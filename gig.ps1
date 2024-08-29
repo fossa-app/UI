@@ -13,3 +13,4 @@ gig -list node, react, visualstudiocode, powershell, macos
 
 Add-Content -Path .\.gitignore -Value '# Repository Specific' -Encoding ascii
 Add-Content -Path .\.gitignore -Value '.trash' -Encoding ascii
+Add-Content -Path .\.gitignore -Value 'build/' -Encoding ascii
