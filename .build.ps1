@@ -27,6 +27,65 @@ param(
 
 Set-StrictMode -Version Latest
 
+# Synopsis: Publish Docker images
+Task Publish Pack, {
+    $state = Import-Clixml -Path ".\.trash\$Instance\state.clixml"
+    $dockerImageVersionTag = $state.DockerImageVersionTag
+    $dockerImageLatestTag = $state.DockerImageLatestTag
+    $dockerImageVersionArchiveName = $state.DockerImageVersionArchiveName
+    $dockerImageLatestArchiveName = $state.DockerImageLatestArchiveName
+    $dockerImageVersionArchive = Resolve-Path -Path ".\.trash\$Instance\artifacts\$dockerImageVersionArchiveName"
+    $dockerImageLatestArchive = Resolve-Path -Path ".\.trash\$Instance\artifacts\$dockerImageLatestArchiveName"
+
+    Exec { docker image load --input $dockerImageVersionArchive }
+    Exec { docker image load --input $dockerImageLatestArchive }
+
+    if ($null -eq $env:DOCKER_ACCESS_TOKEN) {
+        Import-Module -Name Microsoft.PowerShell.SecretManagement
+        $credential = Get-Secret -Name 'Fossa-DockerHub-Credential'
+    }
+    else {
+        $securePassword = New-Object SecureString
+        foreach ($char in $env:DOCKER_ACCESS_TOKEN.ToCharArray()) {
+            $securePassword.AppendChar($char)
+        }
+        $credential = [PSCredential]::New('tiksn', $securePassword)
+    }
+
+    $username = $credential.UserName
+    $password = $credential.GetNetworkCredential().Password
+
+    Exec { docker login --username $username --password $password }
+    Exec { docker push $dockerImageVersionTag }
+    Exec { docker push $dockerImageLatestTag }
+}
+
+# Synopsis: Pack NuGet package
+Task Pack Build, Test, EstimateVersion, {
+    $state = Import-Clixml -Path ".\.trash\$Instance\state.clixml"
+    $dockerImageName = $state.DockerImageName
+    $nextVersion = $state.NextVersion
+    $dockerFilePath = Resolve-Path -Path '.\Dockerfile'
+
+    $dockerImageVersionTag = "$($dockerImageName):$nextVersion"
+    $dockerImageLatestTag = "$($dockerImageName):latest"
+
+    $dockerImageVersionArchiveName = $state.DockerImageVersionArchiveName
+    $dockerImageLatestArchiveName = $state.DockerImageLatestArchiveName
+    $dockerImageVersionArchive = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(".\.trash\$Instance\artifacts\$dockerImageVersionArchiveName")
+    $dockerImageLatestArchive = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(".\.trash\$Instance\artifacts\$dockerImageLatestArchiveName")
+
+    Exec { docker buildx build --file $dockerFilePath --tag $dockerImageVersionTag --tag $dockerImageLatestTag . }
+    Exec { docker image save --output $dockerImageVersionArchive $dockerImageVersionTag }
+    Exec { docker image save --output $dockerImageLatestArchive $dockerImageLatestTag }
+
+    $state.DockerImageVersionTag = $dockerImageVersionTag
+    $state.DockerImageLatestTag = $dockerImageLatestTag
+
+    $state | Export-Clixml -Path ".\.trash\$Instance\state.clixml"
+    Write-Output $state
+}
+
 # Synopsis: Test
 Task Test UnitTest, FunctionalTest, IntegrationTest
 
@@ -107,18 +166,10 @@ Task Init {
     $buildArtifactsFolder = Join-Path -Path $trashFolder -ChildPath 'artifacts'
     New-Item -Path $buildArtifactsFolder -ItemType Directory | Out-Null
 
-    $linuxBuildArtifactsFolder = Join-Path -Path $buildArtifactsFolder -ChildPath 'linux'
-    New-Item -Path $linuxBuildArtifactsFolder -ItemType Directory | Out-Null
-
-    $winBuildArtifactsFolder = Join-Path -Path $buildArtifactsFolder -ChildPath 'win'
-    New-Item -Path $winBuildArtifactsFolder -ItemType Directory | Out-Null
-
     $state = [PSCustomObject]@{
         NextVersion                   = $null
         TrashFolder                   = $trashFolder
         BuildArtifactsFolder          = $buildArtifactsFolder
-        LinuxBuildArtifactsFolder     = $linuxBuildArtifactsFolder
-        WinBuildArtifactsFolder       = $winBuildArtifactsFolder
         DockerImageName               = 'tiksn/fossa-ui'
         DockerImageVersionTag         = $null
         DockerImageLatestTag          = $null
