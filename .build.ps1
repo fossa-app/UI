@@ -116,8 +116,8 @@ Task EstimateVersion Restore, {
         $state.NextVersion = [System.Management.Automation.SemanticVersion]$Version
     }
     else {
-        $gitversion = Exec { dotnet tool run dotnet-gitversion } | ConvertFrom-Json
-        $state.NextVersion = [System.Management.Automation.SemanticVersion]::Parse($gitversion.SemVer)
+        $gitversion = Exec { git describe --tags --dirty --always }
+        $state.NextVersion = [System.Management.Automation.SemanticVersion]::Parse($gitversion)
     }
 
     $state | Export-Clixml -Path ".\.trash\$Instance\state.clixml"
