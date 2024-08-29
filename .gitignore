@@ -216,3 +216,4 @@ sketch
 
 # Repository Specific
 .trash
+build/
