@@ -8,7 +8,7 @@ type ReportHandler = (metric: {
 
 const reportWebVitals = (onPerfEntry?: ReportHandler) => {
   if (onPerfEntry && onPerfEntry instanceof Function) {
-    import('web-vitals').then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
+    import("web-vitals").then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
       onCLS(onPerfEntry);
       onFID(onPerfEntry);
       onFCP(onPerfEntry);
