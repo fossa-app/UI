@@ -1,10 +1,10 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directory: "/"
+    directory: '/'
     labels:
-      - "dependencies"
-      - "maintenance"
+      - 'dependencies'
+      - 'maintenance'
     schedule:
       interval: daily
     open-pull-requests-limit: 10
@@ -12,11 +12,11 @@ updates:
       - tiksn
     assignees:
       - tiksn
-  - package-ecosystem: "docker"
-    directory: "/"
+  - package-ecosystem: 'docker'
+    directory: '/'
     labels:
-      - "dependencies"
-      - "maintenance"
+      - 'dependencies'
+      - 'maintenance'
     schedule:
       interval: daily
     open-pull-requests-limit: 10
@@ -24,15 +24,15 @@ updates:
       - tiksn
     assignees:
       - tiksn
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     labels:
-      - "dependencies"
-      - "maintenance"
+      - 'dependencies'
+      - 'maintenance'
     open-pull-requests-limit: 10
     schedule:
-      interval: "daily"
+      interval: 'daily'
     reviewers:
-      - "tiksn"
+      - 'tiksn'
     assignees:
-      - "tiksn"
+      - 'tiksn'
