@@ -15,9 +15,18 @@
     "react-app",
     "react-app/jest"
   ],
-  "plugins": ["react", "prettier", "@typescript-eslint"],
+  "plugins": [
+    "react",
+    "prettier",
+    "@typescript-eslint"
+  ],
   "rules": {
-    "prettier/prettier": ["error"]
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ]
   },
   "env": {
     "browser": true,
