@@ -24,6 +24,7 @@ docker run --rm `
     -e FIX_TYPESCRIPT_STANDARD=true `
     -e FIX_YAML_PRETTIER=true `
     -e LOG_LEVEL=DEBUG `
+    -e ACTIONS_RUNNER_DEBUG=true `
     -e RUN_LOCAL=true `
     -e VALIDATE_JSCPD=false `
     -e VALIDATE_ALL_CODEBASE=true `

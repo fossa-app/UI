@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@fontsource/roboto": "^5.0.15",
+    "@mui/material": "^6.0.2",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
@@ -22,7 +26,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
-    "format": "prettier --write \"{src,public}/**/*.{js,jsx,ts,tsx,css,json,html}\""
+    "format": "prettier --write \"{src,public}/**/*.{js,jsx,ts,tsx,css,json,html}\"",
+    "prepare": "husky install"
   },
   "browserslist": {
     "production": [
@@ -50,6 +55,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.35.2",
+    "husky": "^8.0.0",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "sass": "^1.78.0"
