@@ -6,8 +6,7 @@ on:
       - main
   pull_request:
 
-permissions:
-  read-all
+permissions: read-all
 
 env:
   DOTNET_NOLOGO: true
@@ -28,21 +27,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run lint
-        run: npm run lint
-
-      - name: Run format
-        run: npm run format
-
-      - name: Run Super Linter
+      - name: Super-linter
         uses: super-linter/super-linter@v7.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
