@@ -27,8 +27,6 @@ jobs:
         with:
           lfs: true
           fetch-depth: 0
-      - name: 'Install .NET Core SDK'
-        uses: actions/setup-dotnet@v4.0.1
       - name: 'Install InvokeBuild Module'
         shell: pwsh
         run: Install-Module -Name InvokeBuild -Force
@@ -54,7 +52,8 @@ jobs:
         uses: actions/upload-artifact@v4.4.0
         with:
           name: .trash
-          path: './.trash'
+          path: '.trash'
+          include-hidden-files: true
 
   cd:
     name: CD
