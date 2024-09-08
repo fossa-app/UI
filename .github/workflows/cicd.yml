@@ -22,63 +22,63 @@ jobs:
     name: CI
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout"
+      - name: 'Checkout'
         uses: actions/checkout@v4
         with:
           lfs: true
           fetch-depth: 0
-      - name: "Install .NET Core SDK"
+      - name: 'Install .NET Core SDK'
         uses: actions/setup-dotnet@v4.0.1
-      - name: "Install InvokeBuild Module"
+      - name: 'Install InvokeBuild Module'
         shell: pwsh
         run: Install-Module -Name InvokeBuild -Force
-      - name: "Restore"
+      - name: 'Restore'
         shell: pwsh
         run: .\restore.ps1 -Instance ${{github.run_id}}
-      - name: "Format"
+      - name: 'Format'
         shell: pwsh
         run: .\format.ps1 -Instance ${{github.run_id}}
-      - name: "Version"
+      - name: 'Version'
         shell: pwsh
         run: .\version.ps1 -Instance ${{github.run_id}}
-      - name: "Build"
+      - name: 'Build'
         shell: pwsh
         run: .\build.ps1 -Instance ${{github.run_id}}
-      - name: "Test"
+      - name: 'Test'
         shell: pwsh
         run: .\test.ps1 -Instance ${{github.run_id}}
-      - name: "Pack"
+      - name: 'Pack'
         shell: pwsh
         run: .\pack.ps1 -Instance ${{github.run_id}}
-      - name: "Publish Artefacts"
+      - name: 'Publish Artefacts'
         uses: actions/upload-artifact@v4.3.6
         with:
           name: .trash
-          path: "./.trash"
+          path: './.trash'
 
   cd:
     name: CD
     needs: ci
     if: github.event_name == 'release'
     environment:
-      name: "DockerHub"
+      name: 'DockerHub'
       url: https://hub.docker.com/r/tiksn/fossa-ui
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout"
+      - name: 'Checkout'
         uses: actions/checkout@v4
         with:
           lfs: true
           fetch-depth: 0
-      - name: "Download Artefact"
+      - name: 'Download Artefact'
         uses: actions/download-artifact@v4.1.8
         with:
-          name: ".trash"
-          path: "./.trash"
-      - name: "Install InvokeBuild Module"
+          name: '.trash'
+          path: './.trash'
+      - name: 'Install InvokeBuild Module'
         shell: pwsh
         run: Install-Module -Name InvokeBuild -Force
-      - name: "Publish"
+      - name: 'Publish'
         env:
           DOCKER_ACCESS_TOKEN: ${{secrets.DOCKER_ACCESS_TOKEN}}
         shell: pwsh
