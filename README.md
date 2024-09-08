@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Fossa UI
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+For local development run `.\start.ps1`
 
 ## Available Scripts
 
