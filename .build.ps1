@@ -130,8 +130,11 @@ Task Format Restore, Lint, {
     Exec { npm run format }
 }
 
-# Synopsis: Format Whitespace
+# Synopsis: Lint
 Task Lint Restore, {
+    if ($IsLinux) {
+        Exec { chmod +x .husky/pre-commit }
+    }
     Exec { npm run lint }
 }
 
