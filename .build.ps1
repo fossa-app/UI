@@ -126,10 +126,13 @@ Task EstimateVersion Restore, {
 }
 
 # Synopsis: Format
-Task Format Restore, FormatWhitespace
+Task Format Restore, Lint, {
+    Exec { npm run format }
+}
 
 # Synopsis: Format Whitespace
-Task FormatWhitespace Restore, {
+Task Lint Restore, {
+    Exec { npm run lint }
 }
 
 # Synopsis: Format XML Files
