@@ -1,5 +1,7 @@
 FROM node:22-alpine
 
+RUN apk --no-cache add curl=8.9.1-r1
+
 WORKDIR /app
 
 COPY ./build ./build
