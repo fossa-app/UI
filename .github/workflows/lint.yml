@@ -28,8 +28,19 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: 'Install InvokeBuild Module'
+        shell: pwsh
+        run: Install-Module -Name InvokeBuild -Force
+      - name: 'Restore'
+        shell: pwsh
+        run: .\restore.ps1 -Instance ${{github.run_id}}
+      - name: 'Format'
+        shell: pwsh
+        run: .\format.ps1 -Instance ${{github.run_id}}
+
       - name: Super-linter
         uses: super-linter/super-linter@v7.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_JSCPD: false
           VALIDATE_TYPESCRIPT_STANDARD: false
