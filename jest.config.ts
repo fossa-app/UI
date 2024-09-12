@@ -84,6 +84,8 @@ const config: Config = {
   moduleNameMapper: {
     '^core/(.*)$': '<rootDir>/src/core/$1',
     '^shared/(.*)$': '<rootDir>/src/shared/$1',
+    '^pages/(.*)$': '<rootDir>/src/pages/$1',
+    '^@fusionauth/react-sdk$': '<rootDir>/src/__mocks__/fusionauth-mock.ts',
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -171,10 +173,7 @@ const config: Config = {
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  // transformIgnorePatterns: [
-  //   "\\\\node_modules\\\\",
-  //   "\\.pnp\\.[^\\\\]+$"
-  // ],
+  transformIgnorePatterns: ['node_modules/(?!(\\@fusionauth/react-sdk)/)'],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,
