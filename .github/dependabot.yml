@@ -1,17 +1,5 @@
 version: 2
 updates:
-  - package-ecosystem: npm
-    directory: '/'
-    labels:
-      - 'dependencies'
-      - 'maintenance'
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 10
-    reviewers:
-      - tiksn
-    assignees:
-      - tiksn
   - package-ecosystem: 'docker'
     directory: '/'
     labels:
