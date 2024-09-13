@@ -9,6 +9,10 @@ const Login: React.FC<{}> = () => {
   const navigate = useNavigate();
   const { isLoggedIn, isFetchingUserInfo, startLogin } = useFusionAuth();
 
+  const login = (): void => {
+    startLogin('state-from-login');
+  };
+
   React.useEffect(() => {
     if (isLoggedIn) {
       navigate(ROUTES.home.path);
@@ -21,10 +25,7 @@ const Login: React.FC<{}> = () => {
 
   return (
     <Box>
-      <Button
-        variant="contained"
-        onClick={() => startLogin('state-from-login')}
-      >
+      <Button variant="contained" onClick={login}>
         Login
       </Button>
     </Box>
