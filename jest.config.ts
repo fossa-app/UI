@@ -85,6 +85,7 @@ const config: Config = {
     '^core/(.*)$': '<rootDir>/src/core/$1',
     '^shared/(.*)$': '<rootDir>/src/shared/$1',
     '^pages/(.*)$': '<rootDir>/src/pages/$1',
+    '^store/(.*)$': '<rootDir>/src/store/$1',
     '^@fusionauth/react-sdk$': '<rootDir>/src/__mocks__/fusionauth-mock.ts',
   },
 

@@ -9,11 +9,14 @@ import { getBackendOrigin } from 'shared/helpers';
 import { Client } from 'shared/models';
 import { FUSION_AUTH_CONFIGS, URLS } from 'shared/constants';
 import axios from 'core/axios';
+import { useAppDispatch, useAppSelector } from 'store';
+import { setClient, selectClient } from 'store/features';
 import AxiosInterceptor from './AxiosInterceptor';
 import App from './App';
 
 const FusionAuthConfigLoader: React.FC = () => {
-  const [client, setClient] = React.useState<Client | null>(null);
+  const dispatch = useAppDispatch();
+  const { client } = useAppSelector(selectClient);
   const [config, setConfig] =
     React.useState<FusionAuthProviderConfig>(FUSION_AUTH_CONFIGS);
 
@@ -25,7 +28,7 @@ const FusionAuthConfigLoader: React.FC = () => {
       const { data } = await axios.get<Client>(`
         ${beOrigin}/${URLS.base}/${URLS.client}?origin=${origin}
       `);
-      setClient(data);
+      dispatch(setClient(data));
       setConfig({
         ...config,
         clientId: data.clientId,
