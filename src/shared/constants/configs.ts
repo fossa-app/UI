@@ -1,6 +1,6 @@
 import { FusionAuthProviderConfig } from '@fusionauth/react-sdk';
 
-export const FUSION_AUTH_CONFIGS: FusionAuthProviderConfig = {
+export const FUSION_AUTH_CONFIG: FusionAuthProviderConfig = {
   clientId: '',
   redirectUri: '',
   postLogoutRedirectUri: '',
@@ -8,7 +8,4 @@ export const FUSION_AUTH_CONFIGS: FusionAuthProviderConfig = {
   shouldAutoFetchUserInfo: true,
   shouldAutoRefresh: true,
   scope: 'openid email profile',
-  onRedirect: (state?: string) => {
-    console.log(`Redirect happened with state value: ${state}`);
-  },
 };
