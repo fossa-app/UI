@@ -1,1 +1,2 @@
-export * from './clientSlice';
+export * from './identitySlice';
+export * from './configSlice';

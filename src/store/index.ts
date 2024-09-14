@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
-import clientReducer from './features/clientSlice';
+import clientReducer from './features/identitySlice';
+import configReducer from './features/configSlice';
 
 const store = configureStore({
   reducer: {
-    client: clientReducer,
+    identity: clientReducer,
+    config: configReducer,
   },
 });
 
