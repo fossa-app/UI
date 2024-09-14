@@ -2,8 +2,8 @@ import { FusionAuthProviderConfig } from '@fusionauth/react-sdk';
 
 export const FUSION_AUTH_CONFIGS: FusionAuthProviderConfig = {
   clientId: '',
-  redirectUri: 'http://we.dev.localtest.me:4211',
-  postLogoutRedirectUri: 'http://we.dev.localtest.me:4211/login',
+  redirectUri: '',
+  postLogoutRedirectUri: '',
   serverUrl: 'http://localhost:9011',
   shouldAutoFetchUserInfo: true,
   shouldAutoRefresh: true,
