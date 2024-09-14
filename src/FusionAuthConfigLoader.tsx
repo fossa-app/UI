@@ -32,6 +32,8 @@ const FusionAuthConfigLoader: React.FC = () => {
       setConfig({
         ...config,
         clientId: data.clientId,
+        redirectUri: origin,
+        postLogoutRedirectUri: origin,
       });
     } catch (error) {
       console.error('Error fetching client:', error);
