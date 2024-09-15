@@ -3,7 +3,7 @@ import axios from 'core/axios';
 import { Client, ErrorResponse, Status } from 'shared/models';
 import { URLS } from 'shared/constants';
 import store, { RootState } from 'store';
-import { setFusionAuthConfig, setFusionAuthConfigStatus } from './configSlice';
+import { setConfig } from './configSlice';
 
 interface IdentityState {
   client: Client | null;
@@ -27,18 +27,19 @@ export const fetchClient = createAsyncThunk<
     );
 
     if (data) {
-      const { fusionAuthConfig } = store.getState().config;
+      const config = store.getState().config;
 
       dispatch(
-        setFusionAuthConfig({
-          ...fusionAuthConfig,
-          clientId: data.clientId,
-          redirectUri: origin,
-          postLogoutRedirectUri: origin,
+        setConfig({
+          ...config,
+          fusionAuthConfig: {
+            ...config.fusionAuthConfig,
+            clientId: data.clientId,
+            redirectUri: origin,
+            postLogoutRedirectUri: origin,
+          },
         })
       );
-
-      dispatch(setFusionAuthConfigStatus('succeeded'));
 
       return data;
     }

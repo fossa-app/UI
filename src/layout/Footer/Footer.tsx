@@ -25,6 +25,7 @@ const Footer: React.FC<{}> = () => {
       alignItems="center"
       padding={2}
       gap={4}
+      minHeight={64}
     >
       {system && (
         <>
