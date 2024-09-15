@@ -39,7 +39,7 @@ const Login: React.FC<{}> = () => {
       <Card sx={{ width: 320 }}>
         <CardHeader
           title="Login"
-          avatar={<LockIcon color="info" />}
+          avatar={<LockIcon color="primary" />}
           titleTypographyProps={{
             fontSize: 20,
           }}
