@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   selectIdentity,
-  getClient,
+  fetchClient,
   selectFusionAuthConfig,
 } from 'store/features';
 import AxiosInterceptor from './AxiosInterceptor';
@@ -17,14 +17,12 @@ const FusionAuthConfigLoader: React.FC = () => {
   const { fusionAuthConfig } = useAppSelector(selectFusionAuthConfig);
   const loading = status === 'loading';
 
-  const fetchClient = async (): Promise<void> => {
-    const origin = window.location.origin;
-
-    dispatch(getClient(origin));
+  const getClient = async (): Promise<void> => {
+    dispatch(fetchClient());
   };
 
   React.useEffect(() => {
-    fetchClient();
+    getClient();
   }, []);
 
   if (loading || !client) {

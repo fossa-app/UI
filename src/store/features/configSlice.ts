@@ -27,10 +27,20 @@ export const configSlice = createSlice({
         fusionAuthConfig: action.payload,
       };
     },
+    setFusionAuthConfigStatus(
+      state,
+      action: PayloadAction<Status>
+    ): ConfigState {
+      return {
+        ...state,
+        status: action.payload,
+      };
+    },
   },
 });
 
-export const { setFusionAuthConfig } = configSlice.actions;
+export const { setFusionAuthConfig, setFusionAuthConfigStatus } =
+  configSlice.actions;
 export const selectFusionAuthConfig = (state: RootState) => state.config;
 
 export default configSlice.reducer;

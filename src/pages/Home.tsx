@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useNavigate, useOutlet } from 'react-router-dom';
 import { useFusionAuth } from '@fusionauth/react-sdk';
 import { ROUTES } from 'shared/constants';
-import Content from './Content';
+import Content from 'layout/Content';
 
 const Home: React.FC<{}> = () => {
   const outlet = useOutlet();
