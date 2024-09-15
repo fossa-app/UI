@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import clientReducer from './features/identitySlice';
 import configReducer from './features/configSlice';
+import licenseReducer from './features/licenseSlice';
 
 const store = configureStore({
   reducer: {
     identity: clientReducer,
     config: configReducer,
+    license: licenseReducer,
   },
 });
 

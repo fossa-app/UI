@@ -2,9 +2,8 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'core/axios';
 import { Client, ErrorResponse, Status } from 'shared/models';
 import { URLS } from 'shared/constants';
-import { getBackendOrigin } from 'shared/helpers';
 import store, { RootState } from 'store';
-import { setFusionAuthConfig } from './configSlice';
+import { setFusionAuthConfig, setFusionAuthConfigStatus } from './configSlice';
 
 interface IdentityState {
   client: Client | null;
@@ -17,16 +16,15 @@ const initialState: IdentityState = {
   status: 'idle',
 };
 
-export const getClient = createAsyncThunk<
+export const fetchClient = createAsyncThunk<
   Client | null,
-  string,
+  void,
   { rejectValue: ErrorResponse }
->('identity/getClient', async (origin, { dispatch, rejectWithValue }) => {
-  const beOrigin = getBackendOrigin(origin);
-  const url = `${beOrigin}/${URLS.base}/${URLS.client}?origin=${origin}`;
-
+>('identity/fetchClient', async (_, { dispatch, rejectWithValue }) => {
   try {
-    const { data } = await axios.get<Client>(url);
+    const { data } = await axios.get<Client>(
+      `${URLS.client}?origin=${window.location.origin}`
+    );
 
     if (data) {
       const { fusionAuthConfig } = store.getState().config;
@@ -39,6 +37,8 @@ export const getClient = createAsyncThunk<
           postLogoutRedirectUri: origin,
         })
       );
+
+      dispatch(setFusionAuthConfigStatus('succeeded'));
 
       return data;
     }
@@ -62,14 +62,14 @@ export const identitySlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(getClient.pending, (state): IdentityState => {
+      .addCase(fetchClient.pending, (state): IdentityState => {
         return {
           ...state,
           status: 'loading',
         };
       })
       .addCase(
-        getClient.rejected,
+        fetchClient.rejected,
         (
           state,
           action: PayloadAction<ErrorResponse | undefined>
@@ -82,7 +82,7 @@ export const identitySlice = createSlice({
         }
       )
       .addCase(
-        getClient.fulfilled,
+        fetchClient.fulfilled,
         (state, action: PayloadAction<Client | null>): IdentityState => {
           return {
             ...state,
