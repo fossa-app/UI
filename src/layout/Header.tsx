@@ -34,12 +34,19 @@ const Header: React.FC<{}> = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            data-testid="app-logo"
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ flexGrow: 1 }}
+          >
             Fossa
           </Typography>
           <FormControlLabel
             control={
               <Switch
+                data-testid="theme-switch"
                 color="primary"
                 checked={isDarkTheme}
                 onChange={handleThemeChange}

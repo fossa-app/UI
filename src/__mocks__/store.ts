@@ -1,22 +1,31 @@
 import { TypedUseSelectorHook } from 'react-redux';
 import configureStore from 'redux-mock-store';
+import { DeepPartial } from 'shared/models';
 import { RootState } from 'store';
 
 const middlewares: any[] = [];
 const mockStore = configureStore(middlewares);
 
-const initialState = {
+let mockInitialState: DeepPartial<RootState> = {
   identity: {},
-  config: {},
+  config: {
+    isDarkTheme: false,
+  },
   license: {},
-} as RootState;
+};
 
-const store = mockStore(initialState);
-const mockDispatch = jest.fn();
+const store = mockStore(mockInitialState);
 
-export const useAppDispatch = jest.fn(() => mockDispatch);
-export const useAppSelector = jest.fn((selectorFn) =>
-  selectorFn(initialState as unknown as TypedUseSelectorHook<RootState>)
-);
+export const mockDispatch = jest.fn();
+export const useAppDispatch = () => mockDispatch;
+
+export const useAppSelector: TypedUseSelectorHook<RootState> = (selectorFn) =>
+  selectorFn(store.getState() as RootState);
+
+export const setMockState = (state: DeepPartial<RootState>) => {
+  mockInitialState = { ...mockInitialState, ...state };
+  store.clearActions();
+  store.getState = () => mockInitialState as RootState;
+};
 
 export default store;
