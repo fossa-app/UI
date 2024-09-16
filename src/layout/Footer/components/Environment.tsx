@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Chip from '@mui/material/Chip';
+import Typography from '@mui/material/Typography';
 import { EnvironmentKind } from 'shared/models';
 
 interface EnvironmentProps {
@@ -7,15 +8,19 @@ interface EnvironmentProps {
 }
 
 const Environment: React.FC<EnvironmentProps> = ({ kind }) => {
-  const colorMap: Record<EnvironmentKind, 'error' | 'warning' | 'success'> = {
-    Development: 'error',
-    Staging: 'warning',
-    Production: 'success',
-  };
+  if (kind === 'Development') {
+    return <Chip label={kind} color="error" data-testid="environment-chip" />;
+  }
 
-  const chipColor = colorMap[kind] || 'error';
+  if (kind === 'Staging') {
+    return (
+      <Typography variant="body2" data-testid="environment-label">
+        {kind}
+      </Typography>
+    );
+  }
 
-  return <Chip label={kind} color={chipColor} />;
+  return null;
 };
 
 export default Environment;
