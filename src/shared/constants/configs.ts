@@ -7,5 +7,5 @@ export const FUSION_AUTH_CONFIG: FusionAuthProviderConfig = {
   serverUrl: 'http://localhost:9011',
   shouldAutoFetchUserInfo: true,
   shouldAutoRefresh: true,
-  scope: 'openid email profile',
+  scope: 'openid email profile offline_access',
 };

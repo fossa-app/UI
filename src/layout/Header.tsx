@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useFusionAuth } from '@fusionauth/react-sdk';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import AppBar from '@mui/material/AppBar';
@@ -13,6 +14,7 @@ import { selectConfig, setConfig } from 'store/features';
 const Header: React.FC<{}> = () => {
   const dispatch = useAppDispatch();
   const { isDarkTheme } = useAppSelector(selectConfig);
+  const { userInfo } = useFusionAuth();
 
   const handleThemeChange = (): void => {
     dispatch(
@@ -36,14 +38,25 @@ const Header: React.FC<{}> = () => {
           </IconButton>
           <Typography
             data-testid="app-logo"
-            variant="h6"
             noWrap
+            variant="h6"
             component="div"
             sx={{ flexGrow: 1 }}
           >
             Fossa
           </Typography>
+          {userInfo?.given_name && (
+            <Typography
+              data-testid="user-name"
+              noWrap
+              variant="body2"
+              sx={{ mr: 2 }}
+            >
+              {userInfo.given_name}
+            </Typography>
+          )}
           <FormControlLabel
+            sx={{ mr: 0 }}
             control={
               <Switch
                 data-testid="theme-switch"
