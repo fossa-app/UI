@@ -13,8 +13,7 @@ import App from './App';
 const FusionAuthConfigLoader: React.FC = () => {
   const dispatch = useAppDispatch();
   const { client, status } = useAppSelector(selectIdentity);
-  const { fusionAuthConfig } = useAppSelector(selectConfig);
-  const { isDarkTheme } = useAppSelector(selectConfig);
+  const { fusionAuthConfig, isDarkTheme } = useAppSelector(selectConfig);
   const appTheme = isDarkTheme ? darkTheme : lightTheme;
   const loading = status === 'loading';
 

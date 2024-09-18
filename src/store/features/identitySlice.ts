@@ -53,14 +53,7 @@ export const fetchClient = createAsyncThunk<
 export const identitySlice = createSlice({
   name: 'identity',
   initialState,
-  reducers: {
-    setClient(state, action: PayloadAction<Client>): IdentityState {
-      return {
-        ...state,
-        client: action.payload,
-      };
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(fetchClient.pending, (state): IdentityState => {
@@ -95,7 +88,6 @@ export const identitySlice = createSlice({
   },
 });
 
-export const { setClient } = identitySlice.actions;
 export const selectIdentity = (state: RootState) => state.identity;
 
 export default identitySlice.reducer;
