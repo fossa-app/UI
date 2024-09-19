@@ -6,6 +6,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -14,7 +15,7 @@ import { selectConfig, setConfig } from 'store/features';
 const Header: React.FC<{}> = () => {
   const dispatch = useAppDispatch();
   const { isDarkTheme } = useAppSelector(selectConfig);
-  const { userInfo } = useFusionAuth();
+  const { isLoggedIn, userInfo, startLogout } = useFusionAuth();
 
   const handleThemeChange = (): void => {
     dispatch(
@@ -24,16 +25,15 @@ const Header: React.FC<{}> = () => {
     );
   };
 
+  const handleLogout = (): void => {
+    startLogout();
+  };
+
   return (
     <Box>
       <AppBar position="static" color="primary">
         <Toolbar>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
+          <IconButton edge="start" color="inherit" sx={{ mr: 2 }}>
             <MenuIcon />
           </IconButton>
           <Typography
@@ -50,22 +50,28 @@ const Header: React.FC<{}> = () => {
               data-testid="user-name"
               noWrap
               variant="body2"
-              sx={{ mr: 2 }}
+              sx={{ mr: 3 }}
             >
               {userInfo.given_name}
             </Typography>
+          )}
+          {isLoggedIn && (
+            <IconButton color="secondary" size="small" onClick={handleLogout}>
+              <LogoutIcon fontSize="small" />
+            </IconButton>
           )}
           <FormControlLabel
             sx={{ mr: 0 }}
             control={
               <Switch
                 data-testid="theme-switch"
-                color="primary"
+                size="small"
                 checked={isDarkTheme}
                 onChange={handleThemeChange}
               />
             }
-            label="Dark theme"
+            labelPlacement="start"
+            label={<Typography variant="body2">Dark theme</Typography>}
           />
         </Toolbar>
       </AppBar>
