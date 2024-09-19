@@ -11,6 +11,7 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectConfig, setConfig } from 'store/features';
+import Logo from 'shared/components/icons/Logo';
 
 const Header: React.FC<{}> = () => {
   const dispatch = useAppDispatch();
@@ -33,9 +34,10 @@ const Header: React.FC<{}> = () => {
     <Box>
       <AppBar position="static" color="primary">
         <Toolbar>
-          <IconButton edge="start" color="inherit" sx={{ mr: 2 }}>
+          <IconButton edge="end" color="inherit" sx={{ mr: 2 }}>
             <MenuIcon />
           </IconButton>
+          <Logo sx={{ mr: 2 }} />
           <Typography
             data-testid="app-logo"
             noWrap
@@ -56,7 +58,12 @@ const Header: React.FC<{}> = () => {
             </Typography>
           )}
           {isLoggedIn && (
-            <IconButton color="secondary" size="small" onClick={handleLogout}>
+            <IconButton
+              data-testid="logout-button"
+              color="secondary"
+              size="small"
+              onClick={handleLogout}
+            >
               <LogoutIcon fontSize="small" />
             </IconButton>
           )}

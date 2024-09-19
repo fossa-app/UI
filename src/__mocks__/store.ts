@@ -22,7 +22,7 @@ export const useAppDispatch = () => mockDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = (selectorFn) =>
   selectorFn(store.getState() as RootState);
 
-export const setMockState = (state: DeepPartial<RootState>) => {
+export const setMockState = (state: DeepPartial<RootState>): void => {
   mockInitialState = { ...mockInitialState, ...state };
   store.clearActions();
   store.getState = () => mockInitialState as RootState;
