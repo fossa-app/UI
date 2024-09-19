@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Box from '@mui/system/Box';
 import { ROUTES } from 'shared/constants';
-import Header from 'layout/Header';
+import Header from 'layout/Header/Header';
 import Footer from 'layout/Footer/Footer';
 import Login from 'pages/Login';
 import Home from 'pages/Home';

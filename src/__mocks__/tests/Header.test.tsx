@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { setConfig } from 'store/features';
 import { setMockState, mockDispatch } from '../store';
 import { setFusionAuthMock } from '../fusionauth-mock';
-import Header from '../../layout/Header';
+import Header from '../../layout/Header/Header';
 
 const mockNavigate = jest.fn();
 
