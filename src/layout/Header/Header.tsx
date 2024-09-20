@@ -6,12 +6,12 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import LogoutIcon from '@mui/icons-material/Logout';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectConfig, setConfig } from 'store/features';
 import Logo from 'shared/components/icons/Logo';
+import UserMenu from './components/UserMenu/UserMenu';
 
 const Header: React.FC<{}> = () => {
   const dispatch = useAppDispatch();
@@ -32,9 +32,9 @@ const Header: React.FC<{}> = () => {
 
   return (
     <Box>
-      <AppBar position="static" color="primary">
+      <AppBar position="static">
         <Toolbar>
-          <IconButton edge="end" color="inherit" sx={{ mr: 2 }}>
+          <IconButton edge="end" sx={{ mr: 2 }}>
             <MenuIcon />
           </IconButton>
           <Logo sx={{ mr: 2 }} />
@@ -47,28 +47,8 @@ const Header: React.FC<{}> = () => {
           >
             Fossa
           </Typography>
-          {userInfo?.given_name && (
-            <Typography
-              data-testid="user-name"
-              noWrap
-              variant="body2"
-              sx={{ mr: 3 }}
-            >
-              {userInfo.given_name}
-            </Typography>
-          )}
-          {isLoggedIn && (
-            <IconButton
-              data-testid="logout-button"
-              color="secondary"
-              size="small"
-              onClick={handleLogout}
-            >
-              <LogoutIcon fontSize="small" />
-            </IconButton>
-          )}
           <FormControlLabel
-            sx={{ mr: 0 }}
+            sx={{ mr: 1 }}
             control={
               <Switch
                 data-testid="theme-switch"
@@ -78,8 +58,19 @@ const Header: React.FC<{}> = () => {
               />
             }
             labelPlacement="start"
-            label={<Typography variant="body2">Dark theme</Typography>}
+            label={
+              <Typography noWrap variant="body2">
+                Dark theme
+              </Typography>
+            }
           />
+          {userInfo?.given_name && isLoggedIn && (
+            <UserMenu
+              name={userInfo.given_name}
+              picture={userInfo.picture}
+              onLogoutClick={handleLogout}
+            />
+          )}
         </Toolbar>
       </AppBar>
     </Box>
