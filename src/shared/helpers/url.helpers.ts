@@ -1,8 +1,8 @@
 export const getBackendOrigin = (frontendOrigin: string): string => {
   const suffixMappings = new Map([
-    ['.dev.localtest.me:4211', '.dev.localtest.me:5210'],
-    ['.test.localtest.me:4212', '.test.localtest.me:5212'],
-    ['.localtest.me:4212', '.localtest.me:5210'],
+    ['.dev.localhost:4211', '.dev.localhost:5210'],
+    ['.test.localhost:4212', '.test.localhost:5212'],
+    ['.localhost:4212', '.localhost:5210'],
   ]);
 
   for (const [frontendSuffix, backendSuffix] of suffixMappings) {

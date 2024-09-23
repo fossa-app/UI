@@ -13,7 +13,7 @@ const lightPalette: PaletteOptions = {
     contrastText: '#fff',
   },
   background: {
-    default: '#fff',
+    default: APP_COLORS.light.background,
   },
   error: {
     main: APP_COLORS.light.error,
@@ -45,7 +45,7 @@ const darkPalette: PaletteOptions = {
     contrastText: '#fff',
   },
   background: {
-    default: '#333',
+    default: APP_COLORS.dark.background,
   },
   error: {
     main: APP_COLORS.dark.error,

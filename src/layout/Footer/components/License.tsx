@@ -9,9 +9,7 @@ interface LicenseProps {
 const License: React.FC<LicenseProps> = ({ name }) => {
   return (
     <Tooltip title={`Licensed to ${name}`}>
-      <Typography variant="body2" fontSize={13}>
-        Fossa
-      </Typography>
+      <Typography variant="caption">Fossa</Typography>
     </Tooltip>
   );
 };

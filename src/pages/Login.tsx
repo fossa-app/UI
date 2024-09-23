@@ -41,7 +41,7 @@ const Login: React.FC<{}> = () => {
           title="Login"
           avatar={<LockIcon color="primary" />}
           titleTypographyProps={{
-            fontSize: 20,
+            variant: 'h5',
           }}
         />
         <Divider />
