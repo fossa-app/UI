@@ -21,7 +21,7 @@ const Environment: React.FC<EnvironmentProps> = ({ kind }) => {
 
   if (kind === 'Staging') {
     return (
-      <Typography data-testid="environment-label" variant="body2" fontSize={13}>
+      <Typography data-testid="environment-label" variant="caption">
         {kind}
       </Typography>
     );
