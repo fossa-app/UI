@@ -5,6 +5,10 @@ export const ROUTES: AppRoute = {
     name: 'Login',
     path: '/login',
   },
+  callback: {
+    name: 'Callback',
+    path: '/callback',
+  },
   home: {
     name: 'Home',
     path: '/',

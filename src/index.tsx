@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from 'store';
 import reportWebVitals from './reportWebVitals';
-import FusionAuthConfigLoader from './FusionAuthConfigLoader';
+import ClientLoader from './ClientLoader';
 import './index.scss';
 
 const root = ReactDOM.createRoot(
@@ -15,7 +15,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
-        <FusionAuthConfigLoader />
+        <ClientLoader />
       </Provider>
     </BrowserRouter>
   </React.StrictMode>

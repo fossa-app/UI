@@ -1,27 +1,23 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render, screen } from '@testing-library/react';
-import { setFusionAuthMock } from '../fusionauth-mock';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { resetMockState, setMockState } from '../store';
+import { getUserManager } from '../oidc-client-mock';
 import Login from '../../pages/Login';
 
-const mockNavigate = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
-}));
-
 beforeEach(() => {
-  mockNavigate.mockClear();
+  resetMockState();
+  setMockState({
+    auth: {
+      user: {
+        data: null,
+      },
+    },
+  });
 });
 
 describe('Login Component', () => {
-  it('should render the login button when isLoggedIn is false and isFetchingUserInfo is false', async () => {
-    setFusionAuthMock({
-      isLoggedIn: false,
-      isFetchingUserInfo: false,
-    });
-
+  it('should render the login button when not authenticated', async () => {
     render(
       <MemoryRouter>
         <Login />
@@ -33,10 +29,8 @@ describe('Login Component', () => {
     expect(loginButton).toBeInTheDocument();
   });
 
-  it('should navigate to home when isLoggedIn is true', () => {
-    setFusionAuthMock({
-      isLoggedIn: true,
-    });
+  it('should call signinRedirect when the login button is clicked', async () => {
+    const mockUserManager = getUserManager();
 
     render(
       <MemoryRouter>
@@ -44,20 +38,12 @@ describe('Login Component', () => {
       </MemoryRouter>
     );
 
-    expect(mockNavigate).toHaveBeenCalledWith('/');
-  });
+    const loginButton = await screen.findByTestId('login-button');
 
-  it('should not navigate when isLoggedIn is false', () => {
-    setFusionAuthMock({
-      isLoggedIn: false,
+    fireEvent.click(loginButton);
+
+    await waitFor(() => {
+      expect(mockUserManager.signinRedirect).toHaveBeenCalled();
     });
-
-    render(
-      <MemoryRouter>
-        <Login />
-      </MemoryRouter>
-    );
-
-    expect(mockNavigate).not.toHaveBeenCalled();
   });
 });

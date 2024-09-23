@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useFusionAuth } from '@fusionauth/react-sdk';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import AppBar from '@mui/material/AppBar';
@@ -9,25 +8,31 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectConfig, setConfig } from 'store/features';
+import {
+  getUserManager,
+  selectAppConfig,
+  selectUser,
+  updateAppConfig,
+} from 'store/features';
 import Logo from 'shared/components/icons/Logo';
 import UserMenu from './components/UserMenu/UserMenu';
 
 const Header: React.FC<{}> = () => {
   const dispatch = useAppDispatch();
-  const { isDarkTheme } = useAppSelector(selectConfig);
-  const { isLoggedIn, userInfo, startLogout } = useFusionAuth();
+  const { isDarkTheme } = useAppSelector(selectAppConfig);
+  const userManager = getUserManager();
+  const { data: user } = useAppSelector(selectUser);
 
   const handleThemeChange = (): void => {
     dispatch(
-      setConfig({
+      updateAppConfig({
         isDarkTheme: !isDarkTheme,
       })
     );
   };
 
-  const handleLogout = (): void => {
-    startLogout();
+  const handleLogout = async (): Promise<void> => {
+    await userManager.signoutRedirect();
   };
 
   return (
@@ -64,10 +69,10 @@ const Header: React.FC<{}> = () => {
               </Typography>
             }
           />
-          {userInfo?.given_name && isLoggedIn && (
+          {user?.profile?.given_name && (
             <UserMenu
-              name={userInfo.given_name}
-              picture={userInfo.picture}
+              name={user.profile.given_name}
+              picture={user.profile.picture}
               onLogoutClick={handleLogout}
             />
           )}

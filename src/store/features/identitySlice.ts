@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'core/axios';
+import store, { RootState } from 'store';
 import { Client, ErrorResponse, Status } from 'shared/models';
 import { URLS } from 'shared/constants';
-import store, { RootState } from 'store';
-import { setConfig } from './configSlice';
+import { updateAuthSettings } from './authSlice';
 
 interface IdentityState {
   client: Client | null;
@@ -27,16 +27,15 @@ export const fetchClient = createAsyncThunk<
     );
 
     if (data) {
-      const config = store.getState().config;
+      const { auth } = store.getState();
 
       dispatch(
-        setConfig({
-          ...config,
-          fusionAuthConfig: {
-            ...config.fusionAuthConfig,
-            clientId: data.clientId,
-            redirectUri: origin,
-            postLogoutRedirectUri: origin,
+        updateAuthSettings({
+          settings: {
+            ...auth.settings,
+            client_id: data.clientId,
+            redirect_uri: `${window.location.origin}/callback`,
+            post_logout_redirect_uri: `${window.location.origin}/`,
           },
         })
       );

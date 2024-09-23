@@ -6,14 +6,20 @@ import { RootState } from 'store';
 const middlewares: any[] = [];
 const mockStore = configureStore(middlewares);
 
-let mockInitialState: DeepPartial<RootState> = {
+const initialMockState: DeepPartial<RootState> = {
   identity: {},
-  config: {
+  appConfig: {
     isDarkTheme: false,
   },
   license: {},
+  auth: {
+    user: {
+      data: null,
+    },
+  },
 };
 
+let mockInitialState = { ...initialMockState };
 const store = mockStore(mockInitialState);
 
 export const mockDispatch = jest.fn();
@@ -23,7 +29,13 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = (selectorFn) =>
   selectorFn(store.getState() as RootState);
 
 export const setMockState = (state: DeepPartial<RootState>): void => {
-  mockInitialState = { ...mockInitialState, ...state };
+  mockInitialState = { ...initialMockState, ...state };
+  store.clearActions();
+  store.getState = () => mockInitialState as RootState;
+};
+
+export const resetMockState = (): void => {
+  mockInitialState = { ...initialMockState };
   store.clearActions();
   store.getState = () => mockInitialState as RootState;
 };

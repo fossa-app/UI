@@ -1,19 +1,18 @@
 import * as React from 'react';
-import { FusionAuthProvider } from '@fusionauth/react-sdk';
-import { ThemeProvider } from '@mui/material/styles';
 import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
+import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { lightTheme, darkTheme } from 'core/theme.config';
+import { darkTheme, lightTheme } from 'core/theme.config';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectIdentity, fetchClient, selectConfig } from 'store/features';
+import { selectIdentity, fetchClient, selectAppConfig } from 'store/features';
 import AxiosInterceptor from './AxiosInterceptor';
 import App from './App';
 
-const FusionAuthConfigLoader: React.FC = () => {
+const ClientLoader: React.FC = () => {
   const dispatch = useAppDispatch();
   const { client, status } = useAppSelector(selectIdentity);
-  const { fusionAuthConfig, isDarkTheme } = useAppSelector(selectConfig);
+  const { isDarkTheme } = useAppSelector(selectAppConfig);
   const appTheme = isDarkTheme ? darkTheme : lightTheme;
   const loading = status === 'loading';
 
@@ -36,13 +35,11 @@ const FusionAuthConfigLoader: React.FC = () => {
   return (
     <ThemeProvider theme={appTheme}>
       <CssBaseline />
-      <FusionAuthProvider {...fusionAuthConfig}>
-        <AxiosInterceptor>
-          <App />
-        </AxiosInterceptor>
-      </FusionAuthProvider>
+      <AxiosInterceptor>
+        <App />
+      </AxiosInterceptor>
     </ThemeProvider>
   );
 };
 
-export default FusionAuthConfigLoader;
+export default ClientLoader;
