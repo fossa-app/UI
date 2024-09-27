@@ -1,9 +1,9 @@
 import { User } from 'oidc-client-ts';
+import { AppUser } from 'shared/models';
 
-// TODO: map all fields
-export const mapUser = (user: User) => {
-  return {
-    profile: user.profile,
-    access_token: user.access_token,
-  };
+export const mapUser = (user: User): AppUser => {
+  // eslint-disable-next-line no-unused-vars
+  const { toStorageString, ...rest } = user;
+
+  return rest;
 };

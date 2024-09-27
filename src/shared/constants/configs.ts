@@ -8,3 +8,5 @@ export const OIDC_INITIAL_CONFIG: UserManagerSettings = {
   redirect_uri: '',
   post_logout_redirect_uri: '',
 };
+
+export const AUTH_KEY = 'auth';

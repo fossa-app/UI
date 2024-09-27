@@ -2,8 +2,8 @@ import * as React from 'react';
 import { useNavigate, useOutlet } from 'react-router-dom';
 import LinearProgress from '@mui/material/LinearProgress';
 import { useAppDispatch, useAppSelector } from 'store';
-import { ROUTES } from 'shared/constants';
 import { fetchUser, selectUser } from 'store/features';
+import { ROUTES } from 'shared/constants';
 import Content from 'layout/Content';
 
 const Home: React.FC<{}> = () => {
