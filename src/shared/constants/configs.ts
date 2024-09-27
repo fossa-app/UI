@@ -1,11 +1,10 @@
-import { FusionAuthProviderConfig } from '@fusionauth/react-sdk';
+import { UserManagerSettings } from 'oidc-client-ts';
 
-export const FUSION_AUTH_CONFIG: FusionAuthProviderConfig = {
-  clientId: '',
-  redirectUri: '',
-  postLogoutRedirectUri: '',
-  serverUrl: 'http://localhost:9011',
-  shouldAutoFetchUserInfo: true,
-  shouldAutoRefresh: true,
-  scope: 'openid email profile offline_access',
+export const OIDC_INITIAL_CONFIG: UserManagerSettings = {
+  authority: 'http://localhost:9011',
+  response_type: 'code',
+  scope: 'openid profile email offline_access',
+  client_id: '',
+  redirect_uri: '',
+  post_logout_redirect_uri: '',
 };

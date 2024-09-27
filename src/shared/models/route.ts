@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 export enum RouteKey {
   login = 'login',
+  callback = 'callback',
   home = 'home',
   dashboard = 'dashboard',
 }

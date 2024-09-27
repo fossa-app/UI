@@ -1,3 +1,4 @@
 export * from './identitySlice';
-export * from './configSlice';
+export * from './appConfigSlice';
 export * from './licenseSlice';
+export * from './authSlice';

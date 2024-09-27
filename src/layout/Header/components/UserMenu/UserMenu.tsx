@@ -37,6 +37,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
       </IconButton>
       <Menu
         keepMounted
+        data-testid="user-menu"
         open={Boolean(anchorElUser)}
         anchorEl={anchorElUser}
         anchorOrigin={{

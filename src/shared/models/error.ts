@@ -1,6 +1,6 @@
 export interface ErrorResponse {
-  type: string;
-  title: string;
-  traceId: string;
-  status: number;
+  type?: string;
+  title?: string;
+  traceId?: string;
+  status?: number;
 }

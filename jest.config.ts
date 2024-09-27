@@ -87,7 +87,7 @@ const config: Config = {
     '^pages/(.*)$': '<rootDir>/src/pages/$1',
     '^layout/(.*)$': '<rootDir>/src/layout/$1',
     '^store/(.*)$': '<rootDir>/src/store/$1',
-    '^@fusionauth/react-sdk$': '<rootDir>/src/__mocks__/fusionauth-mock.ts',
+    '^oidc-client-ts$': '<rootDir>/src/__mocks__/oidc-client-mock.ts',
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -175,7 +175,7 @@ const config: Config = {
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  transformIgnorePatterns: ['node_modules/(?!(\\@fusionauth/react-sdk)/)'],
+  transformIgnorePatterns: ['node_modules/(?!(\\oidc-client-ts)/)'],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,

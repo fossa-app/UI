@@ -7,6 +7,7 @@ import Footer from 'layout/Footer/Footer';
 import Login from 'pages/Login';
 import Home from 'pages/Home';
 import Dashboard from 'pages/Dashboard';
+import Callback from './pages/Callback';
 
 const App: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const App: React.FC = () => {
       <Box display="flex" flexDirection="column" flexGrow={1} padding={2}>
         <Routes>
           <Route path={ROUTES.login.path} element={<Login />} />
+          <Route path={ROUTES.callback.path} element={<Callback />} />
           <Route path={ROUTES.home.path} element={<Home />}>
             <Route
               path={ROUTES.home.path}

@@ -1,23 +1,24 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { setConfig } from 'store/features';
-import { setMockState, mockDispatch } from '../store';
-import { setFusionAuthMock } from '../fusionauth-mock';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { updateAppConfig } from 'store/features';
+import { setMockState, mockDispatch, resetMockState } from '../store';
+import { getUserManager } from '../oidc-client-mock';
 import Header from '../../layout/Header/Header';
 
-const mockNavigate = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
-}));
-
 beforeEach(() => {
-  mockNavigate.mockClear();
+  resetMockState();
+  setMockState({
+    auth: {
+      user: {
+        data: null,
+      },
+    },
+    appConfig: { isDarkTheme: true },
+  });
 });
 
 describe('Header Component', () => {
-  it('should render correctly with logo', async () => {
+  it('should render the logo correctly', async () => {
     render(<Header />);
 
     const appLogo = await screen.findByTestId('app-logo');
@@ -25,8 +26,7 @@ describe('Header Component', () => {
     expect(appLogo).toHaveTextContent('Fossa');
   });
 
-  it('should render correctly with dark theme enabled', async () => {
-    setMockState({ config: { isDarkTheme: true } });
+  it('should display dark theme switch as checked when dark theme is enabled', async () => {
     render(<Header />);
 
     const themeSwitch = await screen.findByTestId('theme-switch');
@@ -34,8 +34,9 @@ describe('Header Component', () => {
     expect(themeSwitch).toHaveClass('Mui-checked');
   });
 
-  it('should render correctly with dark theme disabled', async () => {
-    setMockState({ config: { isDarkTheme: false } });
+  it('should display dark theme switch as unchecked when dark theme is disabled', async () => {
+    setMockState({ appConfig: { isDarkTheme: false } });
+
     render(<Header />);
 
     const themeSwitch = await screen.findByTestId('theme-switch');
@@ -43,23 +44,23 @@ describe('Header Component', () => {
     expect(themeSwitch).not.toHaveClass('Mui-checked');
   });
 
-  it('should dispatch setConfig action with updated isDarkTheme value when switch is toggled', async () => {
-    setMockState({ config: { isDarkTheme: false } });
+  it('should dispatch action to update theme when switch is toggled', async () => {
+    setMockState({ appConfig: { isDarkTheme: false } });
+
     render(<Header />);
 
     const themeSwitch = await screen.findByTestId('theme-switch');
 
     fireEvent.click(themeSwitch);
 
-    expect(mockDispatch).toHaveBeenCalledWith(setConfig({ isDarkTheme: true }));
+    expect(mockDispatch).toHaveBeenCalledWith(
+      updateAppConfig({ isDarkTheme: true })
+    );
   });
 
-  it('should display the user name and the logout button after successful login', async () => {
-    setFusionAuthMock({
-      isLoggedIn: true,
-      userInfo: {
-        given_name: 'Test',
-      },
+  it('should display the user name and logout button after login', async () => {
+    setMockState({
+      auth: { user: { data: { profile: { given_name: 'Test' } } } } as any,
     });
 
     render(<Header />);
@@ -71,23 +72,25 @@ describe('Header Component', () => {
     expect(logoutButton).toBeInTheDocument();
   });
 
-  it('should call startLogout when logout button is clicked', async () => {
-    const mockStartLogout = jest.fn();
+  it('should call signoutRedirect on logout button click', async () => {
+    const mockUserManager = getUserManager();
 
-    setFusionAuthMock({
-      isLoggedIn: true,
-      userInfo: {
-        given_name: 'Test',
-      },
-      startLogout: mockStartLogout,
+    setMockState({
+      auth: { user: { data: { profile: { given_name: 'Test' } } } } as any,
     });
 
     render(<Header />);
+
+    const userMenuButton = await screen.findByTestId('user-menu');
+
+    fireEvent.click(userMenuButton);
 
     const logoutButton = await screen.findByTestId('logout-button');
 
     fireEvent.click(logoutButton);
 
-    expect(mockStartLogout).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockUserManager.signoutRedirect).toHaveBeenCalled();
+    });
   });
 });

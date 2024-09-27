@@ -1,14 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import clientReducer from './features/identitySlice';
-import configReducer from './features/configSlice';
+import appConfigReducer from './features/appConfigSlice';
 import licenseReducer from './features/licenseSlice';
+import authReducer from './features/authSlice';
 
 const store = configureStore({
   reducer: {
     identity: clientReducer,
-    config: configReducer,
+    appConfig: appConfigReducer,
     license: licenseReducer,
+    auth: authReducer,
   },
 });
 

@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useFusionAuth } from '@fusionauth/react-sdk';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -8,25 +6,14 @@ import CardHeader from '@mui/material/CardHeader';
 import CardActions from '@mui/material/CardActions';
 import Divider from '@mui/material/Divider';
 import LockIcon from '@mui/icons-material/Lock';
-import { ROUTES } from 'shared/constants';
+import { getUserManager } from 'store/features';
 
 const Login: React.FC<{}> = () => {
-  const navigate = useNavigate();
-  const { isLoggedIn, isFetchingUserInfo, startLogin } = useFusionAuth();
+  const userManager = getUserManager();
 
-  const handleLogin = (): void => {
-    startLogin('state-from-login');
+  const handleLogin = async (): Promise<void> => {
+    await userManager.signinRedirect();
   };
-
-  React.useEffect(() => {
-    if (isLoggedIn) {
-      navigate(ROUTES.home.path);
-    }
-  }, [isLoggedIn, navigate]);
-
-  if (isLoggedIn || isFetchingUserInfo) {
-    return null;
-  }
 
   return (
     <Box
