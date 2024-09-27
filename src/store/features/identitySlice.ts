@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'core/axios';
 import store, { RootState } from 'store';
 import { Client, ErrorResponse, Status } from 'shared/models';
-import { URLS } from 'shared/constants';
+import { ROUTES, URLS } from 'shared/constants';
 import { updateAuthSettings } from './authSlice';
 
 interface IdentityState {
@@ -34,7 +34,7 @@ export const fetchClient = createAsyncThunk<
           settings: {
             ...auth.settings,
             client_id: data.clientId,
-            redirect_uri: `${window.location.origin}/callback`,
+            redirect_uri: `${window.location.origin}${ROUTES.callback.path}`,
             post_logout_redirect_uri: `${window.location.origin}/`,
           },
         })

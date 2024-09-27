@@ -3,21 +3,20 @@ import {
   UserManager,
   WebStorageStateStore,
   UserManagerSettings,
-  User,
 } from 'oidc-client-ts';
 import { RootState } from 'store';
-import { ErrorResponse, Status } from 'shared/models';
-import { OIDC_INITIAL_CONFIG } from 'shared/constants';
-import { mapUser } from 'shared/helpers';
+import { AppUser, ErrorResponse, StateEntity, Status } from 'shared/models';
+import { AUTH_KEY, OIDC_INITIAL_CONFIG } from 'shared/constants';
+import {
+  mapUser,
+  removeFromLocalStorage,
+  saveToLocalStorage,
+} from 'shared/helpers';
 
 interface AuthState {
   settings: Omit<UserManagerSettings, 'userStore'>;
-  // TODO: create a generic interface for this structure// TODO: create a generic interface for this structure
-  user: {
-    data: Partial<User> | null;
-    status: Status;
-    error?: ErrorResponse;
-  };
+  user: StateEntity<AppUser>;
+  // TODO: remove these fields
   status: Status;
   error?: ErrorResponse;
 }
@@ -39,7 +38,7 @@ const userStore = new WebStorageStateStore({
 let userManager: UserManager | null = null;
 
 export const fetchUser = createAsyncThunk<
-  Partial<User> | null,
+  AppUser | null,
   void,
   { rejectValue: ErrorResponse }
 >('auth/fetchUser', async (_, { rejectWithValue }) => {
@@ -49,11 +48,17 @@ export const fetchUser = createAsyncThunk<
     const user = await userManager.getUser();
 
     if (user) {
-      return mapUser(user);
+      const mappedUser = mapUser(user);
+
+      saveToLocalStorage<AppUser>(AUTH_KEY, mappedUser);
+
+      return mappedUser;
     }
 
+    removeFromLocalStorage(AUTH_KEY);
     return rejectWithValue({ title: 'No user found' });
   } catch (error) {
+    removeFromLocalStorage(AUTH_KEY);
     return rejectWithValue(error as ErrorResponse);
   }
 });
@@ -139,7 +144,7 @@ export const authSlice = createSlice({
       )
       .addCase(
         fetchUser.fulfilled,
-        (state, action: PayloadAction<Partial<User> | null>): AuthState => {
+        (state, action: PayloadAction<AppUser | null>): AuthState => {
           return {
             ...state,
             user: {
