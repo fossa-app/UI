@@ -4,6 +4,7 @@ import clientReducer from './features/identitySlice';
 import appConfigReducer from './features/appConfigSlice';
 import licenseReducer from './features/licenseSlice';
 import authReducer from './features/authSlice';
+import setupReducer from './features/setupSlice';
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     appConfig: appConfigReducer,
     license: licenseReducer,
     auth: authReducer,
+    setup: setupReducer,
   },
 });
 

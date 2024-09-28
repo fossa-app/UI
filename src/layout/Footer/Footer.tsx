@@ -1,21 +1,23 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchSystem, selectLicense } from 'store/features';
+import { fetchSystem, selectSystem } from 'store/features';
 import License from './components/License';
 import Environment from './components/Environment';
 
 const Footer: React.FC<{}> = () => {
   const dispatch = useAppDispatch();
-  const { system } = useAppSelector(selectLicense);
+  const { data: system, status } = useAppSelector(selectSystem);
 
   const getSystem = async (): Promise<void> => {
     dispatch(fetchSystem());
   };
 
   React.useEffect(() => {
-    getSystem();
-  }, []);
+    if (status === 'idle') {
+      getSystem();
+    }
+  }, [status]);
 
   return (
     <Box

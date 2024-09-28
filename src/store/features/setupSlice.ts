@@ -1,27 +1,27 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'core/axios';
-import { ErrorResponse, StateEntity, System } from 'shared/models';
-import { URLS } from 'shared/constants';
 import { RootState } from 'store';
+import { Company, ErrorResponse, StateEntity } from 'shared/models';
+import { URLS } from 'shared/constants';
 
-interface LicenseState {
-  system: StateEntity<System | null>;
+interface SetupState {
+  company: StateEntity<Company | null>;
 }
 
-const initialState: LicenseState = {
-  system: {
+const initialState: SetupState = {
+  company: {
     data: null,
     status: 'idle',
   },
 };
 
-export const fetchSystem = createAsyncThunk<
-  System | null,
+export const fetchCompany = createAsyncThunk<
+  Company | null,
   void,
   { rejectValue: ErrorResponse }
->('license/fetchSystem', async (_, { rejectWithValue }) => {
+>('setup/fetchCompany', async (_, { rejectWithValue }) => {
   try {
-    const { data } = await axios.get<System>(URLS.system);
+    const { data } = await axios.get<Company>(URLS.company);
 
     if (data) {
       return data;
@@ -33,31 +33,31 @@ export const fetchSystem = createAsyncThunk<
   }
 });
 
-export const licenseSlice = createSlice({
-  name: 'license',
+export const setupSlice = createSlice({
+  name: 'setup',
   initialState,
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(fetchSystem.pending, (state): LicenseState => {
+      .addCase(fetchCompany.pending, (state): SetupState => {
         return {
           ...state,
-          system: {
-            ...state.system,
+          company: {
+            ...state.company,
             status: 'loading',
           },
         };
       })
       .addCase(
-        fetchSystem.rejected,
+        fetchCompany.rejected,
         (
           state,
           action: PayloadAction<ErrorResponse | undefined>
-        ): LicenseState => {
+        ): SetupState => {
           return {
             ...state,
-            system: {
-              ...state.system,
+            company: {
+              ...state.company,
               data: null,
               status: 'failed',
               error: action.payload,
@@ -66,12 +66,12 @@ export const licenseSlice = createSlice({
         }
       )
       .addCase(
-        fetchSystem.fulfilled,
-        (state, action: PayloadAction<System | null>): LicenseState => {
+        fetchCompany.fulfilled,
+        (state, action: PayloadAction<Company | null>): SetupState => {
           return {
             ...state,
-            system: {
-              ...state.system,
+            company: {
+              ...state.company,
               data: action.payload,
               status: 'succeeded',
             },
@@ -81,6 +81,6 @@ export const licenseSlice = createSlice({
   },
 });
 
-export const selectSystem = (state: RootState) => state.license.system;
+export const selectCompany = (state: RootState) => state.setup.company;
 
-export default licenseSlice.reducer;
+export default setupSlice.reducer;

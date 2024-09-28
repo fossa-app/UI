@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'core/axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'core/axios';
 import { getUserManager } from 'store/features';
 import {
   getFromLocalStorage,
@@ -18,45 +18,67 @@ interface AxiosInterceptorProps {
 const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
   const navigate = useNavigate();
   const userManager = getUserManager();
+  const [shouldNavigate, setShouldNavigate] = React.useState(false);
 
-  axios.interceptors.request.use((config) => {
-    const { access_token, token_type } = getFromLocalStorage<AppUser>(AUTH_KEY);
+  const refreshToken = async (errorConfig: AxiosRequestConfig) => {
+    try {
+      const user = await userManager.signinSilent();
 
-    if (access_token) {
-      config.headers.Authorization = `${token_type} ${access_token}`;
+      if (user?.access_token && errorConfig.headers) {
+        const mappedUser = mapUser(user);
+
+        saveToLocalStorage<AppUser>(AUTH_KEY, mappedUser);
+        errorConfig.headers.Authorization = `${user.token_type} ${user.access_token}`;
+
+        return axios(errorConfig);
+      }
+    } catch (error) {
+      await userManager.removeUser();
+
+      removeFromLocalStorage(AUTH_KEY);
+      setShouldNavigate(true);
     }
+    return null;
+  };
 
-    return config;
-  });
+  React.useEffect(() => {
+    if (shouldNavigate) {
+      navigate(ROUTES.login.path);
+    }
+  }, [shouldNavigate, navigate]);
 
-  axios.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-      if (!error.isAxiosError) {
-        return Promise.reject(error);
+  React.useEffect(() => {
+    const requestInterceptor = axios.interceptors.request.use((config) => {
+      const { access_token, token_type } =
+        getFromLocalStorage<AppUser>(AUTH_KEY);
+
+      if (access_token) {
+        config.headers.Authorization = `${token_type} ${access_token}`;
       }
 
-      if (error.response?.status === 401) {
-        try {
-          const user = await userManager.signinSilent();
+      return config;
+    });
 
-          if (user?.access_token) {
-            const mappedUser = mapUser(user);
-
-            saveToLocalStorage<AppUser>(AUTH_KEY, mappedUser);
-            error.config.headers.Authorization = `${user.token_type} ${user.access_token}`;
-
-            return axios(error.config);
-          }
-        } catch (renewError) {
-          removeFromLocalStorage(AUTH_KEY);
-          navigate(ROUTES.login.path);
+    const responseInterceptor = axios.interceptors.response.use(
+      (response) => response,
+      async (error: AxiosError) => {
+        if (error.config && error.response?.status === 401) {
+          return refreshToken(error.config);
         }
-      }
 
-      return Promise.reject(error);
-    }
-  );
+        if (!error.isAxiosError) {
+          return Promise.reject(error);
+        }
+
+        return Promise.reject(error.response?.data);
+      }
+    );
+
+    return () => {
+      axios.interceptors.request.eject(requestInterceptor);
+      axios.interceptors.response.eject(responseInterceptor);
+    };
+  }, []);
 
   return children;
 };

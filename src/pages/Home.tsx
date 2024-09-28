@@ -17,10 +17,13 @@ const Home: React.FC<{}> = () => {
   };
 
   React.useEffect(() => {
-    getUser();
-  }, []);
+    if (status === 'idle') {
+      getUser();
+    }
+  }, [status]);
 
   React.useEffect(() => {
+    // TODO: move all auth logic to axios interceptor component
     if (!user && status === 'failed') {
       navigate(ROUTES.login.path);
     }

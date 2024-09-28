@@ -12,10 +12,12 @@ const Callback = () => {
     const handleSignInCallback = async (): Promise<void> => {
       try {
         await userManager.signinRedirectCallback();
+        // TODO: sometimes after successfull login, user is not being redirected to dashboard but to home instead
 
-        navigate(ROUTES.home.path);
+        navigate(ROUTES.setup.path);
       } catch (error) {
         // TODO: set error state
+        // TODO: move all auth logic to axios interceptor component
         navigate(ROUTES.login.path);
       }
     };
