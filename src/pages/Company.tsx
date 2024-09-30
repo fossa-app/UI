@@ -4,7 +4,7 @@ import Snackbar from '@mui/material/Snackbar';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchCompany, selectCompany } from 'store/features';
 
-const Company: React.FC<{}> = () => {
+const CompanyPage: React.FC<{}> = () => {
   const dispatch = useAppDispatch();
   const { status, error } = useAppSelector(selectCompany);
   const [showSnackbar, setShowSnackbar] = React.useState(false);
@@ -40,4 +40,4 @@ const Company: React.FC<{}> = () => {
   );
 };
 
-export default Company;
+export default CompanyPage;

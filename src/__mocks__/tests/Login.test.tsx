@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { resetMockState, setMockState } from '../store';
 import { getUserManager } from '../oidc-client-mock';
-import Login from '../../pages/Login';
+import LoginPage from '../../pages/Login';
 
 beforeEach(() => {
   resetMockState();
@@ -20,7 +20,7 @@ describe('Login Component', () => {
   it('should render the login button when not authenticated', async () => {
     render(
       <MemoryRouter>
-        <Login />
+        <LoginPage />
       </MemoryRouter>
     );
 
@@ -34,7 +34,7 @@ describe('Login Component', () => {
 
     render(
       <MemoryRouter>
-        <Login />
+        <LoginPage />
       </MemoryRouter>
     );
 

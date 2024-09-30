@@ -6,7 +6,7 @@ import { fetchUser, selectUser } from 'store/features';
 import { ROUTES } from 'shared/constants';
 import Content from 'layout/Content';
 
-const Home: React.FC<{}> = () => {
+const ProtectedPage: React.FC<{}> = () => {
   const outlet = useOutlet();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -40,4 +40,4 @@ const Home: React.FC<{}> = () => {
   return <Content>{outlet}</Content>;
 };
 
-export default Home;
+export default ProtectedPage;

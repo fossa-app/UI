@@ -8,7 +8,7 @@ import Divider from '@mui/material/Divider';
 import LockIcon from '@mui/icons-material/Lock';
 import { getUserManager } from 'store/features';
 
-const Login: React.FC<{}> = () => {
+const LoginPage: React.FC<{}> = () => {
   const userManager = getUserManager();
 
   const handleLogin = async (): Promise<void> => {
@@ -47,4 +47,4 @@ const Login: React.FC<{}> = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
