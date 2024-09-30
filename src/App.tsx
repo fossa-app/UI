@@ -10,11 +10,11 @@ import { fetchClient, selectAppConfig, selectClient } from 'store/features';
 import { ROUTES } from 'shared/constants';
 import Header from 'layout/Header/Header';
 import Footer from 'layout/Footer/Footer';
-import Login from 'pages/Login';
-import Home from 'pages/Home';
-import Dashboard from 'pages/Dashboard';
-import Callback from 'pages/Callback';
-import Company from 'pages/Company';
+import LoginPage from 'pages/Login';
+import ProtectedPage from 'pages/Protected';
+import DashboardPage from 'pages/Dashboard';
+import CallbackPage from 'pages/Callback';
+import CompanyPage from 'pages/Company';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -49,9 +49,9 @@ const App: React.FC = () => {
         <Header />
         <Box display="flex" flexDirection="column" flexGrow={1} padding={2}>
           <Routes>
-            <Route path={ROUTES.login.path} element={<Login />} />
-            <Route path={ROUTES.callback.path} element={<Callback />} />
-            <Route path={ROUTES.home.path} element={<Home />}>
+            <Route path={ROUTES.login.path} element={<LoginPage />} />
+            <Route path={ROUTES.callback.path} element={<CallbackPage />} />
+            <Route path={ROUTES.home.path} element={<ProtectedPage />}>
               <Route
                 index
                 element={<Navigate to={ROUTES.setup.path} replace />}
@@ -60,8 +60,8 @@ const App: React.FC = () => {
                 path={ROUTES.setup.path}
                 element={<Navigate to={ROUTES.company.path} replace />}
               />
-              <Route path={ROUTES.company.path} element={<Company />} />
-              <Route path={ROUTES.dashboard.path} element={<Dashboard />} />
+              <Route path={ROUTES.company.path} element={<CompanyPage />} />
+              <Route path={ROUTES.dashboard.path} element={<DashboardPage />} />
               <Route
                 path="*"
                 element={<Navigate to={ROUTES.dashboard.path} replace />}
