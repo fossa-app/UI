@@ -3,9 +3,10 @@ import {
   UserManager,
   WebStorageStateStore,
   UserManagerSettings,
+  OidcClientSettings,
 } from 'oidc-client-ts';
 import { RootState } from 'store';
-import { AppUser, ErrorResponse, StateEntity, Status } from 'shared/models';
+import { AppUser, ErrorResponse, StateEntity } from 'shared/models';
 import { AUTH_KEY, OIDC_INITIAL_CONFIG } from 'shared/constants';
 import {
   mapUser,
@@ -14,20 +15,19 @@ import {
 } from 'shared/helpers';
 
 interface AuthState {
-  settings: Omit<UserManagerSettings, 'userStore'>;
-  user: StateEntity<AppUser>;
-  // TODO: remove these fields
-  status: Status;
-  error?: ErrorResponse;
+  settings: StateEntity<OidcClientSettings>;
+  user: StateEntity<AppUser | null>;
 }
 
 const initialState: AuthState = {
-  settings: OIDC_INITIAL_CONFIG,
+  settings: {
+    data: OIDC_INITIAL_CONFIG,
+    status: 'idle',
+  },
   user: {
     data: null,
     status: 'idle',
   },
-  status: 'idle',
 };
 
 const userStore = new WebStorageStateStore({
@@ -56,9 +56,11 @@ export const fetchUser = createAsyncThunk<
     }
 
     removeFromLocalStorage(AUTH_KEY);
+
     return rejectWithValue({ title: 'No user found' });
   } catch (error) {
     removeFromLocalStorage(AUTH_KEY);
+
     return rejectWithValue(error as ErrorResponse);
   }
 });
@@ -68,7 +70,7 @@ export const getUserManager = (): UserManager => {
     const settings = initialState.settings;
 
     const userManagerConfig: UserManagerSettings = {
-      ...settings,
+      ...settings.data,
       userStore,
     };
 
@@ -101,15 +103,21 @@ export const authSlice = createSlice({
   reducers: {
     updateAuthSettings(
       state,
-      action: PayloadAction<Partial<AuthState>>
+      action: PayloadAction<Partial<OidcClientSettings>>
     ): AuthState {
       const updatedSettings: AuthState = {
         ...state,
-        ...action.payload,
-        status: 'succeeded',
+        settings: {
+          ...state.settings,
+          data: {
+            ...state.settings.data,
+            ...action.payload,
+          },
+          status: 'succeeded',
+        },
       };
 
-      updateUserManager(updatedSettings.settings);
+      updateUserManager(updatedSettings.settings.data);
 
       return updatedSettings;
     },

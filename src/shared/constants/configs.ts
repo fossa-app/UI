@@ -1,6 +1,6 @@
-import { UserManagerSettings } from 'oidc-client-ts';
+import { OidcClientSettings } from 'oidc-client-ts';
 
-export const OIDC_INITIAL_CONFIG: UserManagerSettings = {
+export const OIDC_INITIAL_CONFIG: OidcClientSettings = {
   authority: 'http://localhost:9011',
   response_type: 'code',
   scope: 'openid profile email offline_access',

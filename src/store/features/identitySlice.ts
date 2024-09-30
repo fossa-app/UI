@@ -1,19 +1,19 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'core/axios';
-import store, { RootState } from 'store';
-import { Client, ErrorResponse, Status } from 'shared/models';
+import { RootState } from 'store';
+import { Client, ErrorResponse, StateEntity } from 'shared/models';
 import { ROUTES, URLS } from 'shared/constants';
 import { updateAuthSettings } from './authSlice';
 
 interface IdentityState {
-  client: Client | null;
-  status: Status;
-  error?: ErrorResponse;
+  client: StateEntity<Client | null>;
 }
 
 const initialState: IdentityState = {
-  client: null,
-  status: 'idle',
+  client: {
+    data: null,
+    status: 'idle',
+  },
 };
 
 export const fetchClient = createAsyncThunk<
@@ -27,16 +27,11 @@ export const fetchClient = createAsyncThunk<
     );
 
     if (data) {
-      const { auth } = store.getState();
-
       dispatch(
         updateAuthSettings({
-          settings: {
-            ...auth.settings,
-            client_id: data.clientId,
-            redirect_uri: `${window.location.origin}${ROUTES.callback.path}`,
-            post_logout_redirect_uri: `${window.location.origin}/`,
-          },
+          client_id: data.clientId,
+          redirect_uri: `${window.location.origin}${ROUTES.callback.path}`,
+          post_logout_redirect_uri: `${window.location.origin}/`,
         })
       );
 
@@ -58,7 +53,10 @@ export const identitySlice = createSlice({
       .addCase(fetchClient.pending, (state): IdentityState => {
         return {
           ...state,
-          status: 'loading',
+          client: {
+            ...state.client,
+            status: 'loading',
+          },
         };
       })
       .addCase(
@@ -69,8 +67,12 @@ export const identitySlice = createSlice({
         ): IdentityState => {
           return {
             ...state,
-            status: 'failed',
-            error: action.payload,
+            client: {
+              ...state.client,
+              data: null,
+              status: 'failed',
+              error: action.payload,
+            },
           };
         }
       )
@@ -79,14 +81,17 @@ export const identitySlice = createSlice({
         (state, action: PayloadAction<Client | null>): IdentityState => {
           return {
             ...state,
-            client: action.payload,
-            status: 'succeeded',
+            client: {
+              ...state.client,
+              data: action.payload,
+              status: 'succeeded',
+            },
           };
         }
       );
   },
 });
 
-export const selectIdentity = (state: RootState) => state.identity;
+export const selectClient = (state: RootState) => state.identity.client;
 
 export default identitySlice.reducer;
