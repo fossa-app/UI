@@ -6,7 +6,7 @@ import CardHeader from '@mui/material/CardHeader';
 import CardActions from '@mui/material/CardActions';
 import Divider from '@mui/material/Divider';
 import LockIcon from '@mui/icons-material/Lock';
-import { getUserManager } from 'store/features';
+import { getUserManager } from 'shared/helpers';
 
 const LoginPage: React.FC<{}> = () => {
   const userManager = getUserManager();

@@ -1,15 +1,11 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios, { AxiosError, AxiosRequestConfig } from 'core/axios';
-import { getUserManager } from 'store/features';
-import {
-  getFromLocalStorage,
-  mapUser,
-  removeFromLocalStorage,
-  saveToLocalStorage,
-} from 'shared/helpers';
-import { AUTH_KEY, ROUTES } from 'shared/constants';
-import { AppUser } from 'shared/models';
+import { useAppDispatch, useAppSelector } from 'store';
+import { removeUser, selectAuthSettings } from 'store/features';
+import { getUserFromLocalStorage, getUserManager } from 'shared/helpers';
+import { ROUTES } from 'shared/constants';
+import { ErrorResponse } from 'shared/models';
 
 interface AxiosInterceptorProps {
   children: React.ReactElement;
@@ -18,16 +14,17 @@ interface AxiosInterceptorProps {
 const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
   const navigate = useNavigate();
   const userManager = getUserManager();
+  const dispatch = useAppDispatch();
   const [shouldNavigate, setShouldNavigate] = React.useState(false);
+  const { data: authSettings } = useAppSelector(selectAuthSettings);
 
-  const refreshToken = async (errorConfig: AxiosRequestConfig) => {
+  const refreshToken = async (
+    errorConfig: AxiosRequestConfig
+  ): Promise<ErrorResponse | null> => {
     try {
       const user = await userManager.signinSilent();
 
       if (user?.access_token && errorConfig.headers) {
-        const mappedUser = mapUser(user);
-
-        saveToLocalStorage<AppUser>(AUTH_KEY, mappedUser);
         errorConfig.headers.Authorization = `${user.token_type} ${user.access_token}`;
 
         return axios(errorConfig);
@@ -35,9 +32,15 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
     } catch (error) {
       await userManager.removeUser();
 
-      removeFromLocalStorage(AUTH_KEY);
       setShouldNavigate(true);
+      dispatch(removeUser());
+
+      return {
+        message: 'Token refresh failed. User has been logged out.',
+        status: 401,
+      } as ErrorResponse;
     }
+
     return null;
   };
 
@@ -49,8 +52,9 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
 
   React.useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use((config) => {
-      const { access_token, token_type } =
-        getFromLocalStorage<AppUser>(AUTH_KEY);
+      const { access_token, token_type } = getUserFromLocalStorage(
+        authSettings.client_id
+      );
 
       if (access_token) {
         config.headers.Authorization = `${token_type} ${access_token}`;
@@ -78,7 +82,7 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
       axios.interceptors.request.eject(requestInterceptor);
       axios.interceptors.response.eject(responseInterceptor);
     };
-  }, []);
+  }, [authSettings]);
 
   return children;
 };
