@@ -1,4 +1,4 @@
-import { AppRoute } from 'shared/models';
+import { AppRoute, SetupStep } from 'shared/models';
 
 export const ROUTES: AppRoute = {
   login: {
@@ -19,15 +19,15 @@ export const ROUTES: AppRoute = {
   },
   company: {
     name: 'Company',
-    path: '/setup/company',
+    path: `/setup/${SetupStep.COMPANY}`,
   },
   branches: {
     name: 'Branches',
-    path: '/setup/branches',
+    path: `/setup/${SetupStep.BRANCHES}`,
   },
   employee: {
     name: 'Employee',
-    path: '/setup/employee',
+    path: `/setup/${SetupStep.EMPLOYEE}`,
   },
   dashboard: {
     name: 'Dashboard',
