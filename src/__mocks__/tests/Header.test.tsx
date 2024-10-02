@@ -53,9 +53,7 @@ describe('Header Component', () => {
 
     fireEvent.click(themeSwitch);
 
-    expect(mockDispatch).toHaveBeenCalledWith(
-      updateAppConfig({ isDarkTheme: true })
-    );
+    expect(mockDispatch).toHaveBeenCalledWith(updateAppConfig({ isDarkTheme: true }));
   });
 
   it('should display the user name and logout button after login', async () => {

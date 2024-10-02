@@ -25,8 +25,7 @@ const store = mockStore(mockInitialState);
 export const mockDispatch = jest.fn();
 export const useAppDispatch = () => mockDispatch;
 
-export const useAppSelector: TypedUseSelectorHook<RootState> = (selectorFn) =>
-  selectorFn(store.getState() as RootState);
+export const useAppSelector: TypedUseSelectorHook<RootState> = (selectorFn) => selectorFn(store.getState() as RootState);
 
 export const setMockState = (state: DeepPartial<RootState>): void => {
   mockInitialState = { ...initialMockState, ...state };

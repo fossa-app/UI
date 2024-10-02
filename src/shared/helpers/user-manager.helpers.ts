@@ -1,9 +1,4 @@
-import {
-  UserManager,
-  WebStorageStateStore,
-  UserManagerSettings,
-  OidcClientSettings,
-} from 'oidc-client-ts';
+import { UserManager, WebStorageStateStore, UserManagerSettings, OidcClientSettings } from 'oidc-client-ts';
 import { OIDC_INITIAL_CONFIG } from 'shared/constants';
 
 const userStore = new WebStorageStateStore({
@@ -13,9 +8,7 @@ const userStore = new WebStorageStateStore({
 
 let userManager: UserManager | null = null;
 
-export const getUserManager = (
-  settings: OidcClientSettings = OIDC_INITIAL_CONFIG
-): UserManager => {
+export const getUserManager = (settings: OidcClientSettings = OIDC_INITIAL_CONFIG): UserManager => {
   if (!userManager) {
     userManager = new UserManager({
       ...settings,

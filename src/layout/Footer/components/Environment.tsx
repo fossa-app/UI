@@ -9,14 +9,7 @@ interface EnvironmentProps {
 
 const Environment: React.FC<EnvironmentProps> = ({ kind }) => {
   if (kind === 'Development') {
-    return (
-      <Chip
-        data-testid="environment-chip"
-        color="error"
-        size="small"
-        label={kind}
-      />
-    );
+    return <Chip data-testid="environment-chip" color="error" size="small" label={kind} />;
   }
 
   if (kind === 'Staging') {

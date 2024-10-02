@@ -18,9 +18,7 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
   const [shouldNavigate, setShouldNavigate] = React.useState(false);
   const { data: authSettings } = useAppSelector(selectAuthSettings);
 
-  const refreshToken = async (
-    errorConfig: AxiosRequestConfig
-  ): Promise<ErrorResponse | null> => {
+  const refreshToken = async (errorConfig: AxiosRequestConfig): Promise<ErrorResponse | null> => {
     try {
       const user = await userManager.signinSilent();
 
@@ -52,9 +50,7 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
 
   React.useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use((config) => {
-      const { access_token, token_type } = getUserFromLocalStorage(
-        authSettings.client_id
-      );
+      const { access_token, token_type } = getUserFromLocalStorage(authSettings.client_id);
 
       if (access_token) {
         config.headers.Authorization = `${token_type} ${access_token}`;

@@ -52,20 +52,11 @@ const App: React.FC = () => {
             <Route path={ROUTES.login.path} element={<LoginPage />} />
             <Route path={ROUTES.callback.path} element={<CallbackPage />} />
             <Route path={ROUTES.home.path} element={<ProtectedPage />}>
-              <Route
-                index
-                element={<Navigate to={ROUTES.setup.path} replace />}
-              />
-              <Route
-                path={ROUTES.setup.path}
-                element={<Navigate to={ROUTES.company.path} replace />}
-              />
+              <Route index element={<Navigate to={ROUTES.setup.path} replace />} />
+              <Route path={ROUTES.setup.path} element={<Navigate to={ROUTES.company.path} replace />} />
               <Route path={ROUTES.company.path} element={<CompanyPage />} />
               <Route path={ROUTES.dashboard.path} element={<DashboardPage />} />
-              <Route
-                path="*"
-                element={<Navigate to={ROUTES.dashboard.path} replace />}
-              />
+              <Route path="*" element={<Navigate to={ROUTES.dashboard.path} replace />} />
             </Route>
           </Routes>
         </Box>

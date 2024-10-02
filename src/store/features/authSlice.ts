@@ -21,33 +21,28 @@ const initialState: AuthState = {
   },
 };
 
-// TODO: use this approach in all state
-export const fetchUser = createAsyncThunk<
-  AppUser | null,
-  void,
-  { rejectValue: ErrorResponse }
->('auth/fetchUser', async (_, { rejectWithValue }) => {
-  try {
-    const user = await getUserManager().getUser();
+export const fetchUser = createAsyncThunk<AppUser | null, void, { rejectValue: ErrorResponse }>(
+  'auth/fetchUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      const user = await getUserManager().getUser();
 
-    if (user) {
-      return mapUser(user);
+      if (user) {
+        return mapUser(user);
+      }
+
+      return rejectWithValue({ title: 'No user found' });
+    } catch (error) {
+      return rejectWithValue(error as ErrorResponse);
     }
-
-    return rejectWithValue({ title: 'No user found' });
-  } catch (error) {
-    return rejectWithValue(error as ErrorResponse);
   }
-});
+);
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    updateAuthSettings(
-      state,
-      action: PayloadAction<Partial<OidcClientSettings>>
-    ) {
+    updateAuthSettings(state, action: PayloadAction<Partial<OidcClientSettings>>) {
       state.settings.data = {
         ...state.settings.data,
         ...action.payload,
@@ -66,21 +61,15 @@ const authSlice = createSlice({
       .addCase(fetchUser.pending, (state) => {
         state.user.status = 'loading';
       })
-      .addCase(
-        fetchUser.rejected,
-        (state, action: PayloadAction<ErrorResponse | undefined>) => {
-          state.user.data = null;
-          state.user.status = 'failed';
-          state.user.error = action.payload;
-        }
-      )
-      .addCase(
-        fetchUser.fulfilled,
-        (state, action: PayloadAction<AppUser | null>) => {
-          state.user.data = action.payload;
-          state.user.status = 'succeeded';
-        }
-      );
+      .addCase(fetchUser.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+        state.user.data = null;
+        state.user.status = 'failed';
+        state.user.error = action.payload;
+      })
+      .addCase(fetchUser.fulfilled, (state, action: PayloadAction<AppUser | null>) => {
+        state.user.data = action.payload;
+        state.user.status = 'succeeded';
+      });
   },
 });
 
