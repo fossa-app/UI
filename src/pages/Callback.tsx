@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import LinearProgress from '@mui/material/LinearProgress';
 import { ROUTES } from 'shared/constants';
-import { getUserManager } from 'store/features';
+import { getUserManager } from 'shared/helpers';
 
 const CallbackPage = () => {
   const navigate = useNavigate();
