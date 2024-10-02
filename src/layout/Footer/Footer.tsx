@@ -20,15 +20,7 @@ const Footer: React.FC<{}> = () => {
   }, [status]);
 
   return (
-    <Box
-      component="footer"
-      display="flex"
-      justifyContent="flex-end"
-      alignItems="center"
-      padding={2}
-      gap={4}
-      minHeight={64}
-    >
+    <Box component="footer" display="flex" justifyContent="flex-end" alignItems="center" padding={2} gap={4} minHeight={64}>
       {system && (
         <>
           <Environment kind={system.entitlements.environmentKind} />

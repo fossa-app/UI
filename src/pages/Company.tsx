@@ -30,12 +30,7 @@ const CompanyPage: React.FC<{}> = () => {
     <Box>
       Company
       {/* TODO: move to shared components */}
-      <Snackbar
-        open={showSnackbar}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        message="Company does not exist"
-      />
+      <Snackbar open={showSnackbar} autoHideDuration={6000} onClose={handleClose} message="Company does not exist" />
     </Box>
   );
 };

@@ -13,14 +13,8 @@ interface UserMenuProps {
   onLogoutClick: () => void;
 }
 
-const UserMenu: React.FC<UserMenuProps> = ({
-  name,
-  picture,
-  onLogoutClick,
-}) => {
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
+const UserMenu: React.FC<UserMenuProps> = ({ name, picture, onLogoutClick }) => {
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);

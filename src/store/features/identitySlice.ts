@@ -16,82 +16,48 @@ const initialState: IdentityState = {
   },
 };
 
-export const fetchClient = createAsyncThunk<
-  Client | null,
-  void,
-  { rejectValue: ErrorResponse }
->('identity/fetchClient', async (_, { dispatch, rejectWithValue }) => {
-  try {
-    const { data } = await axios.get<Client>(
-      `${URLS.client}?origin=${window.location.origin}`
-    );
-
-    if (data) {
-      dispatch(
-        updateAuthSettings({
-          client_id: data.clientId,
-          redirect_uri: `${window.location.origin}${ROUTES.callback.path}`,
-          post_logout_redirect_uri: `${window.location.origin}/`,
-        })
-      );
-
-      return data;
+export const fetchClient = createAsyncThunk<Client | null, void, { rejectValue: ErrorResponse }>(
+  'identity/fetchClient',
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      const { data } = await axios.get<Client>(`${URLS.client}?origin=${window.location.origin}`);
+      if (data) {
+        dispatch(
+          updateAuthSettings({
+            client_id: data.clientId,
+            redirect_uri: `${window.location.origin}${ROUTES.callback.path}`,
+            post_logout_redirect_uri: `${window.location.origin}/`,
+          })
+        );
+        return data;
+      }
+      return rejectWithValue({ title: 'Client not found' });
+    } catch (error) {
+      return rejectWithValue(error as ErrorResponse);
     }
-
-    return null;
-  } catch (error) {
-    return rejectWithValue(error as ErrorResponse);
   }
-});
+);
 
-export const identitySlice = createSlice({
+const identitySlice = createSlice({
   name: 'identity',
   initialState,
   reducers: {},
-  extraReducers(builder) {
+  extraReducers: (builder) => {
     builder
-      .addCase(fetchClient.pending, (state): IdentityState => {
-        return {
-          ...state,
-          client: {
-            ...state.client,
-            status: 'loading',
-          },
-        };
+      .addCase(fetchClient.pending, (state) => {
+        state.client.status = 'loading';
       })
-      .addCase(
-        fetchClient.rejected,
-        (
-          state,
-          action: PayloadAction<ErrorResponse | undefined>
-        ): IdentityState => {
-          return {
-            ...state,
-            client: {
-              ...state.client,
-              data: null,
-              status: 'failed',
-              error: action.payload,
-            },
-          };
-        }
-      )
-      .addCase(
-        fetchClient.fulfilled,
-        (state, action: PayloadAction<Client | null>): IdentityState => {
-          return {
-            ...state,
-            client: {
-              ...state.client,
-              data: action.payload,
-              status: 'succeeded',
-            },
-          };
-        }
-      );
+      .addCase(fetchClient.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+        state.client.data = null;
+        state.client.status = 'failed';
+        state.client.error = action.payload;
+      })
+      .addCase(fetchClient.fulfilled, (state, action: PayloadAction<Client | null>) => {
+        state.client.data = action.payload;
+        state.client.status = 'succeeded';
+      });
   },
 });
 
 export const selectClient = (state: RootState) => state.identity.client;
-
 export default identitySlice.reducer;

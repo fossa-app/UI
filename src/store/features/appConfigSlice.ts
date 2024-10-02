@@ -2,9 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'store';
 import { Status } from 'shared/models';
 
-const isBrowserDarkMode =
-  window.matchMedia &&
-  window.matchMedia('(prefers-color-scheme: dark)').matches;
+const isBrowserDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 interface ConfigState {
   isDarkTheme: boolean;
@@ -20,10 +18,7 @@ export const appConfigSlice = createSlice({
   name: 'appConfig',
   initialState,
   reducers: {
-    updateAppConfig(
-      state,
-      action: PayloadAction<Partial<ConfigState>>
-    ): ConfigState {
+    updateAppConfig(state, action: PayloadAction<Partial<ConfigState>>): ConfigState {
       return {
         ...state,
         ...action.payload,

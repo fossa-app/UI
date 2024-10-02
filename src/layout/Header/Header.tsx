@@ -37,25 +37,12 @@ const Header: React.FC<{}> = () => {
           <MenuIcon />
         </IconButton>
         <Logo sx={{ mr: 2 }} />
-        <Typography
-          data-testid="app-logo"
-          noWrap
-          variant="h6"
-          component="div"
-          sx={{ flexGrow: 1 }}
-        >
+        <Typography data-testid="app-logo" noWrap variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Fossa
         </Typography>
         <FormControlLabel
           sx={{ mr: 1 }}
-          control={
-            <Switch
-              data-testid="theme-switch"
-              size="small"
-              checked={isDarkTheme}
-              onChange={handleThemeChange}
-            />
-          }
+          control={<Switch data-testid="theme-switch" size="small" checked={isDarkTheme} onChange={handleThemeChange} />}
           labelPlacement="start"
           label={
             <Typography noWrap variant="body2">
@@ -64,11 +51,7 @@ const Header: React.FC<{}> = () => {
           }
         />
         {user?.profile?.given_name && (
-          <UserMenu
-            name={user.profile.given_name}
-            picture={user.profile.picture}
-            onLogoutClick={handleLogout}
-          />
+          <UserMenu name={user.profile.given_name} picture={user.profile.picture} onLogoutClick={handleLogout} />
         )}
       </Toolbar>
     </AppBar>

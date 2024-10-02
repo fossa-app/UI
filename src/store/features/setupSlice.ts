@@ -15,72 +15,38 @@ const initialState: SetupState = {
   },
 };
 
-export const fetchCompany = createAsyncThunk<
-  Company | null,
-  void,
-  { rejectValue: ErrorResponse }
->('setup/fetchCompany', async (_, { rejectWithValue }) => {
-  try {
-    const { data } = await axios.get<Company>(URLS.company);
-
-    if (data) {
-      return data;
+export const fetchCompany = createAsyncThunk<Company | null, void, { rejectValue: ErrorResponse }>(
+  'setup/fetchCompany',
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get<Company>(URLS.company);
+      return data || rejectWithValue({ title: 'No company found' });
+    } catch (error) {
+      return rejectWithValue(error as ErrorResponse);
     }
-
-    return null;
-  } catch (error) {
-    return rejectWithValue(error as ErrorResponse);
   }
-});
+);
 
-export const setupSlice = createSlice({
+const setupSlice = createSlice({
   name: 'setup',
   initialState,
   reducers: {},
-  extraReducers(builder) {
+  extraReducers: (builder) => {
     builder
-      .addCase(fetchCompany.pending, (state): SetupState => {
-        return {
-          ...state,
-          company: {
-            ...state.company,
-            status: 'loading',
-          },
-        };
+      .addCase(fetchCompany.pending, (state) => {
+        state.company.status = 'loading';
       })
-      .addCase(
-        fetchCompany.rejected,
-        (
-          state,
-          action: PayloadAction<ErrorResponse | undefined>
-        ): SetupState => {
-          return {
-            ...state,
-            company: {
-              ...state.company,
-              data: null,
-              status: 'failed',
-              error: action.payload,
-            },
-          };
-        }
-      )
-      .addCase(
-        fetchCompany.fulfilled,
-        (state, action: PayloadAction<Company | null>): SetupState => {
-          return {
-            ...state,
-            company: {
-              ...state.company,
-              data: action.payload,
-              status: 'succeeded',
-            },
-          };
-        }
-      );
+      .addCase(fetchCompany.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+        state.company.data = null;
+        state.company.status = 'failed';
+        state.company.error = action.payload;
+      })
+      .addCase(fetchCompany.fulfilled, (state, action: PayloadAction<Company | null>) => {
+        state.company.data = action.payload;
+        state.company.status = 'succeeded';
+      });
   },
 });
 
 export const selectCompany = (state: RootState) => state.setup.company;
-
 export default setupSlice.reducer;
