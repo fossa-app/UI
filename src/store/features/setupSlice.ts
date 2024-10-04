@@ -57,6 +57,7 @@ const setupSlice = createSlice({
       .addCase(fetchCompany.fulfilled, (state, action: PayloadAction<Company | null>) => {
         state.company.data = action.payload;
         state.company.status = 'succeeded';
+        state.step = SetupStep.BRANCHES;
       })
       .addCase(createCompany.pending, (state) => {
         state.company.status = 'loading';
@@ -66,10 +67,12 @@ const setupSlice = createSlice({
         state.company.error = action.payload;
       })
       .addCase(createCompany.fulfilled, (state) => {
+        state.company.status = 'succeeded';
         state.step = SetupStep.BRANCHES;
       });
   },
 });
 
 export const selectCompany = (state: RootState) => state.setup.company;
+export const selectStep = (state: RootState) => state.setup.step;
 export default setupSlice.reducer;

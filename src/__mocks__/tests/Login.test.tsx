@@ -4,6 +4,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { resetMockState, setMockState } from '../store';
 import { getUserManager } from '../oidc-client-mock';
 import LoginPage from '../../pages/Login';
+// TODO: remove jest, it's already integrated with @testing-library
 
 beforeEach(() => {
   resetMockState();

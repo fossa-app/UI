@@ -15,6 +15,9 @@ import ProtectedPage from 'pages/Protected';
 import DashboardPage from 'pages/Dashboard';
 import CallbackPage from 'pages/Callback';
 import CompanyPage from 'pages/Company';
+import BranchesPage from 'pages/Branches';
+import SetupPage from 'pages/Setup';
+import EmployeePage from 'pages/Employee';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -53,8 +56,11 @@ const App: React.FC = () => {
             <Route path={ROUTES.callback.path} element={<CallbackPage />} />
             <Route path={ROUTES.home.path} element={<ProtectedPage />}>
               <Route index element={<Navigate to={ROUTES.setup.path} replace />} />
-              <Route path={ROUTES.setup.path} element={<Navigate to={ROUTES.company.path} replace />} />
-              <Route path={ROUTES.company.path} element={<CompanyPage />} />
+              <Route path={ROUTES.setup.path} element={<SetupPage />}>
+                <Route path={ROUTES.company.path} element={<CompanyPage />} />
+                <Route path={ROUTES.branches.path} element={<BranchesPage />} />
+                <Route path={ROUTES.employee.path} element={<EmployeePage />} />
+              </Route>
               <Route path={ROUTES.dashboard.path} element={<DashboardPage />} />
               <Route path="*" element={<Navigate to={ROUTES.dashboard.path} replace />} />
             </Route>
