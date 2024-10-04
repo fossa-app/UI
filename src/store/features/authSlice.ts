@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { OidcClientSettings } from 'oidc-client-ts';
 import { RootState } from 'store';
-import { getUserManager, updateUserManager, mapUser } from 'shared/helpers';
+import { getUserManager, updateUserManager, mapUser, decodeJwt } from 'shared/helpers';
 import { AppUser, ErrorResponse, StateEntity } from 'shared/models';
-import { OIDC_INITIAL_CONFIG } from 'shared/constants';
+import { ADMIN_ROLE_NAME, OIDC_INITIAL_CONFIG } from 'shared/constants';
 
 interface AuthState {
   settings: StateEntity<OidcClientSettings>;
@@ -69,6 +69,12 @@ const authSlice = createSlice({
       .addCase(fetchUser.fulfilled, (state, action: PayloadAction<AppUser | null>) => {
         state.user.data = action.payload;
         state.user.status = 'succeeded';
+
+        const atClaims = decodeJwt(action.payload?.access_token);
+
+        if (state.user.data && atClaims?.roles?.length) {
+          state.user.data.roles = atClaims?.roles;
+        }
       });
   },
 });
@@ -76,6 +82,7 @@ const authSlice = createSlice({
 export const { updateAuthSettings, removeUser } = authSlice.actions;
 export const selectAuth = (state: RootState) => state.auth;
 export const selectUser = (state: RootState) => state.auth.user;
+export const selectIsUserAdmin = (state: RootState) => state.auth.user.data?.roles?.includes(ADMIN_ROLE_NAME);
 export const selectAuthSettings = (state: RootState) => state.auth.settings;
 
 export default authSlice.reducer;

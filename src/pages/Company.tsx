@@ -6,20 +6,16 @@ import Button from '@mui/material/Button';
 import FormHelperText from '@mui/material/FormHelperText';
 import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchCompany, selectCompany, createCompany } from 'store/features';
+import { selectCompany, createCompany, selectIsUserAdmin } from 'store/features';
 
 const CompanyPage: React.FC<{}> = () => {
   const dispatch = useAppDispatch();
   const { status, error } = useAppSelector(selectCompany);
+  const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const [showSnackbar, setShowSnackbar] = React.useState(false);
   const notFound = status === 'failed' && error?.status === 404;
-  const notAllowed = status === 'failed' && error?.status === 403;
   const [inputValue, setInputValue] = React.useState<string>('');
   const [inputError, setInputError] = React.useState<string | null>(null);
-
-  const getCompany = async (): Promise<void> => {
-    dispatch(fetchCompany());
-  };
 
   const handleClose = (): void => {
     setShowSnackbar(false);
@@ -36,6 +32,10 @@ const CompanyPage: React.FC<{}> = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
+    if (!isUserAdmin) {
+      return;
+    }
+
     if (!inputValue) {
       setInputError('Company name is required');
 
@@ -46,14 +46,16 @@ const CompanyPage: React.FC<{}> = () => {
   };
 
   React.useEffect(() => {
-    if (status === 'idle') {
-      getCompany();
-    } else if (notFound) {
+    if (notFound) {
       setShowSnackbar(true);
-    } else if (notAllowed) {
-      setInputError(`You don't have the permission. Please contact your administrator.`);
     }
-  }, [status, error]);
+  }, [notFound]);
+
+  React.useEffect(() => {
+    if (!isUserAdmin) {
+      setInputError(`You don't have the necessary permissions. Please reach out to your administrator for support.`);
+    }
+  }, [isUserAdmin]);
 
   return (
     <Box>
@@ -65,7 +67,8 @@ const CompanyPage: React.FC<{}> = () => {
       <Box component="form" onSubmit={handleSubmit} noValidate>
         <TextField
           fullWidth
-          required
+          required={isUserAdmin}
+          disabled={!isUserAdmin}
           label="Enter Company name"
           variant="outlined"
           margin="normal"
@@ -75,7 +78,7 @@ const CompanyPage: React.FC<{}> = () => {
         />
         <FormHelperText error>{inputError}</FormHelperText>
         <Box display="flex" justifyContent="flex-end" sx={{ mt: 2 }}>
-          <Button type="submit" variant="contained">
+          <Button type="submit" variant="contained" disabled={!isUserAdmin}>
             Next
           </Button>
         </Box>
