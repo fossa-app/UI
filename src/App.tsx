@@ -14,9 +14,9 @@ import LoginPage from 'pages/Login';
 import ProtectedPage from 'pages/Protected';
 import DashboardPage from 'pages/Dashboard';
 import CallbackPage from 'pages/Callback';
+import SetupPage from 'pages/Setup';
 import CompanyPage from 'pages/Company';
 import BranchesPage from 'pages/Branches';
-import SetupPage from 'pages/Setup';
 import EmployeePage from 'pages/Employee';
 
 const App: React.FC = () => {

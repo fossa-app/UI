@@ -14,6 +14,7 @@ const lightPalette: PaletteOptions = {
   },
   background: {
     default: APP_COLORS.light.background,
+    paper: APP_COLORS.light.paper,
   },
   error: {
     main: APP_COLORS.light.error,
@@ -46,6 +47,7 @@ const darkPalette: PaletteOptions = {
   },
   background: {
     default: APP_COLORS.dark.background,
+    paper: APP_COLORS.dark.paper,
   },
   error: {
     main: APP_COLORS.dark.error,

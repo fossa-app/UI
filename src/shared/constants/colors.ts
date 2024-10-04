@@ -4,11 +4,13 @@ export const APP_COLORS = {
     secondary: '#de5114',
     error: '#e05252',
     background: '#fff',
+    paper: '#fff',
   },
   dark: {
     primary: '#25744d',
     secondary: '#996633',
     error: '#ff9999',
-    background: '#333',
+    background: '#252525',
+    paper: '#272727',
   },
 };
