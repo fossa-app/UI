@@ -1,4 +1,4 @@
-import { ErrorResponse } from './error';
+import { ErrorResponse } from './response';
 import { Status } from './status';
 
 export type DeepPartial<T> = {

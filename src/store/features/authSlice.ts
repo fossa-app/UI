@@ -82,7 +82,7 @@ const authSlice = createSlice({
 export const { updateAuthSettings, removeUser } = authSlice.actions;
 export const selectAuth = (state: RootState) => state.auth;
 export const selectUser = (state: RootState) => state.auth.user;
-export const selectIsUserAdmin = (state: RootState) => state.auth.user.data?.roles?.includes(ADMIN_ROLE_NAME);
+export const selectIsUserAdmin = (state: RootState) => state.auth.user.data?.roles?.includes(ADMIN_ROLE_NAME) ?? false;
 export const selectAuthSettings = (state: RootState) => state.auth.settings;
 
 export default authSlice.reducer;

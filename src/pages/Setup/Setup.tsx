@@ -1,28 +1,21 @@
 import * as React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import LinearProgress from '@mui/material/LinearProgress';
-import { useAppDispatch, useAppSelector } from 'store';
-import { fetchCompany, selectCompany, selectIsUserAdmin, selectStep } from 'store/features';
+import { useAppSelector } from 'store';
+import { selectBranches, selectCompany, selectIsUserAdmin, selectStep } from 'store/features';
 import { SetupStep } from 'shared/models';
 import { ROUTES } from 'shared/constants';
+import Box from '@mui/material/Box';
 
 // TODO: use navigation loader instead
 const SetupPage: React.FC<{}> = () => {
   const navigate = useNavigate();
   const step = useAppSelector(selectStep);
-  const dispatch = useAppDispatch();
-  const { status } = useAppSelector(selectCompany);
+  const { data: company, status: companyStatus } = useAppSelector(selectCompany);
+  const { data: branches, status: branchesStatus } = useAppSelector(selectBranches);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
-
-  const getCompany = async (): Promise<void> => {
-    dispatch(fetchCompany());
-  };
-
-  React.useEffect(() => {
-    if (status === 'idle') {
-      getCompany();
-    }
-  }, [status]);
+  const isCompanyLoading = !company && companyStatus === 'loading';
+  const isBranchesLoading = !branches && branchesStatus === 'loading';
 
   React.useEffect(() => {
     if (step === SetupStep.COMPANY) {
@@ -34,11 +27,15 @@ const SetupPage: React.FC<{}> = () => {
     }
   }, [step, isUserAdmin]);
 
-  if (status === 'loading') {
+  if (isCompanyLoading || isBranchesLoading) {
     return <LinearProgress />;
   }
 
-  return <Outlet />;
+  return (
+    <Box sx={{ width: { md: 544, xs: '100%' }, margin: '0 auto' }}>
+      <Outlet />
+    </Box>
+  );
 };
 
 export default SetupPage;
