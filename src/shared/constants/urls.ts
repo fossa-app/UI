@@ -3,4 +3,5 @@ export const URLS = {
   client: 'Identity/Client',
   system: 'License/System',
   company: 'Company',
+  branches: 'Branches',
 };

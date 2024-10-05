@@ -71,6 +71,10 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
         }
 
         return Promise.reject(error.response?.data);
+        // TODO: handle general errors with general message
+        // if (error?.status === 5**) {
+        //   return;
+        // }
       }
     );
 

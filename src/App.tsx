@@ -14,10 +14,10 @@ import LoginPage from 'pages/Login';
 import ProtectedPage from 'pages/Protected';
 import DashboardPage from 'pages/Dashboard';
 import CallbackPage from 'pages/Callback';
-import SetupPage from 'pages/Setup';
-import CompanyPage from 'pages/Company';
-import BranchesPage from 'pages/Branches';
-import EmployeePage from 'pages/Employee';
+import SetupPage from 'pages/Setup/Setup';
+import CompanyPage from 'pages/Setup/Company';
+import BranchesPage from 'pages/Setup/Branches';
+import EmployeePage from 'pages/Setup/Employee';
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
