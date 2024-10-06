@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useNavigate, useOutlet } from 'react-router-dom';
-import LinearProgress from '@mui/material/LinearProgress';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchUser, selectUser } from 'store/features';
 import { ROUTES } from 'shared/constants';
+import Loader from 'shared/components/Loader';
 import Content from 'layout/Content';
 
 const ProtectedPage: React.FC<{}> = () => {
@@ -12,7 +12,7 @@ const ProtectedPage: React.FC<{}> = () => {
   const dispatch = useAppDispatch();
   const { data: user, status } = useAppSelector(selectUser);
 
-  const getUser = async (): Promise<void> => {
+  const getUser = async () => {
     dispatch(fetchUser());
   };
 
@@ -30,7 +30,7 @@ const ProtectedPage: React.FC<{}> = () => {
   }, [user, status]);
 
   if (status === 'loading') {
-    return <LinearProgress />;
+    return <Loader />;
   }
 
   if (status === 'failed') {

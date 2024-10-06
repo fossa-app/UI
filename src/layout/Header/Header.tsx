@@ -18,7 +18,7 @@ const Header: React.FC<{}> = () => {
   const userManager = getUserManager();
   const { data: user } = useAppSelector(selectUser);
 
-  const handleThemeChange = (): void => {
+  const handleThemeChange = () => {
     dispatch(
       updateAppConfig({
         isDarkTheme: !isDarkTheme,
@@ -26,7 +26,7 @@ const Header: React.FC<{}> = () => {
     );
   };
 
-  const handleLogout = async (): Promise<void> => {
+  const handleLogout = async () => {
     await userManager.signoutRedirect();
   };
 

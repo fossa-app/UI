@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import LinearProgress from '@mui/material/LinearProgress';
 import { ROUTES } from 'shared/constants';
 import { getUserManager } from 'shared/helpers';
+import Loader from 'shared/components/Loader';
 
 const CallbackPage = () => {
   const navigate = useNavigate();
   const userManager = getUserManager();
 
-  const handleSignInCallback = async (): Promise<void> => {
+  const handleSignInCallback = async () => {
     try {
       await userManager.signinRedirectCallback();
-      // TODO: sometimes after successfull login, user is not being redirected to dashboard but to home instead
+      // TODO: sometimes after successfull login, user is not being redirected to setup/company but to setup instead
 
       navigate(ROUTES.setup.path);
     } catch (error) {
@@ -25,7 +25,7 @@ const CallbackPage = () => {
     handleSignInCallback();
   }, []);
 
-  return <LinearProgress />;
+  return <Loader />;
 };
 
 export default CallbackPage;

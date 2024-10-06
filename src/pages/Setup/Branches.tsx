@@ -1,26 +1,19 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from 'store';
 import { createBranch, fetchBranches, selectBranches, selectIsUserAdmin } from 'store/features';
-import Snackbar from 'shared/components/Snackbar';
 import CompanyDetailsForm from './components/CompanyDetailsForm';
 
 const BranchesPage: React.FC<{}> = () => {
   const { status, error } = useAppSelector(selectBranches);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const dispatch = useAppDispatch();
-  const notFound = status === 'failed' && error?.status === 500; // TODO: change to 404
-  const [showSnackbar, setShowSnackbar] = React.useState(false);
+  const notFound = status === 'failed' && error?.status === 404;
 
-  const handleClose = (): void => {
-    setShowSnackbar(false);
-  };
-
-  const getBranches = async (): Promise<void> => {
+  const getBranches = async () => {
     dispatch(fetchBranches({ pageNumber: 1, pageSize: 1 }));
   };
 
-  const handleSubmit = (value: string): void => {
+  const handleSubmit = (value: string) => {
     dispatch(createBranch(value));
   };
 
@@ -30,24 +23,16 @@ const BranchesPage: React.FC<{}> = () => {
     }
   }, [status]);
 
-  React.useEffect(() => {
-    if (notFound) {
-      setShowSnackbar(true);
-    }
-  }, [notFound]);
-
   return (
-    <Box>
-      {/* TODO: move text field to a shared component */}
-      <Snackbar type="error" open={showSnackbar} message={error?.title} onClose={handleClose} />
-      <CompanyDetailsForm
-        isAdmin={isUserAdmin}
-        title="Create a Branch"
-        label="Enter Branch name"
-        validationMessage="Branch name is required"
-        onSubmit={handleSubmit}
-      />
-    </Box>
+    <CompanyDetailsForm
+      isAdmin={isUserAdmin}
+      notFound={notFound}
+      title="Create a Branch"
+      label="Enter Branch name"
+      validationMessage="Branch name is required"
+      notFoundMessage="No Branch found"
+      onSubmit={handleSubmit}
+    />
   );
 };
 

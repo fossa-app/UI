@@ -4,21 +4,37 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';
 import Button from '@mui/material/Button';
+import Snackbar from 'shared/components/Snackbar';
 
 interface CompanyDetailsFormProps {
   title: string;
   label: string;
   validationMessage: string;
+  notFoundMessage: string;
   isAdmin: boolean;
+  notFound: boolean;
   // eslint-disable-next-line no-unused-vars
   onSubmit: (value: string) => void;
 }
 
-const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, isAdmin, validationMessage, onSubmit }) => {
+const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({
+  title,
+  label,
+  isAdmin,
+  validationMessage,
+  notFound,
+  notFoundMessage,
+  onSubmit,
+}) => {
   const [inputValue, setInputValue] = React.useState<string>('');
   const [inputError, setInputError] = React.useState<string | null>(null);
+  const [showSnackbar, setShowSnackbar] = React.useState(false);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleClose = () => {
+    setShowSnackbar(false);
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
 
     if (inputError) {
@@ -26,7 +42,7 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, i
     }
   };
 
-  const onFormSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const onFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!isAdmin) {
@@ -48,8 +64,15 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, i
     }
   }, [isAdmin]);
 
+  React.useEffect(() => {
+    if (notFound) {
+      setShowSnackbar(true);
+    }
+  }, [notFound]);
+
   return (
-    <>
+    <Box>
+      <Snackbar type="error" open={showSnackbar} message={notFoundMessage} onClose={handleClose} />
       <Typography align="center" variant="h6" sx={{ my: 2 }}>
         {title}
       </Typography>
@@ -72,7 +95,7 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, i
           </Button>
         </Box>
       </Box>
-    </>
+    </Box>
   );
 };
 

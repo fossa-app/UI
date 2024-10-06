@@ -9,7 +9,7 @@ const Footer: React.FC<{}> = () => {
   const dispatch = useAppDispatch();
   const { data: system, status } = useAppSelector(selectSystem);
 
-  const getSystem = async (): Promise<void> => {
+  const getSystem = async () => {
     dispatch(fetchSystem());
   };
 

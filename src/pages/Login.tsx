@@ -11,7 +11,7 @@ import { getUserManager } from 'shared/helpers';
 const LoginPage: React.FC<{}> = () => {
   const userManager = getUserManager();
 
-  const handleLogin = async (): Promise<void> => {
+  const handleLogin = async () => {
     await userManager.signinRedirect();
   };
 

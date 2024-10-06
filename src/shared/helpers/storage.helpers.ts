@@ -1,7 +1,7 @@
 import { User } from 'oidc-client-ts';
 import { OIDC_INITIAL_CONFIG } from 'shared/constants';
 
-export const saveToLocalStorage = <T>(key: string, value: T): void => {
+export const saveToLocalStorage = <T>(key: string, value: T) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
@@ -19,7 +19,7 @@ export const getFromLocalStorage = <T>(key: string) => {
   }
 };
 
-export const removeFromLocalStorage = (key: string): void => {
+export const removeFromLocalStorage = (key: string) => {
   localStorage.removeItem(key);
 };
 
