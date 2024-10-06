@@ -6,6 +6,10 @@ import { removeUser, selectAuthSettings } from 'store/features';
 import { getUserFromLocalStorage, getUserManager } from 'shared/helpers';
 import { ROUTES } from 'shared/constants';
 import { ErrorResponse } from 'shared/models';
+import Snackbar from 'shared/components/Snackbar';
+
+const unauthorizedErrorMessage = 'Session has expired. Please log in again.';
+const generalErrorMessage = 'An unexpected error occurred. Please try again later.';
 
 interface AxiosInterceptorProps {
   children: React.ReactElement;
@@ -15,8 +19,14 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
   const navigate = useNavigate();
   const userManager = getUserManager();
   const dispatch = useAppDispatch();
-  const [shouldNavigate, setShouldNavigate] = React.useState(false);
   const { data: authSettings } = useAppSelector(selectAuthSettings);
+  const [shouldNavigate, setShouldNavigate] = React.useState(false);
+  const [showSnackbar, setShowSnackbar] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
+
+  const handleClose = () => {
+    setShowSnackbar(false);
+  };
 
   const refreshToken = async (errorConfig: AxiosRequestConfig): Promise<ErrorResponse | null> => {
     try {
@@ -31,12 +41,14 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
       await userManager.removeUser();
 
       setShouldNavigate(true);
+      setShowSnackbar(true);
+      setErrorMessage(unauthorizedErrorMessage);
       dispatch(removeUser());
 
       return {
-        message: 'Token refresh failed. User has been logged out.',
+        title: unauthorizedErrorMessage,
         status: 401,
-      } as ErrorResponse;
+      };
     }
 
     return null;
@@ -62,19 +74,20 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
     const responseInterceptor = axios.interceptors.response.use(
       (response) => response,
       async (error: AxiosError) => {
-        if (error.config && error.response?.status === 401) {
-          return refreshToken(error.config);
-        }
-
         if (!error.isAxiosError) {
           return Promise.reject(error);
         }
 
+        if (error.config && error.response?.status === 401) {
+          return refreshToken(error.config);
+        }
+
+        if (error.response && error.response.status >= 500) {
+          setErrorMessage(generalErrorMessage);
+          setShowSnackbar(true);
+        }
+
         return Promise.reject(error.response?.data);
-        // TODO: handle general errors with general message
-        // if (error?.status === 5**) {
-        //   return;
-        // }
       }
     );
 
@@ -84,7 +97,12 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
     };
   }, [authSettings]);
 
-  return children;
+  return (
+    <>
+      {children}
+      <Snackbar type="error" open={showSnackbar} message={errorMessage} onClose={handleClose} />
+    </>
+  );
 };
 
 export default AxiosInterceptor;

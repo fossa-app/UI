@@ -18,7 +18,7 @@ export const getUserManager = (settings: OidcClientSettings = OIDC_INITIAL_CONFI
   return userManager;
 };
 
-export const updateUserManager = (settings: UserManagerSettings): void => {
+export const updateUserManager = (settings: UserManagerSettings) => {
   userManager = new UserManager({
     ...userManager?.settings,
     ...settings,

@@ -10,7 +10,7 @@ type SnackbarProps = {
 } & MuiSnackbarProps;
 
 const Snackbar: React.FC<SnackbarProps> = ({ open = false, message = '', type, onClose, ...props }) => {
-  const onSnackbarClose = (): void => {
+  const onSnackbarClose = () => {
     onClose();
   };
 
