@@ -4,12 +4,9 @@ import axios, { AxiosError, AxiosRequestConfig } from 'core/axios';
 import { useAppDispatch, useAppSelector } from 'store';
 import { removeUser, selectAuthSettings } from 'store/features';
 import { getUserFromLocalStorage, getUserManager } from 'shared/helpers';
-import { ROUTES } from 'shared/constants';
+import { APP_CONFIG, ROUTES } from 'shared/constants';
 import { ErrorResponse } from 'shared/models';
 import Snackbar from 'shared/components/Snackbar';
-
-const unauthorizedErrorMessage = 'Session has expired. Please log in again.';
-const generalErrorMessage = 'An unexpected error occurred. Please try again later.';
 
 interface AxiosInterceptorProps {
   children: React.ReactElement;
@@ -42,11 +39,11 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
 
       setShouldNavigate(true);
       setShowSnackbar(true);
-      setErrorMessage(unauthorizedErrorMessage);
+      setErrorMessage(APP_CONFIG.unAuthorizedErrorMessage);
       dispatch(removeUser());
 
       return {
-        title: unauthorizedErrorMessage,
+        title: APP_CONFIG.unAuthorizedErrorMessage,
         status: 401,
       };
     }
@@ -83,7 +80,7 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
         }
 
         if (error.response && error.response.status >= 500) {
-          setErrorMessage(generalErrorMessage);
+          setErrorMessage(APP_CONFIG.generalErrorMessage);
           setShowSnackbar(true);
         }
 

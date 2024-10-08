@@ -8,3 +8,9 @@ export const OIDC_INITIAL_CONFIG: OidcClientSettings = {
   redirect_uri: '',
   post_logout_redirect_uri: '',
 };
+
+export const APP_CONFIG = {
+  snackbarAutoHideDuration: 30000,
+  unAuthorizedErrorMessage: 'Session has expired. Please log in again.',
+  generalErrorMessage: 'An unexpected error occurred. Please try again later.',
+};

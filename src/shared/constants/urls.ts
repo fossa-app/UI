@@ -4,4 +4,5 @@ export const URLS = {
   system: 'License/System',
   company: 'Company',
   branches: 'Branches',
+  employee: 'Employee',
 };

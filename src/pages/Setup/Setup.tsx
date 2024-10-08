@@ -7,7 +7,7 @@ import { SetupStep } from 'shared/models';
 import { ROUTES } from 'shared/constants';
 import Loader from 'shared/components/Loader';
 
-const SetupPage: React.FC<{}> = () => {
+const SetupPage: React.FC = () => {
   const navigate = useNavigate();
   const outlet = useOutlet();
   const step = useAppSelector(selectStep);

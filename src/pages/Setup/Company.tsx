@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompany, createCompany, selectIsUserAdmin, fetchCompany } from 'store/features';
 import CompanyDetailsForm from './components/CompanyDetailsForm';
 
-const CompanyPage: React.FC<{}> = () => {
+const CompanyPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { status, error } = useAppSelector(selectCompany);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
