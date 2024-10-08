@@ -5,7 +5,7 @@ import { fetchSystem, selectSystem } from 'store/features';
 import License from './components/License';
 import Environment from './components/Environment';
 
-const Footer: React.FC<{}> = () => {
+const Footer: React.FC = () => {
   const dispatch = useAppDispatch();
   const { data: system, status } = useAppSelector(selectSystem);
 

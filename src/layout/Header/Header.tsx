@@ -12,7 +12,7 @@ import { getUserManager } from 'shared/helpers';
 import Logo from 'shared/components/icons/Logo';
 import UserMenu from './components/UserMenu/UserMenu';
 
-const Header: React.FC<{}> = () => {
+const Header: React.FC = () => {
   const dispatch = useAppDispatch();
   const { isDarkTheme } = useAppSelector(selectAppConfig);
   const userManager = getUserManager();

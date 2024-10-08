@@ -6,7 +6,7 @@ import { ROUTES } from 'shared/constants';
 import Loader from 'shared/components/Loader';
 import Content from 'layout/Content';
 
-const ProtectedPage: React.FC<{}> = () => {
+const ProtectedPage: React.FC = () => {
   const outlet = useOutlet();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
