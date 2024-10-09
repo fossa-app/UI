@@ -5,7 +5,7 @@ import { useAppSelector } from 'store';
 import { selectBranches, selectCompany, selectStep } from 'store/features';
 import { SetupStep } from 'shared/models';
 import { ROUTES } from 'shared/constants';
-import Loader from 'shared/components/Loader';
+import Loader from 'components/UI/Loader';
 
 const SetupPage: React.FC = () => {
   const navigate = useNavigate();

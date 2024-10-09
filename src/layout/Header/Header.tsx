@@ -9,7 +9,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectAppConfig, selectUser, updateAppConfig } from 'store/features';
 import { getUserManager } from 'shared/helpers';
-import Logo from 'shared/components/icons/Logo';
+import Logo from '../../components/UI/Logo';
 import UserMenu from './components/UserMenu/UserMenu';
 
 const Header: React.FC = () => {

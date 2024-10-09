@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ROUTES } from 'shared/constants';
-import RootLayout from 'RootLayout';
+import RootLayout from 'layout/RootLayout';
 import LoginPage from 'pages/Login';
 import ProtectedPage from 'pages/Protected';
 import DashboardPage from 'pages/Dashboard';

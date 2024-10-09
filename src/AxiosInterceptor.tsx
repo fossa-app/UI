@@ -6,7 +6,7 @@ import { removeUser, selectAuthSettings } from 'store/features';
 import { getUserFromLocalStorage, getUserManager } from 'shared/helpers';
 import { APP_CONFIG, ROUTES } from 'shared/constants';
 import { ErrorResponse } from 'shared/models';
-import Snackbar from 'shared/components/Snackbar';
+import Snackbar from 'components/UI/Snackbar';
 
 interface AxiosInterceptorProps {
   children: React.ReactElement;

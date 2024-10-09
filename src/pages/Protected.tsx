@@ -3,7 +3,7 @@ import { useNavigate, useOutlet } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchUser, selectUser } from 'store/features';
 import { ROUTES } from 'shared/constants';
-import Loader from 'shared/components/Loader';
+import Loader from 'components/UI/Loader';
 import Content from 'layout/Content';
 
 const ProtectedPage: React.FC = () => {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from 'shared/constants';
 import { getUserManager } from 'shared/helpers';
-import Loader from 'shared/components/Loader';
+import Loader from 'components/UI/Loader';
 
 const CallbackPage = () => {
   const navigate = useNavigate();
