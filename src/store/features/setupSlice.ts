@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'core/axios';
+import axios from 'core/axios.config';
 import { RootState } from 'store';
 import { Branch, Company, ErrorResponse, PaginatedResponse, PaginationParams, SetupStep, StateEntity } from 'shared/models';
 import { URLS } from 'shared/constants';
@@ -29,7 +29,11 @@ export const fetchCompany = createAsyncThunk<Company | null, void, { rejectValue
     try {
       const { data } = await axios.get<Company>(URLS.company);
 
-      return data || rejectWithValue({ title: 'No company found' });
+      if (data) {
+        return data;
+      }
+
+      return null;
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);
     }
@@ -54,7 +58,11 @@ export const fetchBranches = createAsyncThunk<PaginatedResponse<Branch> | null, 
     try {
       const { data } = await axios.get<PaginatedResponse<Branch>>(`${URLS.branches}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
 
-      return data || rejectWithValue({ title: 'No branches found' });
+      if (data) {
+        return data;
+      }
+
+      return null;
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);
     }

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'core/axios';
+import axios from 'core/axios.config';
 import { ErrorResponse, StateEntity, System } from 'shared/models';
 import { URLS } from 'shared/constants';
 import { RootState } from 'store';
