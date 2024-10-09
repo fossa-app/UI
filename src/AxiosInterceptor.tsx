@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios, { AxiosError, AxiosRequestConfig } from 'core/axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'core/axios.config';
 import { useAppDispatch, useAppSelector } from 'store';
 import { removeUser, selectAuthSettings } from 'store/features';
 import { getUserFromLocalStorage, getUserManager } from 'shared/helpers';
@@ -39,13 +39,13 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
 
       setShouldNavigate(true);
       setShowSnackbar(true);
-      setErrorMessage(APP_CONFIG.unAuthorizedErrorMessage);
+      setErrorMessage(APP_CONFIG.errorMessages.unAuthorized);
       dispatch(removeUser());
 
-      return {
-        title: APP_CONFIG.unAuthorizedErrorMessage,
+      return Promise.reject({
+        title: APP_CONFIG.errorMessages.unAuthorized,
         status: 401,
-      };
+      });
     }
 
     return null;
@@ -75,13 +75,29 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
           return Promise.reject(error);
         }
 
+        // TODO: double check this
+        if (!error.response || error.code === 'ERR_NETWORK') {
+          setErrorMessage(APP_CONFIG.errorMessages.network);
+          setShowSnackbar(true);
+
+          return Promise.reject({
+            status: 599,
+            title: APP_CONFIG.errorMessages.network,
+          });
+        }
+
         if (error.config && error.response?.status === 401) {
           return refreshToken(error.config);
         }
 
         if (error.response && error.response.status >= 500) {
-          setErrorMessage(APP_CONFIG.generalErrorMessage);
+          setErrorMessage(APP_CONFIG.errorMessages.general);
           setShowSnackbar(true);
+
+          return Promise.reject({
+            ...(error.response.data as ErrorResponse),
+            title: APP_CONFIG.errorMessages.general,
+          });
         }
 
         return Promise.reject(error.response?.data);

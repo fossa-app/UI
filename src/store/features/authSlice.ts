@@ -3,7 +3,7 @@ import { OidcClientSettings } from 'oidc-client-ts';
 import { RootState } from 'store';
 import { getUserManager, updateUserManager, mapUser, decodeJwt } from 'shared/helpers';
 import { AppUser, ErrorResponse, StateEntity } from 'shared/models';
-import { ADMIN_ROLE_NAME, OIDC_INITIAL_CONFIG } from 'shared/constants';
+import { ADMIN_ROLE_NAME, APP_CONFIG, OIDC_INITIAL_CONFIG } from 'shared/constants';
 
 interface AuthState {
   settings: StateEntity<OidcClientSettings>;
@@ -31,7 +31,10 @@ export const fetchUser = createAsyncThunk<AppUser | null, void, { rejectValue: E
         return mapUser(user);
       }
 
-      return rejectWithValue({ title: 'No user found' });
+      return rejectWithValue({
+        title: APP_CONFIG.errorMessages.unAuthorized,
+        status: 401,
+      });
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);
     }
