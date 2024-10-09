@@ -6,7 +6,7 @@ import Box from '@mui/system/Box';
 import { darkTheme, lightTheme } from 'core/theme.config';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchClient, selectAppConfig, selectClient } from 'store/features';
-import Loader from 'shared/components/Loader';
+import Loader from 'components/UI/Loader';
 import Header from 'layout/Header/Header';
 import Footer from 'layout/Footer/Footer';
 

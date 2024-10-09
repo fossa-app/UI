@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';
 import Button from '@mui/material/Button';
-import Snackbar from 'shared/components/Snackbar';
+import Snackbar from 'components/UI/Snackbar';
 
 interface CompanyDetailsFormProps {
   title: string;
