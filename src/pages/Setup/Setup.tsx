@@ -1,20 +1,24 @@
 import * as React from 'react';
 import { useNavigate, useOutlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import { useAppSelector } from 'store';
-import { selectBranches, selectCompany, selectStep } from 'store/features';
+import { useAppDispatch, useAppSelector } from 'store';
+import { fetchSetupData, selectStep, selectSetupStatus } from 'store/features';
 import { SetupStep } from 'shared/models';
 import { ROUTES } from 'shared/constants';
 import Loader from 'components/UI/Loader';
 
 const SetupPage: React.FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const outlet = useOutlet();
   const step = useAppSelector(selectStep);
-  const { data: company, status: companyStatus } = useAppSelector(selectCompany);
-  const { data: branches, status: branchesStatus } = useAppSelector(selectBranches);
-  const isCompanyLoading = !company && companyStatus === 'loading';
-  const isBranchesLoading = !branches && branchesStatus === 'loading';
+  const status = useAppSelector(selectSetupStatus);
+
+  React.useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchSetupData());
+    }
+  }, [status]);
 
   React.useEffect(() => {
     if (step === SetupStep.COMPANY) {
@@ -23,10 +27,12 @@ const SetupPage: React.FC = () => {
       navigate(ROUTES.branches.path);
     } else if (step === SetupStep.EMPLOYEE) {
       navigate(ROUTES.employee.path);
+    } else if (step === SetupStep.COMPLETED) {
+      navigate(ROUTES.dashboard.path);
     }
   }, [step]);
 
-  if (isCompanyLoading || isBranchesLoading) {
+  if (status === 'loading') {
     return <Loader />;
   }
 
