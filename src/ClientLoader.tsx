@@ -3,10 +3,9 @@ import { Outlet } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/system/Box';
-import { darkTheme, lightTheme } from 'core/theme.config';
+import { darkTheme, lightTheme } from 'shared/configs/theme.config';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchClient, selectAppConfig, selectClient } from 'store/features';
-import Loader from 'components/UI/Loader';
 import Header from 'layout/Header/Header';
 import Footer from 'layout/Footer/Footer';
 
@@ -28,7 +27,7 @@ const ClientLoader: React.FC = () => {
   }, [status]);
 
   if (loading || !client) {
-    return <Loader />;
+    return null;
   }
 
   return (

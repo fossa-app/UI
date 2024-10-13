@@ -6,7 +6,6 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 
-// TODO: find a way to inherit this from @fusionauth
 interface UserMenuProps {
   name: string;
   picture?: string;

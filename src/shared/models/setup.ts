@@ -3,4 +3,5 @@ export enum SetupStep {
   COMPANY = 'company',
   BRANCHES = 'branches',
   EMPLOYEE = 'employee',
+  COMPLETED = 'completed',
 }

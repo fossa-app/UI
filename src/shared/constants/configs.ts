@@ -10,10 +10,11 @@ export const OIDC_INITIAL_CONFIG: OidcClientSettings = {
 };
 
 export const APP_CONFIG = {
-  snackbarAutoHideDuration: 30000,
+  snackbarAutoHideDuration: 10000,
   errorMessages: {
     unAuthorized: 'Session has expired. Please log in again.',
     general: 'An unexpected error occurred. Please try again later.',
     network: 'Network Error',
+    permission: `You don't have the necessary permissions. Please reach out to your Company administrator for support.`,
   },
 };

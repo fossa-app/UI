@@ -10,8 +10,8 @@ const Logo: React.FC<LogoProps> = ({ sx }) => {
       src="/logo192.png"
       alt="Fossa"
       sx={{
-        width: 'auto',
-        height: '48px',
+        width: 48,
+        height: 48,
         ...sx,
       }}
     />
