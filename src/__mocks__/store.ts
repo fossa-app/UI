@@ -11,6 +11,9 @@ const initialMockState: DeepPartial<RootState> = {
   appConfig: {
     isDarkTheme: false,
   },
+  setup: {
+    company: {},
+  },
   license: {},
   auth: {
     user: {

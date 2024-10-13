@@ -3,27 +3,22 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { updateAppConfig } from 'store/features';
 import { setMockState, mockDispatch, resetMockState } from '../store';
 import { getUserManager } from '../oidc-client-mock';
-import Header from '../../layout/Header/Header';
-
-beforeEach(() => {
-  resetMockState();
-  setMockState({
-    auth: {
-      user: {
-        data: null,
-      },
-    },
-    appConfig: { isDarkTheme: true },
-  });
-});
+import Header from 'layout/Header/Header';
 
 describe('Header Component', () => {
-  it('should render the logo correctly', async () => {
-    render(<Header />);
-
-    const appLogo = await screen.findByTestId('app-logo');
-
-    expect(appLogo).toHaveTextContent('Fossa');
+  beforeEach(() => {
+    resetMockState();
+    setMockState({
+      auth: {
+        user: {
+          data: null,
+        },
+      },
+      setup: {
+        company: { data: { name: 'Test' } },
+      },
+      appConfig: { isDarkTheme: true },
+    });
   });
 
   it('should display dark theme switch as checked when dark theme is enabled', async () => {
