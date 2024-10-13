@@ -5,7 +5,7 @@ import { APP_CONFIG } from 'shared/constants';
 
 type SnackbarProps = {
   type: AlertColor;
-  message: string;
+  message?: string;
   onClose: () => void;
 } & MuiSnackbarProps;
 

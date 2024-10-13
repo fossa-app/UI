@@ -3,29 +3,24 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { APP_CONFIG } from 'shared/constants';
+import { ErrorResponse } from 'shared/models';
 import Snackbar from 'components/UI/Snackbar';
 
 interface CompanyDetailsFormProps {
   title: string;
   label: string;
   validationMessage: string;
-  notFoundMessage: string;
   isAdmin: boolean;
-  notFound: boolean;
+  loading: boolean;
+  error?: ErrorResponse;
   // eslint-disable-next-line no-unused-vars
   onSubmit: (value: string) => void;
 }
 
-const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({
-  title,
-  label,
-  isAdmin,
-  validationMessage,
-  notFound,
-  notFoundMessage,
-  onSubmit,
-}) => {
+const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, isAdmin, validationMessage, error, loading, onSubmit }) => {
   const [inputValue, setInputValue] = React.useState<string>('');
   const [inputError, setInputError] = React.useState<string | null>(null);
   const [showSnackbar, setShowSnackbar] = React.useState(false);
@@ -60,39 +55,45 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({
 
   React.useEffect(() => {
     if (!isAdmin) {
-      setInputError(`You don't have the necessary permissions. Please reach out to your administrator for support.`);
+      setInputError(APP_CONFIG.errorMessages.permission);
     }
   }, [isAdmin]);
 
   React.useEffect(() => {
-    if (notFound) {
+    if (error) {
       setShowSnackbar(true);
     }
-  }, [notFound]);
+  }, [error]);
 
   return (
     <Box>
-      <Snackbar type="error" open={showSnackbar} message={notFoundMessage} onClose={handleClose} />
-      <Typography align="center" variant="h6" sx={{ my: 2 }}>
+      <Snackbar type="error" open={showSnackbar} message={error?.title} onClose={handleClose} />
+      <Typography align="center" variant="h6" sx={{ my: 5 }}>
         {title}
       </Typography>
-      <Box component="form" onSubmit={onFormSubmit} noValidate>
+      <Box component="form" noValidate onSubmit={onFormSubmit}>
         <TextField
           fullWidth
           variant="outlined"
-          margin="normal"
           required={isAdmin}
           disabled={!isAdmin}
           label={label}
           value={inputValue}
-          onChange={handleInputChange}
           error={!!inputError}
+          onChange={handleInputChange}
         />
-        <FormHelperText error>{inputError}</FormHelperText>
-        <Box display="flex" justifyContent="flex-end" sx={{ mt: 2 }}>
-          <Button type="submit" variant="contained" disabled={!isAdmin}>
+        {inputError && <FormHelperText error>{inputError}</FormHelperText>}
+        <Box display="flex" justifyContent="flex-end" sx={{ mt: 5 }}>
+          <LoadingButton
+            type="submit"
+            variant="outlined"
+            loadingPosition="start"
+            loading={loading}
+            disabled={!isAdmin}
+            startIcon={<NavigateNextIcon />}
+          >
             Next
-          </Button>
+          </LoadingButton>
         </Box>
       </Box>
     </Box>

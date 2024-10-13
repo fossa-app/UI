@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
     <Box component="footer" display="flex" justifyContent="flex-end" alignItems="center" padding={2} gap={4} minHeight={64}>
       {system && (
         <>
-          <Environment kind={system.entitlements.environmentKind} />
+          <Environment kind={system.entitlements.environmentKind} name={system.entitlements.environmentName} />
           <License name={system.terms.licensee.longName} />
         </>
       )}
