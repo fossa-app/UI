@@ -12,6 +12,7 @@ const CallbackPage = () => {
     try {
       await userManager.signinRedirectCallback();
       // TODO: sometimes after successfull login, user is not being redirected to setup/company but to setup instead
+      // TODO: check if company/branch/employee data exists, navigate to Dashboard instead
 
       navigate(ROUTES.setup.path);
     } catch (error) {

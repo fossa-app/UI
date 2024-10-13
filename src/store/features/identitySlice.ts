@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'core/axios.config';
 import { RootState } from 'store';
+import axios from 'shared/configs/axios.config';
 import { Client, ErrorResponse, StateEntity } from 'shared/models';
 import { ROUTES, URLS } from 'shared/constants';
 import { updateAuthSettings } from './authSlice';
@@ -17,10 +17,11 @@ const initialState: IdentityState = {
 };
 
 export const fetchClient = createAsyncThunk<Client | null, void, { rejectValue: ErrorResponse }>(
-  'identity/fetchClient',
+  'identity/getClient',
   async (_, { dispatch, rejectWithValue }) => {
     try {
       const { data } = await axios.get<Client>(`${URLS.client}?origin=${window.location.origin}`);
+
       if (data) {
         dispatch(
           updateAuthSettings({
@@ -29,8 +30,10 @@ export const fetchClient = createAsyncThunk<Client | null, void, { rejectValue: 
             post_logout_redirect_uri: `${window.location.origin}/`,
           })
         );
+
         return data;
       }
+
       return rejectWithValue({ title: 'Client not found' });
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);

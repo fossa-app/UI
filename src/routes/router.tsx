@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ROUTES } from 'shared/constants';
-import RootLayout from 'layout/RootLayout';
+import RootPage from 'pages/Root';
 import LoginPage from 'pages/Login';
 import ProtectedPage from 'pages/Protected';
 import DashboardPage from 'pages/Dashboard';
@@ -10,13 +10,12 @@ import SetupPage from 'pages/Setup/Setup';
 import CompanyPage from 'pages/Setup/Company';
 import BranchesPage from 'pages/Setup/Branches';
 import EmployeePage from 'pages/Setup/Employee';
-// import { loader as branchesLoader } from '../pages/Setup/Branches';
 
 const router = createBrowserRouter([
   // TODO: add Error component
   {
     path: '/',
-    element: <RootLayout />,
+    element: <RootPage />,
     children: [
       {
         path: ROUTES.login.path,
@@ -37,12 +36,12 @@ const router = createBrowserRouter([
             children: [
               {
                 path: ROUTES.company.path,
+                index: true,
                 element: <CompanyPage />,
               },
               {
                 path: ROUTES.branches.path,
                 element: <BranchesPage />,
-                // loader: branchesLoader,
               },
               {
                 path: ROUTES.employee.path,

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios, { AxiosError, AxiosRequestConfig } from 'core/axios.config';
 import { useAppDispatch, useAppSelector } from 'store';
 import { removeUser, selectAuthSettings } from 'store/features';
+import axios, { AxiosError, AxiosRequestConfig } from 'shared/configs/axios.config';
 import { getUserFromLocalStorage, getUserManager } from 'shared/helpers';
 import { APP_CONFIG, ROUTES } from 'shared/constants';
 import { ErrorResponse } from 'shared/models';
@@ -86,7 +86,7 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
           });
         }
 
-        if (error.config && error.response?.status === 401) {
+        if (error.config && error.response.status === 401) {
           return refreshToken(error.config);
         }
 

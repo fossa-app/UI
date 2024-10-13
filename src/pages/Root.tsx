@@ -2,7 +2,7 @@ import * as React from 'react';
 import AxiosInterceptor from '../AxiosInterceptor';
 import ClientLoader from '../ClientLoader';
 
-const RootLayout: React.FC = () => {
+const RootPage: React.FC = () => {
   return (
     <AxiosInterceptor>
       <ClientLoader />
@@ -10,4 +10,4 @@ const RootLayout: React.FC = () => {
   );
 };
 
-export default RootLayout;
+export default RootPage;
