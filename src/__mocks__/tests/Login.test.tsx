@@ -6,18 +6,18 @@ import { getUserManager } from '../oidc-client-mock';
 import LoginPage from '../../pages/Login';
 // TODO: remove jest, it's already integrated with @testing-library
 
-beforeEach(() => {
-  resetMockState();
-  setMockState({
-    auth: {
-      user: {
-        data: null,
-      },
-    },
-  });
-});
-
 describe('Login Component', () => {
+  beforeEach(() => {
+    resetMockState();
+    setMockState({
+      auth: {
+        user: {
+          data: null,
+        },
+      },
+    });
+  });
+
   it('should render the login button when not authenticated', async () => {
     render(
       <MemoryRouter>

@@ -17,7 +17,7 @@ interface CompanyDetailsFormProps {
   loading: boolean;
   error?: ErrorResponse;
   // eslint-disable-next-line no-unused-vars
-  onSubmit: (value: string) => void;
+  onSubmit: (name: string) => void;
 }
 
 const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, isAdmin, validationMessage, error, loading, onSubmit }) => {
@@ -75,6 +75,7 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, i
         <TextField
           fullWidth
           variant="outlined"
+          name="name"
           required={isAdmin}
           disabled={!isAdmin}
           label={label}
@@ -83,14 +84,14 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, i
           onChange={handleInputChange}
         />
         {inputError && <FormHelperText error>{inputError}</FormHelperText>}
-        <Box display="flex" justifyContent="flex-end" sx={{ mt: 5 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 5 }}>
           <LoadingButton
             type="submit"
             variant="outlined"
-            loadingPosition="start"
+            loadingPosition="end"
             loading={loading}
             disabled={!isAdmin}
-            startIcon={<NavigateNextIcon />}
+            endIcon={<NavigateNextIcon />}
           >
             Next
           </LoadingButton>

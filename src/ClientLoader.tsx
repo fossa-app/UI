@@ -33,9 +33,9 @@ const ClientLoader: React.FC = () => {
   return (
     <ThemeProvider theme={appTheme}>
       <CssBaseline />
-      <Box display="flex" flexDirection="column" flexGrow={1}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
         <Header />
-        <Box display="flex" flexDirection="column" flexGrow={1} padding={2}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, padding: 2 }}>
           <Outlet />
         </Box>
         <Footer />
