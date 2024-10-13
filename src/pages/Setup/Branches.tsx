@@ -8,8 +8,8 @@ const BranchesPage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const dispatch = useAppDispatch();
 
-  const handleSubmit = (value: string) => {
-    dispatch(createBranch(value));
+  const handleSubmit = (name: string) => {
+    dispatch(createBranch({ name }));
   };
 
   return (

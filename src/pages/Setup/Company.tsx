@@ -8,8 +8,8 @@ const CompanyPage: React.FC = () => {
   const { status, error } = useAppSelector(selectCompany);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
 
-  const handleSubmit = (value: string) => {
-    dispatch(createCompany(value));
+  const handleSubmit = (name: string) => {
+    dispatch(createCompany({ name }));
   };
 
   return (
