@@ -6,11 +6,7 @@ interface ContentProps {
 }
 
 const Content: React.FC<ContentProps> = ({ children }: ContentProps) => {
-  return (
-    <Box display="flex" flexDirection="column" flexGrow={1}>
-      {children}
-    </Box>
-  );
+  return <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>{children}</Box>;
 };
 
 export default Content;

@@ -1,16 +1,18 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import Tooltip from '@mui/material/Tooltip';
+import Box from '@mui/material/Box';
 
 interface LicenseProps {
-  name: string;
+  system: string;
+  company: string;
 }
 
-const License: React.FC<LicenseProps> = ({ name }) => {
+const License: React.FC<LicenseProps> = ({ system, company }) => {
   return (
-    <Tooltip title={`Licensed to ${name}`}>
-      <Typography variant="caption">Fossa</Typography>
-    </Tooltip>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Typography variant="caption">{system}</Typography>
+      <Typography variant="caption">{company}</Typography>
+    </Box>
   );
 };
 

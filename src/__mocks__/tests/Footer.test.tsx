@@ -1,9 +1,26 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Environment from '../../layout/Footer/components/Environment';
+import { resetMockState, setMockState } from '../store';
+import Environment from 'layout/Footer/components/Environment';
+import Footer from 'layout/Footer/Footer';
 
 describe('Footer Component', () => {
+  beforeEach(() => {
+    resetMockState();
+    setMockState({
+      license: { system: {} },
+    });
+  });
+
+  it('should render the system logo correctly', async () => {
+    render(<Footer />);
+
+    const appLogo = await screen.findByTestId('app-logo');
+
+    expect(appLogo).toHaveTextContent('Fossa');
+  });
+
   it('should render error Chip for Development environment', async () => {
     render(<Environment kind="Development" name="Test" />);
 

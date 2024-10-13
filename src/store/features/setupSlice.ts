@@ -74,11 +74,13 @@ export const fetchCompany = createAsyncThunk<Company | null, void, { rejectValue
   }
 );
 
-export const createCompany = createAsyncThunk<void, string, { rejectValue: ErrorResponse }>(
+export const createCompany = createAsyncThunk<Company, Company, { rejectValue: ErrorResponse }>(
   'setup/setCompany',
   async (company, { rejectWithValue }) => {
     try {
-      await axios.post<Company>(URLS.company, { name: company });
+      await axios.post<Company>(URLS.company, company);
+
+      return company;
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);
     }
@@ -108,11 +110,11 @@ export const fetchBranches = createAsyncThunk<PaginatedResponse<Branch> | null, 
   }
 );
 
-export const createBranch = createAsyncThunk<void, string, { rejectValue: ErrorResponse }>(
+export const createBranch = createAsyncThunk<void, Branch, { rejectValue: ErrorResponse }>(
   'setup/setBranch',
   async (branch, { rejectWithValue }) => {
     try {
-      await axios.post<Branch>(URLS.branches, { name: branch });
+      await axios.post<Branch>(URLS.branches, branch);
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);
     }
@@ -178,8 +180,10 @@ const setupSlice = createSlice({
         state.company.status = 'failed';
         state.company.error = action.payload;
       })
-      .addCase(createCompany.fulfilled, (state) => {
+      .addCase(createCompany.fulfilled, (state, action: PayloadAction<Company>) => {
         state.company.status = 'succeeded';
+        // TODO: update company data here
+        state.company.data = action.payload;
         state.step = SetupStep.BRANCHES;
       })
       .addCase(fetchBranches.pending, (state) => {

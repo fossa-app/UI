@@ -16,7 +16,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" flexGrow={1}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
       <Card sx={{ width: 320 }}>
         <CardHeader
           title="Login"

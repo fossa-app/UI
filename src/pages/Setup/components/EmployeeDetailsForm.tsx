@@ -126,14 +126,14 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({ title, isAdmi
           />
         </Box>
         {permissionError && <FormHelperText error>{permissionError}</FormHelperText>}
-        <Box display="flex" justifyContent="flex-end" sx={{ mt: 5 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 5 }}>
           <LoadingButton
             type="submit"
-            loadingPosition="start"
+            loadingPosition="end"
             variant="outlined"
             loading={loading}
             disabled={!isAdmin}
-            startIcon={<DoneIcon />}
+            endIcon={<DoneIcon />}
           >
             Finish
           </LoadingButton>
