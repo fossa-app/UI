@@ -1,5 +1,5 @@
 export interface Branch {
-  id?: number;
-  companyId?: number;
+  id?: string;
+  companyId?: string;
   name: string;
 }

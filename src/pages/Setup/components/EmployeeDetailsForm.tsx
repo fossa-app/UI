@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';
 import LoadingButton from '@mui/lab/LoadingButton';
 import DoneIcon from '@mui/icons-material/Done';
-import { APP_CONFIG } from 'shared/constants';
+import { MESSAGES } from 'shared/constants';
 import { AppUser, Employee, ErrorResponse } from 'shared/models';
 import Snackbar from 'components/UI/Snackbar';
 
@@ -76,7 +76,7 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({ title, isAdmi
 
   React.useEffect(() => {
     if (!isAdmin) {
-      setPermissionError(APP_CONFIG.errorMessages.permission);
+      setPermissionError(MESSAGES.error.general.permission);
     }
   }, [isAdmin]);
 

@@ -1,48 +1,42 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { RootState } from 'store';
+import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios.config';
-import {
-  Branch,
-  Company,
-  Employee,
-  ErrorResponse,
-  PaginatedResponse,
-  PaginationParams,
-  SetupStep,
-  StateEntity,
-  Status,
-} from 'shared/models';
-import { URLS } from 'shared/constants';
+import { Branch, Company, Employee, ErrorResponse, PaginatedResponse, PaginationParams, SetupStep } from 'shared/models';
+import { MESSAGES, URLS } from 'shared/constants';
 
 interface SetupState {
   company: StateEntity<Company | null>;
   branches: StateEntity<PaginatedResponse<Branch> | null>;
   employee: StateEntity<Employee | null>;
-  step: SetupStep;
-  status: Status;
+  step: StateEntity<SetupStep>;
 }
 
 const initialState: SetupState = {
   company: {
     data: null,
-    status: 'idle',
+    fetchStatus: 'idle',
+    updateStatus: 'idle',
   },
   branches: {
     data: null,
-    status: 'idle',
+    fetchStatus: 'idle',
+    updateStatus: 'idle',
   },
   employee: {
     data: null,
+    fetchStatus: 'idle',
+    updateStatus: 'idle',
+  },
+  step: {
+    data: SetupStep.COMPANY,
     status: 'idle',
   },
-  status: 'idle',
-  step: SetupStep.COMPANY,
 };
 
 export const fetchSetupData = createAsyncThunk<void, void, { rejectValue: ErrorResponse }>(
   'setup/getSetupData',
   async (_, { dispatch }) => {
-    const companyResponse = await dispatch(fetchCompany()).unwrap();
+    const companyResponse = await dispatch(fetchCompany(true)).unwrap();
 
     if (companyResponse) {
       const branchesResponse = await dispatch(fetchBranches({ pageNumber: 1, pageSize: 1 })).unwrap();
@@ -54,7 +48,7 @@ export const fetchSetupData = createAsyncThunk<void, void, { rejectValue: ErrorR
   }
 );
 
-export const fetchCompany = createAsyncThunk<Company | null, void, { rejectValue: ErrorResponse }>(
+export const fetchCompany = createAsyncThunk<Company | null, boolean | undefined, { rejectValue: ErrorResponse }>(
   'setup/getCompany',
   async (_, { rejectWithValue }) => {
     try {
@@ -68,7 +62,7 @@ export const fetchCompany = createAsyncThunk<Company | null, void, { rejectValue
     } catch (error) {
       return rejectWithValue({
         ...(error as ErrorResponse),
-        title: 'No Company found',
+        title: MESSAGES.error.company.notFound,
       });
     }
   }
@@ -76,9 +70,10 @@ export const fetchCompany = createAsyncThunk<Company | null, void, { rejectValue
 
 export const createCompany = createAsyncThunk<Company, Company, { rejectValue: ErrorResponse }>(
   'setup/setCompany',
-  async (company, { rejectWithValue }) => {
+  async (company, { dispatch, rejectWithValue }) => {
     try {
       await axios.post<Company>(URLS.company, company);
+      await dispatch(fetchCompany(false)).unwrap();
 
       return company;
     } catch (error) {
@@ -96,7 +91,7 @@ export const fetchBranches = createAsyncThunk<PaginatedResponse<Branch> | null, 
       if (!data.items.length) {
         return rejectWithValue({
           status: 404,
-          title: 'No Branches found',
+          title: MESSAGES.error.branches.notFound,
         });
       }
 
@@ -104,7 +99,7 @@ export const fetchBranches = createAsyncThunk<PaginatedResponse<Branch> | null, 
     } catch (error) {
       return rejectWithValue({
         ...(error as ErrorResponse),
-        title: 'No Branches found',
+        title: MESSAGES.error.branches.notFound,
       });
     }
   }
@@ -112,9 +107,10 @@ export const fetchBranches = createAsyncThunk<PaginatedResponse<Branch> | null, 
 
 export const createBranch = createAsyncThunk<void, Branch, { rejectValue: ErrorResponse }>(
   'setup/setBranch',
-  async (branch, { rejectWithValue }) => {
+  async (branch, { dispatch, rejectWithValue }) => {
     try {
       await axios.post<Branch>(URLS.branches, branch);
+      await dispatch(fetchBranches({ pageSize: 1, pageNumber: 1 })).unwrap();
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);
     }
@@ -135,7 +131,7 @@ export const fetchEmployee = createAsyncThunk<Employee | null, void, { rejectVal
     } catch (error) {
       return rejectWithValue({
         ...(error as ErrorResponse),
-        title: 'No Employee found',
+        title: MESSAGES.error.employee.notFound,
       });
     }
   }
@@ -143,9 +139,10 @@ export const fetchEmployee = createAsyncThunk<Employee | null, void, { rejectVal
 
 export const createEmployee = createAsyncThunk<void, Employee, { rejectValue: ErrorResponse }>(
   'setup/setEmployee',
-  async (employee, { rejectWithValue }) => {
+  async (employee, { dispatch, rejectWithValue }) => {
     try {
       await axios.post<Employee>(URLS.employee, employee);
+      await dispatch(fetchEmployee()).unwrap();
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);
     }
@@ -158,84 +155,83 @@ const setupSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCompany.pending, (state) => {
-        state.company.status = 'loading';
-        state.status = 'loading';
+      .addCase(fetchCompany.pending, (state, action) => {
+        state.company.fetchStatus = 'loading';
+
+        if (action.meta.arg) {
+          state.step.status = 'loading';
+        }
       })
       .addCase(fetchCompany.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
         state.company.data = null;
-        state.company.status = 'failed';
-        state.status = 'failed';
+        state.company.fetchStatus = 'failed';
+        state.step.status = 'failed';
         state.company.error = action.payload;
       })
       .addCase(fetchCompany.fulfilled, (state, action: PayloadAction<Company | null>) => {
         state.company.data = action.payload;
-        state.company.status = 'succeeded';
-        state.step = SetupStep.BRANCHES;
+        state.company.fetchStatus = 'succeeded';
+        state.step.data = SetupStep.BRANCHES;
       })
       .addCase(createCompany.pending, (state) => {
-        state.company.status = 'loading';
+        state.company.updateStatus = 'loading';
       })
       .addCase(createCompany.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
-        state.company.status = 'failed';
+        state.company.updateStatus = 'failed';
         state.company.error = action.payload;
       })
       .addCase(createCompany.fulfilled, (state, action: PayloadAction<Company>) => {
-        state.company.status = 'succeeded';
-        // TODO: update company data here
+        state.company.updateStatus = 'succeeded';
         state.company.data = action.payload;
-        state.step = SetupStep.BRANCHES;
       })
       .addCase(fetchBranches.pending, (state) => {
-        state.branches.status = 'loading';
+        state.branches.fetchStatus = 'loading';
       })
       .addCase(fetchBranches.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
         state.branches.data = null;
-        state.branches.status = 'failed';
-        state.status = 'failed';
+        state.branches.fetchStatus = 'failed';
+        state.step.status = 'failed';
         state.branches.error = action.payload;
       })
       .addCase(fetchBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<Branch> | null>) => {
         state.branches.data = action.payload;
-        state.branches.status = 'succeeded';
-        state.step = SetupStep.EMPLOYEE;
+        state.branches.fetchStatus = 'succeeded';
+        state.step.data = SetupStep.EMPLOYEE;
       })
       .addCase(createBranch.pending, (state) => {
-        state.branches.status = 'loading';
+        state.branches.updateStatus = 'loading';
       })
       .addCase(createBranch.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
-        state.branches.status = 'failed';
+        state.branches.updateStatus = 'failed';
         state.branches.error = action.payload;
       })
       .addCase(createBranch.fulfilled, (state) => {
-        state.branches.status = 'succeeded';
-        state.step = SetupStep.EMPLOYEE;
+        state.branches.updateStatus = 'succeeded';
       })
       .addCase(fetchEmployee.pending, (state) => {
-        state.employee.status = 'loading';
+        state.employee.fetchStatus = 'loading';
       })
       .addCase(fetchEmployee.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
         state.employee.data = null;
-        state.employee.status = 'failed';
-        state.status = 'failed';
+        state.employee.fetchStatus = 'failed';
+        state.step.status = 'failed';
         state.employee.error = action.payload;
       })
       .addCase(fetchEmployee.fulfilled, (state, action: PayloadAction<Employee | null>) => {
         state.employee.data = action.payload;
-        state.employee.status = 'succeeded';
-        state.status = 'succeeded';
-        state.step = SetupStep.COMPLETED;
+        state.employee.fetchStatus = 'succeeded';
+        state.step.status = 'succeeded';
+        state.step.data = SetupStep.COMPLETED;
       })
       .addCase(createEmployee.pending, (state) => {
-        state.employee.status = 'loading';
+        state.employee.updateStatus = 'loading';
       })
       .addCase(createEmployee.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
-        state.employee.status = 'failed';
+        state.employee.updateStatus = 'failed';
         state.employee.error = action.payload;
       })
       .addCase(createEmployee.fulfilled, (state) => {
-        state.employee.status = 'succeeded';
-        state.step = SetupStep.COMPLETED;
+        state.employee.updateStatus = 'succeeded';
       });
   },
 });
@@ -244,5 +240,4 @@ export const selectCompany = (state: RootState) => state.setup.company;
 export const selectBranches = (state: RootState) => state.setup.branches;
 export const selectEmployee = (state: RootState) => state.setup.employee;
 export const selectStep = (state: RootState) => state.setup.step;
-export const selectSetupStatus = (state: RootState) => state.setup.status;
 export default setupSlice.reducer;
