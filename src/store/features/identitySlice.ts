@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { RootState } from 'store';
+import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios.config';
-import { Client, ErrorResponse, StateEntity } from 'shared/models';
-import { ROUTES, URLS } from 'shared/constants';
+import { Client, ErrorResponse } from 'shared/models';
+import { MESSAGES, ROUTES, URLS } from 'shared/constants';
 import { updateAuthSettings } from './authSlice';
 
 interface IdentityState {
@@ -34,7 +34,7 @@ export const fetchClient = createAsyncThunk<Client | null, void, { rejectValue: 
         return data;
       }
 
-      return rejectWithValue({ title: 'Client not found' });
+      return rejectWithValue({ title: MESSAGES.error.client.notFound });
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);
     }

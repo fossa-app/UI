@@ -11,10 +11,33 @@ export const OIDC_INITIAL_CONFIG: OidcClientSettings = {
 
 export const APP_CONFIG = {
   snackbarAutoHideDuration: 10000,
-  errorMessages: {
-    unAuthorized: 'Session has expired. Please log in again.',
-    general: 'An unexpected error occurred. Please try again later.',
-    network: 'Network Error',
-    permission: `You don't have the necessary permissions. Please reach out to your Company administrator for support.`,
+  httpTimeout: 5000,
+};
+
+export const MESSAGES = {
+  error: {
+    general: {
+      unAuthorized: 'Session has expired. Please log in again. 😖',
+      common: 'An unexpected error occurred. Please try again later. 😖',
+      network: 'Network Error 😖',
+      permission: `You don't have the necessary permissions. Please reach out to your Company administrator for support. 😖`,
+    },
+    client: {
+      notFound: 'Client not found 😞',
+    },
+    system: {
+      notFound: 'System not found 😞',
+    },
+    company: {
+      notFound: 'Company not found 😞',
+    },
+    branches: {
+      notFound: 'Branch not found 😞',
+    },
+    employee: {
+      notFound: 'Employee not found 😞',
+    },
   },
 };
+
+export const STEP_KEY = 'step';

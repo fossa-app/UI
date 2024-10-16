@@ -1,11 +1,12 @@
 import { User } from 'oidc-client-ts';
 import { OIDC_INITIAL_CONFIG } from 'shared/constants';
 
-export const saveToLocalStorage = <T>(key: string, value: T) => {
+export const saveToLocalStorage = <T = any>(key: string, value: T) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
-export const getFromLocalStorage = <T>(key: string) => {
+// TODO: return null instead of empty object if not found
+export const getFromLocalStorage = <T = any>(key: string) => {
   const data = localStorage.getItem(key);
 
   if (!data) {
@@ -29,6 +30,7 @@ export const getUserFromLocalStorage = (clientId: string): User => {
   return getFromLocalStorage<User>(oidcKey);
 };
 
+// TODO: move to another helper
 export const decodeJwt = (token?: string): Record<string, any> | null => {
   if (!token) {
     return null;
