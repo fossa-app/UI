@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { removeUser, selectAuthSettings } from 'store/features';
 import axios, { AxiosError, AxiosRequestConfig } from 'shared/configs/axios.config';
 import { getUserFromLocalStorage, getUserManager } from 'shared/helpers';
-import { APP_CONFIG, ROUTES } from 'shared/constants';
+import { MESSAGES, ROUTES } from 'shared/constants';
 import { ErrorResponse } from 'shared/models';
 import Snackbar from 'components/UI/Snackbar';
 
@@ -39,11 +39,11 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
 
       setShouldNavigate(true);
       setShowSnackbar(true);
-      setErrorMessage(APP_CONFIG.errorMessages.unAuthorized);
+      setErrorMessage(MESSAGES.error.general.unAuthorized);
       dispatch(removeUser());
 
       return Promise.reject({
-        title: APP_CONFIG.errorMessages.unAuthorized,
+        title: MESSAGES.error.general.unAuthorized,
         status: 401,
       });
     }
@@ -77,12 +77,12 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
 
         // TODO: double check this
         if (!error.response || error.code === 'ERR_NETWORK') {
-          setErrorMessage(APP_CONFIG.errorMessages.network);
+          setErrorMessage(MESSAGES.error.general.network);
           setShowSnackbar(true);
 
           return Promise.reject({
             status: 599,
-            title: APP_CONFIG.errorMessages.network,
+            title: MESSAGES.error.general.network,
           });
         }
 
@@ -91,12 +91,12 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
         }
 
         if (error.response && error.response.status >= 500) {
-          setErrorMessage(APP_CONFIG.errorMessages.general);
+          setErrorMessage(MESSAGES.error.general.common);
           setShowSnackbar(true);
 
           return Promise.reject({
             ...(error.response.data as ErrorResponse),
-            title: APP_CONFIG.errorMessages.general,
+            title: MESSAGES.error.general.common,
           });
         }
 

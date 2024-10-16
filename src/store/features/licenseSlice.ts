@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'shared/configs/axios.config';
-import { ErrorResponse, StateEntity, System } from 'shared/models';
-import { URLS } from 'shared/constants';
-import { RootState } from 'store';
+import { ErrorResponse, System } from 'shared/models';
+import { MESSAGES, URLS } from 'shared/constants';
+import { RootState, StateEntity } from 'store';
 
 interface LicenseState {
   system: StateEntity<System | null>;
@@ -21,7 +21,7 @@ export const fetchSystem = createAsyncThunk<System | null, void, { rejectValue: 
     try {
       const { data } = await axios.get<System>(URLS.system);
 
-      return data || rejectWithValue({ title: 'System not found' });
+      return data || rejectWithValue({ title: MESSAGES.error.system.notFound });
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);
     }

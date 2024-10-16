@@ -6,7 +6,7 @@ import EmployeeDetailsForm from './components/EmployeeDetailsForm';
 
 const EmployeePage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { status, error } = useAppSelector(selectEmployee);
+  const { updateStatus, error } = useAppSelector(selectEmployee);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { data: user } = useAppSelector(selectUser);
 
@@ -19,7 +19,7 @@ const EmployeePage: React.FC = () => {
       title="Create an Employee"
       isAdmin={isUserAdmin}
       error={error}
-      loading={status === 'loading'}
+      loading={updateStatus === 'loading'}
       userProfile={user?.profile}
       onSubmit={handleSubmit}
     />

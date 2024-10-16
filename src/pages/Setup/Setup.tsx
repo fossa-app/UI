@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useNavigate, useOutlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchSetupData, selectStep, selectSetupStatus } from 'store/features';
+import { fetchSetupData, selectStep } from 'store/features';
 import { SetupStep } from 'shared/models';
 import { ROUTES } from 'shared/constants';
 import Loader from 'components/UI/Loader';
@@ -11,8 +11,7 @@ const SetupPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const outlet = useOutlet();
-  const step = useAppSelector(selectStep);
-  const status = useAppSelector(selectSetupStatus);
+  const { data: step, status } = useAppSelector(selectStep);
 
   React.useEffect(() => {
     if (status === 'idle') {

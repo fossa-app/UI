@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
+import { ErrorResponse, Status } from 'shared/models';
 import clientReducer from './features/identitySlice';
 import appConfigReducer from './features/appConfigSlice';
 import licenseReducer from './features/licenseSlice';
@@ -18,6 +19,14 @@ const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+export interface StateEntity<T = unknown> {
+  data: T;
+  status?: Status;
+  fetchStatus?: Status;
+  updateStatus?: Status;
+  error?: ErrorResponse;
+}
 
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 export const useAppSelector = useSelector.withTypes<RootState>();

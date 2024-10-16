@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';
 import LoadingButton from '@mui/lab/LoadingButton';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { APP_CONFIG } from 'shared/constants';
+import { MESSAGES } from 'shared/constants';
 import { ErrorResponse } from 'shared/models';
 import Snackbar from 'components/UI/Snackbar';
 
@@ -55,7 +55,7 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, i
 
   React.useEffect(() => {
     if (!isAdmin) {
-      setInputError(APP_CONFIG.errorMessages.permission);
+      setInputError(MESSAGES.error.general.permission);
     }
   }, [isAdmin]);
 
