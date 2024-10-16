@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { OidcClientSettings } from 'oidc-client-ts';
-import { RootState } from 'store';
+import { RootState, StateEntity } from 'store';
 import { getUserManager, updateUserManager, mapUser, decodeJwt } from 'shared/helpers';
-import { AppUser, ErrorResponse, StateEntity } from 'shared/models';
-import { ADMIN_ROLE_NAME, APP_CONFIG, OIDC_INITIAL_CONFIG } from 'shared/constants';
+import { AppUser, ErrorResponse } from 'shared/models';
+import { ADMIN_ROLE_NAME, MESSAGES, OIDC_INITIAL_CONFIG } from 'shared/constants';
 
 interface AuthState {
   settings: StateEntity<OidcClientSettings>;
@@ -32,7 +32,7 @@ export const fetchUser = createAsyncThunk<AppUser | null, void, { rejectValue: E
       }
 
       return rejectWithValue({
-        title: APP_CONFIG.errorMessages.unAuthorized,
+        title: MESSAGES.error.general.unAuthorized,
         status: 401,
       });
     } catch (error) {

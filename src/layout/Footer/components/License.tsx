@@ -10,8 +10,12 @@ interface LicenseProps {
 const License: React.FC<LicenseProps> = ({ system, company }) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Typography variant="caption">{system}</Typography>
-      <Typography variant="caption">{company}</Typography>
+      <Typography variant="caption" textAlign="right">
+        {system}
+      </Typography>
+      <Typography variant="caption" textAlign="right">
+        {company}
+      </Typography>
     </Box>
   );
 };

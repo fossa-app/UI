@@ -4,7 +4,7 @@ import { createBranch, selectBranches, selectIsUserAdmin } from 'store/features'
 import CompanyDetailsForm from './components/CompanyDetailsForm';
 
 const BranchesPage: React.FC = () => {
-  const { status, error } = useAppSelector(selectBranches);
+  const { updateStatus, error } = useAppSelector(selectBranches);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const dispatch = useAppDispatch();
 
@@ -19,7 +19,7 @@ const BranchesPage: React.FC = () => {
       validationMessage="Branch name is required"
       isAdmin={isUserAdmin}
       error={error}
-      loading={status === 'loading'}
+      loading={updateStatus === 'loading'}
       onSubmit={handleSubmit}
     />
   );
