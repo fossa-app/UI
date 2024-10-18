@@ -2,7 +2,6 @@
 export enum RouteKey {
   login = 'login',
   callback = 'callback',
-  home = 'home',
   setup = 'setup',
   company = 'company',
   branches = 'branches',

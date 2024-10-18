@@ -59,7 +59,7 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
 
   React.useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use((config) => {
-      const { access_token, token_type } = getUserFromLocalStorage(authSettings.client_id);
+      const { access_token, token_type = 'Bearer' } = getUserFromLocalStorage(authSettings.client_id) || {};
 
       if (access_token) {
         config.headers.Authorization = `${token_type} ${access_token}`;
@@ -76,7 +76,7 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
         }
 
         // TODO: double check this
-        if (!error.response || error.code === 'ERR_NETWORK') {
+        if (error.code === 'ERR_NETWORK') {
           setErrorMessage(MESSAGES.error.general.network);
           setShowSnackbar(true);
 
@@ -86,7 +86,7 @@ const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
           });
         }
 
-        if (error.config && error.response.status === 401) {
+        if (error.config && error.response?.status === 401) {
           return refreshToken(error.config);
         }
 
