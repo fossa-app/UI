@@ -130,7 +130,7 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({ title, isAdmi
           <LoadingButton
             type="submit"
             loadingPosition="end"
-            variant="outlined"
+            variant="contained"
             loading={loading}
             disabled={!isAdmin}
             endIcon={<DoneIcon />}

@@ -48,6 +48,7 @@ export const fetchSetupData = createAsyncThunk<void, void, { rejectValue: ErrorR
   }
 );
 
+// TODO: move to companySlice
 export const fetchCompany = createAsyncThunk<Company | null, boolean | undefined, { rejectValue: ErrorResponse }>(
   'setup/getCompany',
   async (_, { rejectWithValue }) => {
@@ -68,6 +69,7 @@ export const fetchCompany = createAsyncThunk<Company | null, boolean | undefined
   }
 );
 
+// TODO: move to companySlice
 export const createCompany = createAsyncThunk<Company, Company, { rejectValue: ErrorResponse }>(
   'setup/setCompany',
   async (company, { dispatch, rejectWithValue }) => {
@@ -82,6 +84,7 @@ export const createCompany = createAsyncThunk<Company, Company, { rejectValue: E
   }
 );
 
+// TODO: move to branchesSlice
 export const fetchBranches = createAsyncThunk<PaginatedResponse<Branch> | null, PaginationParams, { rejectValue: ErrorResponse }>(
   'setup/getBranches',
   async ({ pageNumber, pageSize }, { rejectWithValue }) => {
@@ -105,6 +108,7 @@ export const fetchBranches = createAsyncThunk<PaginatedResponse<Branch> | null, 
   }
 );
 
+// TODO: move to branchesSlice
 export const createBranch = createAsyncThunk<void, Branch, { rejectValue: ErrorResponse }>(
   'setup/setBranch',
   async (branch, { dispatch, rejectWithValue }) => {
@@ -117,6 +121,7 @@ export const createBranch = createAsyncThunk<void, Branch, { rejectValue: ErrorR
   }
 );
 
+// TODO: move to employeeSlice
 export const fetchEmployee = createAsyncThunk<Employee | null, void, { rejectValue: ErrorResponse }>(
   'setup/getEmployee',
   async (_, { rejectWithValue }) => {
@@ -137,6 +142,7 @@ export const fetchEmployee = createAsyncThunk<Employee | null, void, { rejectVal
   }
 );
 
+// TODO: move to employeeSlice
 export const createEmployee = createAsyncThunk<void, Employee, { rejectValue: ErrorResponse }>(
   'setup/setEmployee',
   async (employee, { dispatch, rejectWithValue }) => {
