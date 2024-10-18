@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import { ROUTES } from 'shared/constants';
 import RootPage from 'pages/Root';
 import LoginPage from 'pages/Login';
@@ -10,9 +10,9 @@ import SetupPage from 'pages/Setup/Setup';
 import CompanyPage from 'pages/Setup/Company';
 import BranchesPage from 'pages/Setup/Branches';
 import EmployeePage from 'pages/Setup/Employee';
+import NotFoundPage from 'pages/NotFound';
 
 const router = createBrowserRouter([
-  // TODO: add Error component
   {
     path: '/',
     element: <RootPage />,
@@ -26,10 +26,9 @@ const router = createBrowserRouter([
         element: <CallbackPage />,
       },
       {
-        path: ROUTES.home.path,
+        path: '/',
         element: <ProtectedPage />,
         children: [
-          { index: true, element: <Navigate to={ROUTES.setup.path} replace /> },
           {
             path: ROUTES.setup.path,
             element: <SetupPage />,
@@ -50,9 +49,9 @@ const router = createBrowserRouter([
             ],
           },
           { path: ROUTES.dashboard.path, element: <DashboardPage /> },
-          { path: '*', element: <Navigate to={ROUTES.dashboard.path} replace /> },
         ],
       },
+      { path: '*', element: <NotFoundPage /> },
     ],
   },
 ]);

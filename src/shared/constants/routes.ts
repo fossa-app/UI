@@ -9,10 +9,6 @@ export const ROUTES: AppRoute = {
     name: 'Callback',
     path: '/callback',
   },
-  home: {
-    name: 'Home',
-    path: '/',
-  },
   setup: {
     name: 'Setup',
     path: '/setup',

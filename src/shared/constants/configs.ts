@@ -11,16 +11,16 @@ export const OIDC_INITIAL_CONFIG: OidcClientSettings = {
 
 export const APP_CONFIG = {
   snackbarAutoHideDuration: 10000,
-  httpTimeout: 5000,
+  httpTimeout: 15000,
 };
 
 export const MESSAGES = {
   error: {
     general: {
-      unAuthorized: 'Session has expired. Please log in again. 😖',
-      common: 'An unexpected error occurred. Please try again later. 😖',
-      network: 'Network Error 😖',
-      permission: `You don't have the necessary permissions. Please reach out to your Company administrator for support. 😖`,
+      unAuthorized: 'Session has expired. Please log in again. 😞',
+      common: 'An unexpected error occurred. Please try again later. 😞',
+      network: 'Network Error 😞',
+      permission: `You don't have the necessary permissions. Please reach out to your Company administrator for support. 😊`,
     },
     client: {
       notFound: 'Client not found 😞',
