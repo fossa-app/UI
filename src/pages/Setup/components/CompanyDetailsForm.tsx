@@ -80,6 +80,11 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, i
           disabled={!isAdmin}
           label={label}
           value={inputValue}
+          slotProps={{
+            htmlInput: {
+              maxLength: 50,
+            },
+          }}
           error={!!inputError}
           onChange={handleInputChange}
         />
@@ -87,7 +92,7 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, i
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 5 }}>
           <LoadingButton
             type="submit"
-            variant="outlined"
+            variant="contained"
             loadingPosition="end"
             loading={loading}
             disabled={!isAdmin}

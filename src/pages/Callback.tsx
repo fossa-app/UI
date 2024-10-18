@@ -11,13 +11,9 @@ const CallbackPage = () => {
   const handleSignInCallback = async () => {
     try {
       await userManager.signinRedirectCallback();
-      // TODO: sometimes after successfull login, user is not being redirected to setup/company but to setup instead
-      // TODO: check if company/branch/employee data exists, navigate to Dashboard instead
-
-      navigate(ROUTES.setup.path);
+      navigate('/');
     } catch (error) {
       // TODO: set error state
-      // TODO: move all auth logic to axios interceptor component
       navigate(ROUTES.login.path);
     }
   };

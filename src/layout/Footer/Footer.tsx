@@ -28,7 +28,7 @@ const Footer: React.FC = () => {
     >
       <>
         <Logo sx={{ width: 36, height: 36 }} />
-        <Typography data-testid="app-logo" noWrap variant="caption" component="div" sx={{ flexGrow: 1 }}>
+        <Typography data-testid="app-logo" variant="caption" component="div" sx={{ flexGrow: 1 }}>
           Fossa
         </Typography>
       </>

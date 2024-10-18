@@ -5,18 +5,17 @@ export const saveToLocalStorage = <T = any>(key: string, value: T) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
-// TODO: return null instead of empty object if not found
-export const getFromLocalStorage = <T = any>(key: string) => {
+export const getFromLocalStorage = <T = any>(key: string): T | null => {
   const data = localStorage.getItem(key);
 
   if (!data) {
-    return {} as T;
+    return null;
   }
 
   try {
     return JSON.parse(data) as T;
   } catch (error) {
-    return {} as T;
+    return null;
   }
 };
 
@@ -24,7 +23,7 @@ export const removeFromLocalStorage = (key: string) => {
   localStorage.removeItem(key);
 };
 
-export const getUserFromLocalStorage = (clientId: string): User => {
+export const getUserFromLocalStorage = (clientId: string): User | null => {
   const oidcKey = `oidc.user:${OIDC_INITIAL_CONFIG.authority}:${clientId}`;
 
   return getFromLocalStorage<User>(oidcKey);
