@@ -25,16 +25,20 @@ export const ROUTES: AppRoute = {
     name: 'Set Employee',
     path: `/setup/${SetupStep.EMPLOYEE}`,
   },
+  manage: {
+    name: 'Manage',
+    path: '/manage',
+  },
   dashboard: {
     name: 'Dashboard',
-    path: '/dashboard',
+    path: '/manage/dashboard',
   },
   company: {
     name: 'Company',
-    path: '/company',
+    path: '/manage/company',
   },
   branches: {
     name: 'Branches',
-    path: '/branches',
+    path: '/manage/branches',
   },
 };

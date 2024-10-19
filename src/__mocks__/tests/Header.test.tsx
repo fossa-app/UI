@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { updateAppConfig } from 'store/features';
 import { setMockState, mockDispatch, resetMockState } from '../store';
 import { getUserManager } from '../oidc-client-mock';
+import { SetupStep } from 'shared/models';
 import Header from 'layout/Header/Header';
 
 describe('Header Component', () => {
@@ -16,6 +17,7 @@ describe('Header Component', () => {
       },
       setup: {
         company: { data: { name: 'Test' } },
+        step: { data: SetupStep.COMPLETED, status: 'succeeded' },
       },
       appConfig: { isDarkTheme: true },
     });

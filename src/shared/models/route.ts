@@ -6,6 +6,7 @@ export enum RouteKey {
   setCompany = 'setCompany',
   setBranches = 'setBranches',
   setEmployee = 'setEmployee',
+  manage = 'manage',
   dashboard = 'dashboard',
   company = 'company',
   branches = 'branches',

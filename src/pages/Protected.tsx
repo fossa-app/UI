@@ -1,46 +1,37 @@
 import * as React from 'react';
-import { useNavigate, useOutlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchSetupData, fetchUser, selectStep, selectUser } from 'store/features';
+import { fetchUser, selectUser } from 'store/features';
 import { ROUTES } from 'shared/constants';
 import Loader from 'components/UI/Loader';
 import Content from 'layout/Content';
 
 const ProtectedPage: React.FC = () => {
-  const outlet = useOutlet();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: user, status: fetchUserStatus } = useAppSelector(selectUser);
-  const { status: stepStatus } = useAppSelector(selectStep);
-  const loading = fetchUserStatus === 'loading' || stepStatus === 'loading';
+  const { data: user, status } = useAppSelector(selectUser);
 
   React.useEffect(() => {
-    if (fetchUserStatus === 'idle') {
+    if (status === 'idle') {
       dispatch(fetchUser());
-    } else if (!user && fetchUserStatus === 'failed') {
+    } else if (!user && status === 'failed') {
       navigate(ROUTES.login.path);
     }
-  }, [user, fetchUserStatus]);
+  }, [user, status]);
 
-  React.useEffect(() => {
-    if (stepStatus === 'idle') {
-      dispatch(fetchSetupData());
-    } else if (stepStatus === 'failed') {
-      navigate(ROUTES.setup.path);
-    } else if (stepStatus === 'succeeded') {
-      navigate(ROUTES.dashboard.path);
-    }
-  }, [stepStatus]);
-
-  if (loading) {
+  if (status === 'loading') {
     return <Loader />;
   }
 
-  if (fetchUserStatus === 'failed') {
+  if (status === 'failed') {
     return null;
   }
 
-  return <Content>{outlet}</Content>;
+  return (
+    <Content>
+      <Outlet />
+    </Content>
+  );
 };
 
 export default ProtectedPage;
