@@ -7,9 +7,11 @@ import ProtectedPage from 'pages/Protected';
 import DashboardPage from 'pages/Dashboard';
 import CallbackPage from 'pages/Callback';
 import SetupPage from 'pages/Setup/Setup';
-import CompanyPage from 'pages/Setup/Company';
-import BranchesPage from 'pages/Setup/Branches';
-import EmployeePage from 'pages/Setup/Employee';
+import CompanySetupPage from 'pages/Setup/CompanySetup';
+import BranchesSetupPage from 'pages/Setup/BranchesSetup';
+import EmployeeSetupPage from 'pages/Setup/EmployeeSetup';
+import CompanyPage from 'pages/Company';
+import BranchesPage from 'pages/Branches';
 import NotFoundPage from 'pages/NotFound';
 
 const router = createBrowserRouter([
@@ -34,21 +36,23 @@ const router = createBrowserRouter([
             element: <SetupPage />,
             children: [
               {
-                path: ROUTES.company.path,
+                path: ROUTES.setCompany.path,
                 index: true,
-                element: <CompanyPage />,
+                element: <CompanySetupPage />,
               },
               {
-                path: ROUTES.branches.path,
-                element: <BranchesPage />,
+                path: ROUTES.setBranches.path,
+                element: <BranchesSetupPage />,
               },
               {
-                path: ROUTES.employee.path,
-                element: <EmployeePage />,
+                path: ROUTES.setEmployee.path,
+                element: <EmployeeSetupPage />,
               },
             ],
           },
           { path: ROUTES.dashboard.path, element: <DashboardPage /> },
+          { path: ROUTES.company.path, element: <CompanyPage /> },
+          { path: ROUTES.branches.path, element: <BranchesPage /> },
         ],
       },
       { path: '*', element: <NotFoundPage /> },

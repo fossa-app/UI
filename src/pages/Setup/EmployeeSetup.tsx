@@ -4,7 +4,7 @@ import { selectIsUserAdmin, selectEmployee, createEmployee, selectUser } from 's
 import { Employee } from 'shared/models';
 import EmployeeDetailsForm from './components/EmployeeDetailsForm';
 
-const EmployeePage: React.FC = () => {
+const EmployeeSetupPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { updateStatus, error } = useAppSelector(selectEmployee);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
@@ -26,4 +26,4 @@ const EmployeePage: React.FC = () => {
   );
 };
 
-export default EmployeePage;
+export default EmployeeSetupPage;
