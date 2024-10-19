@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate, useOutlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchSetupData, selectStep } from 'store/features';
@@ -10,7 +10,6 @@ import Loader from 'components/UI/Loader';
 const SetupPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const outlet = useOutlet();
   const { data: step, status } = useAppSelector(selectStep);
 
   React.useEffect(() => {
@@ -29,7 +28,7 @@ const SetupPage: React.FC = () => {
     } else if (step === SetupStep.EMPLOYEE) {
       navigate(ROUTES.setEmployee.path);
     } else if (step === SetupStep.COMPLETED) {
-      navigate(ROUTES.dashboard.path);
+      navigate(ROUTES.manage.path);
     }
   }, [step]);
 
@@ -37,7 +36,11 @@ const SetupPage: React.FC = () => {
     return <Loader />;
   }
 
-  return <Box sx={{ width: { md: 544, xs: '100%' }, margin: '0 auto' }}>{outlet}</Box>;
+  return (
+    <Box sx={{ width: { md: 544, xs: '100%' }, margin: '0 auto' }}>
+      <Outlet />
+    </Box>
+  );
 };
 
 export default SetupPage;

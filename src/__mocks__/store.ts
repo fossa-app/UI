@@ -13,6 +13,7 @@ const initialMockState: DeepPartial<RootState> = {
   },
   setup: {
     company: {},
+    step: {},
   },
   license: {},
   auth: {
