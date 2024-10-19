@@ -10,6 +10,7 @@ import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectAppConfig, selectCompany, selectUser, updateAppConfig } from 'store/features';
 import { getUserManager } from 'shared/helpers';
+import Search from '../../components/Search';
 import UserMenu from './components/UserMenu/UserMenu';
 
 const Header: React.FC = () => {
@@ -32,6 +33,10 @@ const Header: React.FC = () => {
     await userManager.signoutRedirect();
   };
 
+  const handleGetOptionLabel = (option: { id: string; name: string }) => {
+    return option.name;
+  };
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -45,6 +50,9 @@ const Header: React.FC = () => {
             <Typography data-testid="app-logo" noWrap variant="h6" component="div">
               {companyName}
             </Typography>
+          </Grid>
+          <Grid size={3}>
+            <Search data={[]} getOptionLabel={handleGetOptionLabel} />
           </Grid>
           <Grid size="auto" sx={{ display: 'flex', alignItems: 'center' }}>
             <FormControlLabel
