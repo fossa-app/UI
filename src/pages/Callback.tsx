@@ -11,7 +11,7 @@ const CallbackPage = () => {
   const handleSignInCallback = async () => {
     try {
       await userManager.signinRedirectCallback();
-      navigate('/');
+      navigate(ROUTES.manage.path);
     } catch (error) {
       // TODO: set error state
       navigate(ROUTES.login.path);

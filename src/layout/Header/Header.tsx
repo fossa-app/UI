@@ -8,7 +8,7 @@ import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectAppConfig, selectCompany, selectUser, updateAppConfig } from 'store/features';
+import { selectAppConfig, selectCompany, selectStep, selectUser, updateAppConfig } from 'store/features';
 import { getUserManager } from 'shared/helpers';
 import Search from '../../components/Search';
 import UserMenu from './components/UserMenu/UserMenu';
@@ -19,7 +19,9 @@ const Header: React.FC = () => {
   const userManager = getUserManager();
   const { data: user } = useAppSelector(selectUser);
   const { data: company } = useAppSelector(selectCompany);
+  const { status } = useAppSelector(selectStep);
   const companyName = company?.name ?? '';
+  const setupCompleted = status === 'succeeded';
 
   const handleThemeChange = () => {
     dispatch(
@@ -46,15 +48,21 @@ const Header: React.FC = () => {
               <MenuIcon />
             </IconButton>
           </Grid>
-          <Grid size="grow">
-            <Typography data-testid="app-logo" noWrap variant="h6" component="div">
-              {companyName}
-            </Typography>
-          </Grid>
-          <Grid size={3}>
-            <Search data={[]} getOptionLabel={handleGetOptionLabel} />
-          </Grid>
+          {companyName && (
+            <Grid size="grow">
+              {/* TODO: handle long company name cases */}
+              <Typography data-testid="app-logo" noWrap variant="h6" component="div">
+                {companyName}
+              </Typography>
+            </Grid>
+          )}
+          {setupCompleted && (
+            <Grid size={3}>
+              <Search data={[]} getOptionLabel={handleGetOptionLabel} />
+            </Grid>
+          )}
           <Grid size="auto" sx={{ display: 'flex', alignItems: 'center' }}>
+            {/* TODO: move to a separate component */}
             <FormControlLabel
               sx={{ mr: 1 }}
               control={<Switch data-testid="theme-switch" size="small" checked={isDarkTheme} onChange={handleThemeChange} />}
