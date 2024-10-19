@@ -23,11 +23,11 @@ const SetupPage: React.FC = () => {
   // This is minor issue since the user has no way (except from manually entering the url) to access the /setup page
   React.useEffect(() => {
     if (step === SetupStep.COMPANY) {
-      navigate(ROUTES.company.path);
+      navigate(ROUTES.setCompany.path);
     } else if (step === SetupStep.BRANCHES) {
-      navigate(ROUTES.branches.path);
+      navigate(ROUTES.setBranches.path);
     } else if (step === SetupStep.EMPLOYEE) {
-      navigate(ROUTES.employee.path);
+      navigate(ROUTES.setEmployee.path);
     } else if (step === SetupStep.COMPLETED) {
       navigate(ROUTES.dashboard.path);
     }

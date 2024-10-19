@@ -3,10 +3,12 @@ export enum RouteKey {
   login = 'login',
   callback = 'callback',
   setup = 'setup',
+  setCompany = 'setCompany',
+  setBranches = 'setBranches',
+  setEmployee = 'setEmployee',
+  dashboard = 'dashboard',
   company = 'company',
   branches = 'branches',
-  employee = 'employee',
-  dashboard = 'dashboard',
 }
 
 export interface RouteItem {

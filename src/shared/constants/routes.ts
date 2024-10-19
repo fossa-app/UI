@@ -13,20 +13,28 @@ export const ROUTES: AppRoute = {
     name: 'Setup',
     path: '/setup',
   },
-  company: {
-    name: 'Company',
+  setCompany: {
+    name: 'Set Company',
     path: `/setup/${SetupStep.COMPANY}`,
   },
-  branches: {
-    name: 'Branches',
+  setBranches: {
+    name: 'Set Branches',
     path: `/setup/${SetupStep.BRANCHES}`,
   },
-  employee: {
-    name: 'Employee',
+  setEmployee: {
+    name: 'Set Employee',
     path: `/setup/${SetupStep.EMPLOYEE}`,
   },
   dashboard: {
     name: 'Dashboard',
     path: '/dashboard',
+  },
+  company: {
+    name: 'Company',
+    path: '/company',
+  },
+  branches: {
+    name: 'Branches',
+    path: '/branches',
   },
 };

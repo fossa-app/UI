@@ -1,22 +1,22 @@
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectCompany, createCompany, selectIsUserAdmin } from 'store/features';
+import { createBranch, selectBranches, selectIsUserAdmin } from 'store/features';
 import CompanyDetailsForm from './components/CompanyDetailsForm';
 
-const CompanyPage: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const { updateStatus, error } = useAppSelector(selectCompany);
+const BranchesSetupPage: React.FC = () => {
+  const { updateStatus, error } = useAppSelector(selectBranches);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
+  const dispatch = useAppDispatch();
 
   const handleSubmit = (name: string) => {
-    dispatch(createCompany({ name }));
+    dispatch(createBranch({ name }));
   };
 
   return (
     <CompanyDetailsForm
-      title="Create a Company"
-      label="Enter Company name"
-      validationMessage="Company name is required"
+      title="Create a Branch"
+      label="Enter Branch name"
+      validationMessage="Branch name is required"
       isAdmin={isUserAdmin}
       error={error}
       loading={updateStatus === 'loading'}
@@ -25,4 +25,4 @@ const CompanyPage: React.FC = () => {
   );
 };
 
-export default CompanyPage;
+export default BranchesSetupPage;
