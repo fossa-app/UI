@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { updateAppConfig } from 'store/features';
 import { setMockState, mockDispatch, resetMockState } from '../store';
@@ -24,7 +25,11 @@ describe('Header Component', () => {
   });
 
   it('should display dark theme switch as checked when dark theme is enabled', async () => {
-    render(<Header />);
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
 
     const themeSwitch = await screen.findByTestId('theme-switch');
 
@@ -34,7 +39,11 @@ describe('Header Component', () => {
   it('should display dark theme switch as unchecked when dark theme is disabled', async () => {
     setMockState({ appConfig: { isDarkTheme: false } });
 
-    render(<Header />);
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
 
     const themeSwitch = await screen.findByTestId('theme-switch');
 
@@ -44,7 +53,11 @@ describe('Header Component', () => {
   it('should dispatch action to update theme when switch is toggled', async () => {
     setMockState({ appConfig: { isDarkTheme: false } });
 
-    render(<Header />);
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
 
     const themeSwitch = await screen.findByTestId('theme-switch');
 
@@ -58,7 +71,11 @@ describe('Header Component', () => {
       auth: { user: { data: { profile: { given_name: 'Test' } } } } as any,
     });
 
-    render(<Header />);
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
 
     const userName = await screen.findByTestId('user-name');
     const logoutButton = await screen.findByTestId('logout-button');
@@ -74,7 +91,11 @@ describe('Header Component', () => {
       auth: { user: { data: { profile: { given_name: 'Test' } } } } as any,
     });
 
-    render(<Header />);
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>
+    );
 
     const userMenuButton = await screen.findByTestId('user-menu');
 
