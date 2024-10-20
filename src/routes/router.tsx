@@ -14,6 +14,7 @@ import ManagePage from 'pages/Manage/Manage';
 import DashboardPage from 'pages/Dashboard';
 import CompanyPage from 'pages/Company';
 import BranchesPage from 'pages/Branches';
+import RouteTitle from 'components/RouteTitle';
 
 const router = createBrowserRouter([
   {
@@ -22,11 +23,21 @@ const router = createBrowserRouter([
     children: [
       {
         path: ROUTES.login.path,
-        element: <LoginPage />,
+        element: (
+          <>
+            <RouteTitle title="Login" />
+            <LoginPage />
+          </>
+        ),
       },
       {
         path: ROUTES.callback.path,
-        element: <CallbackPage />,
+        element: (
+          <>
+            <RouteTitle title="Callback" />
+            <CallbackPage />
+          </>
+        ),
       },
       {
         path: '/',
@@ -46,15 +57,30 @@ const router = createBrowserRouter([
               },
               {
                 path: ROUTES.setCompany.path,
-                element: <CompanySetupPage />,
+                element: (
+                  <>
+                    <RouteTitle title="Create a Company" />
+                    <CompanySetupPage />
+                  </>
+                ),
               },
               {
                 path: ROUTES.setBranches.path,
-                element: <BranchesSetupPage />,
+                element: (
+                  <>
+                    <RouteTitle title="Create a Branch" />
+                    <BranchesSetupPage />
+                  </>
+                ),
               },
               {
                 path: ROUTES.setEmployee.path,
-                element: <EmployeeSetupPage />,
+                element: (
+                  <>
+                    <RouteTitle title="Create an Employee" />
+                    <EmployeeSetupPage />
+                  </>
+                ),
               },
             ],
           },
@@ -68,15 +94,30 @@ const router = createBrowserRouter([
               },
               {
                 path: ROUTES.dashboard.path,
-                element: <DashboardPage />,
+                element: (
+                  <>
+                    <RouteTitle title="Dashboard" />
+                    <DashboardPage />
+                  </>
+                ),
               },
               {
                 path: ROUTES.company.path,
-                element: <CompanyPage />,
+                element: (
+                  <>
+                    <RouteTitle title="Company" />
+                    <CompanyPage />
+                  </>
+                ),
               },
               {
                 path: ROUTES.branches.path,
-                element: <BranchesPage />,
+                element: (
+                  <>
+                    <RouteTitle title="Branches" />
+                    <BranchesPage />
+                  </>
+                ),
               },
               {
                 path: '*',
@@ -86,7 +127,15 @@ const router = createBrowserRouter([
           },
         ],
       },
-      { path: '*', element: <NotFoundPage /> },
+      {
+        path: '*',
+        element: (
+          <>
+            <RouteTitle title="Page not found" />
+            <NotFoundPage />
+          </>
+        ),
+      },
     ],
   },
 ]);

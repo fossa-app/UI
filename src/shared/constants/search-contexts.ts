@@ -5,8 +5,8 @@ export enum SearchContext {
   EMPLOYEE = 'employee',
 }
 
-export const SEARCH_CONTEXTS = new Map<SearchContext, string>([
-  [SearchContext.COMPANY, 'manage/company'],
-  [SearchContext.BRANCHES, 'manage/branches'],
-  [SearchContext.EMPLOYEE, 'manage/employee'],
+export const SEARCH_CONTEXTS = new Map<string, SearchContext>([
+  ['/manage/company', SearchContext.COMPANY],
+  ['/manage/branches', SearchContext.BRANCHES],
+  ['/manage/employee', SearchContext.EMPLOYEE],
 ]);
