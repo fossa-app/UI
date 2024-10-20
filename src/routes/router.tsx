@@ -14,6 +14,7 @@ import ManagePage from 'pages/Manage/Manage';
 import DashboardPage from 'pages/Dashboard';
 import CompanyPage from 'pages/Company';
 import BranchesPage from 'pages/Branches';
+import EmployeesPage from 'pages/Employees';
 import RouteTitle from 'components/RouteTitle';
 
 const router = createBrowserRouter([
@@ -116,6 +117,15 @@ const router = createBrowserRouter([
                   <>
                     <RouteTitle title="Branches" />
                     <BranchesPage />
+                  </>
+                ),
+              },
+              {
+                path: ROUTES.employees.path,
+                element: (
+                  <>
+                    <RouteTitle title="Employees" />
+                    <EmployeesPage />
                   </>
                 ),
               },

@@ -10,6 +10,7 @@ export enum RouteKey {
   dashboard = 'dashboard',
   company = 'company',
   branches = 'branches',
+  employees = 'employees',
 }
 
 export interface RouteItem {
