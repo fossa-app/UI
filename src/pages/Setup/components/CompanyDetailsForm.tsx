@@ -7,7 +7,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { MESSAGES } from 'shared/constants';
 import { ErrorResponse } from 'shared/models';
 import Snackbar from 'components/UI/Snackbar';
-import PageTitle from 'components/PageTitle';
+import Page, { PageTitle } from 'components/Page';
 
 interface CompanyDetailsFormProps {
   title: string;
@@ -68,7 +68,9 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, i
   return (
     <Box>
       <Snackbar type="error" open={showSnackbar} message={error?.title} onClose={handleClose} />
-      <PageTitle>{title}</PageTitle>
+      <Page>
+        <PageTitle>{title}</PageTitle>
+      </Page>
       <Box component="form" noValidate onSubmit={onFormSubmit}>
         <TextField
           fullWidth

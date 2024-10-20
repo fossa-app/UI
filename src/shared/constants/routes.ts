@@ -41,4 +41,8 @@ export const ROUTES: AppRoute = {
     name: 'Branches',
     path: '/manage/branches',
   },
+  employees: {
+    name: 'Employees',
+    path: '/manage/employees',
+  },
 };
