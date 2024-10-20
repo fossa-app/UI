@@ -18,8 +18,6 @@ const SetupPage: React.FC = () => {
     }
   }, [status]);
 
-  // TODO: when company exists, navigating to /setup fetches all entities twice (also on Protected page). Find a way to remove this logic from here
-  // This is minor issue since the user has no way (except from manually entering the url) to access the /setup page
   React.useEffect(() => {
     if (step === SetupStep.COMPANY) {
       navigate(ROUTES.setCompany.path);
