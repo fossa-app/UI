@@ -1,3 +1,5 @@
+import { SEARCH_CONTEXTS, SearchContext } from 'shared/constants';
+
 export const getBackendOrigin = (frontendOrigin: string): string => {
   const suffixMappings = new Map([
     ['.dev.localhost:4211', '.dev.localhost:5210'],
@@ -12,4 +14,14 @@ export const getBackendOrigin = (frontendOrigin: string): string => {
   }
 
   return frontendOrigin;
+};
+
+export const getSearchContext = (pathname: string): SearchContext => {
+  for (const [context, path] of SEARCH_CONTEXTS.entries()) {
+    if (pathname.includes(path)) {
+      return context;
+    }
+  }
+
+  return SearchContext.EMPLOYEE;
 };
