@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -8,6 +7,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { MESSAGES } from 'shared/constants';
 import { ErrorResponse } from 'shared/models';
 import Snackbar from 'components/UI/Snackbar';
+import PageTitle from 'components/PageTitle';
 
 interface CompanyDetailsFormProps {
   title: string;
@@ -68,9 +68,7 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, i
   return (
     <Box>
       <Snackbar type="error" open={showSnackbar} message={error?.title} onClose={handleClose} />
-      <Typography align="center" variant="h6" sx={{ my: 5 }}>
-        {title}
-      </Typography>
+      <PageTitle>{title}</PageTitle>
       <Box component="form" noValidate onSubmit={onFormSubmit}>
         <TextField
           fullWidth

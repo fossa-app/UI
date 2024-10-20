@@ -8,11 +8,7 @@ import { MESSAGES, ROUTES } from 'shared/constants';
 import { ErrorResponse } from 'shared/models';
 import Snackbar from 'components/UI/Snackbar';
 
-interface AxiosInterceptorProps {
-  children: React.ReactElement;
-}
-
-const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) => {
+const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
   const navigate = useNavigate();
   const userManager = getUserManager();
   const dispatch = useAppDispatch();
