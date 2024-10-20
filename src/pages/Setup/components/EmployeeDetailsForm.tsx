@@ -7,7 +7,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import { MESSAGES } from 'shared/constants';
 import { AppUser, Employee, ErrorResponse } from 'shared/models';
 import Snackbar from 'components/UI/Snackbar';
-import PageTitle from 'components/PageTitle';
+import Page, { PageTitle } from 'components/Page';
 
 interface EmployeeDetailsFormProps {
   title: string;
@@ -89,7 +89,9 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({ title, isAdmi
   return (
     <Box>
       <Snackbar type="error" open={showSnackbar} message={error?.title} onClose={handleClose} />
-      <PageTitle>{title}</PageTitle>
+      <Page>
+        <PageTitle>{title}</PageTitle>
+      </Page>
       <Box component="form" noValidate onSubmit={onFormSubmit}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
           <TextField

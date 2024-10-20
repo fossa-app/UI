@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
 export enum SearchContext {
-  COMPANY = 'company',
+  // COMPANY = 'company',
   BRANCHES = 'branches',
-  EMPLOYEE = 'employee',
+  EMPLOYEES = 'employees',
 }
 
 export const SEARCH_CONTEXTS = new Map<string, SearchContext>([
-  ['/manage/company', SearchContext.COMPANY],
+  // ['/manage/company', SearchContext.COMPANY], // TODO: double check this
   ['/manage/branches', SearchContext.BRANCHES],
-  ['/manage/employee', SearchContext.EMPLOYEE],
+  ['/manage/employees', SearchContext.EMPLOYEES],
 ]);
