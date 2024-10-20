@@ -28,7 +28,7 @@ const ManagePage: React.FC = () => {
   }
 
   return (
-    <Box>
+    <Box sx={{ width: { md: 860, xs: '100%' }, margin: '0 auto' }}>
       <Outlet />
     </Box>
   );
