@@ -7,7 +7,7 @@ const CompanyPage: React.FC = () => {
     <Box>
       <Page>
         <PageTitle>Company</PageTitle>
-        <PageSubtitle>Manage Companies</PageSubtitle>
+        <PageSubtitle>Manage Company</PageSubtitle>
       </Page>
     </Box>
   );

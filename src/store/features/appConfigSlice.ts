@@ -18,17 +18,14 @@ export const appConfigSlice = createSlice({
   name: 'appConfig',
   initialState,
   reducers: {
-    updateAppConfig(state, action: PayloadAction<Partial<ConfigState>>): ConfigState {
-      return {
-        ...state,
-        ...action.payload,
-        status: 'succeeded',
-      };
+    toggleAppTheme(state, action: PayloadAction<ConfigState['isDarkTheme']>) {
+      state.isDarkTheme = action.payload;
+      state.status = 'succeeded';
     },
   },
 });
 
-export const { updateAppConfig } = appConfigSlice.actions;
+export const { toggleAppTheme } = appConfigSlice.actions;
 
 export const selectAppConfig = (state: RootState) => state.appConfig;
 
