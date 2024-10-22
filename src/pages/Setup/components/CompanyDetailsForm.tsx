@@ -67,6 +67,7 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, i
 
   return (
     <Box>
+      {/* TODO: remove not found message */}
       <Snackbar type="error" open={showSnackbar} message={error?.title} onClose={handleClose} />
       <Page>
         <PageTitle>{title}</PageTitle>
