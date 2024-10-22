@@ -14,6 +14,7 @@ const CallbackPage = () => {
       navigate(ROUTES.manage.path);
     } catch (error) {
       // TODO: set error state
+      // TODO: sometimes POST http://localhost:9011/oauth2/token responses with 400 error after successful login
       navigate(ROUTES.login.path);
     }
   };

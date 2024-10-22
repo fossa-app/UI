@@ -1,7 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { updateAppConfig } from 'store/features';
+import { toggleAppTheme } from 'store/features';
 import { setMockState, mockDispatch, resetMockState } from '../store';
 import { getUserManager } from '../oidc-client-mock';
 import { SetupStep } from 'shared/models';
@@ -17,10 +17,10 @@ describe('Header Component', () => {
         },
       },
       setup: {
-        company: { data: { name: 'Test' } },
         step: { data: SetupStep.COMPLETED, status: 'succeeded' },
       },
       appConfig: { isDarkTheme: true },
+      company: { company: { data: { name: 'Test' } } },
     });
   });
 
@@ -63,7 +63,7 @@ describe('Header Component', () => {
 
     fireEvent.click(themeSwitch);
 
-    expect(mockDispatch).toHaveBeenCalledWith(updateAppConfig({ isDarkTheme: true }));
+    expect(mockDispatch).toHaveBeenCalledWith(toggleAppTheme(true));
   });
 
   it('should display the user name and logout button after login', async () => {
