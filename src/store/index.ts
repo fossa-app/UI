@@ -6,6 +6,9 @@ import appConfigReducer from './features/appConfigSlice';
 import licenseReducer from './features/licenseSlice';
 import authReducer from './features/authSlice';
 import setupReducer from './features/setupSlice';
+import companyReducer from './features/companySlice';
+import branchReducer from './features/branchSlice';
+import employeeReducer from './features/employeeSlice';
 
 const store = configureStore({
   reducer: {
@@ -14,6 +17,9 @@ const store = configureStore({
     license: licenseReducer,
     auth: authReducer,
     setup: setupReducer,
+    company: companyReducer,
+    branch: branchReducer,
+    employee: employeeReducer,
   },
 });
 

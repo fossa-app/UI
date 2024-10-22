@@ -12,7 +12,6 @@ const initialMockState: DeepPartial<RootState> = {
     isDarkTheme: false,
   },
   setup: {
-    company: {},
     step: {},
   },
   license: {},
@@ -21,6 +20,9 @@ const initialMockState: DeepPartial<RootState> = {
       data: null,
     },
   },
+  company: { company: {} },
+  branch: { branches: {} },
+  employee: { employee: {} },
 };
 
 let mockInitialState = { ...initialMockState };

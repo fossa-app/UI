@@ -11,6 +11,7 @@ interface SearchProps<T> {
 }
 
 const Search = <T,>({ data, context, getOptionLabel }: SearchProps<T>) => {
+  // TODO: add search icons and clear icon instead of arrow
   return (
     <Autocomplete
       size="small"

@@ -16,6 +16,6 @@ export const getBackendOrigin = (frontendOrigin: string): string => {
   return frontendOrigin;
 };
 
-export const getSearchContext = (pathname: string): SearchContext => {
-  return SEARCH_CONTEXTS.get(pathname) || SearchContext.EMPLOYEES;
+export const getSearchContext = (pathname: string): SearchContext | undefined => {
+  return SEARCH_CONTEXTS.get(pathname);
 };

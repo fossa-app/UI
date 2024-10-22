@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectAppConfig, selectCompany, selectStep, selectUser, updateAppConfig } from 'store/features';
+import { selectAppConfig, selectCompany, selectStep, selectUser, toggleAppTheme } from 'store/features';
 import { getSearchContext, getUserManager } from 'shared/helpers';
 import Search from '../../components/Search/Search';
 import UserMenu from './components/UserMenu';
@@ -24,13 +24,10 @@ const Header: React.FC = () => {
   const [locationPathname, setLocationPathname] = React.useState(location.pathname);
   const companyName = company?.name ?? '';
   const setupCompleted = status === 'succeeded';
+  const showSearch = setupCompleted && !!getSearchContext(locationPathname);
 
   const handleThemeChange = () => {
-    dispatch(
-      updateAppConfig({
-        isDarkTheme: !isDarkTheme,
-      })
-    );
+    dispatch(toggleAppTheme(!isDarkTheme));
   };
 
   const handleLogout = async () => {
@@ -50,6 +47,7 @@ const Header: React.FC = () => {
       <Toolbar>
         <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexGrow: 1 }}>
           <Grid size="auto">
+            {/* TODO: show menu icon when setup is completed */}
             <IconButton edge="end" color="inherit">
               <MenuIcon />
             </IconButton>
@@ -62,7 +60,7 @@ const Header: React.FC = () => {
             )}
           </Grid>
           <Grid size={3}>
-            {setupCompleted && <Search data={[]} context={getSearchContext(locationPathname)} getOptionLabel={handleGetOptionLabel} />}
+            {showSearch && <Search data={[]} context={getSearchContext(locationPathname)!} getOptionLabel={handleGetOptionLabel} />}
           </Grid>
           <Grid size="auto">
             <ThemeSwitch isDarkTheme={isDarkTheme} onThemeChange={handleThemeChange} />
