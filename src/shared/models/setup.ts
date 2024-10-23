@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 export enum SetupStep {
   COMPANY = 'company',
-  BRANCHES = 'branches',
+  BRANCH = 'branch',
   EMPLOYEE = 'employee',
   COMPLETED = 'completed',
 }

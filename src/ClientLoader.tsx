@@ -6,8 +6,9 @@ import Box from '@mui/system/Box';
 import { darkTheme, lightTheme } from 'shared/configs/theme.config';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchClient, selectAppConfig, selectClient } from 'store/features';
-import Header from 'layout/Header/Header';
-import Footer from 'layout/Footer/Footer';
+import Header from 'layout/Header';
+import Footer from 'layout/Footer';
+import SideBar from 'layout/Sidebar';
 
 const ClientLoader: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -35,6 +36,7 @@ const ClientLoader: React.FC = () => {
       <CssBaseline />
       <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
         <Header />
+        <SideBar variant="temporary" />
         <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, padding: 2 }}>
           <Outlet />
         </Box>

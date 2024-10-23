@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectAppConfig, selectCompany, selectStep, selectUser, toggleAppTheme } from 'store/features';
+import { openSideBar, selectAppConfig, selectCompany, selectStep, selectUser, toggleAppTheme } from 'store/features';
 import { getSearchContext, getUserManager } from 'shared/helpers';
 import Search from '../../components/Search/Search';
 import UserMenu from './components/UserMenu';
@@ -38,6 +38,10 @@ const Header: React.FC = () => {
     return option.name;
   };
 
+  const showSideBar = () => {
+    dispatch(openSideBar());
+  };
+
   React.useEffect(() => {
     setLocationPathname(pathname);
   }, [pathname]);
@@ -47,10 +51,11 @@ const Header: React.FC = () => {
       <Toolbar>
         <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexGrow: 1 }}>
           <Grid size="auto">
-            {/* TODO: show menu icon when setup is completed */}
-            <IconButton edge="end" color="inherit">
-              <MenuIcon />
-            </IconButton>
+            {setupCompleted && (
+              <IconButton edge="end" color="inherit" onClick={showSideBar}>
+                <MenuIcon />
+              </IconButton>
+            )}
           </Grid>
           <Grid size="grow">
             {companyName && (

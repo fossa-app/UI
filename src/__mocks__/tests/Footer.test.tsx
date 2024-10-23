@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { resetMockState, setMockState } from '../store';
 import Environment from 'layout/Footer/components/Environment';
-import Footer from 'layout/Footer/Footer';
+import Footer from 'layout/Footer';
 
 describe('Footer Component', () => {
   beforeEach(() => {

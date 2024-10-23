@@ -45,7 +45,10 @@ export const createCompany = createAsyncThunk<Company, Company, { rejectValue: E
 
       return company;
     } catch (error) {
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue({
+        ...(error as ErrorResponse),
+        title: MESSAGES.error.company.createFailed,
+      });
     }
   }
 );
