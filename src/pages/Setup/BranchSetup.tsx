@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
-import { createBranch, selectBranches, selectIsUserAdmin } from 'store/features';
+import { createBranch, selectBranch, selectIsUserAdmin } from 'store/features';
 import CompanyDetailsForm from './components/CompanyDetailsForm';
 
-const BranchesSetupPage: React.FC = () => {
-  const { updateStatus, error } = useAppSelector(selectBranches);
+const BranchSetupPage: React.FC = () => {
+  const { updateStatus, error } = useAppSelector(selectBranch);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const dispatch = useAppDispatch();
 
@@ -18,11 +18,11 @@ const BranchesSetupPage: React.FC = () => {
       label="Enter Branch name"
       validationMessage="Branch name is required"
       isAdmin={isUserAdmin}
-      error={error}
+      error={updateStatus === 'failed' ? error : undefined}
       loading={updateStatus === 'loading'}
       onSubmit={handleSubmit}
     />
   );
 };
 
-export default BranchesSetupPage;
+export default BranchSetupPage;

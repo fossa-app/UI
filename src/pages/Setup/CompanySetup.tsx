@@ -18,7 +18,7 @@ const CompanySetupPage: React.FC = () => {
       label="Enter Company name"
       validationMessage="Company name is required"
       isAdmin={isUserAdmin}
-      error={error}
+      error={updateStatus === 'failed' ? error : undefined}
       loading={updateStatus === 'loading'}
       onSubmit={handleSubmit}
     />

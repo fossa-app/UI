@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios.config';
-import { Employee, ErrorResponse } from 'shared/models';
+import { Employee, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { MESSAGES, URLS } from 'shared/constants';
 
 interface SetupState {
   employee: StateEntity<Employee | null>;
+  employees: StateEntity<PaginatedResponse<Employee> | null>;
 }
 
 const initialState: SetupState = {
@@ -13,6 +14,10 @@ const initialState: SetupState = {
     data: null,
     fetchStatus: 'idle',
     updateStatus: 'idle',
+  },
+  employees: {
+    data: null,
+    fetchStatus: 'idle',
   },
 };
 
@@ -36,6 +41,26 @@ export const fetchEmployee = createAsyncThunk<Employee | null, void, { rejectVal
   }
 );
 
+export const fetchEmployees = createAsyncThunk<PaginatedResponse<Employee> | null, PaginationParams, { rejectValue: ErrorResponse }>(
+  'employee/getEmployees',
+  async ({ pageNumber, pageSize }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get<PaginatedResponse<Employee>>(`${URLS.employees}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+
+      if (data) {
+        return data;
+      }
+
+      return null;
+    } catch (error) {
+      return rejectWithValue({
+        ...(error as ErrorResponse),
+        title: MESSAGES.error.employee.notFound,
+      });
+    }
+  }
+);
+
 export const createEmployee = createAsyncThunk<void, Employee, { rejectValue: ErrorResponse }>(
   'employee/setEmployee',
   async (employee, { dispatch, rejectWithValue }) => {
@@ -43,7 +68,10 @@ export const createEmployee = createAsyncThunk<void, Employee, { rejectValue: Er
       await axios.post<Employee>(URLS.employee, employee);
       await dispatch(fetchEmployee()).unwrap();
     } catch (error) {
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue({
+        ...(error as ErrorResponse),
+        title: MESSAGES.error.employee.createFailed,
+      });
     }
   }
 );
@@ -75,10 +103,23 @@ const employeeSlice = createSlice({
       })
       .addCase(createEmployee.fulfilled, (state) => {
         state.employee.updateStatus = 'succeeded';
+      })
+      .addCase(fetchEmployees.pending, (state) => {
+        state.employees.fetchStatus = 'loading';
+      })
+      .addCase(fetchEmployees.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+        state.employees.data = null;
+        state.employees.fetchStatus = 'failed';
+        state.employees.error = action.payload;
+      })
+      .addCase(fetchEmployees.fulfilled, (state, action: PayloadAction<PaginatedResponse<Employee> | null>) => {
+        state.employees.data = action.payload;
+        state.employees.fetchStatus = 'succeeded';
       });
   },
 });
 
 export const selectEmployee = (state: RootState) => state.employee.employee;
+export const selectEmployees = (state: RootState) => state.employee.employees;
 
 export default employeeSlice.reducer;

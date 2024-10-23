@@ -21,7 +21,7 @@ const SetupPage: React.FC = () => {
   React.useEffect(() => {
     if (step === SetupStep.COMPANY) {
       navigate(ROUTES.setCompany.path);
-    } else if (step === SetupStep.BRANCHES) {
+    } else if (step === SetupStep.BRANCH) {
       navigate(ROUTES.setBranches.path);
     } else if (step === SetupStep.EMPLOYEE) {
       navigate(ROUTES.setEmployee.path);

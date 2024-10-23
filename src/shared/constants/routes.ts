@@ -18,8 +18,8 @@ export const ROUTES: AppRoute = {
     path: `/setup/${SetupStep.COMPANY}`,
   },
   setBranches: {
-    name: 'Set Branches',
-    path: `/setup/${SetupStep.BRANCHES}`,
+    name: 'Set Branch',
+    path: `/setup/${SetupStep.BRANCH}`,
   },
   setEmployee: {
     name: 'Set Employee',
