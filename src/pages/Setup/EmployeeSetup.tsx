@@ -16,7 +16,7 @@ const EmployeeSetupPage: React.FC = () => {
   return (
     <EmployeeDetailsForm
       title="Create an Employee"
-      error={error}
+      error={updateStatus === 'failed' ? error : undefined}
       loading={updateStatus === 'loading'}
       userProfile={user?.profile}
       onSubmit={handleSubmit}

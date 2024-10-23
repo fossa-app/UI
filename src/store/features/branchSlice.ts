@@ -5,11 +5,11 @@ import { Branch, ErrorResponse, PaginatedResponse, PaginationParams } from 'shar
 import { MESSAGES, URLS } from 'shared/constants';
 
 interface BranchState {
-  branches: StateEntity<PaginatedResponse<Branch> | null>;
+  branch: StateEntity<PaginatedResponse<Branch> | null>;
 }
 
 const initialState: BranchState = {
-  branches: {
+  branch: {
     data: null,
     fetchStatus: 'idle',
     updateStatus: 'idle',
@@ -46,7 +46,10 @@ export const createBranch = createAsyncThunk<void, Branch, { rejectValue: ErrorR
       await axios.post<Branch>(URLS.branches, branch);
       await dispatch(fetchBranches({ pageSize: 1, pageNumber: 1 })).unwrap();
     } catch (error) {
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue({
+        ...(error as ErrorResponse),
+        title: MESSAGES.error.branches.createFailed,
+      });
     }
   }
 );
@@ -58,30 +61,30 @@ const branchSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchBranches.pending, (state) => {
-        state.branches.fetchStatus = 'loading';
+        state.branch.fetchStatus = 'loading';
       })
       .addCase(fetchBranches.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
-        state.branches.data = null;
-        state.branches.fetchStatus = 'failed';
-        state.branches.error = action.payload;
+        state.branch.data = null;
+        state.branch.fetchStatus = 'failed';
+        state.branch.error = action.payload;
       })
       .addCase(fetchBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<Branch> | null>) => {
-        state.branches.data = action.payload;
-        state.branches.fetchStatus = 'succeeded';
+        state.branch.data = action.payload;
+        state.branch.fetchStatus = 'succeeded';
       })
       .addCase(createBranch.pending, (state) => {
-        state.branches.updateStatus = 'loading';
+        state.branch.updateStatus = 'loading';
       })
       .addCase(createBranch.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
-        state.branches.updateStatus = 'failed';
-        state.branches.error = action.payload;
+        state.branch.updateStatus = 'failed';
+        state.branch.error = action.payload;
       })
       .addCase(createBranch.fulfilled, (state) => {
-        state.branches.updateStatus = 'succeeded';
+        state.branch.updateStatus = 'succeeded';
       });
   },
 });
 
-export const selectBranches = (state: RootState) => state.branch.branches;
+export const selectBranch = (state: RootState) => state.branch.branch;
 
 export default branchSlice.reducer;

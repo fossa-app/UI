@@ -3,4 +3,5 @@ export * from './routes';
 export * from './configs';
 export * from './colors';
 export * from './roles';
-export * from './searchContexts';
+export * from './search-contexts';
+export * from './menu-items';

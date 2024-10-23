@@ -8,7 +8,7 @@ import ProtectedPage from 'pages/Protected';
 import CallbackPage from 'pages/Callback';
 import SetupPage from 'pages/Setup/Setup';
 import CompanySetupPage from 'pages/Setup/CompanySetup';
-import BranchesSetupPage from 'pages/Setup/BranchesSetup';
+import BranchSetupPage from 'pages/Setup/BranchSetup';
 import EmployeeSetupPage from 'pages/Setup/EmployeeSetup';
 import ManagePage from 'pages/Manage/Manage';
 import DashboardPage from 'pages/Dashboard';
@@ -70,7 +70,7 @@ const router = createBrowserRouter([
                 element: (
                   <>
                     <RouteTitle title="Create a Branch" />
-                    <BranchesSetupPage />
+                    <BranchSetupPage />
                   </>
                 ),
               },
