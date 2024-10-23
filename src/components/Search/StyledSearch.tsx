@@ -11,7 +11,7 @@ export const StyledTextField = styled(TextField)(({ theme }) => {
     '& .MuiInputLabel-root': {
       color: contrastText,
     },
-    '& .MuiAutocomplete-popupIndicator': {
+    '& .MuiInputAdornment-root': {
       color: contrastText,
     },
     '& .MuiInputBase-input': {

@@ -5,7 +5,7 @@ import { toggleAppTheme } from 'store/features';
 import { setMockState, mockDispatch, resetMockState } from '../store';
 import { getUserManager } from '../oidc-client-mock';
 import { SetupStep } from 'shared/models';
-import Header from 'layout/Header/Header';
+import Header from 'layout/Header';
 
 describe('Header Component', () => {
   beforeEach(() => {

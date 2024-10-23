@@ -21,7 +21,7 @@ const initialMockState: DeepPartial<RootState> = {
     },
   },
   company: { company: {} },
-  branch: { branches: {} },
+  branch: { branch: {} },
   employee: { employee: {} },
 };
 

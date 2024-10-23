@@ -30,12 +30,15 @@ export const MESSAGES = {
     },
     company: {
       notFound: 'Company not found 😞',
+      createFailed: 'Failed to create a Company 😞',
     },
     branches: {
       notFound: 'Branch not found 😞',
+      createFailed: 'Failed to create a Branch 😞',
     },
     employee: {
       notFound: 'Employee not found 😞',
+      createFailed: 'Failed to create an Employee 😞',
     },
   },
 };

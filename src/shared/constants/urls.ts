@@ -5,4 +5,5 @@ export const URLS = {
   company: 'Company',
   branches: 'Branches',
   employee: 'Employee',
+  employees: 'Employees',
 };

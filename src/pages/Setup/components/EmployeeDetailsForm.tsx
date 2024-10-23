@@ -74,8 +74,7 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({ title, error,
 
   return (
     <Box>
-      {/* TODO: remove not found message */}
-      <Snackbar type="error" open={showSnackbar} message={error?.title} onClose={handleClose} />
+      {error && <Snackbar type="error" open={showSnackbar} message={error.title} onClose={handleClose} />}
       <Page>
         <PageTitle>{title}</PageTitle>
       </Page>
