@@ -2,6 +2,7 @@ import * as React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ROUTES } from 'shared/constants';
 import RootPage from 'pages/Root';
+import RouteTitle from 'components/RouteTitle';
 import NotFoundPage from 'pages/NotFound';
 import LoginPage from 'pages/Login';
 import ProtectedPage from 'pages/Protected';
@@ -14,8 +15,9 @@ import ManagePage from 'pages/Manage/Manage';
 import DashboardPage from 'pages/Dashboard';
 import CompanyPage from 'pages/Company';
 import BranchesPage from 'pages/Branches';
-import EmployeesPage from 'pages/Employees';
-import RouteTitle from 'components/RouteTitle';
+import EmployeePage from 'pages/Manage/Employee/Employee';
+import EmployeeListPage from 'pages/Manage/Employee/pages/EmployeeList';
+import CreateEditEmployeePage from 'pages/Manage/Employee/pages/CreateEditEmployee';
 
 const router = createBrowserRouter([
   {
@@ -122,12 +124,27 @@ const router = createBrowserRouter([
               },
               {
                 path: ROUTES.employees.path,
-                element: (
-                  <>
-                    <RouteTitle title="Employees" />
-                    <EmployeesPage />
-                  </>
-                ),
+                element: <EmployeePage />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <>
+                        <RouteTitle title="Employee List" />
+                        <EmployeeListPage />
+                      </>
+                    ),
+                  },
+                  {
+                    path: ROUTES.newEmployee.path,
+                    element: (
+                      <>
+                        <RouteTitle title="Create/Edit Employee" />
+                        <CreateEditEmployeePage />
+                      </>
+                    ),
+                  },
+                ],
               },
               {
                 path: '*',

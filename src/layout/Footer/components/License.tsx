@@ -3,19 +3,18 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 interface LicenseProps {
-  system: string;
-  company: string;
+  company?: string;
+  system?: string;
 }
 
-const License: React.FC<LicenseProps> = ({ system, company }) => {
+const License: React.FC<LicenseProps> = ({ company = 'Unlicensed Company', system = 'Unlicensed System' }) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      {/* TODO: show Unlicensed link button if company license does not exist, which opens a modal. Otherwise, show system.licensee.longName */}
-      <Typography variant="caption" textAlign="right">
-        {system}
-      </Typography>
       <Typography variant="caption" textAlign="right">
         {company}
+      </Typography>
+      <Typography variant="caption" textAlign="right">
+        {system}
       </Typography>
     </Box>
   );

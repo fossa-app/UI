@@ -17,5 +17,9 @@ export const getBackendOrigin = (frontendOrigin: string): string => {
 };
 
 export const getSearchContext = (pathname: string): SearchContext | undefined => {
-  return SEARCH_CONTEXTS.get(pathname);
+  for (const [route, context] of SEARCH_CONTEXTS) {
+    if (pathname.includes(route)) {
+      return context;
+    }
+  }
 };
