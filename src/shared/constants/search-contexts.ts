@@ -1,3 +1,5 @@
+import { ROUTES } from './routes';
+
 /* eslint-disable no-unused-vars */
 export enum SearchContext {
   BRANCHES = 'branches',
@@ -5,6 +7,6 @@ export enum SearchContext {
 }
 
 export const SEARCH_CONTEXTS = new Map<string, SearchContext>([
-  ['/manage/branches', SearchContext.BRANCHES],
-  ['/manage/employees', SearchContext.EMPLOYEES],
+  [ROUTES.branches.path, SearchContext.BRANCHES],
+  [ROUTES.employees.path, SearchContext.EMPLOYEES],
 ]);

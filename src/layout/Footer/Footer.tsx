@@ -35,7 +35,7 @@ const Footer: React.FC = () => {
       {system && (
         <>
           <Environment kind={system.entitlements.environmentKind} name={system.entitlements.environmentName} />
-          <License system={system.terms.licensor.longName} company={system.terms.licensee.longName} />
+          <License system={system.terms.licensee.longName} />
         </>
       )}
     </Box>
