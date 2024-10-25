@@ -7,7 +7,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { MESSAGES } from 'shared/constants';
 import { ErrorResponse } from 'shared/models';
 import Snackbar from 'components/UI/Snackbar';
-import Page, { PageTitle } from 'components/Page';
+import Page, { PageTitle } from 'components/UI/Page';
 
 interface CompanyDetailsFormProps {
   title: string;

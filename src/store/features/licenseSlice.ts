@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'shared/configs/axios.config';
-import { ErrorResponse, System } from 'shared/models';
+import axios from 'shared/configs/axios';
+import { CompanyLicense, ErrorResponse, SystemLicense } from 'shared/models';
 import { MESSAGES, URLS } from 'shared/constants';
 import { RootState, StateEntity } from 'store';
 
 interface LicenseState {
-  system: StateEntity<System | null>;
+  system: StateEntity<SystemLicense | null>;
+  company: StateEntity<CompanyLicense | null>;
 }
 
 const initialState: LicenseState = {
@@ -13,15 +14,32 @@ const initialState: LicenseState = {
     data: null,
     status: 'idle',
   },
+  company: {
+    data: null,
+    status: 'idle',
+  },
 };
 
-export const fetchSystem = createAsyncThunk<System | null, void, { rejectValue: ErrorResponse }>(
-  'license/getSystem',
+export const fetchSystemLicense = createAsyncThunk<SystemLicense | null, void, { rejectValue: ErrorResponse }>(
+  'license/getSystemLicense',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get<System>(URLS.system);
+      const { data } = await axios.get<SystemLicense>(URLS.systemLicense);
 
-      return data || rejectWithValue({ title: MESSAGES.error.system.notFound });
+      return data || rejectWithValue({ title: MESSAGES.error.license.system.notFound });
+    } catch (error) {
+      return rejectWithValue(error as ErrorResponse);
+    }
+  }
+);
+
+export const fetchCompanyLicense = createAsyncThunk<CompanyLicense | null, void, { rejectValue: ErrorResponse }>(
+  'license/getCompanyLicense',
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get<CompanyLicense>(URLS.companyLicense);
+
+      return data || rejectWithValue({ title: MESSAGES.error.license.company.notFound });
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);
     }
@@ -34,20 +52,33 @@ const licenseSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchSystem.pending, (state) => {
+      .addCase(fetchSystemLicense.pending, (state) => {
         state.system.status = 'loading';
       })
-      .addCase(fetchSystem.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(fetchSystemLicense.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
         state.system.data = null;
         state.system.status = 'failed';
         state.system.error = action.payload;
       })
-      .addCase(fetchSystem.fulfilled, (state, action: PayloadAction<System | null>) => {
+      .addCase(fetchSystemLicense.fulfilled, (state, action: PayloadAction<SystemLicense | null>) => {
         state.system.data = action.payload;
         state.system.status = 'succeeded';
+      })
+      .addCase(fetchCompanyLicense.pending, (state) => {
+        state.company.status = 'loading';
+      })
+      .addCase(fetchCompanyLicense.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+        state.company.data = null;
+        state.company.status = 'failed';
+        state.company.error = action.payload;
+      })
+      .addCase(fetchCompanyLicense.fulfilled, (state, action: PayloadAction<CompanyLicense | null>) => {
+        state.company.data = action.payload;
+        state.company.status = 'succeeded';
       });
   },
 });
 
-export const selectSystem = (state: RootState) => state.license.system;
+export const selectSystemLicense = (state: RootState) => state.license.system;
+export const selectCompanyLicense = (state: RootState) => state.license.company;
 export default licenseSlice.reducer;

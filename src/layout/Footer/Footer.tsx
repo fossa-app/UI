@@ -2,22 +2,19 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchSystem, selectSystem } from 'store/features';
+import { fetchSystemLicense, selectCompanyLicense, selectSystemLicense } from 'store/features';
 import Logo from '../../components/UI/Logo';
 import License from './components/License';
 import Environment from './components/Environment';
 
 const Footer: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { data: system, status } = useAppSelector(selectSystem);
-
-  const getSystem = async () => {
-    dispatch(fetchSystem());
-  };
+  const { data: system, status } = useAppSelector(selectSystemLicense);
+  const { data: company } = useAppSelector(selectCompanyLicense);
 
   React.useEffect(() => {
     if (status === 'idle') {
-      getSystem();
+      dispatch(fetchSystemLicense());
     }
   }, [status]);
 
@@ -32,12 +29,10 @@ const Footer: React.FC = () => {
           Fossa
         </Typography>
       </>
-      {system && (
-        <>
-          <Environment kind={system.entitlements.environmentKind} name={system.entitlements.environmentName} />
-          <License system={system.terms.licensee.longName} />
-        </>
-      )}
+      <>
+        <Environment kind={system?.entitlements.environmentKind} name={system?.entitlements.environmentName} />
+        <License system={system?.terms.licensee.longName} company={company?.terms.licensee.longName} />
+      </>
     </Box>
   );
 };

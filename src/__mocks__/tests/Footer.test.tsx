@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { resetMockState, setMockState } from '../store';
+import { CompanyLicense, SystemLicense } from 'shared/models';
 import Environment from 'layout/Footer/components/Environment';
 import Footer from 'layout/Footer';
 
@@ -9,7 +10,12 @@ describe('Footer Component', () => {
   beforeEach(() => {
     resetMockState();
     setMockState({
-      license: { system: {} },
+      license: {
+        system: { data: { entitlements: { environmentKind: 'Development' }, terms: { licensee: { longName: 'Test' } } } as SystemLicense },
+        company: {
+          data: { entitlements: { environmentKind: 'Development' }, terms: { licensee: { longName: 'Test' } } } as CompanyLicense,
+        },
+      },
     });
   });
 
