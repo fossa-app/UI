@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
-import axios from 'shared/configs/axios.config';
+import axios from 'shared/configs/axios';
 import { Client, ErrorResponse } from 'shared/models';
 import { MESSAGES, ROUTES, URLS } from 'shared/constants';
 import { updateAuthSettings } from './authSlice';

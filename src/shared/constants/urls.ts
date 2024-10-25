@@ -1,7 +1,8 @@
 export const URLS = {
   base: 'api/1',
   client: 'Identity/Client',
-  system: 'License/System',
+  systemLicense: 'License/System',
+  companyLicense: 'License/Company',
   company: 'Company',
   branches: 'Branches',
   employee: 'Employee',

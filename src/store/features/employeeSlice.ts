@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
-import axios from 'shared/configs/axios.config';
+import axios from 'shared/configs/axios';
 import { Employee, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { MESSAGES, URLS } from 'shared/constants';
 
@@ -17,6 +17,7 @@ const initialState: SetupState = {
   },
   employees: {
     data: null,
+    page: { pageNumber: 1, pageSize: 1 },
     fetchStatus: 'idle',
   },
 };
@@ -79,7 +80,11 @@ export const createEmployee = createAsyncThunk<void, Employee, { rejectValue: Er
 const employeeSlice = createSlice({
   name: 'employee',
   initialState,
-  reducers: {},
+  reducers: {
+    setEmployeesPagination(state, action: PayloadAction<PaginationParams>) {
+      state.employees.page = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchEmployee.pending, (state) => {
@@ -121,5 +126,7 @@ const employeeSlice = createSlice({
 
 export const selectEmployee = (state: RootState) => state.employee.employee;
 export const selectEmployees = (state: RootState) => state.employee.employees;
+
+export const { setEmployeesPagination } = employeeSlice.actions;
 
 export default employeeSlice.reducer;

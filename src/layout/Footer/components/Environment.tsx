@@ -5,8 +5,8 @@ import Tooltip from '@mui/material/Tooltip';
 import { EnvironmentKind } from 'shared/models';
 
 interface EnvironmentProps {
-  kind: EnvironmentKind;
-  name: string;
+  kind?: EnvironmentKind;
+  name?: string;
 }
 
 const Environment: React.FC<EnvironmentProps> = ({ kind, name }) => {

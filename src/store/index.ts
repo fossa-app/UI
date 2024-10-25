@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
-import { ErrorResponse, Status } from 'shared/models';
+import { ErrorResponse, PaginationParams, Status } from 'shared/models';
 import clientReducer from './features/identitySlice';
 import appConfigReducer from './features/appConfigSlice';
 import licenseReducer from './features/licenseSlice';
@@ -32,6 +32,7 @@ export interface StateEntity<T = unknown> {
   fetchStatus?: Status;
   updateStatus?: Status;
   error?: ErrorResponse;
+  page?: PaginationParams;
 }
 
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
