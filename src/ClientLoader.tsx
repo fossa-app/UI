@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/system/Box';
-import { darkTheme, lightTheme } from 'shared/configs/theme.config';
+import { darkTheme, lightTheme } from 'shared/configs/theme';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchClient, selectAppConfig, selectClient } from 'store/features';
 import Header from 'layout/Header';

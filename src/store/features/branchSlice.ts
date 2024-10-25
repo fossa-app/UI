@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
-import axios from 'shared/configs/axios.config';
+import axios from 'shared/configs/axios';
 import { Branch, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { MESSAGES, URLS } from 'shared/constants';
 

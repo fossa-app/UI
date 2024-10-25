@@ -25,8 +25,13 @@ export const MESSAGES = {
     client: {
       notFound: 'Client not found 😞',
     },
-    system: {
-      notFound: 'System not found 😞',
+    license: {
+      system: {
+        notFound: 'System license not found 😞',
+      },
+      company: {
+        notFound: 'Company license not found 😞',
+      },
     },
     company: {
       notFound: 'Company not found 😞',

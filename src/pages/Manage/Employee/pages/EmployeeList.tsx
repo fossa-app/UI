@@ -1,15 +1,16 @@
-import { fetchEmployees, selectEmployees } from 'store/features';
 import * as React from 'react';
-import { useAppDispatch, useAppSelector } from 'store';
 import Box from '@mui/material/Box';
-import Page, { PageSubtitle, PageTitle } from 'components/Page';
+import { useAppDispatch, useAppSelector } from 'store';
+import { fetchEmployees, selectEmployees, setEmployeesPagination } from 'store/features';
 import { Employee } from 'shared/models';
 import { EMPLOYEE_FIELDS } from 'shared/constants';
+import Page, { PageSubtitle, PageTitle } from 'components/UI/Page';
 import Table, { Column } from 'components/UI/Table';
 
 const EmployeeListPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { fetchStatus, data: employees } = useAppSelector(selectEmployees);
+  const { fetchStatus, data: employees, page } = useAppSelector(selectEmployees);
+  const { pageNumber, pageSize } = page!;
 
   const columns: Column<Employee>[] = [
     {
@@ -32,18 +33,34 @@ const EmployeeListPage: React.FC = () => {
     </Page>
   );
 
+  const handlePageNumberChange = (pageNumber: number) => {
+    dispatch(setEmployeesPagination({ pageNumber, pageSize }));
+  };
+
+  const handlePageSizeChange = (pageSize: number) => {
+    dispatch(setEmployeesPagination({ pageSize, pageNumber: 1 }));
+  };
+
   React.useEffect(() => {
-    if (fetchStatus === 'idle') {
-      dispatch(fetchEmployees({ pageNumber: 1, pageSize: 10 }));
-    }
-  }, [fetchStatus]);
+    dispatch(fetchEmployees({ pageNumber, pageSize }));
+  }, [pageNumber, pageSize, dispatch]);
 
   return (
     <Box>
       <Page>
         <PageTitle>Employees</PageTitle>
       </Page>
-      <Table loading={fetchStatus === 'loading'} columns={columns} items={employees?.items} noRecords={noRecordsTemplate} />
+      <Table<Employee>
+        loading={fetchStatus === 'loading'}
+        columns={columns}
+        items={employees?.items}
+        pageNumber={pageNumber}
+        pageSize={pageSize}
+        pageSizeOptions={[1, 2]}
+        noRecordsTemplate={noRecordsTemplate}
+        onPageNumberChange={handlePageNumberChange}
+        onPageSizeChange={handlePageSizeChange}
+      />
     </Box>
   );
 };

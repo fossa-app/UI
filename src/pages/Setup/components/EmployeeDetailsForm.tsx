@@ -5,7 +5,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import DoneIcon from '@mui/icons-material/Done';
 import { AppUser, Employee, ErrorResponse } from 'shared/models';
 import Snackbar from 'components/UI/Snackbar';
-import Page, { PageTitle } from 'components/Page';
+import Page, { PageTitle } from 'components/UI/Page';
 
 interface EmployeeDetailsFormProps {
   title: string;

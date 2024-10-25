@@ -14,7 +14,10 @@ const initialMockState: DeepPartial<RootState> = {
   setup: {
     step: {},
   },
-  license: {},
+  license: {
+    system: {},
+    company: {},
+  },
   auth: {
     user: {
       data: null,
