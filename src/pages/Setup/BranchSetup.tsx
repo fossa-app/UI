@@ -1,16 +1,23 @@
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
-import { createBranch, selectBranch, selectIsUserAdmin } from 'store/features';
+import { createBranch, fetchCompanyLicense, selectBranch, selectCompanyLicense, selectIsUserAdmin } from 'store/features';
 import CompanyDetailsForm from './components/CompanyDetailsForm';
 
 const BranchSetupPage: React.FC = () => {
   const { updateStatus, error } = useAppSelector(selectBranch);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
+  const { status: companyLicenseStatus } = useAppSelector(selectCompanyLicense);
   const dispatch = useAppDispatch();
 
   const handleSubmit = (name: string) => {
     dispatch(createBranch({ name }));
   };
+
+  React.useEffect(() => {
+    if (companyLicenseStatus === 'idle') {
+      dispatch(fetchCompanyLicense());
+    }
+  }, [companyLicenseStatus]);
 
   return (
     <CompanyDetailsForm

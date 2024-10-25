@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Box from '@mui/system/Box';
 import Button from '@mui/material/Button';
-import Page, { PageTitle, PageSubtitle } from 'components/Page';
+import Page, { PageTitle, PageSubtitle } from 'components/UI/Page';
 
 const NotFoundPage: React.FC = () => {
   return (

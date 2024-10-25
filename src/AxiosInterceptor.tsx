@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { removeUser, selectAuthSettings } from 'store/features';
-import axios, { AxiosError, AxiosRequestConfig } from 'shared/configs/axios.config';
+import axios, { AxiosError, AxiosRequestConfig } from 'shared/configs/axios';
 import { getUserFromLocalStorage, getUserManager } from 'shared/helpers';
 import { MESSAGES, ROUTES } from 'shared/constants';
 import { ErrorResponse } from 'shared/models';

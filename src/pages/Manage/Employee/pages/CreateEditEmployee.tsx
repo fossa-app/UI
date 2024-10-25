@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Page, { PageTitle } from 'components/Page';
+import Page, { PageTitle } from 'components/UI/Page';
 
 const CreateEditEmployeePage: React.FC = () => {
   return (
