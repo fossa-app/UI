@@ -12,6 +12,10 @@ export const OIDC_INITIAL_CONFIG: OidcClientSettings = {
 export const APP_CONFIG = {
   snackbarAutoHideDuration: 10000,
   httpTimeout: 15000,
+  table: {
+    defaultPagination: { pageNumber: 1, pageSize: 1, totalItems: undefined },
+    defaultPageSizeOptions: [1, 2],
+  },
 };
 
 export const MESSAGES = {
