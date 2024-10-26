@@ -3,14 +3,15 @@ import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchEmployees, selectEmployees, setEmployeesPagination } from 'store/features';
 import { Employee } from 'shared/models';
-import { EMPLOYEE_FIELDS } from 'shared/constants';
+import { APP_CONFIG, EMPLOYEE_FIELDS } from 'shared/constants';
 import Page, { PageSubtitle, PageTitle } from 'components/UI/Page';
 import Table, { Column } from 'components/UI/Table';
 
-const EmployeeListPage: React.FC = () => {
+const EmployeeTablePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { fetchStatus, data: employees, page } = useAppSelector(selectEmployees);
-  const { pageNumber, pageSize } = page!;
+  const { pageNumber, pageSize, totalItems } = page || APP_CONFIG.table.defaultPagination;
+  const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
 
   const columns: Column<Employee>[] = [
     {
@@ -34,11 +35,11 @@ const EmployeeListPage: React.FC = () => {
   );
 
   const handlePageNumberChange = (pageNumber: number) => {
-    dispatch(setEmployeesPagination({ pageNumber, pageSize }));
+    dispatch(setEmployeesPagination({ ...page, pageNumber, pageSize }));
   };
 
   const handlePageSizeChange = (pageSize: number) => {
-    dispatch(setEmployeesPagination({ pageSize, pageNumber: 1 }));
+    dispatch(setEmployeesPagination({ ...page, pageSize, pageNumber: 1 }));
   };
 
   React.useEffect(() => {
@@ -56,7 +57,8 @@ const EmployeeListPage: React.FC = () => {
         items={employees?.items}
         pageNumber={pageNumber}
         pageSize={pageSize}
-        pageSizeOptions={[1, 2]}
+        totalItems={totalItems}
+        pageSizeOptions={pageSizeOptions}
         noRecordsTemplate={noRecordsTemplate}
         onPageNumberChange={handlePageNumberChange}
         onPageSizeChange={handlePageSizeChange}
@@ -65,4 +67,4 @@ const EmployeeListPage: React.FC = () => {
   );
 };
 
-export default EmployeeListPage;
+export default EmployeeTablePage;
