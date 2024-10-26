@@ -14,10 +14,11 @@ interface TableProps<T> {
   columns: Column<T>[];
   items: T[] | undefined;
   loading: boolean;
-  noRecordsTemplate?: React.ReactElement;
   pageNumber: number;
   pageSize: number;
   pageSizeOptions: number[];
+  totalItems?: number;
+  noRecordsTemplate?: React.ReactElement;
   // eslint-disable-next-line no-unused-vars
   onPageNumberChange: (pageNumber: number) => void;
   // eslint-disable-next-line no-unused-vars
@@ -27,16 +28,18 @@ interface TableProps<T> {
 const Table = <T extends Item>({
   columns,
   items,
+  loading,
   pageNumber,
   pageSize,
   pageSizeOptions,
-  loading,
+  totalItems,
   noRecordsTemplate,
   onPageNumberChange,
   onPageSizeChange,
 }: TableProps<T>) => {
-  const handlePageNumberChange = (event: unknown, page: number) => {
-    onPageNumberChange(page);
+  const handlePageNumberChange = (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
+    // BE pageNumber starts from 1
+    onPageNumberChange(page + 1);
   };
 
   const handlePageSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,7 +94,7 @@ const Table = <T extends Item>({
         <TablePagination
           component="div"
           rowsPerPageOptions={pageSizeOptions}
-          count={items!.length}
+          count={totalItems || 0}
           rowsPerPage={pageSize}
           // BE pageNumber starts from 1
           page={pageNumber - 1}

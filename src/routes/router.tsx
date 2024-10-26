@@ -14,10 +14,12 @@ import EmployeeSetupPage from 'pages/Setup/EmployeeSetup';
 import ManagePage from 'pages/Manage/Manage';
 import DashboardPage from 'pages/Dashboard';
 import CompanyPage from 'pages/Company';
-import BranchesPage from 'pages/Branches';
 import EmployeePage from 'pages/Manage/Employee/Employee';
-import EmployeeListPage from 'pages/Manage/Employee/pages/EmployeeList';
+import EmployeeTablePage from 'pages/Manage/Employee/pages/EmployeeTable';
 import CreateEditEmployeePage from 'pages/Manage/Employee/pages/CreateEditEmployee';
+import BranchPage from 'pages/Manage/Branch/Branch';
+import BranchTablePage from 'pages/Manage/Branch/pages/BranchTable';
+import CreateEditBranchPage from 'pages/Manage/Branch/pages/CreateEditBranch';
 
 const router = createBrowserRouter([
   {
@@ -115,12 +117,27 @@ const router = createBrowserRouter([
               },
               {
                 path: ROUTES.branches.path,
-                element: (
-                  <>
-                    <RouteTitle title="Branches" />
-                    <BranchesPage />
-                  </>
-                ),
+                element: <BranchPage />,
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <>
+                        <RouteTitle title="Branch Table" />
+                        <BranchTablePage />
+                      </>
+                    ),
+                  },
+                  {
+                    path: ROUTES.newBranch.path,
+                    element: (
+                      <>
+                        <RouteTitle title="Create/Edit Branch" />
+                        <CreateEditBranchPage />
+                      </>
+                    ),
+                  },
+                ],
               },
               {
                 path: ROUTES.employees.path,
@@ -130,8 +147,8 @@ const router = createBrowserRouter([
                     index: true,
                     element: (
                       <>
-                        <RouteTitle title="Employee List" />
-                        <EmployeeListPage />
+                        <RouteTitle title="Employee Table" />
+                        <EmployeeTablePage />
                       </>
                     ),
                   },

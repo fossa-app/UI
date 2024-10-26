@@ -49,4 +49,8 @@ export const ROUTES: AppRoute = {
     name: 'Create Employee',
     path: '/manage/employees/new',
   },
+  newBranch: {
+    name: 'Create Branch',
+    path: '/manage/branches/new',
+  },
 };
