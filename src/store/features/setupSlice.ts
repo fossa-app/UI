@@ -22,7 +22,7 @@ export const fetchSetupData = createAsyncThunk<void, void, { rejectValue: ErrorR
     const companyResponse = await dispatch(fetchCompany(true)).unwrap();
 
     if (companyResponse) {
-      const branchesResponse = await dispatch(fetchBranches({ pageNumber: 1, pageSize: 1 })).unwrap();
+      const branchesResponse = await dispatch(fetchBranches([{ pageSize: 1, pageNumber: 1 }, true])).unwrap();
 
       if (branchesResponse?.items.length) {
         await dispatch(fetchEmployee()).unwrap();

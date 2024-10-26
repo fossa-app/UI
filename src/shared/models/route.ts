@@ -15,6 +15,7 @@ export enum RouteKey {
   branches = 'branches',
   employees = 'employees',
   newEmployee = 'newEmployee',
+  newBranch = 'newBranch',
 }
 
 export interface RouteItem {

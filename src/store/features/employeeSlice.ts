@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { Employee, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
-import { MESSAGES, URLS } from 'shared/constants';
+import { APP_CONFIG, MESSAGES, URLS } from 'shared/constants';
 
 interface SetupState {
   employee: StateEntity<Employee | null>;
@@ -17,7 +17,7 @@ const initialState: SetupState = {
   },
   employees: {
     data: null,
-    page: { pageNumber: 1, pageSize: 1 },
+    page: APP_CONFIG.table.defaultPagination,
     fetchStatus: 'idle',
   },
 };
@@ -119,6 +119,8 @@ const employeeSlice = createSlice({
       })
       .addCase(fetchEmployees.fulfilled, (state, action: PayloadAction<PaginatedResponse<Employee> | null>) => {
         state.employees.data = action.payload;
+        state.employees.page!.totalItems = action.payload?.totalItems;
+        state.employees.page!.totalPages = action.payload?.totalPages;
         state.employees.fetchStatus = 'succeeded';
       });
   },

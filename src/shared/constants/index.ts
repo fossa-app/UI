@@ -5,4 +5,5 @@ export * from './colors';
 export * from './roles';
 export * from './search-contexts';
 export * from './menu-items';
-export * from './employee';
+export * from './employees';
+export * from './branches';
