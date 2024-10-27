@@ -64,7 +64,7 @@ const Header: React.FC = () => {
               </Typography>
             )}
           </Grid>
-          <Grid size={3}>
+          <Grid size="auto">
             {showSearch && <Search data={[]} context={getSearchContext(locationPathname)!} getOptionLabel={handleGetOptionLabel} />}
           </Grid>
           <Grid size="auto">

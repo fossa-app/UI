@@ -1,13 +1,15 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchEmployees, selectEmployees, setEmployeesPagination } from 'store/features';
 import { Employee } from 'shared/models';
-import { APP_CONFIG, EMPLOYEE_FIELDS } from 'shared/constants';
-import Page, { PageSubtitle, PageTitle } from 'components/UI/Page';
+import { APP_CONFIG, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
+import Page, { PageSubtitle } from 'components/UI/Page';
 import Table, { Column } from 'components/UI/Table';
+import TableLayout from 'pages/Manage/components/TableLayout';
 
 const EmployeeTablePage: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { fetchStatus, data: employees, page } = useAppSelector(selectEmployees);
   const { pageNumber, pageSize, totalItems } = page || APP_CONFIG.table.defaultPagination;
@@ -17,19 +19,22 @@ const EmployeeTablePage: React.FC = () => {
     {
       name: EMPLOYEE_FIELDS.firstName.name,
       field: EMPLOYEE_FIELDS.firstName.field,
+      width: 200,
     },
     {
       name: EMPLOYEE_FIELDS.lastName.name,
       field: EMPLOYEE_FIELDS.lastName.field,
+      width: 200,
     },
     {
       name: EMPLOYEE_FIELDS.fullName.name,
       field: EMPLOYEE_FIELDS.fullName.field,
+      width: 'auto',
     },
   ];
 
   const noRecordsTemplate = (
-    <Page>
+    <Page sx={{ my: 0 }}>
       <PageSubtitle>No Employees Found</PageSubtitle>
     </Page>
   );
@@ -42,15 +47,16 @@ const EmployeeTablePage: React.FC = () => {
     dispatch(setEmployeesPagination({ ...page, pageSize, pageNumber: 1 }));
   };
 
+  const handleActionClick = () => {
+    navigate(ROUTES.newEmployee.path);
+  };
+
   React.useEffect(() => {
     dispatch(fetchEmployees({ pageNumber, pageSize }));
   }, [pageNumber, pageSize, dispatch]);
 
   return (
-    <Box>
-      <Page>
-        <PageTitle>Employees</PageTitle>
-      </Page>
+    <TableLayout withActionButton pageTitle="Employees" actionButtonLabel="New Employee" onActionClick={handleActionClick}>
       <Table<Employee>
         loading={fetchStatus === 'loading'}
         columns={columns}
@@ -63,7 +69,7 @@ const EmployeeTablePage: React.FC = () => {
         onPageNumberChange={handlePageNumberChange}
         onPageSizeChange={handlePageSizeChange}
       />
-    </Box>
+    </TableLayout>
   );
 };
 

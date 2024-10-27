@@ -1,12 +1,30 @@
 import * as React from 'react';
-import Typography, { TypographyProps } from '@mui/material/Typography';
+import Typography from '@mui/material/Typography';
+import Box, { BoxProps } from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-type PageTitleProps = TypographyProps;
+type PageTitleProps = {
+  withBackButton?: boolean;
+  onBackButtonClick?: () => void;
+} & BoxProps;
 
-export const PageTitle: React.FC<React.PropsWithChildren<PageTitleProps>> = ({ children, ...props }) => {
+export const PageTitle: React.FC<React.PropsWithChildren<PageTitleProps>> = ({
+  children,
+  withBackButton = false,
+  onBackButtonClick,
+  ...props
+}) => {
   return (
-    <Typography variant="h5" component="h1" {...props}>
-      {children}
-    </Typography>
+    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} {...props}>
+      {withBackButton && (
+        <IconButton size="large" onClick={onBackButtonClick}>
+          <ArrowBackIcon />
+        </IconButton>
+      )}
+      <Typography variant="h5" component="h1" sx={{ flexGrow: 1 }}>
+        {children}
+      </Typography>
+    </Box>
   );
 };
