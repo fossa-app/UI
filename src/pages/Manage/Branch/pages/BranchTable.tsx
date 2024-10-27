@@ -1,13 +1,15 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchBranches, selectBranches, setBranchesPagination } from 'store/features';
 import { Branch } from 'shared/models';
-import { APP_CONFIG, BRANCH_FIELDS } from 'shared/constants';
-import Page, { PageSubtitle, PageTitle } from 'components/UI/Page';
+import { APP_CONFIG, BRANCH_FIELDS, ROUTES } from 'shared/constants';
+import Page, { PageSubtitle } from 'components/UI/Page';
 import Table, { Column } from 'components/UI/Table';
+import TableLayout from 'pages/Manage/components/TableLayout';
 
 const BranchTablePage: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { fetchStatus, data: branches, page } = useAppSelector(selectBranches);
   const { pageNumber, pageSize, totalItems } = page || APP_CONFIG.table.defaultPagination;
@@ -34,15 +36,16 @@ const BranchTablePage: React.FC = () => {
     dispatch(setBranchesPagination({ ...page, pageSize, pageNumber: 1 }));
   };
 
+  const handleActionClick = () => {
+    navigate(ROUTES.newBranch.path);
+  };
+
   React.useEffect(() => {
     dispatch(fetchBranches([{ pageNumber, pageSize }]));
   }, [pageNumber, pageSize, dispatch]);
 
   return (
-    <Box>
-      <Page>
-        <PageTitle>Branches</PageTitle>
-      </Page>
+    <TableLayout withActionButton pageTitle="Branches" actionButtonLabel="New Branch" onActionClick={handleActionClick}>
       <Table<Branch>
         loading={fetchStatus === 'loading'}
         columns={columns}
@@ -55,7 +58,7 @@ const BranchTablePage: React.FC = () => {
         onPageNumberChange={handlePageNumberChange}
         onPageSizeChange={handlePageSizeChange}
       />
-    </Box>
+    </TableLayout>
   );
 };
 

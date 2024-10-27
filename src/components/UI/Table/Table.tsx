@@ -7,12 +7,13 @@ import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import TablePagination from '@mui/material/TablePagination';
 import LinearProgress from '@mui/material/LinearProgress';
+import Paper from '@mui/material/Paper';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import { Column, Item } from './table.model';
 
 interface TableProps<T> {
   columns: Column<T>[];
-  items: T[] | undefined;
+  items?: T[];
   loading: boolean;
   pageNumber: number;
   pageSize: number;
@@ -27,18 +28,17 @@ interface TableProps<T> {
 
 const Table = <T extends Item>({
   columns,
-  items,
+  items = [],
   loading,
   pageNumber,
   pageSize,
   pageSizeOptions,
-  totalItems,
+  totalItems = 0,
   noRecordsTemplate,
   onPageNumberChange,
   onPageSizeChange,
 }: TableProps<T>) => {
-  const handlePageNumberChange = (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
-    // BE pageNumber starts from 1
+  const handlePageNumberChange = (_: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
     onPageNumberChange(page + 1);
   };
 
@@ -46,66 +46,65 @@ const Table = <T extends Item>({
     onPageSizeChange(Number(event.target.value));
   };
 
-  const renderContent = (): React.ReactElement => {
-    if (loading) {
-      return <LinearProgress />;
-    }
+  const tableContent = (
+    <TableBody>
+      {loading ? (
+        <TableRow>
+          <TableCell colSpan={columns.length} align="left">
+            <LinearProgress sx={{ my: 2 }} />
+          </TableCell>
+        </TableRow>
+      ) : items.length === 0 ? (
+        <TableRow>
+          <TableCell colSpan={columns.length} align="center">
+            {noRecordsTemplate ?? (
+              <Page>
+                <PageSubtitle>No Records Found</PageSubtitle>
+              </Page>
+            )}
+          </TableCell>
+        </TableRow>
+      ) : (
+        items.map((row) => (
+          <TableRow hover key={row.id}>
+            {columns.map((column) => (
+              <TableCell key={column.field} align="left" sx={{ width: column.width || 'auto' }}>
+                {column.renderBodyCell ? column.renderBodyCell(row) : (row[column.field] ?? 'N/A')}
+              </TableCell>
+            ))}
+          </TableRow>
+        ))
+      )}
+    </TableBody>
+  );
 
-    if (!loading && !items?.length) {
-      return (
-        noRecordsTemplate ?? (
-          <Page>
-            <PageSubtitle>No Records Found</PageSubtitle>
-          </Page>
-        )
-      );
-    }
-
-    return (
-      <>
-        <TableContainer sx={{ padding: 3 }}>
-          <MuiTable stickyHeader>
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell key={column.field} align="left">
-                    {column.name}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {items!.map((row) => (
-                <TableRow hover key={row.id}>
-                  {columns.map((column) => {
-                    const value = column.renderBodyCell ? column.renderBodyCell(row) : (row[column.field] ?? 'N/A');
-
-                    return (
-                      <TableCell key={column.field as string} align="left">
-                        {value}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
+  return (
+    <Paper elevation={3} sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, pt: 4, pr: 4, pb: 1, pl: 4 }}>
+      <TableContainer sx={{ flexGrow: 1 }}>
+        <MuiTable stickyHeader>
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <TableCell key={column.field} align="left" sx={{ width: column.width, fontWeight: '700', fontSize: 16 }}>
+                  {column.name}
+                </TableCell>
               ))}
-            </TableBody>
-          </MuiTable>
-        </TableContainer>
-        <TablePagination
-          component="div"
-          rowsPerPageOptions={pageSizeOptions}
-          count={totalItems || 0}
-          rowsPerPage={pageSize}
-          // BE pageNumber starts from 1
-          page={pageNumber - 1}
-          onPageChange={handlePageNumberChange}
-          onRowsPerPageChange={handlePageSizeChange}
-        />
-      </>
-    );
-  };
-
-  return renderContent();
+            </TableRow>
+          </TableHead>
+          {tableContent}
+        </MuiTable>
+      </TableContainer>
+      <TablePagination
+        component="div"
+        rowsPerPageOptions={pageSizeOptions}
+        count={totalItems}
+        rowsPerPage={pageSize}
+        page={pageNumber - 1}
+        onPageChange={handlePageNumberChange}
+        onRowsPerPageChange={handlePageSizeChange}
+      />
+    </Paper>
+  );
 };
 
 export default Table;

@@ -14,7 +14,7 @@ export const APP_CONFIG = {
   httpTimeout: 15000,
   table: {
     defaultPagination: { pageNumber: 1, pageSize: 1, totalItems: undefined },
-    defaultPageSizeOptions: [1, 2],
+    defaultPageSizeOptions: [1, 5, 10],
   },
 };
 
