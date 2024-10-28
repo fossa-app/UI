@@ -14,6 +14,7 @@ const initialState: BranchState = {
     data: null,
     fetchStatus: 'idle',
     updateStatus: 'idle',
+    deleteStatus: 'idle',
   },
   branches: {
     data: null,
@@ -46,12 +47,32 @@ export const fetchBranches = createAsyncThunk<
   }
 });
 
-export const createBranch = createAsyncThunk<void, Branch, { rejectValue: ErrorResponse }>(
+export const createBranch = createAsyncThunk<void, [Branch, boolean?], { rejectValue: ErrorResponse }>(
   'branch/setBranch',
-  async (branch, { dispatch, rejectWithValue }) => {
+  async ([branch, shouldFetchBranches = true], { dispatch, rejectWithValue }) => {
     try {
-      await axios.post<Branch>(URLS.branches, branch);
-      await dispatch(fetchBranches([{ pageSize: 1, pageNumber: 1 }])).unwrap();
+      await axios.post<void>(URLS.branches, branch);
+
+      if (shouldFetchBranches) {
+        await dispatch(fetchBranches([{ pageNumber: 1, pageSize: 1 }])).unwrap();
+      }
+    } catch (error) {
+      return rejectWithValue({
+        ...(error as ErrorResponse),
+        title: MESSAGES.error.branches.createFailed,
+      });
+    }
+  }
+);
+
+export const deleteBranch = createAsyncThunk<void, Branch['id'], { state: RootState; rejectValue: ErrorResponse }>(
+  'branch/deleteBranch',
+  async (id, { dispatch, getState, rejectWithValue }) => {
+    try {
+      await axios.delete<void>(`${URLS.branches}/${id}`);
+      const { pageNumber, pageSize } = getState().branch.branches.page!;
+
+      await dispatch(fetchBranches([{ pageSize, pageNumber }])).unwrap();
     } catch (error) {
       return rejectWithValue({
         ...(error as ErrorResponse),

@@ -16,7 +16,6 @@ import DashboardPage from 'pages/Dashboard';
 import CompanyPage from 'pages/Company';
 import EmployeePage from 'pages/Manage/Employee/Employee';
 import EmployeeTablePage from 'pages/Manage/Employee/pages/EmployeeTable';
-import CreateEditEmployeePage from 'pages/Manage/Employee/pages/CreateEditEmployee';
 import BranchPage from 'pages/Manage/Branch/Branch';
 import BranchTablePage from 'pages/Manage/Branch/pages/BranchTable';
 import CreateEditBranchPage from 'pages/Manage/Branch/pages/CreateEditBranch';
@@ -123,16 +122,17 @@ const router = createBrowserRouter([
                     index: true,
                     element: (
                       <>
-                        <RouteTitle title="Branch Table" />
+                        <RouteTitle title="Branches" />
                         <BranchTablePage />
                       </>
                     ),
                   },
+                  // TODO: only admins can see this route
                   {
                     path: ROUTES.newBranch.path,
                     element: (
                       <>
-                        <RouteTitle title="Create/Edit Branch" />
+                        <RouteTitle title="Create Branch" />
                         <CreateEditBranchPage />
                       </>
                     ),
@@ -147,17 +147,8 @@ const router = createBrowserRouter([
                     index: true,
                     element: (
                       <>
-                        <RouteTitle title="Employee Table" />
+                        <RouteTitle title="Employees" />
                         <EmployeeTablePage />
-                      </>
-                    ),
-                  },
-                  {
-                    path: ROUTES.newEmployee.path,
-                    element: (
-                      <>
-                        <RouteTitle title="Create/Edit Employee" />
-                        <CreateEditEmployeePage />
                       </>
                     ),
                   },

@@ -10,7 +10,8 @@ const EmployeeSetupPage: React.FC = () => {
   const { data: user } = useAppSelector(selectUser);
 
   const handleSubmit = (value: Employee) => {
-    dispatch(createEmployee(value));
+    // TODO: when deleting a branch and the employee exists, it navigates to /setup/employee page, but should navigate to /manage
+    dispatch(createEmployee([value]));
   };
 
   return (

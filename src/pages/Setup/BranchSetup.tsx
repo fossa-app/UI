@@ -10,7 +10,7 @@ const BranchSetupPage: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const handleSubmit = (name: string) => {
-    dispatch(createBranch({ name }));
+    dispatch(createBranch([{ name }]));
   };
 
   React.useEffect(() => {
