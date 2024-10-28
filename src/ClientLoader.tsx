@@ -17,13 +17,9 @@ const ClientLoader: React.FC = () => {
   const loading = status === 'loading';
   const appTheme = isDarkTheme ? darkTheme : lightTheme;
 
-  const getClient = async () => {
-    dispatch(fetchClient());
-  };
-
   React.useEffect(() => {
     if (status === 'idle') {
-      getClient();
+      dispatch(fetchClient());
     }
   }, [status]);
 

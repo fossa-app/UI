@@ -31,6 +31,7 @@ export interface StateEntity<T = unknown> {
   status?: Status;
   fetchStatus?: Status;
   updateStatus?: Status;
+  deleteStatus?: Status;
   error?: ErrorResponse;
   page?: PaginationParams;
 }
