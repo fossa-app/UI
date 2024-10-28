@@ -13,8 +13,8 @@ export const APP_CONFIG = {
   snackbarAutoHideDuration: 10000,
   httpTimeout: 15000,
   table: {
-    defaultPagination: { pageNumber: 1, pageSize: 1, totalItems: undefined },
-    defaultPageSizeOptions: [1, 5, 10],
+    defaultPagination: { pageNumber: 1, pageSize: 5, totalItems: undefined },
+    defaultPageSizeOptions: [5, 10],
   },
 };
 
@@ -44,6 +44,7 @@ export const MESSAGES = {
     branches: {
       notFound: 'Branch not found 😞',
       createFailed: 'Failed to create a Branch 😞',
+      deleteFailed: 'Failed to delete a Branch 😞',
     },
     employee: {
       notFound: 'Employee not found 😞',

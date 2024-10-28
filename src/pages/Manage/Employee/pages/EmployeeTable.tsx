@@ -1,15 +1,13 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchEmployees, selectEmployees, setEmployeesPagination } from 'store/features';
 import { Employee } from 'shared/models';
-import { APP_CONFIG, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
+import { APP_CONFIG, EMPLOYEE_FIELDS } from 'shared/constants';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import Table, { Column } from 'components/UI/Table';
-import TableLayout from 'pages/Manage/components/TableLayout';
+import TableLayout from '../../components/TableLayout';
 
 const EmployeeTablePage: React.FC = () => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { fetchStatus, data: employees, page } = useAppSelector(selectEmployees);
   const { pageNumber, pageSize, totalItems } = page || APP_CONFIG.table.defaultPagination;
@@ -47,16 +45,12 @@ const EmployeeTablePage: React.FC = () => {
     dispatch(setEmployeesPagination({ ...page, pageSize, pageNumber: 1 }));
   };
 
-  const handleActionClick = () => {
-    navigate(ROUTES.newEmployee.path);
-  };
-
   React.useEffect(() => {
     dispatch(fetchEmployees({ pageNumber, pageSize }));
   }, [pageNumber, pageSize, dispatch]);
 
   return (
-    <TableLayout withActionButton pageTitle="Employees" actionButtonLabel="New Employee" onActionClick={handleActionClick}>
+    <TableLayout pageTitle="Employees">
       <Table<Employee>
         loading={fetchStatus === 'loading'}
         columns={columns}

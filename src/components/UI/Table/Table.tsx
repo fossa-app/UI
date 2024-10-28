@@ -1,6 +1,5 @@
 import * as React from 'react';
 import TableContainer from '@mui/material/TableContainer';
-import MuiTable from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
@@ -10,6 +9,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Paper from '@mui/material/Paper';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import { Column, Item } from './table.model';
+import { StyledTable } from './StyledTable';
 
 interface TableProps<T> {
   columns: Column<T>[];
@@ -58,7 +58,7 @@ const Table = <T extends Item>({
         <TableRow>
           <TableCell colSpan={columns.length} align="center">
             {noRecordsTemplate ?? (
-              <Page>
+              <Page sx={{ margin: 0 }}>
                 <PageSubtitle>No Records Found</PageSubtitle>
               </Page>
             )}
@@ -68,7 +68,7 @@ const Table = <T extends Item>({
         items.map((row) => (
           <TableRow hover key={row.id}>
             {columns.map((column) => (
-              <TableCell key={column.field} align="left" sx={{ width: column.width || 'auto' }}>
+              <TableCell key={column.field} align={column.align || 'left'} sx={{ width: column.width || 'auto' }}>
                 {column.renderBodyCell ? column.renderBodyCell(row) : (row[column.field] ?? 'N/A')}
               </TableCell>
             ))}
@@ -79,20 +79,20 @@ const Table = <T extends Item>({
   );
 
   return (
-    <Paper elevation={3} sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, pt: 4, pr: 4, pb: 1, pl: 4 }}>
+    <Paper elevation={3} sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, pt: 3, pr: 3, pb: 1, pl: 3 }}>
       <TableContainer sx={{ flexGrow: 1 }}>
-        <MuiTable stickyHeader>
+        <StyledTable stickyHeader>
           <TableHead>
             <TableRow>
               {columns.map((column) => (
-                <TableCell key={column.field} align="left" sx={{ width: column.width, fontWeight: '700', fontSize: 16 }}>
+                <TableCell key={column.field} align={column.align || 'left'} sx={{ width: column.width, fontWeight: '700', fontSize: 16 }}>
                   {column.name}
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
           {tableContent}
-        </MuiTable>
+        </StyledTable>
       </TableContainer>
       <TablePagination
         component="div"

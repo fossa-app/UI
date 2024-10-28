@@ -14,7 +14,6 @@ export enum RouteKey {
   company = 'company',
   branches = 'branches',
   employees = 'employees',
-  newEmployee = 'newEmployee',
   newBranch = 'newBranch',
 }
 

@@ -11,6 +11,8 @@ const defaultConfigs: CreateAxiosDefaults = {
   headers: {
     'Content-Type': 'application/json',
   },
+  // BE sends big numbers in the response, parsing manually in AxiosInterceptor
+  transformResponse: [(response) => response],
 };
 
 const instance = axios.create(defaultConfigs);
