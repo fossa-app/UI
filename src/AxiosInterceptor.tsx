@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { removeUser, selectAuthSettings } from 'store/features';
 import axios, { AxiosError, AxiosRequestConfig } from 'shared/configs/axios';
-import { getUserFromLocalStorage, getUserManager } from 'shared/helpers';
+import { getUserFromLocalStorage, getUserManager, parseResponseData } from 'shared/helpers';
 import { MESSAGES, ROUTES } from 'shared/constants';
 import { ErrorResponse } from 'shared/models';
 import Snackbar from 'components/UI/Snackbar';
@@ -65,7 +65,12 @@ const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
     });
 
     const responseInterceptor = axios.interceptors.response.use(
-      (response) => response,
+      (response) => {
+        return {
+          ...response,
+          data: parseResponseData(response.data),
+        };
+      },
       async (error: AxiosError) => {
         if (!error.isAxiosError) {
           return Promise.reject(error);

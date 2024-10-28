@@ -18,6 +18,9 @@
     "es6": true,
     "jest": true
   },
+  "globals": {
+    "BigInt": true
+  },
   "overrides": [
     {
       "files": ["**/*.test.ts", "**/*.test.tsx"],
