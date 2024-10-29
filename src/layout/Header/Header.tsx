@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -9,13 +9,15 @@ import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
 import { openSideBar, selectAppConfig, selectCompany, selectStep, selectUser, toggleAppTheme } from 'store/features';
 import { getSearchContext, getUserManager } from 'shared/helpers';
+import { ROUTES } from 'shared/constants';
 import Search from '../../components/Search/Search';
 import UserMenu from './components/UserMenu';
 import ThemeSwitch from './components/ThemeSwitch';
 
 const Header: React.FC = () => {
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { pathname } = useLocation();
+  const dispatch = useAppDispatch();
   const { isDarkTheme } = useAppSelector(selectAppConfig);
   const { data: user } = useAppSelector(selectUser);
   const { data: company } = useAppSelector(selectCompany);
@@ -36,6 +38,10 @@ const Header: React.FC = () => {
 
   const handleGetOptionLabel = (option: { id: string; name: string }) => {
     return option.name;
+  };
+
+  const handleCompanyClick = () => {
+    navigate(ROUTES.manage.path);
   };
 
   const showSideBar = () => {
@@ -59,7 +65,13 @@ const Header: React.FC = () => {
           </Grid>
           <Grid size="grow">
             {companyName && (
-              <Typography data-testid="app-logo" noWrap variant="h6" sx={{ maxWidth: { sm: 320, xs: 120 } }}>
+              <Typography
+                data-testid="app-logo"
+                noWrap
+                variant="h6"
+                onClick={handleCompanyClick}
+                sx={{ maxWidth: { sm: 320, xs: 120, cursor: 'pointer' } }}
+              >
                 {companyName}
               </Typography>
             )}

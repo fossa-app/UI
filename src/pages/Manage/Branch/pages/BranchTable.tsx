@@ -45,7 +45,7 @@ const BranchTablePage: React.FC = () => {
 
   const noRecordsTemplate = (
     <Page sx={{ margin: 0 }}>
-      <PageSubtitle>No Branches Found</PageSubtitle>
+      <PageSubtitle fontSize={20}>No Branches Found</PageSubtitle>
     </Page>
   );
 
@@ -62,6 +62,12 @@ const BranchTablePage: React.FC = () => {
   };
 
   const handleDeleteBranch = (id: Branch['id']) => {
+    const itemsLength = branches?.items.length || 0;
+
+    if (pageNumber > 1 && itemsLength <= 1) {
+      dispatch(setBranchesPagination({ ...page, pageSize, pageNumber: pageNumber - 1 }));
+    }
+
     dispatch(deleteBranch(id));
   };
 
