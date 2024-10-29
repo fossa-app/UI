@@ -1,18 +1,23 @@
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectEmployee, createEmployee, selectUser } from 'store/features';
+import { selectEmployee, createEmployee, selectUser, fetchEmployee } from 'store/features';
 import { Employee } from 'shared/models';
 import EmployeeDetailsForm from './components/EmployeeDetailsForm';
 
 const EmployeeSetupPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { updateStatus, error } = useAppSelector(selectEmployee);
+  const { data: employee, fetchStatus, updateStatus, error } = useAppSelector(selectEmployee);
   const { data: user } = useAppSelector(selectUser);
 
   const handleSubmit = (value: Employee) => {
-    // TODO: when deleting a branch and the employee exists, it navigates to /setup/employee page, but should navigate to /manage
-    dispatch(createEmployee([value]));
+    dispatch(createEmployee(value));
   };
+
+  React.useEffect(() => {
+    if (!employee && fetchStatus === 'idle') {
+      dispatch(fetchEmployee());
+    }
+  }, [employee, fetchStatus]);
 
   return (
     <EmployeeDetailsForm

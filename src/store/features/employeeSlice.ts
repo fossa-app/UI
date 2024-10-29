@@ -62,17 +62,12 @@ export const fetchEmployees = createAsyncThunk<PaginatedResponse<Employee> | nul
   }
 );
 
-export const createEmployee = createAsyncThunk<void, [Employee, boolean?], { state: RootState; rejectValue: ErrorResponse }>(
+export const createEmployee = createAsyncThunk<void, Employee, { state: RootState; rejectValue: ErrorResponse }>(
   'employee/setEmployee',
-  async ([employee, shouldFetchEmployees = true], { dispatch, getState, rejectWithValue }) => {
+  async (employee, { dispatch, rejectWithValue }) => {
     try {
       await axios.post<void>(URLS.employee, employee);
-
-      if (shouldFetchEmployees) {
-        const { pageNumber, pageSize } = getState().employee.employees.page!;
-
-        await dispatch(fetchEmployees({ pageNumber, pageSize })).unwrap();
-      }
+      await dispatch(fetchEmployee()).unwrap();
     } catch (error) {
       return rejectWithValue({
         ...(error as ErrorResponse),
