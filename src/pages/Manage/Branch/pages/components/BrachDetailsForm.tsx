@@ -5,19 +5,17 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Grid from '@mui/material/Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
-import { MESSAGES } from 'shared/constants';
 import { ErrorResponse } from 'shared/models';
 import Snackbar from 'components/UI/Snackbar';
 
 interface BrachDetailsFormProps {
-  isAdmin: boolean;
   loading: boolean;
   error?: ErrorResponse;
   // eslint-disable-next-line no-unused-vars
   onSubmit: (name: string) => void;
 }
 
-const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ isAdmin, error, loading, onSubmit }) => {
+const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ error, loading, onSubmit }) => {
   const [inputValue, setInputValue] = React.useState<string>('');
   const [inputError, setInputError] = React.useState<string | null>(null);
   const [showSnackbar, setShowSnackbar] = React.useState(false);
@@ -37,10 +35,6 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ isAdmin, error, loa
   const onFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!isAdmin) {
-      return;
-    }
-
     if (!inputValue) {
       setInputError('Branch name is required');
 
@@ -49,12 +43,6 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ isAdmin, error, loa
 
     onSubmit(inputValue);
   };
-
-  React.useEffect(() => {
-    if (!isAdmin) {
-      setInputError(MESSAGES.error.general.permission);
-    }
-  }, [isAdmin]);
 
   React.useEffect(() => {
     if (error) {
@@ -71,10 +59,9 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ isAdmin, error, loa
           <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               fullWidth
+              required
               variant="outlined"
               name="name"
-              required={isAdmin}
-              disabled={!isAdmin}
               label="Enter Branch name"
               value={inputValue}
               slotProps={{
@@ -93,14 +80,7 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ isAdmin, error, loa
           </Grid>
         </Grid>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 5 }}>
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            loadingPosition="end"
-            loading={loading}
-            disabled={!isAdmin}
-            endIcon={<SaveIcon />}
-          >
+          <LoadingButton type="submit" variant="contained" loadingPosition="end" loading={loading} endIcon={<SaveIcon />}>
             Save
           </LoadingButton>
         </Box>

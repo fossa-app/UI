@@ -3,7 +3,6 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ROUTES } from 'shared/constants';
 import RootPage from 'pages/Root';
 import RouteTitle from 'components/RouteTitle';
-import NotFoundPage from 'pages/NotFound';
 import LoginPage from 'pages/Login';
 import ProtectedPage from 'pages/Protected';
 import CallbackPage from 'pages/Callback';
@@ -13,12 +12,16 @@ import BranchSetupPage from 'pages/Setup/BranchSetup';
 import EmployeeSetupPage from 'pages/Setup/EmployeeSetup';
 import ManagePage from 'pages/Manage/Manage';
 import DashboardPage from 'pages/Dashboard';
-import CompanyPage from 'pages/Company';
-import EmployeePage from 'pages/Manage/Employee/Employee';
-import EmployeeTablePage from 'pages/Manage/Employee/pages/EmployeeTable';
-import BranchPage from 'pages/Manage/Branch/Branch';
-import BranchTablePage from 'pages/Manage/Branch/pages/BranchTable';
-import CreateEditBranchPage from 'pages/Manage/Branch/pages/CreateEditBranch';
+import { createLazyComponent } from './lazy-load';
+
+// Lazy loaded pages
+const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), 'Not found');
+const CompanyPage = createLazyComponent(() => import('pages/Company'));
+const BranchPage = createLazyComponent(() => import('pages/Manage/Branch/Branch'));
+const BranchTablePage = createLazyComponent(() => import('pages/Manage/Branch/pages/BranchTable'), ROUTES.branches.name);
+const CreateEditBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/CreateEditBranch'), ROUTES.newBranch.name, true);
+const EmployeePage = createLazyComponent(() => import('pages/Manage/Employee/Employee'));
+const EmployeeTablePage = createLazyComponent(() => import('pages/Manage/Employee/pages/EmployeeTable'), ROUTES.employees.name);
 
 const router = createBrowserRouter([
   {
@@ -107,50 +110,29 @@ const router = createBrowserRouter([
               },
               {
                 path: ROUTES.company.path,
-                element: (
-                  <>
-                    <RouteTitle title="Company" />
-                    <CompanyPage />
-                  </>
-                ),
+                element: CompanyPage,
               },
               {
                 path: ROUTES.branches.path,
-                element: <BranchPage />,
+                element: BranchPage,
                 children: [
                   {
                     index: true,
-                    element: (
-                      <>
-                        <RouteTitle title="Branches" />
-                        <BranchTablePage />
-                      </>
-                    ),
+                    element: BranchTablePage,
                   },
-                  // TODO: only admins can see this route
                   {
                     path: ROUTES.newBranch.path,
-                    element: (
-                      <>
-                        <RouteTitle title="Create Branch" />
-                        <CreateEditBranchPage />
-                      </>
-                    ),
+                    element: CreateEditBranchPage,
                   },
                 ],
               },
               {
                 path: ROUTES.employees.path,
-                element: <EmployeePage />,
+                element: EmployeePage,
                 children: [
                   {
                     index: true,
-                    element: (
-                      <>
-                        <RouteTitle title="Employees" />
-                        <EmployeeTablePage />
-                      </>
-                    ),
+                    element: EmployeeTablePage,
                   },
                 ],
               },
@@ -164,12 +146,7 @@ const router = createBrowserRouter([
       },
       {
         path: '*',
-        element: (
-          <>
-            <RouteTitle title="Page not found" />
-            <NotFoundPage />
-          </>
-        ),
+        element: NotFoundPage,
       },
     ],
   },
