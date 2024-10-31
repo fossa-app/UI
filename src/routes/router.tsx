@@ -12,16 +12,24 @@ import BranchSetupPage from 'pages/Setup/BranchSetup';
 import EmployeeSetupPage from 'pages/Setup/EmployeeSetup';
 import ManagePage from 'pages/Manage/Manage';
 import DashboardPage from 'pages/Dashboard';
-import { createLazyComponent } from './lazy-load';
+import { createLazyComponent } from './lazy-loaded-component';
 
 // Lazy loaded pages
-const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), 'Not found');
+const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
 const CompanyPage = createLazyComponent(() => import('pages/Company'));
-const BranchPage = createLazyComponent(() => import('pages/Manage/Branch/Branch'));
-const BranchTablePage = createLazyComponent(() => import('pages/Manage/Branch/pages/BranchTable'), ROUTES.branches.name);
-const CreateEditBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/CreateEditBranch'), ROUTES.newBranch.name, true);
 const EmployeePage = createLazyComponent(() => import('pages/Manage/Employee/Employee'));
-const EmployeeTablePage = createLazyComponent(() => import('pages/Manage/Employee/pages/EmployeeTable'), ROUTES.employees.name);
+const EmployeeTablePage = createLazyComponent(() => import('pages/Manage/Employee/pages/EmployeeTable'), { title: ROUTES.employees.name });
+const BranchPage = createLazyComponent(() => import('pages/Manage/Branch/Branch'));
+const BranchTablePage = createLazyComponent(() => import('pages/Manage/Branch/pages/BranchTable'), { title: ROUTES.branches.name });
+
+const CreateBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/CreateEditBranch'), {
+  title: ROUTES.newBranch.name,
+  isAdminRoute: true,
+});
+const EditBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/CreateEditBranch'), {
+  title: ROUTES.editBranch.name,
+  isAdminRoute: true,
+});
 
 const router = createBrowserRouter([
   {
@@ -122,7 +130,11 @@ const router = createBrowserRouter([
                   },
                   {
                     path: ROUTES.newBranch.path,
-                    element: CreateEditBranchPage,
+                    element: CreateBranchPage,
+                  },
+                  {
+                    path: ROUTES.editBranch.path,
+                    element: EditBranchPage,
                   },
                 ],
               },

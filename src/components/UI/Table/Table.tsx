@@ -50,7 +50,7 @@ const Table = <T extends Item>({
 
   const tableContent = (
     <TableBody>
-      {items.length === 0 ? (
+      {!loading && items.length === 0 ? (
         <TableRow>
           <TableCell colSpan={columns.length} align="center">
             {noRecordsTemplate ?? (

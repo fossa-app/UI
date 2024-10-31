@@ -47,6 +47,19 @@ export const fetchBranches = createAsyncThunk<
   }
 });
 
+export const fetchBranchById = createAsyncThunk<Branch, string, { rejectValue: ErrorResponse }>(
+  'branch/getBranchById',
+  async (id, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get<Branch>(`${URLS.branches}/${id}`);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error as ErrorResponse);
+    }
+  }
+);
+
 export const createBranch = createAsyncThunk<void, [Branch, boolean?], { rejectValue: ErrorResponse }>(
   'branch/setBranch',
   async ([branch, shouldFetchBranches = true], { dispatch, rejectWithValue }) => {
@@ -65,11 +78,26 @@ export const createBranch = createAsyncThunk<void, [Branch, boolean?], { rejectV
   }
 );
 
+export const editBranch = createAsyncThunk<void, [string, Omit<Branch, 'id'>], { rejectValue: ErrorResponse }>(
+  'branch/editBranch',
+  async ([id, branch], { rejectWithValue }) => {
+    try {
+      await axios.put<Branch>(`${URLS.branches}/${id}`, branch);
+    } catch (error) {
+      return rejectWithValue({
+        ...(error as ErrorResponse),
+        title: MESSAGES.error.branches.updateFailed,
+      });
+    }
+  }
+);
+
 export const deleteBranch = createAsyncThunk<void, Branch['id'], { state: RootState; rejectValue: ErrorResponse }>(
   'branch/deleteBranch',
   async (id, { dispatch, getState, rejectWithValue }) => {
     try {
       await axios.delete<void>(`${URLS.branches}/${id}`);
+      // TODO: get rid of fetching branches on delete, set the status instead
       const { pageNumber, pageSize } = getState().branch.branches.page!;
 
       await dispatch(fetchBranches([{ pageSize, pageNumber }])).unwrap();
@@ -106,6 +134,19 @@ const branchSlice = createSlice({
         state.branches.page!.totalPages = action.payload?.totalPages;
         state.branches.fetchStatus = 'succeeded';
       })
+      .addCase(fetchBranchById.pending, (state) => {
+        state.branch.fetchStatus = 'loading';
+      })
+      .addCase(fetchBranchById.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+        state.branch.data = null;
+        state.branch.fetchStatus = 'failed';
+        state.branch.error = action.payload;
+      })
+      .addCase(fetchBranchById.fulfilled, (state, action: PayloadAction<Branch | null>) => {
+        state.branch.data = action.payload;
+        state.branch.fetchStatus = 'succeeded';
+        state.branch.error = undefined;
+      })
       .addCase(createBranch.pending, (state) => {
         state.branch.updateStatus = 'loading';
       })
@@ -115,6 +156,26 @@ const branchSlice = createSlice({
       })
       .addCase(createBranch.fulfilled, (state) => {
         state.branch.updateStatus = 'succeeded';
+      })
+      .addCase(editBranch.pending, (state) => {
+        state.branch.updateStatus = 'loading';
+      })
+      .addCase(editBranch.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+        state.branch.updateStatus = 'failed';
+        state.branch.error = action.payload;
+      })
+      .addCase(editBranch.fulfilled, (state) => {
+        state.branch.updateStatus = 'succeeded';
+      })
+      .addCase(deleteBranch.pending, (state) => {
+        state.branch.deleteStatus = 'loading';
+      })
+      .addCase(deleteBranch.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+        state.branch.deleteStatus = 'failed';
+        state.branch.error = action.payload;
+      })
+      .addCase(deleteBranch.fulfilled, (state) => {
+        state.branch.deleteStatus = 'succeeded';
       });
   },
 });

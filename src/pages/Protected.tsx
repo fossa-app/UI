@@ -3,7 +3,6 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchUser, selectUser } from 'store/features';
 import { ROUTES } from 'shared/constants';
-import Loader from 'components/UI/Loader';
 import Content from 'layout/Content';
 
 const ProtectedPage: React.FC = () => {
@@ -18,10 +17,6 @@ const ProtectedPage: React.FC = () => {
       navigate(ROUTES.login.path);
     }
   }, [user, status]);
-
-  if (status === 'loading') {
-    return <Loader />;
-  }
 
   if (status === 'failed') {
     return null;

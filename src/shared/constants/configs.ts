@@ -43,8 +43,9 @@ export const MESSAGES = {
     },
     branches: {
       notFound: 'Branch not found 😞',
-      createFailed: 'Failed to create a Branch 😞',
-      deleteFailed: 'Failed to delete a Branch 😞',
+      createFailed: 'Failed to create Branch 😞',
+      updateFailed: 'Failed to update Branch 😞',
+      deleteFailed: 'Failed to delete Branch 😞',
     },
     employee: {
       notFound: 'Employee not found 😞',
