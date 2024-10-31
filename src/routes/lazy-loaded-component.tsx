@@ -5,7 +5,12 @@ import Loader from 'components/UI/Loader';
 
 type ImportFunc = () => Promise<{ default: React.ComponentType<any> }>;
 
-export const createLazyComponent = (importFunc: ImportFunc, title?: string, isAdminRoute?: boolean): React.ReactElement => {
+interface LazyComponentProps {
+  title?: string;
+  isAdminRoute?: boolean;
+}
+
+export const createLazyComponent = (importFunc: ImportFunc, { title, isAdminRoute }: LazyComponentProps = {}): React.ReactElement => {
   const Component = React.lazy(importFunc);
 
   return (

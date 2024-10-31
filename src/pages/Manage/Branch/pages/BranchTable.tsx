@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { generatePath, useNavigate } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch, useAppSelector } from 'store';
-import { deleteBranch, fetchBranches, selectBranches, selectIsUserAdmin, setBranchesPagination } from 'store/features';
+import { deleteBranch, fetchBranches, selectBranch, selectBranches, selectIsUserAdmin, setBranchesPagination } from 'store/features';
 import { Branch } from 'shared/models';
 import { APP_CONFIG, BRANCH_FIELDS, ROUTES } from 'shared/constants';
 import Page, { PageSubtitle } from 'components/UI/Page';
@@ -15,9 +15,11 @@ const BranchTablePage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { fetchStatus, data: branches, page } = useAppSelector(selectBranches);
+  const { deleteStatus } = useAppSelector(selectBranch);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { pageNumber, pageSize, totalItems } = page || APP_CONFIG.table.defaultPagination;
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
+  const loading = fetchStatus === 'loading' || deleteStatus === 'loading';
 
   const columns: Column<Branch>[] = [
     {
@@ -72,7 +74,9 @@ const BranchTablePage: React.FC = () => {
   };
 
   const handleEditBranch = (id: Branch['id']) => {
-    console.log(id);
+    const editPath = generatePath(ROUTES.editBranch.path, { id });
+
+    navigate(editPath);
   };
 
   React.useEffect(() => {
@@ -82,7 +86,7 @@ const BranchTablePage: React.FC = () => {
   return (
     <TableLayout withActionButton={isUserAdmin} pageTitle="Branches" actionButtonLabel="New Branch" onActionClick={handleActionClick}>
       <Table<Branch>
-        loading={fetchStatus === 'loading'}
+        loading={loading}
         columns={columns}
         items={branches?.items}
         pageNumber={pageNumber}

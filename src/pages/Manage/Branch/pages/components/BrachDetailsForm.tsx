@@ -5,18 +5,21 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Grid from '@mui/material/Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
-import { ErrorResponse } from 'shared/models';
+import { Branch, ErrorResponse } from 'shared/models';
 import Snackbar from 'components/UI/Snackbar';
 
 interface BrachDetailsFormProps {
+  data: Branch | null;
   loading: boolean;
   error?: ErrorResponse;
   // eslint-disable-next-line no-unused-vars
-  onSubmit: (name: string) => void;
+  onSubmit: (data: Branch) => void;
 }
 
-const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ error, loading, onSubmit }) => {
-  const [inputValue, setInputValue] = React.useState<string>('');
+const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ data, error, loading, onSubmit }) => {
+  const [formData, setFormData] = React.useState<Branch>({
+    name: data?.name ?? '',
+  });
   const [inputError, setInputError] = React.useState<string | null>(null);
   const [showSnackbar, setShowSnackbar] = React.useState(false);
 
@@ -25,7 +28,7 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ error, loading, onS
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
+    setFormData({ name: event.target.value });
 
     if (inputError) {
       setInputError(null);
@@ -35,13 +38,13 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ error, loading, onS
   const onFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!inputValue) {
+    if (!formData.name) {
       setInputError('Branch name is required');
 
       return;
     }
 
-    onSubmit(inputValue);
+    onSubmit(formData);
   };
 
   React.useEffect(() => {
@@ -50,12 +53,18 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ error, loading, onS
     }
   }, [error]);
 
+  React.useEffect(() => {
+    if (data) {
+      setFormData({ name: data.name });
+    }
+  }, [data]);
+
   return (
     <Box>
       {error && <Snackbar type="error" open={showSnackbar} message={error.title} onClose={handleClose} />}
       {/* TODO: create a generic form component */}
       <Box component="form" noValidate onSubmit={onFormSubmit}>
-        <Grid container spacing={2}>
+        <Grid container spacing={4}>
           <Grid size={{ xs: 12, md: 6 }}>
             <TextField
               fullWidth
@@ -63,7 +72,7 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ error, loading, onS
               variant="outlined"
               name="name"
               label="Enter Branch name"
-              value={inputValue}
+              value={formData.name}
               slotProps={{
                 htmlInput: {
                   maxLength: 50,

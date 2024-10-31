@@ -1,5 +1,6 @@
 import { AppRoute, SetupStep } from 'shared/models';
 
+// TODO: use relative routes instead
 export const ROUTES: AppRoute = {
   login: {
     name: 'Login',
@@ -48,5 +49,9 @@ export const ROUTES: AppRoute = {
   newBranch: {
     name: 'Create Branch',
     path: '/manage/branches/new',
+  },
+  editBranch: {
+    name: 'Edit Branch',
+    path: '/manage/branches/edit/:id',
   },
 };
