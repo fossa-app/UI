@@ -1,0 +1,83 @@
+import * as React from 'react';
+import Dialog, { DialogProps } from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import LoadingButton from '@mui/lab/LoadingButton';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import FileUpload from './FileUpload';
+
+type CompanyLicenseDialogProps = {
+  loading: boolean;
+  // eslint-disable-next-line no-unused-vars
+  onFileUpload: (file: File) => void;
+} & DialogProps;
+
+const CompanyLicenseDialog: React.FC<CompanyLicenseDialogProps> = ({ loading, onFileUpload, ...props }) => {
+  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+  const [errorMessage, setErrorMessage] = React.useState('');
+
+  const handleFileSelect = (file: File) => {
+    setSelectedFile(file);
+    setErrorMessage('');
+  };
+
+  const handleUpload = () => {
+    if (!selectedFile) {
+      setErrorMessage('File is not selected');
+
+      return;
+    }
+
+    onFileUpload(selectedFile);
+  };
+
+  const handleClose = (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => {
+    setErrorMessage('');
+
+    if (props.onClose) {
+      setSelectedFile(null);
+      props.onClose(event, reason);
+    }
+  };
+
+  return (
+    <Dialog
+      {...props}
+      fullWidth
+      maxWidth="sm"
+      onClose={handleClose}
+      PaperProps={{
+        component: 'form',
+        onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
+          event.preventDefault();
+          handleUpload();
+        },
+      }}
+    >
+      <DialogTitle>Upload License File</DialogTitle>
+      <DialogContent>
+        <DialogContentText>Please select a license file to upload.</DialogContentText>
+        <FileUpload onFileSelect={handleFileSelect} sx={{ my: 2 }} />
+        {errorMessage && (
+          <Typography variant="body2" color="error">
+            {errorMessage}
+          </Typography>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button variant="text" color="secondary" onClick={() => handleClose({}, 'backdropClick')}>
+          Cancel
+        </Button>
+        <LoadingButton type="submit" variant="contained" loadingPosition="end" loading={loading} endIcon={<UploadFileIcon />}>
+          Upload
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+export default CompanyLicenseDialog;

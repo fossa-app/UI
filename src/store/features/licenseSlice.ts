@@ -17,6 +17,7 @@ const initialState: LicenseState = {
   company: {
     data: null,
     status: 'idle',
+    updateStatus: 'idle',
   },
 };
 
@@ -42,6 +43,32 @@ export const fetchCompanyLicense = createAsyncThunk<CompanyLicense | null, void,
       return data || rejectWithValue({ title: MESSAGES.error.license.company.notFound });
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);
+    }
+  }
+);
+
+export const uploadCompanyLicense = createAsyncThunk<CompanyLicense | null, File, { rejectValue: ErrorResponse }>(
+  'license/uploadCompanyLicense',
+  async (file, { rejectWithValue }) => {
+    try {
+      const formData = new FormData();
+
+      formData.append('licenseFile', file);
+
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+
+      const { data } = await axios.post<CompanyLicense>(URLS.companyLicense, formData, config);
+
+      return data || null;
+    } catch (error) {
+      return rejectWithValue({
+        ...(error as ErrorResponse),
+        title: MESSAGES.error.license.company.createFailed,
+      });
     }
   }
 );
@@ -75,6 +102,18 @@ const licenseSlice = createSlice({
       .addCase(fetchCompanyLicense.fulfilled, (state, action: PayloadAction<CompanyLicense | null>) => {
         state.company.data = action.payload;
         state.company.status = 'succeeded';
+      })
+      .addCase(uploadCompanyLicense.pending, (state) => {
+        state.company.updateStatus = 'loading';
+      })
+      .addCase(uploadCompanyLicense.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+        state.company.data = null;
+        state.company.updateStatus = 'failed';
+        state.company.error = action.payload;
+      })
+      .addCase(uploadCompanyLicense.fulfilled, (state, action: PayloadAction<CompanyLicense | null>) => {
+        state.company.data = action.payload;
+        state.company.updateStatus = 'succeeded';
       });
   },
 });
