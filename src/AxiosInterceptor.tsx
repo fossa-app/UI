@@ -76,6 +76,10 @@ const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
           return Promise.reject(error);
         }
 
+        if (error.response?.data) {
+          error.response.data = parseResponseData(error.response.data);
+        }
+
         // TODO: double check this
         if (error.code === 'ERR_NETWORK') {
           setErrorMessage(MESSAGES.error.general.network);
