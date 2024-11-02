@@ -24,10 +24,8 @@ const License: React.FC<LicenseProps> = ({
           {company}
         </Typography>
       ) : (
-        <Button variant="text" onClick={onCompanyLicenseClick}>
-          <Typography variant="caption" textAlign="right" color="error">
-            {company}
-          </Typography>
+        <Button variant="text" color="error" size="small" onClick={onCompanyLicenseClick}>
+          {company}
         </Button>
       )}
       <Typography variant="caption" textAlign="right">

@@ -15,12 +15,13 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "types": ["cypress", "node"]
   },
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs"
     }
   },
-  "include": ["src"]
+  "include": ["src", "cypress"]
 }

@@ -3,9 +3,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchSystemLicense, selectCompanyLicense, selectSystemLicense, uploadCompanyLicense } from 'store/features';
-// TODO: check why absolute paths fail in jest
-import Logo from '../../components/UI/Logo';
-import Snackbar from '../../components/UI/Snackbar';
+import Logo from 'components/UI/Logo';
+import Snackbar from 'components/UI/Snackbar';
 import License from './components/License';
 import Environment from './components/Environment';
 import CompanyLicenseDialog from './components/CompanyLicenseDialog';
@@ -59,7 +58,7 @@ const Footer: React.FC = () => {
             Fossa
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 2 }}>
           <Environment kind={system?.entitlements.environmentKind} name={system?.entitlements.environmentName} />
           <License
             system={system?.terms.licensee.longName}

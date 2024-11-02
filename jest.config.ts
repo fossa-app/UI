@@ -87,6 +87,7 @@ const config: Config = {
     '^pages/(.*)$': '<rootDir>/src/pages/$1',
     '^layout/(.*)$': '<rootDir>/src/layout/$1',
     '^store/(.*)$': '<rootDir>/src/store/$1',
+    '^components/(.*)$': '<rootDir>/src/components/$1',
     '^oidc-client-ts$': '<rootDir>/src/__mocks__/oidc-client-mock.ts',
   },
 

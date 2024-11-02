@@ -35,7 +35,7 @@ export const MESSAGES = {
       },
       company: {
         notFound: 'Company license not found 😞',
-        createFailed: 'Failed to upload company license 😞',
+        createFailed: 'Failed to upload Company license 😞',
       },
     },
     company: {

@@ -11,11 +11,11 @@ import CompanySetupPage from 'pages/Setup/CompanySetup';
 import BranchSetupPage from 'pages/Setup/BranchSetup';
 import EmployeeSetupPage from 'pages/Setup/EmployeeSetup';
 import ManagePage from 'pages/Manage/Manage';
-import DashboardPage from 'pages/Dashboard';
 import { createLazyComponent } from './lazy-loaded-component';
 
 // Lazy loaded pages
 const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
+const DashboardPage = createLazyComponent(() => import('pages/Dashboard'));
 const CompanyPage = createLazyComponent(() => import('pages/Company'));
 const EmployeePage = createLazyComponent(() => import('pages/Manage/Employee/Employee'));
 const EmployeeTablePage = createLazyComponent(() => import('pages/Manage/Employee/pages/EmployeeTable'), { title: ROUTES.employees.name });
@@ -109,12 +109,7 @@ const router = createBrowserRouter([
               },
               {
                 path: ROUTES.dashboard.path,
-                element: (
-                  <>
-                    <RouteTitle title="Dashboard" />
-                    <DashboardPage />
-                  </>
-                ),
+                element: DashboardPage,
               },
               {
                 path: ROUTES.company.path,
