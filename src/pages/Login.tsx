@@ -19,6 +19,7 @@ const LoginPage: React.FC = () => {
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
       <Card sx={{ width: 320 }}>
         <CardHeader
+          data-cy="login-form-title"
           title="Login"
           avatar={<LockIcon color="primary" />}
           titleTypographyProps={{

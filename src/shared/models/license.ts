@@ -13,12 +13,19 @@ export interface License {
     notBefore: string;
     notAfter: string;
   };
+}
+
+export interface CompanyLicense extends License {
+  entitlements: {
+    companyId: number;
+    maximumBranchCount: number;
+    maximumEmployeeCount: number;
+  };
+}
+export interface SystemLicense extends License {
   entitlements: {
     environmentName: string;
     environmentKind: EnvironmentKind;
     maximumCompanyCount: number;
   };
 }
-
-export interface CompanyLicense extends License {}
-export interface SystemLicense extends License {}

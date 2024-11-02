@@ -6,29 +6,41 @@ import Button from '@mui/material/Button';
 interface LicenseProps {
   company?: string;
   system?: string;
-  isCompanyLicenseValid: boolean;
+  setupCompleted: boolean;
   onCompanyLicenseClick: () => void;
 }
 
 const License: React.FC<LicenseProps> = ({
   // TODO: move the default values to state
-  company = 'Unlicensed Company',
+  company,
   system = 'Unlicensed System',
-  isCompanyLicenseValid,
+  setupCompleted,
   onCompanyLicenseClick,
 }) => {
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      {isCompanyLicenseValid ? (
-        <Typography variant="caption" textAlign="right">
+  const companyLicenseContent = () => {
+    if (company) {
+      return (
+        <Typography data-cy="company-license-text" variant="caption" textAlign="right">
           {company}
         </Typography>
-      ) : (
-        <Button variant="text" color="error" size="small" onClick={onCompanyLicenseClick}>
-          {company}
+      );
+    }
+
+    if (setupCompleted && !company) {
+      return (
+        <Button data-cy="company-license-button" variant="text" color="error" size="small" onClick={onCompanyLicenseClick}>
+          Unlicensed Company
         </Button>
-      )}
-      <Typography variant="caption" textAlign="right">
+      );
+    }
+
+    return null;
+  };
+
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      {companyLicenseContent()}
+      <Typography data-cy="system-license" variant="caption" textAlign="right">
         {system}
       </Typography>
     </Box>

@@ -14,6 +14,7 @@ const ManagePage: React.FC = () => {
 
   React.useEffect(() => {
     if (status === 'idle') {
+      // TODO: Do not fetch setup data here, instead navigate to /setup if entities do not exist
       dispatch(fetchSetupData());
     } else if (status === 'failed') {
       navigate(ROUTES.setup.path);

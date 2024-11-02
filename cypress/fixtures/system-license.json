@@ -1,0 +1,19 @@
+{
+  "terms": {
+    "licensor": {
+      "longName": "Test Licensor",
+      "shortName": "Test System Licensor"
+    },
+    "licensee": {
+      "longName": "Test Licensee",
+      "shortName": "Test System Licensee"
+    },
+    "notBefore": "2024-09-01T00:00:00+00:00",
+    "notAfter": "2025-09-01T00:00:00+00:00"
+  },
+  "entitlements": {
+    "environmentName": "TEST-LOCAL-DEVELOPMENT",
+    "environmentKind": "Development",
+    "maximumCompanyCount": 15
+  }
+}
