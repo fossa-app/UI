@@ -27,7 +27,7 @@ const LoginPage: React.FC = () => {
         />
         <Divider />
         <CardActions sx={{ justifyContent: 'flex-end', padding: 2 }}>
-          <Button data-testid="login-button" variant="contained" color="primary" onClick={handleLogin}>
+          <Button data-testid="login-button" data-cy="login-button" variant="contained" color="primary" onClick={handleLogin}>
             Login
           </Button>
         </CardActions>

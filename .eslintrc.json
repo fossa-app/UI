@@ -1,6 +1,6 @@
 {
   "parser": "@typescript-eslint/parser",
-  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:prettier/recommended"],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:prettier/recommended", "plugin:cypress/recommended"],
   "rules": {
     "prettier/prettier": [
       "error",
@@ -19,7 +19,8 @@
     "jest": true
   },
   "globals": {
-    "BigInt": true
+    "BigInt": true,
+    "cy": true
   },
   "overrides": [
     {
@@ -27,6 +28,9 @@
       "env": {
         "jest": true
       }
+    },
+    {
+      "files": ["cypress/**/*.ts", "cypress/**/*.tsx"]
     }
   ],
   "settings": {

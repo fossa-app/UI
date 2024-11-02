@@ -8,7 +8,8 @@
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -217,3 +218,7 @@ sketch
 # Repository Specific
 .trash
 build/
+
+# Ignore Cypress screenshots
+cypress/screenshots/
+cypress/downloads/

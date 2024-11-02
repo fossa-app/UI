@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { openSideBar, selectAppConfig, selectCompany, selectStep, selectUser, toggleAppTheme } from 'store/features';
 import { getSearchContext, getUserManager } from 'shared/helpers';
 import { ROUTES } from 'shared/constants';
-import Search from '../../components/Search/Search';
+import Search from 'components/Search';
 import UserMenu from './components/UserMenu';
 import ThemeSwitch from './components/ThemeSwitch';
 

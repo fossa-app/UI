@@ -133,6 +133,7 @@ const branchSlice = createSlice({
         state.branches.page!.totalItems = action.payload?.totalItems;
         state.branches.page!.totalPages = action.payload?.totalPages;
         state.branches.fetchStatus = 'succeeded';
+        state.branches.error = undefined;
       })
       .addCase(fetchBranchById.pending, (state) => {
         state.branch.fetchStatus = 'loading';
@@ -156,6 +157,7 @@ const branchSlice = createSlice({
       })
       .addCase(createBranch.fulfilled, (state) => {
         state.branch.updateStatus = 'succeeded';
+        state.branch.error = undefined;
       })
       .addCase(editBranch.pending, (state) => {
         state.branch.updateStatus = 'loading';
@@ -166,6 +168,7 @@ const branchSlice = createSlice({
       })
       .addCase(editBranch.fulfilled, (state) => {
         state.branch.updateStatus = 'succeeded';
+        state.branch.error = undefined;
       })
       .addCase(deleteBranch.pending, (state) => {
         state.branch.deleteStatus = 'loading';
@@ -176,6 +179,7 @@ const branchSlice = createSlice({
       })
       .addCase(deleteBranch.fulfilled, (state) => {
         state.branch.deleteStatus = 'succeeded';
+        state.branch.error = undefined;
       });
   },
 });
