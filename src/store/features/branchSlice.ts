@@ -67,7 +67,7 @@ export const createBranch = createAsyncThunk<void, [Branch, boolean?], { rejectV
       await axios.post<void>(URLS.branches, branch);
 
       if (shouldFetchBranches) {
-        await dispatch(fetchBranches([{ pageNumber: 1, pageSize: 1 }])).unwrap();
+        await dispatch(fetchBranches([APP_CONFIG.table.defaultPagination])).unwrap();
       }
     } catch (error) {
       return rejectWithValue({

@@ -13,7 +13,7 @@ describe('Footer Component', () => {
       license: {
         system: { data: { entitlements: { environmentKind: 'Development' }, terms: { licensee: { longName: 'Test' } } } as SystemLicense },
         company: {
-          data: { entitlements: { environmentKind: 'Development' }, terms: { licensee: { longName: 'Test' } } } as CompanyLicense,
+          data: { entitlements: {}, terms: { licensee: { longName: 'Test' } } } as CompanyLicense,
         },
       },
     });

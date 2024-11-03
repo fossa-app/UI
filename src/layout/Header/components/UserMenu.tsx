@@ -31,6 +31,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ name, picture, onLogoutClick }) => 
       <Menu
         keepMounted
         data-testid="user-menu"
+        data-cy="user-menu"
         open={Boolean(anchorElUser)}
         anchorEl={anchorElUser}
         anchorOrigin={{

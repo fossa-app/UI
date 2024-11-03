@@ -1,0 +1,19 @@
+{
+  "terms": {
+    "licensor": {
+      "longName": "Test Licensor",
+      "shortName": "Test Company Licensor"
+    },
+    "licensee": {
+      "longName": "Test Licensee",
+      "shortName": "Test Company Licensee"
+    },
+    "notBefore": "2024-09-01T00:00:00+00:00",
+    "notAfter": "2025-09-01T00:00:00+00:00"
+  },
+  "entitlements": {
+    "companyId": 111111111111,
+    "maximumBranchCount": 10,
+    "maximumEmployeeCount": 100
+  }
+}

@@ -2,7 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchSystemLicense, selectCompanyLicense, selectSystemLicense, uploadCompanyLicense } from 'store/features';
+import { fetchSystemLicense, selectCompanyLicense, selectStep, selectSystemLicense, uploadCompanyLicense } from 'store/features';
 import Logo from 'components/UI/Logo';
 import Snackbar from 'components/UI/Snackbar';
 import License from './components/License';
@@ -13,8 +13,10 @@ const Footer: React.FC = () => {
   const dispatch = useAppDispatch();
   const { data: system, status: systemLicenseStatus } = useAppSelector(selectSystemLicense);
   const { data: company, updateStatus, error } = useAppSelector(selectCompanyLicense);
+  const { status: stepStatus } = useAppSelector(selectStep);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [showSnackbar, setShowSnackbar] = React.useState(false);
+  const setupCompleted = stepStatus === 'succeeded';
 
   const handleCompanyLicenseClick = () => {
     setDialogOpen(true);
@@ -50,7 +52,7 @@ const Footer: React.FC = () => {
     <>
       <Box
         component="footer"
-        sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 2, gap: 4, minHeight: 64 }}
+        sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: 3, gap: 4, minHeight: 64 }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Logo sx={{ width: 36, height: 36 }} />
@@ -63,7 +65,7 @@ const Footer: React.FC = () => {
           <License
             system={system?.terms.licensee.longName}
             company={company?.terms.licensee.longName}
-            isCompanyLicenseValid={!!company}
+            setupCompleted={setupCompleted}
             onCompanyLicenseClick={handleCompanyLicenseClick}
           />
         </Box>

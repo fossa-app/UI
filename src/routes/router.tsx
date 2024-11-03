@@ -15,7 +15,7 @@ import { createLazyComponent } from './lazy-loaded-component';
 
 // Lazy loaded pages
 const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
-const DashboardPage = createLazyComponent(() => import('pages/Dashboard'));
+const DashboardPage = createLazyComponent(() => import('pages/Dashboard'), { title: ROUTES.dashboard.name });
 const CompanyPage = createLazyComponent(() => import('pages/Company'));
 const EmployeePage = createLazyComponent(() => import('pages/Manage/Employee/Employee'));
 const EmployeeTablePage = createLazyComponent(() => import('pages/Manage/Employee/pages/EmployeeTable'), { title: ROUTES.employees.name });

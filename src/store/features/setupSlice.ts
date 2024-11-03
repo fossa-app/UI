@@ -4,6 +4,7 @@ import { ErrorResponse, SetupStep } from 'shared/models';
 import { fetchCompany } from './companySlice';
 import { fetchBranches } from './branchSlice';
 import { fetchEmployee } from './employeeSlice';
+import { APP_CONFIG } from 'shared/constants';
 
 interface SetupState {
   step: StateEntity<SetupStep>;
@@ -22,7 +23,7 @@ export const fetchSetupData = createAsyncThunk<void, void, { rejectValue: ErrorR
     const companyResponse = await dispatch(fetchCompany(true)).unwrap();
 
     if (companyResponse) {
-      const branchesResponse = await dispatch(fetchBranches([{ pageNumber: 1, pageSize: 1 }, true])).unwrap();
+      const branchesResponse = await dispatch(fetchBranches([APP_CONFIG.table.defaultPagination, true])).unwrap();
 
       if (branchesResponse?.items.length) {
         await dispatch(fetchEmployee()).unwrap();
