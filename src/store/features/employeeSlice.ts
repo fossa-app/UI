@@ -3,6 +3,7 @@ import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { Employee, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, URLS } from 'shared/constants';
+import { setError } from './errorSlice';
 
 interface SetupState {
   employee: StateEntity<Employee | null>;
@@ -69,10 +70,14 @@ export const createEmployee = createAsyncThunk<void, Employee, { state: RootStat
       await axios.post<void>(URLS.employee, employee);
       await dispatch(fetchEmployee()).unwrap();
     } catch (error) {
-      return rejectWithValue({
-        ...(error as ErrorResponse),
-        title: MESSAGES.error.employee.createFailed,
-      });
+      dispatch(
+        setError({
+          ...(error as ErrorResponse),
+          title: MESSAGES.error.employee.createFailed,
+        })
+      );
+
+      return rejectWithValue(error as ErrorResponse);
     }
   }
 );

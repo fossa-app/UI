@@ -9,6 +9,7 @@ import setupReducer from './features/setupSlice';
 import companyReducer from './features/companySlice';
 import branchReducer from './features/branchSlice';
 import employeeReducer from './features/employeeSlice';
+import errorReducer from './features/errorSlice';
 
 const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
     company: companyReducer,
     branch: branchReducer,
     employee: employeeReducer,
+    error: errorReducer,
   },
 });
 

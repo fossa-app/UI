@@ -3,6 +3,7 @@ import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { Branch, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, URLS } from 'shared/constants';
+import { setError } from './errorSlice';
 
 interface BranchState {
   branch: StateEntity<Branch | null>;
@@ -70,24 +71,32 @@ export const createBranch = createAsyncThunk<void, [Branch, boolean?], { rejectV
         await dispatch(fetchBranches([APP_CONFIG.table.defaultPagination])).unwrap();
       }
     } catch (error) {
-      return rejectWithValue({
-        ...(error as ErrorResponse),
-        title: MESSAGES.error.branches.createFailed,
-      });
+      dispatch(
+        setError({
+          ...(error as ErrorResponse),
+          title: MESSAGES.error.branches.createFailed,
+        })
+      );
+
+      return rejectWithValue(error as ErrorResponse);
     }
   }
 );
 
 export const editBranch = createAsyncThunk<void, [string, Omit<Branch, 'id'>], { rejectValue: ErrorResponse }>(
   'branch/editBranch',
-  async ([id, branch], { rejectWithValue }) => {
+  async ([id, branch], { dispatch, rejectWithValue }) => {
     try {
       await axios.put<Branch>(`${URLS.branches}/${id}`, branch);
     } catch (error) {
-      return rejectWithValue({
-        ...(error as ErrorResponse),
-        title: MESSAGES.error.branches.updateFailed,
-      });
+      dispatch(
+        setError({
+          ...(error as ErrorResponse),
+          title: MESSAGES.error.branches.updateFailed,
+        })
+      );
+
+      return rejectWithValue(error as ErrorResponse);
     }
   }
 );
@@ -102,10 +111,14 @@ export const deleteBranch = createAsyncThunk<void, Branch['id'], { state: RootSt
 
       await dispatch(fetchBranches([{ pageSize, pageNumber }])).unwrap();
     } catch (error) {
-      return rejectWithValue({
-        ...(error as ErrorResponse),
-        title: MESSAGES.error.branches.createFailed,
-      });
+      dispatch(
+        setError({
+          ...(error as ErrorResponse),
+          title: MESSAGES.error.branches.deleteFailed,
+        })
+      );
+
+      return rejectWithValue(error as ErrorResponse);
     }
   }
 );

@@ -5,8 +5,6 @@ import FormHelperText from '@mui/material/FormHelperText';
 import LoadingButton from '@mui/lab/LoadingButton';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { MESSAGES } from 'shared/constants';
-import { ErrorResponse } from 'shared/models';
-import Snackbar from 'components/UI/Snackbar';
 import Page, { PageTitle } from 'components/UI/Page';
 
 interface CompanyDetailsFormProps {
@@ -15,19 +13,13 @@ interface CompanyDetailsFormProps {
   validationMessage: string;
   isAdmin: boolean;
   loading: boolean;
-  error?: ErrorResponse;
   // eslint-disable-next-line no-unused-vars
   onSubmit: (name: string) => void;
 }
 
-const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, isAdmin, validationMessage, error, loading, onSubmit }) => {
+const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, isAdmin, validationMessage, loading, onSubmit }) => {
   const [inputValue, setInputValue] = React.useState<string>('');
   const [inputError, setInputError] = React.useState<string | null>(null);
-  const [showSnackbar, setShowSnackbar] = React.useState(false);
-
-  const handleClose = () => {
-    setShowSnackbar(false);
-  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -59,15 +51,8 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, i
     }
   }, [isAdmin]);
 
-  React.useEffect(() => {
-    if (error) {
-      setShowSnackbar(true);
-    }
-  }, [error]);
-
   return (
     <Box>
-      {error && <Snackbar type="error" open={showSnackbar} message={error.title} onClose={handleClose} />}
       <Page>
         <PageTitle>{title}</PageTitle>
       </Page>
