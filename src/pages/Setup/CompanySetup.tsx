@@ -5,7 +5,7 @@ import CompanyDetailsForm from './components/CompanyDetailsForm';
 
 const CompanySetupPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { updateStatus, error } = useAppSelector(selectCompany);
+  const { updateStatus } = useAppSelector(selectCompany);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
 
   const handleSubmit = (name: string) => {
@@ -18,7 +18,6 @@ const CompanySetupPage: React.FC = () => {
       label="Enter Company name"
       validationMessage="Company name is required"
       isAdmin={isUserAdmin}
-      error={updateStatus === 'failed' ? error : undefined}
       loading={updateStatus === 'loading'}
       onSubmit={handleSubmit}
     />

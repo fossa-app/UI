@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchSystemLicense, selectCompanyLicense, selectStep, selectSystemLicense, uploadCompanyLicense } from 'store/features';
 import Logo from 'components/UI/Logo';
-import Snackbar from 'components/UI/Snackbar';
 import License from './components/License';
 import Environment from './components/Environment';
 import CompanyLicenseDialog from './components/CompanyLicenseDialog';
@@ -12,10 +11,9 @@ import CompanyLicenseDialog from './components/CompanyLicenseDialog';
 const Footer: React.FC = () => {
   const dispatch = useAppDispatch();
   const { data: system, status: systemLicenseStatus } = useAppSelector(selectSystemLicense);
-  const { data: company, updateStatus, error } = useAppSelector(selectCompanyLicense);
+  const { data: company, updateStatus } = useAppSelector(selectCompanyLicense);
   const { status: stepStatus } = useAppSelector(selectStep);
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [showSnackbar, setShowSnackbar] = React.useState(false);
   const setupCompleted = stepStatus === 'succeeded';
 
   const handleCompanyLicenseClick = () => {
@@ -24,10 +22,6 @@ const Footer: React.FC = () => {
 
   const handleClose = () => {
     setDialogOpen(false);
-  };
-
-  const handleSnackbarClose = () => {
-    setShowSnackbar(false);
   };
 
   const handleUpload = (file: File) => {
@@ -43,8 +37,6 @@ const Footer: React.FC = () => {
   React.useEffect(() => {
     if (updateStatus === 'succeeded') {
       handleClose();
-    } else if (updateStatus === 'failed') {
-      setShowSnackbar(true);
     }
   }, [updateStatus]);
 
@@ -71,7 +63,6 @@ const Footer: React.FC = () => {
         </Box>
       </Box>
       <CompanyLicenseDialog open={dialogOpen} loading={updateStatus === 'loading'} onClose={handleClose} onFileUpload={handleUpload} />
-      {error && <Snackbar type="error" open={showSnackbar} message={error.title} onClose={handleSnackbarClose} />}
     </>
   );
 };

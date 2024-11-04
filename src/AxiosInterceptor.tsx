@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
-import { removeUser, selectAuthSettings } from 'store/features';
+import { removeUser, selectAuthSettings, setError } from 'store/features';
 import axios, { AxiosError, AxiosRequestConfig } from 'shared/configs/axios';
 import { getUserFromLocalStorage, getUserManager, parseResponseData } from 'shared/helpers';
 import { MESSAGES, ROUTES } from 'shared/constants';
 import { ErrorResponse } from 'shared/models';
-import Snackbar from 'components/UI/Snackbar';
 
 const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
   const navigate = useNavigate();
@@ -14,12 +13,6 @@ const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
   const dispatch = useAppDispatch();
   const { data: authSettings } = useAppSelector(selectAuthSettings);
   const [shouldNavigate, setShouldNavigate] = React.useState(false);
-  const [showSnackbar, setShowSnackbar] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState('');
-
-  const handleClose = () => {
-    setShowSnackbar(false);
-  };
 
   const refreshToken = async (errorConfig: AxiosRequestConfig): Promise<ErrorResponse | null> => {
     try {
@@ -34,9 +27,13 @@ const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
       await userManager.removeUser();
 
       setShouldNavigate(true);
-      setShowSnackbar(true);
-      setErrorMessage(MESSAGES.error.general.unAuthorized);
       dispatch(removeUser());
+
+      dispatch(
+        setError({
+          title: MESSAGES.error.general.unAuthorized,
+        })
+      );
 
       return Promise.reject({
         title: MESSAGES.error.general.unAuthorized,
@@ -80,10 +77,12 @@ const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
           error.response.data = parseResponseData(error.response.data);
         }
 
-        // TODO: double check this
         if (error.code === 'ERR_NETWORK') {
-          setErrorMessage(MESSAGES.error.general.network);
-          setShowSnackbar(true);
+          dispatch(
+            setError({
+              title: MESSAGES.error.general.network,
+            })
+          );
 
           return Promise.reject({
             status: 599,
@@ -96,8 +95,11 @@ const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
         }
 
         if (error.response && error.response.status >= 500) {
-          setErrorMessage(MESSAGES.error.general.common);
-          setShowSnackbar(true);
+          dispatch(
+            setError({
+              title: MESSAGES.error.general.common,
+            })
+          );
 
           return Promise.reject({
             ...(error.response.data as ErrorResponse),
@@ -115,12 +117,7 @@ const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
     };
   }, [authSettings]);
 
-  return (
-    <>
-      {children}
-      <Snackbar type="error" open={showSnackbar} message={errorMessage} onClose={handleClose} />
-    </>
-  );
+  return <>{children}</>;
 };
 
 export default AxiosInterceptor;

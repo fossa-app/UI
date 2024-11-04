@@ -3,6 +3,7 @@ import axios from 'shared/configs/axios';
 import { CompanyLicense, ErrorResponse, SystemLicense } from 'shared/models';
 import { MESSAGES, URLS } from 'shared/constants';
 import { RootState, StateEntity } from 'store';
+import { setError } from './errorSlice';
 
 interface LicenseState {
   system: StateEntity<SystemLicense | null>;
@@ -40,16 +41,19 @@ export const fetchCompanyLicense = createAsyncThunk<CompanyLicense | null, void,
     try {
       const { data } = await axios.get<CompanyLicense>(URLS.companyLicense);
 
-      return data || rejectWithValue({ title: MESSAGES.error.license.company.notFound });
+      return data;
     } catch (error) {
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue({
+        ...(error as ErrorResponse),
+        title: MESSAGES.error.license.company.notFound,
+      });
     }
   }
 );
 
 export const uploadCompanyLicense = createAsyncThunk<CompanyLicense | null, File, { rejectValue: ErrorResponse }>(
   'license/uploadCompanyLicense',
-  async (file, { rejectWithValue }) => {
+  async (file, { dispatch, rejectWithValue }) => {
     try {
       const formData = new FormData();
 
@@ -62,13 +66,18 @@ export const uploadCompanyLicense = createAsyncThunk<CompanyLicense | null, File
       };
 
       const { data } = await axios.post<CompanyLicense>(URLS.companyLicense, formData, config);
+      await dispatch(fetchCompanyLicense()).unwrap();
 
       return data || null;
     } catch (error) {
-      return rejectWithValue({
-        ...(error as ErrorResponse),
-        title: MESSAGES.error.license.company.createFailed,
-      });
+      dispatch(
+        setError({
+          ...(error as ErrorResponse),
+          title: MESSAGES.error.license.company.createFailed,
+        })
+      );
+
+      return rejectWithValue(error as ErrorResponse);
     }
   }
 );

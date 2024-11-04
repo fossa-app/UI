@@ -6,7 +6,7 @@ import EmployeeDetailsForm from './components/EmployeeDetailsForm';
 
 const EmployeeSetupPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { data: employee, fetchStatus, updateStatus, error } = useAppSelector(selectEmployee);
+  const { data: employee, fetchStatus, updateStatus } = useAppSelector(selectEmployee);
   const { data: user } = useAppSelector(selectUser);
 
   const handleSubmit = (value: Employee) => {
@@ -22,7 +22,6 @@ const EmployeeSetupPage: React.FC = () => {
   return (
     <EmployeeDetailsForm
       title="Create an Employee"
-      error={updateStatus === 'failed' ? error : undefined}
       loading={updateStatus === 'loading'}
       userProfile={user?.profile}
       onSubmit={handleSubmit}

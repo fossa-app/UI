@@ -10,7 +10,7 @@ import BrachDetailsForm from './components/BrachDetailsForm';
 const CreateEditBranchPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: branch, updateStatus, error } = useAppSelector(selectBranch);
+  const { data: branch, updateStatus } = useAppSelector(selectBranch);
   const { id } = useParams();
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
 
@@ -43,12 +43,7 @@ const CreateEditBranchPage: React.FC = () => {
           {id ? 'Edit Branch' : 'Create Branch'}
         </PageTitle>
       </Page>
-      <BrachDetailsForm
-        data={id ? branch : null}
-        error={updateStatus === 'failed' ? error : undefined}
-        loading={updateStatus === 'loading'}
-        onSubmit={handleSubmit}
-      />
+      <BrachDetailsForm data={id ? branch : null} loading={updateStatus === 'loading'} onSubmit={handleSubmit} />
     </>
   );
 };

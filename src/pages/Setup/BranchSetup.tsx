@@ -4,7 +4,7 @@ import { createBranch, fetchCompanyLicense, selectBranch, selectCompanyLicense, 
 import CompanyDetailsForm from './components/CompanyDetailsForm';
 
 const BranchSetupPage: React.FC = () => {
-  const { updateStatus, error } = useAppSelector(selectBranch);
+  const { updateStatus } = useAppSelector(selectBranch);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { status: companyLicenseStatus } = useAppSelector(selectCompanyLicense);
   const dispatch = useAppDispatch();
@@ -25,7 +25,6 @@ const BranchSetupPage: React.FC = () => {
       label="Enter Branch name"
       validationMessage="Branch name is required"
       isAdmin={isUserAdmin}
-      error={updateStatus === 'failed' ? error : undefined}
       loading={updateStatus === 'loading'}
       onSubmit={handleSubmit}
     />

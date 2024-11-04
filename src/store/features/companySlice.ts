@@ -3,6 +3,7 @@ import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { Company, ErrorResponse } from 'shared/models';
 import { MESSAGES, URLS } from 'shared/constants';
+import { setError } from './errorSlice';
 
 interface CompanyState {
   company: StateEntity<Company | null>;
@@ -45,10 +46,14 @@ export const createCompany = createAsyncThunk<Company, Company, { rejectValue: E
 
       return company;
     } catch (error) {
-      return rejectWithValue({
-        ...(error as ErrorResponse),
-        title: MESSAGES.error.company.createFailed,
-      });
+      dispatch(
+        setError({
+          ...(error as ErrorResponse),
+          title: MESSAGES.error.company.createFailed,
+        })
+      );
+
+      return rejectWithValue(error as ErrorResponse);
     }
   }
 );
