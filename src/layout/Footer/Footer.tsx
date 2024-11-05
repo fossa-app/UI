@@ -1,6 +1,9 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchSystemLicense, selectCompanyLicense, selectStep, selectSystemLicense, uploadCompanyLicense } from 'store/features';
 import Logo from 'components/UI/Logo';
@@ -42,26 +45,31 @@ const Footer: React.FC = () => {
 
   return (
     <>
-      <Box
-        component="footer"
-        sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: 3, gap: 4, minHeight: 64 }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Logo sx={{ width: 36, height: 36 }} />
-          <Typography data-testid="app-logo" variant="caption" component="div">
-            Fossa
-          </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 2 }}>
-          <Environment kind={system?.entitlements.environmentKind} name={system?.entitlements.environmentName} />
-          <License
-            system={system?.terms.licensee.longName}
-            company={company?.terms.licensee.longName}
-            setupCompleted={setupCompleted}
-            onCompanyLicenseClick={handleCompanyLicenseClick}
-          />
-        </Box>
-      </Box>
+      <AppBar position="static" component="footer" sx={{ top: 'auto', bottom: 0 }}>
+        <Toolbar>
+          <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexGrow: 1 }}>
+            <Grid>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Logo sx={{ width: 36, height: 36 }} />
+                <Typography data-testid="app-logo" variant="caption" component="div">
+                  Fossa
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Environment kind={system?.entitlements.environmentKind} name={system?.entitlements.environmentName} />
+                <License
+                  system={system?.terms.licensee.longName}
+                  company={company?.terms.licensee.longName}
+                  setupCompleted={setupCompleted}
+                  onCompanyLicenseClick={handleCompanyLicenseClick}
+                />
+              </Box>
+            </Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
       <CompanyLicenseDialog open={dialogOpen} loading={updateStatus === 'loading'} onClose={handleClose} onFileUpload={handleUpload} />
     </>
   );

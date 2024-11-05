@@ -6,12 +6,10 @@ import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import TablePagination from '@mui/material/TablePagination';
 import Paper from '@mui/material/Paper';
-import Backdrop from '@mui/material/Backdrop';
-import LinearProgress from '@mui/material/LinearProgress';
-import { alpha } from '@mui/material/styles';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import { Column, Item } from './table.model';
 import { StyledTable } from './StyledTable';
+import LinearLoader from '../LinearLoader';
 
 interface TableProps<T> {
   columns: Column<T>[];
@@ -99,20 +97,7 @@ const Table = <T extends Item>({
         onPageChange={handlePageNumberChange}
         onRowsPerPageChange={handlePageSizeChange}
       />
-      <Backdrop
-        open={loading}
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: (theme) => theme.zIndex.modal + 1,
-          backgroundColor: (theme) => alpha(theme.palette.background.paper, 0.7),
-        }}
-      >
-        <LinearProgress sx={{ position: 'absolute', top: 0, left: 0, right: 0 }} />
-      </Backdrop>
+      <LinearLoader open={loading} />
     </Paper>
   );
 };

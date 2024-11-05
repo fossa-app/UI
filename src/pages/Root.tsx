@@ -7,6 +7,7 @@ import { darkTheme, lightTheme } from 'shared/configs/theme';
 import AxiosInterceptor from '../AxiosInterceptor';
 import ClientLoader from '../ClientLoader';
 import ErrorLayout from 'layout/ErrorLayout';
+import LoaderLayout from 'layout/LoaderLayout';
 
 const RootPage: React.FC = () => {
   const { isDarkTheme } = useAppSelector(selectAppConfig);
@@ -18,6 +19,7 @@ const RootPage: React.FC = () => {
         <CssBaseline />
         <ClientLoader />
         <ErrorLayout />
+        <LoaderLayout />
       </ThemeProvider>
     </AxiosInterceptor>
   );

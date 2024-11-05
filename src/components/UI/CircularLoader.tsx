@@ -2,7 +2,7 @@ import * as React from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
-const Loader: React.FC = () => {
+const CircularLoader: React.FC = () => {
   return (
     <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
       <CircularProgress color="primary" />
@@ -10,4 +10,4 @@ const Loader: React.FC = () => {
   );
 };
 
-export default Loader;
+export default CircularLoader;
