@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { fetchSetupData, selectStep } from 'store/features';
 import { SetupStep } from 'shared/models';
 import { ROUTES } from 'shared/constants';
-import Loader from 'components/UI/Loader';
+import CircularLoader from 'components/UI/CircularLoader';
 
 const SetupPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -31,7 +31,7 @@ const SetupPage: React.FC = () => {
   }, [step]);
 
   if (status === 'loading') {
-    return <Loader />;
+    return <CircularLoader />;
   }
 
   return (

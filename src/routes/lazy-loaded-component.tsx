@@ -1,9 +1,9 @@
 import * as React from 'react';
 import AdminRoute from 'components/AdminRoute';
 import RouteTitle from 'components/RouteTitle';
-import Loader from 'components/UI/Loader';
+import CircularLoader from 'components/UI/CircularLoader';
 
-type ImportFunc = () => Promise<{ default: React.ComponentType<any> }>;
+type ImportFunc = () => Promise<{ default: React.ComponentType<{}> }>;
 
 interface LazyComponentProps {
   title?: string;
@@ -14,7 +14,7 @@ export const createLazyComponent = (importFunc: ImportFunc, { title, isAdminRout
   const Component = React.lazy(importFunc);
 
   return (
-    <React.Suspense fallback={<Loader />}>
+    <React.Suspense fallback={<CircularLoader />}>
       {/* TODO: create error boundary component */}
       {isAdminRoute ? (
         <AdminRoute>

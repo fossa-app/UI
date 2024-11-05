@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchCompanyLicense, fetchSetupData, selectCompanyLicense, selectStep } from 'store/features';
 import { ROUTES } from 'shared/constants';
-import Loader from 'components/UI/Loader';
+import CircularLoader from 'components/UI/CircularLoader';
 
 const ManagePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -28,7 +28,7 @@ const ManagePage: React.FC = () => {
   }, [companyLicenseStatus]);
 
   if (status === 'loading') {
-    return <Loader />;
+    return <CircularLoader />;
   }
 
   if (status === 'idle' || status === 'failed') {

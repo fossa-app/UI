@@ -4,13 +4,13 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { createBranch, editBranch, fetchBranchById, selectBranch } from 'store/features';
 import { ROUTES } from 'shared/constants';
 import { Branch } from 'shared/models';
-import Page, { PageTitle } from 'components/UI/Page';
+import FormLayout from '../../components/FormLayout';
 import BrachDetailsForm from './components/BrachDetailsForm';
 
 const CreateEditBranchPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: branch, updateStatus } = useAppSelector(selectBranch);
+  const { data: branch, fetchStatus, updateStatus } = useAppSelector(selectBranch);
   const { id } = useParams();
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
 
@@ -36,15 +36,14 @@ const CreateEditBranchPage: React.FC = () => {
   }, [id, dispatch]);
 
   return (
-    <>
-      {/* TODO: create a FormLayout component identical to TableLayout */}
-      <Page>
-        <PageTitle withBackButton onBackButtonClick={navigateBack}>
-          {id ? 'Edit Branch' : 'Create Branch'}
-        </PageTitle>
-      </Page>
-      <BrachDetailsForm data={id ? branch : null} loading={updateStatus === 'loading'} onSubmit={handleSubmit} />
-    </>
+    <FormLayout withBackButton pageTitle={id ? 'Edit Branch' : 'Create Branch'} onBackButtonClick={navigateBack}>
+      <BrachDetailsForm
+        data={id ? branch : null}
+        formLoading={fetchStatus === 'loading'}
+        buttonLoading={updateStatus === 'loading'}
+        onSubmit={handleSubmit}
+      />
+    </FormLayout>
   );
 };
 
