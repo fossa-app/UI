@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
-import { createBranch, editBranch, fetchBranchById, selectBranch } from 'store/features';
+import { createBranch, editBranch, fetchBranchById, resetBranch, selectBranch } from 'store/features';
 import { ROUTES } from 'shared/constants';
 import { Branch } from 'shared/models';
 import FormLayout from '../../components/FormLayout';
@@ -15,6 +15,7 @@ const CreateEditBranchPage: React.FC = () => {
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
 
   const navigateBack = () => {
+    dispatch(resetBranch());
     navigate(ROUTES.branches.path);
   };
 
@@ -38,7 +39,7 @@ const CreateEditBranchPage: React.FC = () => {
   return (
     <FormLayout withBackButton pageTitle={id ? 'Edit Branch' : 'Create Branch'} onBackButtonClick={navigateBack}>
       <BrachDetailsForm
-        data={id ? branch : null}
+        data={branch}
         formLoading={fetchStatus === 'loading'}
         buttonLoading={updateStatus === 'loading'}
         onSubmit={handleSubmit}
