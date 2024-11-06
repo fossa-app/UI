@@ -7,4 +7,4 @@ export * from './companySlice';
 export * from './branchSlice';
 export * from './employeeSlice';
 export * from './errorSlice';
-export * from './loadingSlice';
+export * from './appLoadingSlice';

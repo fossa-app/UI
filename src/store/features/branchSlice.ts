@@ -130,6 +130,9 @@ const branchSlice = createSlice({
     setBranchesPagination(state, action: PayloadAction<PaginationParams>) {
       state.branches.page = action.payload;
     },
+    resetBranch(state) {
+      state.branch = initialState.branch;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -200,6 +203,6 @@ const branchSlice = createSlice({
 export const selectBranch = (state: RootState) => state.branch.branch;
 export const selectBranches = (state: RootState) => state.branch.branches;
 
-export const { setBranchesPagination } = branchSlice.actions;
+export const { setBranchesPagination, resetBranch } = branchSlice.actions;
 
 export default branchSlice.reducer;

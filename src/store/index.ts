@@ -10,7 +10,7 @@ import companyReducer from './features/companySlice';
 import branchReducer from './features/branchSlice';
 import employeeReducer from './features/employeeSlice';
 import errorReducer from './features/errorSlice';
-import loadingReducer from './features/loadingSlice';
+import appLoadingReducer from './features/appLoadingSlice';
 
 const store = configureStore({
   reducer: {
@@ -23,7 +23,7 @@ const store = configureStore({
     branch: branchReducer,
     employee: employeeReducer,
     error: errorReducer,
-    loading: loadingReducer,
+    appLoading: appLoadingReducer,
   },
 });
 
