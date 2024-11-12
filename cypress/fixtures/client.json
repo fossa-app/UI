@@ -1,5 +1,5 @@
 {
-  "clientId": "c1111-c1111-c1111-c1111-c1111",
-  "clientName": "Client (Web)",
-  "tenantId": "t1111-t1111-t1111-t1111-t1111"
+  "clientId": "mock-client-id",
+  "clientName": "Mock Client",
+  "tenantId": "mock-tenant-id"
 }

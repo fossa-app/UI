@@ -1,4 +1,4 @@
-import { interceptFetchSystemLicenseRequest } from './index';
+import { interceptFetchSystemLicenseRequest } from '../support/interceptors';
 
 describe('License Tests', () => {
   it('should fetch and display correct system license', () => {
@@ -9,7 +9,7 @@ describe('License Tests', () => {
 
     cy.wait('@fetchSystemLicenseRequest');
 
-    cy.get('[data-cy="system-license"]').should('exist').and('have.text', 'Test Licensee');
+    cy.get('[data-cy="system-license"]').should('exist').and('have.text', 'Test System Licensee');
   });
 
   it('should not display company license if not logged in', () => {

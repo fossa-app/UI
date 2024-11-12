@@ -76,7 +76,7 @@ const authSlice = createSlice({
         const atClaims = decodeJwt(action.payload?.access_token);
 
         if (state.user.data && atClaims?.roles?.length) {
-          state.user.data.roles = atClaims?.roles;
+          state.user.data.roles = atClaims.roles;
         }
       });
   },

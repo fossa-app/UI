@@ -25,7 +25,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ name, picture, onLogoutClick }) => 
 
   return (
     <Box sx={{ flexGrow: 0 }}>
-      <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+      <IconButton data-cy="user-avatar" onClick={handleOpenUserMenu} sx={{ p: 0 }}>
         <Avatar alt={name} src={picture} />
       </IconButton>
       <Menu
@@ -44,7 +44,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ name, picture, onLogoutClick }) => 
         }}
         onClose={handleCloseUserMenu}
       >
-        <MenuItem data-testid="user-name">
+        <MenuItem data-testid="user-name" data-cy="user-name">
           <Typography variant="body2" sx={{ textAlign: 'center' }}>
             Hi, {name}
           </Typography>

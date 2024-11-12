@@ -76,6 +76,7 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, i
         {inputError && <FormHelperText error>{inputError}</FormHelperText>}
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 5 }}>
           <LoadingButton
+            data-cy="setup-next-button"
             type="submit"
             variant="contained"
             loadingPosition="end"

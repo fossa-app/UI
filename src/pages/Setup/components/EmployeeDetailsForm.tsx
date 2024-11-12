@@ -89,7 +89,14 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({ title, loadin
           <TextField fullWidth label="Full Name" name="fullName" value={formData.fullName} onChange={handleInputChange} />
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 5 }}>
-          <LoadingButton type="submit" loadingPosition="end" variant="contained" loading={loading} endIcon={<DoneIcon />}>
+          <LoadingButton
+            data-cy="setup-finish-button"
+            type="submit"
+            loadingPosition="end"
+            variant="contained"
+            loading={loading}
+            endIcon={<DoneIcon />}
+          >
             Finish
           </LoadingButton>
         </Box>
