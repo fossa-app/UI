@@ -1,9 +1,13 @@
-import { interceptFetchSystemLicenseRequest } from '../support/interceptors';
+import { interceptFetchClientRequest, interceptFetchSystemLicenseRequest } from '../support/interceptors';
 
 describe('License Tests', () => {
+  beforeEach(() => {
+    interceptFetchClientRequest();
+    interceptFetchSystemLicenseRequest();
+  });
+
   it('should fetch and display correct system license', () => {
     cy.visit('/login');
-    interceptFetchSystemLicenseRequest();
 
     cy.get('[data-cy="system-license"]').should('exist').and('have.text', 'Unlicensed System');
 

@@ -1,3 +1,4 @@
+const baseUrl = Cypress.config('baseUrl');
 const serverBaseUrl = Cypress.env('serverBaseUrl');
 const fusionAuthBaseUrl = Cypress.env('fusionAuthBaseUrl');
 
@@ -15,6 +16,19 @@ export const interceptFetchClientRequest = () => {
 
 export const interceptLoginRequest = () => {
   cy.intercept('GET', `${fusionAuthBaseUrl}/oauth2/authorize*`, { statusCode: 302 }).as('loginRequest');
+};
+
+export const interceptLogoutRequest = () => {
+  cy.intercept('GET', `${fusionAuthBaseUrl}/oauth2/logout*`, {
+    statusCode: 200,
+    headers: {
+      location: `${baseUrl}/login`,
+    },
+  }).as('logoutRequest');
+};
+
+export const interceptOpenidConfigurationRequest = () => {
+  cy.intercept('GET', `${fusionAuthBaseUrl}/.well-known/openid-configuration`, { statusCode: 200 }).as('openidConfigurationRequest');
 };
 
 export const interceptFetchTokenRequest = () => {

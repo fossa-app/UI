@@ -40,6 +40,7 @@ declare namespace Cypress {
   interface Chainable {
     // eslint-disable-next-line no-unused-vars
     loginMock(expiresIn?: number, isAdmin?: boolean): Chainable<void>;
+    logoutMock(): Chainable<void>;
   }
 }
 
@@ -79,4 +80,8 @@ Cypress.Commands.add('loginMock', (expiresIn?: number, isAdmin = false) => {
   };
 
   localStorage.setItem('oidc.user:http://localhost:9011:mock-client-id', JSON.stringify(mockUser));
+});
+
+Cypress.Commands.add('logoutMock', () => {
+  localStorage.removeItem('oidc.user:http://localhost:9011:mock-client-id');
 });
