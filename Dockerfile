@@ -1,6 +1,6 @@
 FROM node:23-alpine
 
-RUN apk --no-cache add curl=8.10.1-r0
+RUN apk --no-cache add curl=8.11.0-r2
 
 WORKDIR /app
 
