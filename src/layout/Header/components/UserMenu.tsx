@@ -49,7 +49,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ name, picture, onLogoutClick }) => 
             Hi, {name}
           </Typography>
         </MenuItem>
-        <MenuItem data-testid="logout-button" onClick={onLogoutClick}>
+        <MenuItem data-testid="logout-button" data-cy="logout-button" onClick={onLogoutClick}>
           <Typography variant="body2" sx={{ textAlign: 'center' }}>
             Logout
           </Typography>

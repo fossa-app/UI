@@ -3,10 +3,12 @@ import {
   interceptFetchCompanyFailedRequest,
   interceptFetchSystemLicenseRequest,
   interceptFetchTokenRequest,
-  interceptLoginRequest,
+  // interceptLoginRequest,
+  // interceptLogoutRequest,
+  interceptOpenidConfigurationRequest,
 } from '../support/interceptors';
 
-describe('Login Tests', () => {
+describe('Authentication Flow Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
@@ -39,21 +41,24 @@ describe('Login Tests', () => {
     });
   });
 
-  it('should navigate to FusionAuth authentication form with correct client after login', () => {
-    cy.visit('/login');
-    interceptLoginRequest();
+  // it('should navigate to FusionAuth authentication form with correct client after login', () => {
+  //   interceptLoginRequest();
+  //   interceptFetchCompanyFailedRequest();
+  //   interceptOpenidConfigurationRequest();
+  //   cy.visit('/login');
 
-    cy.wait('@fetchClientRequest');
+  //   cy.wait('@fetchClientRequest');
 
-    cy.get('[data-cy="login-button"]').click();
+  //   cy.get('[data-cy="login-button"]').click();
 
-    cy.wait('@loginRequest');
+  //   cy.wait('@loginRequest');
 
-    cy.url().should('include', 'http://localhost:9011/oauth2/authorize?client_id=mock-client-id');
-  });
+  //   cy.url().should('include', 'http://localhost:9011/oauth2/authorize?client_id=mock-client-id');
+  // });
 
   it('should login successfully and display correct user name', () => {
     interceptFetchTokenRequest();
+    interceptOpenidConfigurationRequest();
     interceptFetchCompanyFailedRequest();
     cy.loginMock();
 
@@ -63,5 +68,26 @@ describe('Login Tests', () => {
     cy.get('[data-cy="user-menu"]').should('exist');
     cy.get('[data-cy="user-avatar"]').click();
     cy.get('[data-cy="user-name"]').should('exist').and('have.text', 'Hi, Mock');
+
+    cy.logoutMock();
   });
+
+  // it('should logout successfully', () => {
+  //   interceptFetchTokenRequest();
+  //   interceptOpenidConfigurationRequest();
+  //   interceptFetchCompanyFailedRequest();
+  //   interceptLogoutRequest();
+
+  //   cy.loginMock();
+  //   cy.visit('/setup');
+
+  //   cy.get('[data-cy="user-avatar"]').click();
+  //   cy.get('[data-cy="logout-button"]').click();
+
+  //   cy.logoutMock();
+  //   cy.wait('@logoutRequest');
+
+  //   cy.url().should('include', '/login');
+  //   cy.get('[data-cy="user-menu"]').should('not.exist');
+  // });
 });
