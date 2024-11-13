@@ -97,6 +97,40 @@ Task IntegrationTest Build, {
 
 # Synopsis: Functional Test
 Task FunctionalTest Build, {
+    try {
+        $devServerJob = Start-ThreadJob { ./start.ps1 }
+
+        $maxAttempts = 120
+        $attempt = 0
+        $devServerUrl = 'http://localhost:4211/'
+
+        while ($attempt -lt $maxAttempts) {
+            Write-Output "Making request to $devServerUrl (attempt $($attempt + 1))"
+            try {
+                $response = Invoke-WebRequest -Uri $devServerUrl -UseBasicParsing
+                if ($response.StatusCode -eq 200) {
+                    Write-Output 'Endpoint returned 200. Ending attempts.'
+                    break
+                }
+            }
+            catch {
+                $null = 1 #avoid an empty catch
+            }
+            Start-Sleep -Seconds 1
+            $attempt++
+        }
+
+        if ($attempt -eq $maxAttempts) {
+            throw 'Reached maximum number of attempts without getting a 200 status code.'
+        }
+
+        Exec { npm run test:e2e }
+    }
+    finally {
+        Get-Process -Name node | Stop-Process -Force
+        Stop-Job -Job $devServerJob
+    }
+
 }
 
 # Synopsis: Unit Test
