@@ -1,12 +1,12 @@
 {
   "terms": {
     "licensor": {
-      "longName": "Test Licensor",
-      "shortName": "Test System Licensor"
+      "longName": "Test System Licensor",
+      "shortName": "Test Licensor"
     },
     "licensee": {
-      "longName": "Test Licensee",
-      "shortName": "Test System Licensee"
+      "longName": "Test System Licensee",
+      "shortName": "Test Licensee"
     },
     "notBefore": "2024-09-01T00:00:00+00:00",
     "notAfter": "2025-09-01T00:00:00+00:00"

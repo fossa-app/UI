@@ -1,8 +1,15 @@
-import { interceptFetchClientRequest, interceptLoginRequest } from './index';
+import {
+  interceptFetchClientRequest,
+  interceptFetchCompanyFailedRequest,
+  interceptFetchSystemLicenseRequest,
+  interceptFetchTokenRequest,
+  interceptLoginRequest,
+} from '../support/interceptors';
 
 describe('Login Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
+    interceptFetchSystemLicenseRequest();
   });
 
   it('should render the Login page', () => {
@@ -21,6 +28,8 @@ describe('Login Tests', () => {
       '/manage/dashboard',
       '/manage/company',
       '/manage/branches',
+      '/manage/branches/new',
+      '/manage/branches/edit/1',
       '/manage/employees',
     ];
 
@@ -40,6 +49,19 @@ describe('Login Tests', () => {
 
     cy.wait('@loginRequest');
 
-    cy.url().should('include', 'http://localhost:9011/oauth2/authorize?client_id=c1111-c1111-c1111-c1111-c1111');
+    cy.url().should('include', 'http://localhost:9011/oauth2/authorize?client_id=mock-client-id');
+  });
+
+  it('should login successfully and display correct user name', () => {
+    interceptFetchTokenRequest();
+    interceptFetchCompanyFailedRequest();
+    cy.loginMock();
+
+    cy.visit('/setup');
+
+    cy.url().should('include', '/setup');
+    cy.get('[data-cy="user-menu"]').should('exist');
+    cy.get('[data-cy="user-avatar"]').click();
+    cy.get('[data-cy="user-name"]').should('exist').and('have.text', 'Hi, Mock');
   });
 });

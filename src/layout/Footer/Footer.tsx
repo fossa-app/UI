@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
                 <Environment kind={system?.entitlements.environmentKind} name={system?.entitlements.environmentName} />
                 <License
                   system={system?.terms.licensee.longName}
-                  company={company?.terms.licensee.longName}
+                  company={company?.terms?.licensee.longName}
                   setupCompleted={setupCompleted}
                   onCompanyLicenseClick={handleCompanyLicenseClick}
                 />
