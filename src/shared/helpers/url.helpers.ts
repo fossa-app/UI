@@ -3,8 +3,9 @@ import { SEARCH_CONTEXTS, SearchContext } from 'shared/constants';
 export const getBackendOrigin = (frontendOrigin: string): string => {
   const suffixMappings = new Map([
     ['.dev.localhost:4211', '.dev.localhost:5210'],
-    ['.test.localhost:4212', '.test.localhost:5212'],
-    ['.localhost:4212', '.localhost:5210'],
+    ['.test.localhost:4210', '.test.localhost:5211'],
+    ['.test.localhost:4211', '.test.localhost:5211'],
+    ['.localhost:4210', '.localhost:5210'],
   ]);
 
   for (const [frontendSuffix, backendSuffix] of suffixMappings) {
