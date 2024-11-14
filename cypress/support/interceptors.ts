@@ -20,7 +20,7 @@ export const interceptLoginRequest = () => {
 
 export const interceptLogoutRequest = () => {
   cy.intercept('GET', `${fusionAuthBaseUrl}/oauth2/logout*`, {
-    statusCode: 200,
+    statusCode: 302,
     headers: {
       location: `${baseUrl}/login`,
     },
@@ -28,7 +28,13 @@ export const interceptLogoutRequest = () => {
 };
 
 export const interceptOpenidConfigurationRequest = () => {
-  cy.intercept('GET', `${fusionAuthBaseUrl}/.well-known/openid-configuration`, { statusCode: 200 }).as('openidConfigurationRequest');
+  cy.intercept('GET', `${fusionAuthBaseUrl}/.well-known/openid-configuration`, {
+    statusCode: 200,
+    body: {
+      authorization_endpoint: `${fusionAuthBaseUrl}/oauth2/authorize`,
+      end_session_endpoint: `${fusionAuthBaseUrl}/oauth2/logout`,
+    },
+  }).as('openidConfigurationRequest');
 };
 
 export const interceptFetchTokenRequest = () => {
@@ -99,6 +105,32 @@ export const interceptFetchCompanyLicenseFailedRequest = () => {
   ).as('fetchCompanyLicenseFailedRequest');
 };
 
+export const interceptCreateCompanyRequest = () => {
+  cy.intercept(
+    {
+      method: 'POST',
+      url: `${serverBaseUrl}/Company`,
+      headers: {
+        Authorization: /^Bearer .+$/,
+      },
+    },
+    { statusCode: 200 }
+  ).as('createCompanyRequest');
+};
+
+export const interceptCreateCompanyFailedRequest = () => {
+  cy.intercept(
+    {
+      method: 'POST',
+      url: `${serverBaseUrl}/Company`,
+      headers: {
+        Authorization: /^Bearer .+$/,
+      },
+    },
+    { statusCode: 500 }
+  ).as('createCompanyFailedRequest');
+};
+
 export const interceptFetchBranchesRequest = () => {
   cy.fixture('branches').then((branches) => {
     cy.intercept(
@@ -129,6 +161,32 @@ export const interceptFetchBranchesFailedRequest = () => {
   });
 };
 
+export const interceptCreateBranchRequest = () => {
+  cy.intercept(
+    {
+      method: 'POST',
+      url: `${serverBaseUrl}/Branches`,
+      headers: {
+        Authorization: /^Bearer .+$/,
+      },
+    },
+    { statusCode: 200 }
+  ).as('createBranchRequest');
+};
+
+export const interceptCreateBranchFailedRequest = () => {
+  cy.intercept(
+    {
+      method: 'POST',
+      url: `${serverBaseUrl}/Branches`,
+      headers: {
+        Authorization: /^Bearer .+$/,
+      },
+    },
+    { statusCode: 500 }
+  ).as('createBranchFailedRequest');
+};
+
 export const interceptFetchEmployeeRequest = () => {
   cy.fixture('employee').then((employee) => {
     cy.intercept(
@@ -155,4 +213,30 @@ export const interceptFetchEmployeeFailedRequest = () => {
     },
     { statusCode: 404, body: {} }
   ).as('fetchEmployeeFailedRequest');
+};
+
+export const interceptCreateEmployeeRequest = () => {
+  cy.intercept(
+    {
+      method: 'POST',
+      url: `${serverBaseUrl}/Employee`,
+      headers: {
+        Authorization: /^Bearer .+$/,
+      },
+    },
+    { statusCode: 200 }
+  ).as('createEmployeeRequest');
+};
+
+export const interceptCreateEmployeeFailedRequest = () => {
+  cy.intercept(
+    {
+      method: 'POST',
+      url: `${serverBaseUrl}/Employee`,
+      headers: {
+        Authorization: /^Bearer .+$/,
+      },
+    },
+    { statusCode: 500 }
+  ).as('createEmployeeFailedRequest');
 };

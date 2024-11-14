@@ -66,7 +66,8 @@ const Header: React.FC = () => {
           <Grid size="grow">
             {companyName && (
               <Typography
-                data-testid="app-logo"
+                data-testid="company-logo"
+                data-cy="company-logo"
                 noWrap
                 variant="h6"
                 onClick={handleCompanyClick}

@@ -8,6 +8,12 @@ import {
   interceptFetchEmployeeFailedRequest,
   interceptFetchSystemLicenseRequest,
   interceptFetchEmployeeRequest,
+  interceptCreateCompanyFailedRequest,
+  interceptCreateCompanyRequest,
+  interceptCreateBranchFailedRequest,
+  interceptCreateBranchRequest,
+  interceptCreateEmployeeFailedRequest,
+  interceptCreateEmployeeRequest,
 } from '../support/interceptors';
 
 const setupRoutes = ['/setup/company', '/setup/branch', '/setup/employee'];
@@ -83,6 +89,9 @@ describe('Setup Tests', () => {
 
       cy.url().should('include', '/manage/dashboard');
     });
+
+    // TODO: add test case for user role employee creation
+    // TODO: add test cases for user role validation messages
   });
 
   describe('Admin Role', () => {
@@ -156,29 +165,132 @@ describe('Setup Tests', () => {
       cy.url().should('include', '/manage/dashboard');
     });
 
-    // it('should navigate through setup steps using buttons', () => {
-    //   interceptFetchCompanyRequest();
-    //   interceptFetchCompanyFailedRequest();
-    //   interceptFetchBranchesRequest();
-    //   interceptFetchBranchesFailedRequest();
-    //   interceptFetchEmployeeRequest();
-    //   interceptFetchEmployeeFailedRequest();
+    it('should not be able to navigate to branch setup step if company creation failed', () => {
+      interceptFetchCompanyFailedRequest();
+      interceptCreateCompanyFailedRequest();
+      cy.visit('/setup');
 
-    //   cy.visit('/setup');
+      cy.wait('@fetchCompanyFailedRequest');
 
-    //   cy.wait('@fetchCompanyFailedRequest');
+      cy.url().should('include', '/setup/company');
 
-    //   cy.url().should('include', '/setup/company');
+      cy.get('[data-cy="company-branch-input"]').type('Test Company');
+      cy.get('[data-cy="setup-next-button"]').click();
 
-    //   cy.wait('@fetchCompanyRequest');
+      cy.wait('@createCompanyFailedRequest');
 
-    //   cy.wait('@fetchBranchesFailedRequest');
+      cy.url().should('include', '/setup/company');
+    });
 
-    //   cy.wait('@fetchBranchesRequest');
+    it('should be able to navigate to branch setup step if company creation succeeded', () => {
+      interceptFetchCompanyFailedRequest();
+      interceptCreateCompanyRequest();
+      interceptFetchBranchesFailedRequest();
+      cy.visit('/setup');
 
-    //   cy.wait('@fetchEmployeeFailedRequest');
+      cy.wait('@fetchCompanyFailedRequest');
 
-    //   cy.wait('@fetchEmployeeRequest');
-    // });
+      cy.url().should('include', '/setup/company');
+      cy.get('[data-cy="company-logo"]').should('not.exist');
+
+      interceptFetchCompanyRequest();
+
+      cy.get('[data-cy="company-branch-input"]').type('Good Omens');
+      cy.get('[data-cy="setup-next-button"]').click();
+
+      cy.wait('@createCompanyRequest');
+      cy.wait('@fetchCompanyRequest');
+
+      cy.url().should('include', '/setup/branch');
+      cy.get('[data-cy="company-logo"]').should('exist').and('have.text', 'Good Omens');
+    });
+
+    it('should not be able to navigate to employee setup step if branch creation failed', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptCreateBranchFailedRequest();
+      cy.visit('/setup');
+
+      cy.wait('@fetchBranchesFailedRequest');
+
+      cy.url().should('include', '/setup/branch');
+
+      cy.get('[data-cy="company-branch-input"]').type('Test Branch');
+      cy.get('[data-cy="setup-next-button"]').click();
+
+      cy.wait('@createBranchFailedRequest');
+
+      cy.url().should('include', '/setup/branch');
+    });
+
+    it('should be able to navigate to employee setup step if branch creation succeeded', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptCreateBranchRequest();
+      interceptFetchEmployeeFailedRequest();
+      cy.visit('/setup');
+
+      cy.wait('@fetchBranchesFailedRequest');
+
+      cy.url().should('include', '/setup/branch');
+
+      interceptFetchBranchesRequest();
+
+      cy.get('[data-cy="company-branch-input"]').type('London');
+      cy.get('[data-cy="setup-next-button"]').click();
+
+      cy.wait('@createBranchRequest');
+      cy.wait('@fetchBranchesRequest');
+
+      cy.url().should('include', '/setup/employee');
+      cy.get('[data-cy="employee-firstname-input"] input').should('have.value', 'Mock');
+      cy.get('[data-cy="employee-lastname-input"] input').should('have.value', 'User');
+      cy.get('[data-cy="employee-fullname-input"] input').should('have.value', 'Mock Oidc User');
+    });
+
+    it('should not be able to navigate to dashboard if employee creation failed', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesRequest();
+      interceptFetchEmployeeFailedRequest();
+      interceptCreateEmployeeFailedRequest();
+      cy.visit('/setup');
+
+      cy.wait('@fetchEmployeeFailedRequest');
+
+      cy.url().should('include', '/setup/employee');
+
+      cy.get('[data-cy="setup-finish-button"]').click();
+
+      cy.wait('@createEmployeeFailedRequest');
+
+      cy.url().should('include', '/setup/employee');
+    });
+
+    it('should be able to navigate to dashboard if employee creation succeeded', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesRequest();
+      interceptFetchEmployeeFailedRequest();
+      interceptCreateEmployeeRequest();
+      cy.visit('/setup');
+
+      cy.wait('@fetchEmployeeFailedRequest');
+
+      cy.url().should('include', '/setup/employee');
+
+      interceptFetchEmployeeRequest();
+
+      cy.get('[data-cy="employee-firstname-input"] input').clear();
+      cy.get('[data-cy="employee-firstname-input"] input').type('Gabriel');
+      cy.get('[data-cy="employee-lastname-input"] input').clear();
+      cy.get('[data-cy="employee-lastname-input"] input').type('Archangel');
+      cy.get('[data-cy="employee-fullname-input"] input').clear();
+      cy.get('[data-cy="employee-fullname-input"] input').type('Gabriel Admin Archangel');
+      cy.get('[data-cy="setup-finish-button"]').click();
+
+      cy.wait('@createEmployeeRequest');
+      cy.wait('@fetchEmployeeRequest');
+
+      cy.url().should('include', '/manage/dashboard');
+    });
   });
 });

@@ -59,6 +59,7 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, i
       <Box component="form" noValidate onSubmit={onFormSubmit}>
         <TextField
           fullWidth
+          data-cy="company-branch-input"
           variant="outlined"
           name="name"
           required={isAdmin}
