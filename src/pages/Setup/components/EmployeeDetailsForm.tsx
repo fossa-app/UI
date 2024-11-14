@@ -69,6 +69,7 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({ title, loadin
           <TextField
             fullWidth
             required
+            data-cy="employee-firstname-input"
             label="First Name"
             name="firstName"
             value={formData.firstName}
@@ -79,6 +80,7 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({ title, loadin
           <TextField
             fullWidth
             required
+            data-cy="employee-lastname-input"
             label="Last Name"
             name="lastName"
             value={formData.lastName}
@@ -86,7 +88,14 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({ title, loadin
             helperText={formErrors.lastName}
             onChange={handleInputChange}
           />
-          <TextField fullWidth label="Full Name" name="fullName" value={formData.fullName} onChange={handleInputChange} />
+          <TextField
+            fullWidth
+            data-cy="employee-fullname-input"
+            label="Full Name"
+            name="fullName"
+            value={formData.fullName}
+            onChange={handleInputChange}
+          />
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 5 }}>
           <LoadingButton
