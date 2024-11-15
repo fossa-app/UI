@@ -18,12 +18,15 @@ import {
 
 const setupRoutes = ['/setup/company', '/setup/branch', '/setup/employee'];
 
-describe('Setup Tests', () => {
+describe('Setup Flow Tests', () => {
+  beforeEach(() => {
+    interceptFetchClientRequest();
+    interceptFetchSystemLicenseRequest();
+    interceptFetchCompanyLicenseRequest();
+  });
+
   describe('User Role', () => {
     beforeEach(() => {
-      interceptFetchClientRequest();
-      interceptFetchSystemLicenseRequest();
-      interceptFetchCompanyLicenseRequest();
       cy.loginMock();
     });
 
@@ -35,6 +38,9 @@ describe('Setup Tests', () => {
 
       cy.url().should('include', '/setup/company');
       cy.get('[data-cy="setup-next-button"]').should('have.attr', 'disabled');
+      cy.get('[data-cy="company-branch-input-validation"]')
+        .should('exist')
+        .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
 
       setupRoutes.forEach((route) => {
         cy.visit(route);
@@ -51,6 +57,9 @@ describe('Setup Tests', () => {
 
       cy.url().should('include', '/setup/branch');
       cy.get('[data-cy="setup-next-button"]').should('have.attr', 'disabled');
+      cy.get('[data-cy="company-branch-input-validation"]')
+        .should('exist')
+        .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
 
       setupRoutes.forEach((route) => {
         cy.visit(route);
@@ -70,11 +79,57 @@ describe('Setup Tests', () => {
 
       cy.url().should('include', '/setup/employee');
       cy.get('[data-cy="setup-finish-button"]').should('not.have.attr', 'disabled');
+      cy.get('[data-cy="company-branch-input-validation"]').should('not.exist');
 
       setupRoutes.forEach((route) => {
         cy.visit(route);
         cy.url().should('include', '/setup/employee');
       });
+    });
+
+    it('should not be able to navigate to dashboard if employee creation failed', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesRequest();
+      interceptFetchEmployeeFailedRequest();
+      interceptCreateEmployeeFailedRequest();
+      cy.visit('/setup');
+
+      cy.wait('@fetchEmployeeFailedRequest');
+
+      cy.url().should('include', '/setup/employee');
+
+      cy.get('[data-cy="setup-finish-button"]').click();
+
+      cy.wait('@createEmployeeFailedRequest');
+
+      cy.url().should('include', '/setup/employee');
+    });
+
+    it('should be able to navigate to dashboard if employee creation succeeded', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesRequest();
+      interceptFetchEmployeeFailedRequest();
+      interceptCreateEmployeeRequest();
+      cy.visit('/setup');
+
+      cy.wait('@fetchEmployeeFailedRequest');
+
+      cy.url().should('include', '/setup/employee');
+
+      interceptFetchEmployeeRequest();
+
+      cy.get('[data-cy="employee-firstname-input"] input').clear();
+      cy.get('[data-cy="employee-firstname-input"] input').type('Anthony');
+      cy.get('[data-cy="employee-lastname-input"] input').clear();
+      cy.get('[data-cy="employee-lastname-input"] input').type('Crowley');
+      cy.get('[data-cy="employee-fullname-input"] input').clear();
+      cy.get('[data-cy="employee-fullname-input"] input').type('Anthony User Crowley');
+      cy.get('[data-cy="setup-finish-button"]').click();
+
+      cy.wait('@createEmployeeRequest');
+      cy.wait('@fetchEmployeeRequest');
+
+      cy.url().should('include', '/manage/dashboard');
     });
 
     it('should navigate to dashboard if company, branch and employee data exist', () => {
@@ -89,16 +144,10 @@ describe('Setup Tests', () => {
 
       cy.url().should('include', '/manage/dashboard');
     });
-
-    // TODO: add test case for user role employee creation
-    // TODO: add test cases for user role validation messages
   });
 
   describe('Admin Role', () => {
     beforeEach(() => {
-      interceptFetchClientRequest();
-      interceptFetchSystemLicenseRequest();
-      interceptFetchCompanyLicenseRequest();
       cy.loginMock(undefined, true);
     });
 
