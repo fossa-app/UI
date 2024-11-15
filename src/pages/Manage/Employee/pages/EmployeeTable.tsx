@@ -33,7 +33,9 @@ const EmployeeTablePage: React.FC = () => {
 
   const noRecordsTemplate = (
     <Page sx={{ my: 0 }}>
-      <PageSubtitle fontSize={20}>No Employees Found</PageSubtitle>
+      <PageSubtitle data-cy="table-no-employees" fontSize={20}>
+        No Employees Found
+      </PageSubtitle>
     </Page>
   );
 

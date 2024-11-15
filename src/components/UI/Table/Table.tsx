@@ -60,9 +60,14 @@ const Table = <T extends Item>({
         </TableRow>
       ) : (
         items.map((row) => (
-          <TableRow hover key={row.id}>
+          <TableRow hover data-cy="table-body-row" key={row.id}>
             {columns.map((column) => (
-              <TableCell key={column.field} align={column.align || 'left'} sx={{ width: column.width || 'auto' }}>
+              <TableCell
+                data-cy="table-body-column"
+                key={column.field}
+                align={column.align || 'left'}
+                sx={{ width: column.width || 'auto' }}
+              >
                 {column.renderBodyCell ? column.renderBodyCell(row) : (row[column.field] ?? 'N/A')}
               </TableCell>
             ))}

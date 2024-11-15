@@ -51,192 +51,84 @@ export const interceptFetchTokenRequest = () => {
 
 export const interceptFetchCompanyRequest = () => {
   cy.fixture('company').then((company) => {
-    cy.intercept(
-      {
-        method: 'GET',
-        url: `${serverBaseUrl}/Company`,
-        headers: {
-          Authorization: /^Bearer .+$/,
-        },
-      },
-      { statusCode: 200, body: company }
-    ).as('fetchCompanyRequest');
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Company`, company, 'fetchCompanyRequest');
   });
 };
 
 export const interceptFetchCompanyFailedRequest = () => {
-  cy.intercept(
-    {
-      method: 'GET',
-      url: `${serverBaseUrl}/Company`,
-      headers: {
-        Authorization: /^Bearer .+$/,
-      },
-    },
-    { statusCode: 404, body: {} }
-  ).as('fetchCompanyFailedRequest');
+  cy.interceptWithAuth('GET', `${serverBaseUrl}/Company`, null, 'fetchCompanyFailedRequest', 404);
 };
 
 export const interceptFetchCompanyLicenseRequest = () => {
   cy.fixture('company-license').then((companyLicense) => {
-    cy.intercept(
-      {
-        method: 'GET',
-        url: `${serverBaseUrl}/License/Company`,
-        headers: {
-          Authorization: /^Bearer .+$/,
-        },
-      },
-      { statusCode: 200, body: companyLicense }
-    ).as('fetchCompanyLicenseRequest');
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/License/Company`, companyLicense, 'fetchCompanyLicenseRequest');
   });
 };
 
 export const interceptFetchCompanyLicenseFailedRequest = () => {
-  cy.intercept(
-    {
-      method: 'GET',
-      url: `${serverBaseUrl}/License/Company`,
-      headers: {
-        Authorization: /^Bearer .+$/,
-      },
-    },
-    { statusCode: 404, body: {} }
-  ).as('fetchCompanyLicenseFailedRequest');
+  cy.interceptWithAuth('GET', `${serverBaseUrl}/License/Company`, null, 'fetchCompanyLicenseFailedRequest', 404);
+};
+
+export const interceptUploadCompanyLicenseRequest = () => {
+  cy.interceptWithAuth('POST', `${serverBaseUrl}/License/Company`, null, 'uploadCompanyLicenseRequest');
+};
+
+export const interceptUploadCompanyLicenseFailedRequest = () => {
+  cy.interceptWithAuth('POST', `${serverBaseUrl}/License/Company`, null, 'uploadCompanyLicenseFailedRequest', 404);
 };
 
 export const interceptCreateCompanyRequest = () => {
-  cy.intercept(
-    {
-      method: 'POST',
-      url: `${serverBaseUrl}/Company`,
-      headers: {
-        Authorization: /^Bearer .+$/,
-      },
-    },
-    { statusCode: 200 }
-  ).as('createCompanyRequest');
+  cy.interceptWithAuth('POST', `${serverBaseUrl}/Company`, null, 'createCompanyRequest');
 };
 
 export const interceptCreateCompanyFailedRequest = () => {
-  cy.intercept(
-    {
-      method: 'POST',
-      url: `${serverBaseUrl}/Company`,
-      headers: {
-        Authorization: /^Bearer .+$/,
-      },
-    },
-    { statusCode: 500 }
-  ).as('createCompanyFailedRequest');
+  cy.interceptWithAuth('POST', `${serverBaseUrl}/Company`, null, 'createCompanyFailedRequest', 404);
 };
 
 export const interceptFetchBranchesRequest = () => {
   cy.fixture('branches').then((branches) => {
-    cy.intercept(
-      {
-        method: 'GET',
-        url: `${serverBaseUrl}/Branches*`,
-        headers: {
-          Authorization: /^Bearer .+$/,
-        },
-      },
-      { statusCode: 200, body: branches }
-    ).as('fetchBranchesRequest');
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Branches*`, branches, 'fetchBranchesRequest');
   });
 };
 
 export const interceptFetchBranchesFailedRequest = () => {
   cy.fixture('empty-branches').then((emptyBranches) => {
-    cy.intercept(
-      {
-        method: 'GET',
-        url: `${serverBaseUrl}/Branches*`,
-        headers: {
-          Authorization: /^Bearer .+$/,
-        },
-      },
-      { statusCode: 200, body: emptyBranches }
-    ).as('fetchBranchesFailedRequest');
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Branches*`, emptyBranches, 'fetchBranchesFailedRequest');
   });
 };
 
 export const interceptCreateBranchRequest = () => {
-  cy.intercept(
-    {
-      method: 'POST',
-      url: `${serverBaseUrl}/Branches`,
-      headers: {
-        Authorization: /^Bearer .+$/,
-      },
-    },
-    { statusCode: 200 }
-  ).as('createBranchRequest');
+  cy.interceptWithAuth('POST', `${serverBaseUrl}/Branches`, null, 'createBranchRequest');
 };
 
 export const interceptCreateBranchFailedRequest = () => {
-  cy.intercept(
-    {
-      method: 'POST',
-      url: `${serverBaseUrl}/Branches`,
-      headers: {
-        Authorization: /^Bearer .+$/,
-      },
-    },
-    { statusCode: 500 }
-  ).as('createBranchFailedRequest');
+  cy.interceptWithAuth('POST', `${serverBaseUrl}/Branches`, null, 'createBranchFailedRequest', 404);
 };
 
 export const interceptFetchEmployeeRequest = () => {
   cy.fixture('employee').then((employee) => {
-    cy.intercept(
-      {
-        method: 'GET',
-        url: `${serverBaseUrl}/Employee`,
-        headers: {
-          Authorization: /^Bearer .+$/,
-        },
-      },
-      { statusCode: 200, body: employee }
-    ).as('fetchEmployeeRequest');
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Employee`, employee, 'fetchEmployeeRequest');
   });
 };
 
 export const interceptFetchEmployeeFailedRequest = () => {
-  cy.intercept(
-    {
-      method: 'GET',
-      url: `${serverBaseUrl}/Employee`,
-      headers: {
-        Authorization: /^Bearer .+$/,
-      },
-    },
-    { statusCode: 404, body: {} }
-  ).as('fetchEmployeeFailedRequest');
+  cy.interceptWithAuth('GET', `${serverBaseUrl}/Employee`, null, 'fetchEmployeeFailedRequest', 404);
 };
 
 export const interceptCreateEmployeeRequest = () => {
-  cy.intercept(
-    {
-      method: 'POST',
-      url: `${serverBaseUrl}/Employee`,
-      headers: {
-        Authorization: /^Bearer .+$/,
-      },
-    },
-    { statusCode: 200 }
-  ).as('createEmployeeRequest');
+  cy.interceptWithAuth('POST', `${serverBaseUrl}/Employee`, null, 'createEmployeeRequest');
 };
 
 export const interceptCreateEmployeeFailedRequest = () => {
-  cy.intercept(
-    {
-      method: 'POST',
-      url: `${serverBaseUrl}/Employee`,
-      headers: {
-        Authorization: /^Bearer .+$/,
-      },
-    },
-    { statusCode: 500 }
-  ).as('createEmployeeFailedRequest');
+  cy.interceptWithAuth('POST', `${serverBaseUrl}/Employee`, null, 'createEmployeeFailedRequest', 404);
+};
+
+export const interceptFetchEmployeesRequest = () => {
+  cy.fixture('employees').then((employees) => {
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Employees*`, employees, 'fetchEmployeesRequest', 200, 1000);
+  });
+};
+
+export const interceptFetchEmployeesFailedRequest = () => {
+  cy.interceptWithAuth('GET', `${serverBaseUrl}/Employees*`, null, 'fetchEmployeesFailedRequest', 404);
 };

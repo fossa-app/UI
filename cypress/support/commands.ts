@@ -36,11 +36,19 @@
 //   }
 // }
 
+/* eslint-disable no-unused-vars */
 declare namespace Cypress {
   interface Chainable {
-    // eslint-disable-next-line no-unused-vars
     loginMock(expiresIn?: number, isAdmin?: boolean): Chainable<void>;
     logoutMock(): Chainable<void>;
+    interceptWithAuth(
+      method: string,
+      url: string | RegExp,
+      response: any,
+      alias?: string,
+      statusCode?: number,
+      delay?: number
+    ): Chainable<void>;
   }
 }
 
@@ -84,4 +92,21 @@ Cypress.Commands.add('loginMock', (expiresIn?: number, isAdmin = false) => {
 
 Cypress.Commands.add('logoutMock', () => {
   localStorage.removeItem('oidc.user:http://localhost:9011:mock-client-id');
+});
+
+Cypress.Commands.add('interceptWithAuth', (method, url, response, alias = '', statusCode = 200, delay = 0) => {
+  cy.intercept(
+    {
+      method,
+      url,
+      headers: {
+        Authorization: /^Bearer .+$/,
+      },
+    },
+    {
+      statusCode,
+      delay,
+      body: response,
+    }
+  ).as(alias);
 });

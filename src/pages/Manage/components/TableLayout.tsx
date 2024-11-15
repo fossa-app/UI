@@ -20,7 +20,9 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}>
       <Page sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', textAlign: 'left', mb: 5 }}>
-        <PageTitle sx={{ flexGrow: 1 }}>{pageTitle}</PageTitle>
+        <PageTitle data-cy="table-layout-title" sx={{ flexGrow: 1 }}>
+          {pageTitle}
+        </PageTitle>
         {withActionButton && (
           <Button variant="contained" color="primary" onClick={onActionClick}>
             {actionButtonLabel}

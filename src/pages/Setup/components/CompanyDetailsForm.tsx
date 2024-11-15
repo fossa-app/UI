@@ -74,7 +74,11 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, i
           error={!!inputError}
           onChange={handleInputChange}
         />
-        {inputError && <FormHelperText error>{inputError}</FormHelperText>}
+        {inputError && (
+          <FormHelperText data-cy="company-branch-input-validation" error>
+            {inputError}
+          </FormHelperText>
+        )}
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 5 }}>
           <LoadingButton
             data-cy="setup-next-button"
