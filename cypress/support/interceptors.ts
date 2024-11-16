@@ -92,7 +92,7 @@ export const interceptFetchBranchesRequest = () => {
 };
 
 export const interceptFetchBranchesFailedRequest = () => {
-  cy.fixture('empty-branches').then((emptyBranches) => {
+  cy.fixture('branches-empty').then((emptyBranches) => {
     cy.interceptWithAuth('GET', `${serverBaseUrl}/Branches*`, emptyBranches, 'fetchBranchesFailedRequest');
   });
 };
@@ -125,7 +125,7 @@ export const interceptCreateEmployeeFailedRequest = () => {
 
 export const interceptFetchEmployeesRequest = () => {
   cy.fixture('employees').then((employees) => {
-    cy.interceptWithAuth('GET', `${serverBaseUrl}/Employees*`, employees, 'fetchEmployeesRequest', 200, 1000);
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Employees*`, employees, 'fetchEmployeesRequest', 200, 300);
   });
 };
 

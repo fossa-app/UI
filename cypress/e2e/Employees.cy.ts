@@ -1,3 +1,4 @@
+import { getTableLoader, getTablePaginationDisplayedRows, getTablePaginationSizeInput } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -28,19 +29,44 @@ describe('Employees Tests', () => {
 
   it('should display the loader if fetching employees is in progress', () => {
     cy.visit('/manage/employees');
-
-    cy.get('[data-cy="table-no-employees"]').should('not.exist');
-    cy.get('[data-cy="linear-loader"]').should('not.exist');
     interceptFetchEmployeesRequest();
+
+    cy.wait('@fetchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
+    getTableLoader().should('be.visible');
+    cy.get('[data-cy="table-no-employees"]').should('not.exist');
+
     cy.wait('@fetchEmployeesRequest');
-    cy.get('[data-cy="linear-loader"]').should('exist');
+
+    getTableLoader().should('not.be.visible');
   });
 
-  it('should display employees within the table if there are employees', () => {
+  it('should render employees table if there are fetched employees', () => {
     interceptFetchEmployeesRequest();
 
+    cy.wait('@fetchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
     cy.get('[data-cy="table-no-employees"]').should('not.exist');
-    cy.get('[data-cy="linear-loader"]').should('not.exist');
+    getTableLoader().should('not.be.visible');
     cy.get('[data-cy="table-body-row"]').should('have.length', 3);
+    cy.get('[data-cy="employees-table"]').find('[data-cy="table-header-cell-firstName"]').should('have.text', 'First Name');
+    cy.get('[data-cy="employees-table"]').find('[data-cy="table-header-cell-lastName"]').should('have.text', 'Last Name');
+    cy.get('[data-cy="employees-table"]').find('[data-cy="table-header-cell-fullName"]').should('have.text', 'Full Name');
+    getTablePaginationSizeInput().should('have.value', '5');
+    getTablePaginationDisplayedRows().should('have.text', '1–3 of 3');
+  });
+
+  it('should send correct request when pagination changes', () => {
+    cy.get('[data-cy="employees-table"]').find('[data-cy="table-pagination"] .MuiTablePagination-input').click();
+
+    cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').should('have.length', 2);
+    cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(0).should('have.text', '5');
+    cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(1).should('have.text', '10');
+
+    interceptFetchEmployeesRequest();
+
+    cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="10"]').click();
+
+    getTablePaginationSizeInput().should('have.value', '10');
+    // TODO: remove timeout
+    cy.wait('@fetchEmployeesRequest', { timeout: 400 }).its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
   });
 });
