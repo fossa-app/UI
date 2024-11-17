@@ -54,7 +54,7 @@ const EmployeeTablePage: React.FC = () => {
   return (
     <TableLayout pageTitle="Employees">
       <Table<Employee>
-        data-cy="employees-table"
+        data-cy="employee-table"
         loading={fetchStatus === 'loading'}
         columns={columns}
         items={employees?.items}

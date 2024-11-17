@@ -39,7 +39,7 @@
 /* eslint-disable no-unused-vars */
 declare namespace Cypress {
   interface Chainable {
-    loginMock(expiresIn?: number, isAdmin?: boolean): Chainable<void>;
+    loginMock(isAdmin?: boolean, expiresIn?: number): Chainable<void>;
     logoutMock(): Chainable<void>;
     interceptWithAuth(
       method: string,
@@ -66,7 +66,7 @@ const createMockJwt = (isAdmin: boolean): string => {
   return `${encodedHeader}.${encodedPayload}.${mockSignature}`;
 };
 
-Cypress.Commands.add('loginMock', (expiresIn?: number, isAdmin = false) => {
+Cypress.Commands.add('loginMock', (isAdmin = false, expiresIn?: number) => {
   const access_token = createMockJwt(isAdmin);
 
   const mockUser = {
@@ -79,11 +79,11 @@ Cypress.Commands.add('loginMock', (expiresIn?: number, isAdmin = false) => {
     profile: {
       sub: 'mock-user-id',
       tid: 'mock-tenant-id',
-      given_name: 'Mock',
+      given_name: isAdmin ? 'Admin' : 'User',
       middle_name: 'Oidc',
-      family_name: 'User',
-      name: 'Mock Oidc User',
-      email: 'mockuser@example.com',
+      family_name: 'Mock',
+      name: isAdmin ? 'Admin Oidc Mock' : 'User Oidc Mock',
+      email: 'mock@example.com',
     },
   };
 
@@ -94,7 +94,7 @@ Cypress.Commands.add('logoutMock', () => {
   localStorage.removeItem('oidc.user:http://localhost:9011:mock-client-id');
 });
 
-Cypress.Commands.add('interceptWithAuth', (method, url, response, alias = '', statusCode = 200, delay = 0) => {
+Cypress.Commands.add('interceptWithAuth', (method, url, response, alias = '', statusCode = 200, delay = 200) => {
   cy.intercept(
     {
       method,

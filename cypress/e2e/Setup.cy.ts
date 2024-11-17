@@ -116,14 +116,14 @@ describe('Setup Flow Tests', () => {
 
       cy.url().should('include', '/setup/employee');
 
-      interceptFetchEmployeeRequest();
-
       cy.get('[data-cy="employee-firstname-input"] input').clear();
       cy.get('[data-cy="employee-firstname-input"] input').type('Anthony');
       cy.get('[data-cy="employee-lastname-input"] input').clear();
       cy.get('[data-cy="employee-lastname-input"] input').type('Crowley');
       cy.get('[data-cy="employee-fullname-input"] input').clear();
       cy.get('[data-cy="employee-fullname-input"] input').type('Anthony User Crowley');
+
+      interceptFetchEmployeeRequest();
       cy.get('[data-cy="setup-finish-button"]').click();
 
       cy.wait('@createEmployeeRequest');
@@ -148,7 +148,7 @@ describe('Setup Flow Tests', () => {
 
   describe('Admin Role', () => {
     beforeEach(() => {
-      cy.loginMock(undefined, true);
+      cy.loginMock(true);
     });
 
     it('should navigate to company setup page and no other setup pages if there is no company', () => {
@@ -293,9 +293,9 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchBranchesRequest');
 
       cy.url().should('include', '/setup/employee');
-      cy.get('[data-cy="employee-firstname-input"] input').should('have.value', 'Mock');
-      cy.get('[data-cy="employee-lastname-input"] input').should('have.value', 'User');
-      cy.get('[data-cy="employee-fullname-input"] input').should('have.value', 'Mock Oidc User');
+      cy.get('[data-cy="employee-firstname-input"] input').should('have.value', 'Admin');
+      cy.get('[data-cy="employee-lastname-input"] input').should('have.value', 'Mock');
+      cy.get('[data-cy="employee-fullname-input"] input').should('have.value', 'Admin Oidc Mock');
     });
 
     it('should not be able to navigate to dashboard if employee creation failed', () => {
@@ -327,14 +327,14 @@ describe('Setup Flow Tests', () => {
 
       cy.url().should('include', '/setup/employee');
 
-      interceptFetchEmployeeRequest();
-
       cy.get('[data-cy="employee-firstname-input"] input').clear();
       cy.get('[data-cy="employee-firstname-input"] input').type('Gabriel');
       cy.get('[data-cy="employee-lastname-input"] input').clear();
       cy.get('[data-cy="employee-lastname-input"] input').type('Archangel');
       cy.get('[data-cy="employee-fullname-input"] input').clear();
       cy.get('[data-cy="employee-fullname-input"] input').type('Gabriel Admin Archangel');
+
+      interceptFetchEmployeeRequest();
       cy.get('[data-cy="setup-finish-button"]').click();
 
       cy.wait('@createEmployeeRequest');

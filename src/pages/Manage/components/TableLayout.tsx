@@ -24,7 +24,7 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
           {pageTitle}
         </PageTitle>
         {withActionButton && (
-          <Button variant="contained" color="primary" onClick={onActionClick}>
+          <Button data-cy="action-button" variant="contained" color="primary" onClick={onActionClick}>
             {actionButtonLabel}
           </Button>
         )}

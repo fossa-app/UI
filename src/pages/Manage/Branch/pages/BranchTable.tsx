@@ -33,10 +33,10 @@ const BranchTablePage: React.FC = () => {
       renderBodyCell: ({ id }) => {
         return isUserAdmin ? (
           <>
-            <IconButton size="small" color="primary" onClick={() => handleEditBranch(id)}>
+            <IconButton data-cy="edit-branch-button" size="small" color="primary" onClick={() => handleEditBranch(id)}>
               <EditIcon />
             </IconButton>
-            <IconButton size="small" color="error" onClick={() => handleDeleteBranch(id)}>
+            <IconButton data-cy="delete-branch-button" size="small" color="error" onClick={() => handleDeleteBranch(id)}>
               <DeleteIcon />
             </IconButton>
           </>
@@ -47,7 +47,9 @@ const BranchTablePage: React.FC = () => {
 
   const noRecordsTemplate = (
     <Page sx={{ margin: 0 }}>
-      <PageSubtitle fontSize={20}>No Branches Found</PageSubtitle>
+      <PageSubtitle data-cy="table-no-branches" fontSize={20}>
+        No Branches Found
+      </PageSubtitle>
     </Page>
   );
 
@@ -86,6 +88,7 @@ const BranchTablePage: React.FC = () => {
   return (
     <TableLayout withActionButton={isUserAdmin} pageTitle="Branches" actionButtonLabel="New Branch" onActionClick={handleActionClick}>
       <Table<Branch>
+        data-cy="branch-table"
         loading={loading}
         columns={columns}
         items={branches?.items}
