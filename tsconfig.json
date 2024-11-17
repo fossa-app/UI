@@ -23,5 +23,5 @@
       "module": "commonjs"
     }
   },
-  "include": ["src", "cypress/**/*.ts", "node_modules/cypress/types/index.d.ts"]
+  "include": ["src", "node_modules/cypress/types/index.d.ts"]
 }

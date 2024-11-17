@@ -123,9 +123,16 @@ export const interceptCreateEmployeeFailedRequest = () => {
   cy.interceptWithAuth('POST', `${serverBaseUrl}/Employee`, null, 'createEmployeeFailedRequest', 404);
 };
 
-export const interceptFetchEmployeesRequest = () => {
+export const interceptFetchEmployeesRequest = (delay = 300, pageNumber = 1, pageSize = 5) => {
   cy.fixture('employees').then((employees) => {
-    cy.interceptWithAuth('GET', `${serverBaseUrl}/Employees*`, employees, 'fetchEmployeesRequest', 200, 300);
+    cy.interceptWithAuth(
+      'GET',
+      `${serverBaseUrl}/Employees?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+      employees,
+      'fetchEmployeesRequest',
+      200,
+      delay
+    );
   });
 };
 

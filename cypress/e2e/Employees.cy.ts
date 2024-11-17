@@ -61,12 +61,12 @@ describe('Employees Tests', () => {
     cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(0).should('have.text', '5');
     cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(1).should('have.text', '10');
 
-    interceptFetchEmployeesRequest();
+    interceptFetchEmployeesRequest(0, 1, 10);
 
     cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="10"]').click();
 
+    cy.wait('@fetchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
+
     getTablePaginationSizeInput().should('have.value', '10');
-    // TODO: remove timeout
-    cy.wait('@fetchEmployeesRequest', { timeout: 400 }).its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
   });
 });
