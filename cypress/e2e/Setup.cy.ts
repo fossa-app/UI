@@ -1,7 +1,7 @@
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
-  interceptFetchCompanyLicenseRequest,
+  interceptFetchCompanyLicenseFailedRequest,
   interceptFetchCompanyFailedRequest,
   interceptFetchCompanyRequest,
   interceptFetchBranchesFailedRequest,
@@ -22,7 +22,7 @@ describe('Setup Flow Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
-    interceptFetchCompanyLicenseRequest();
+    interceptFetchCompanyLicenseFailedRequest();
   });
 
   describe('User Role', () => {

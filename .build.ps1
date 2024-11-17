@@ -135,7 +135,7 @@ Task FunctionalTest Build, {
 
 # Synopsis: Unit Test
 Task UnitTest Build, {
-    Exec { npm test }
+    Exec { npm run test:unit }
 }
 
 # Synopsis: Build

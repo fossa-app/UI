@@ -1,7 +1,9 @@
 import { defineConfig } from 'cypress';
+import { APP_CONFIG } from './src/shared/constants';
 
 export default defineConfig({
   defaultCommandTimeout: 10000,
+  requestTimeout: APP_CONFIG.httpTimeout,
   retries: 3,
   chromeWebSecurity: false,
   e2e: {
