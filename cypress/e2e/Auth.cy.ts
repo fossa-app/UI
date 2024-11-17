@@ -61,7 +61,7 @@ describe('Authentication Flow Tests', () => {
     cy.url().should('include', 'http://localhost:9011/oauth2/authorize?client_id=mock-client-id');
   });
 
-  it('should login successfully and display correct user name', () => {
+  it('should login successfully and display correct user name for user role', () => {
     interceptFetchTokenRequest();
     interceptOpenidConfigurationRequest();
     interceptFetchCompanyFailedRequest();
@@ -72,7 +72,20 @@ describe('Authentication Flow Tests', () => {
     cy.url().should('include', '/setup');
     cy.get('[data-cy="user-menu"]').should('exist');
     cy.get('[data-cy="user-avatar"]').click();
-    cy.get('[data-cy="user-name"]').should('exist').and('have.text', 'Hi, Mock');
+    cy.get('[data-cy="user-name"]').should('exist').and('have.text', 'Hi, User');
+  });
+
+  it('should login successfully and display correct user name for admin role', () => {
+    interceptFetchTokenRequest();
+    interceptOpenidConfigurationRequest();
+    interceptFetchCompanyFailedRequest();
+    cy.loginMock(true);
+
+    cy.visit('/setup');
+
+    cy.url().should('include', '/setup');
+    cy.get('[data-cy="user-avatar"]').click();
+    cy.get('[data-cy="user-name"]').should('exist').and('have.text', 'Hi, Admin');
   });
 
   it('should logout successfully', () => {

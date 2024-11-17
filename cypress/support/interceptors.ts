@@ -85,9 +85,9 @@ export const interceptCreateCompanyFailedRequest = () => {
   cy.interceptWithAuth('POST', `${serverBaseUrl}/Company`, null, 'createCompanyFailedRequest', 404);
 };
 
-export const interceptFetchBranchesRequest = () => {
+export const interceptFetchBranchesRequest = (pageNumber = 1, pageSize = 5, alias = 'fetchBranchesRequest') => {
   cy.fixture('branches').then((branches) => {
-    cy.interceptWithAuth('GET', `${serverBaseUrl}/Branches*`, branches, 'fetchBranchesRequest');
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Branches?pageNumber=${pageNumber}&pageSize=${pageSize}`, branches, alias);
   });
 };
 
@@ -123,16 +123,9 @@ export const interceptCreateEmployeeFailedRequest = () => {
   cy.interceptWithAuth('POST', `${serverBaseUrl}/Employee`, null, 'createEmployeeFailedRequest', 404);
 };
 
-export const interceptFetchEmployeesRequest = (delay = 300, pageNumber = 1, pageSize = 5) => {
+export const interceptFetchEmployeesRequest = (pageNumber = 1, pageSize = 5, alias = 'fetchEmployeesRequest') => {
   cy.fixture('employees').then((employees) => {
-    cy.interceptWithAuth(
-      'GET',
-      `${serverBaseUrl}/Employees?pageNumber=${pageNumber}&pageSize=${pageSize}`,
-      employees,
-      'fetchEmployeesRequest',
-      200,
-      delay
-    );
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Employees?pageNumber=${pageNumber}&pageSize=${pageSize}`, employees, alias);
   });
 };
 
