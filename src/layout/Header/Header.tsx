@@ -12,7 +12,7 @@ import { getSearchContext, getUserManager } from 'shared/helpers';
 import { ROUTES } from 'shared/constants';
 import Search from 'components/Search';
 import UserMenu from './components/UserMenu';
-import ThemeSwitch from './components/ThemeSwitch';
+import ThemeButton from './components/ThemeButton';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -81,7 +81,7 @@ const Header: React.FC = () => {
             {showSearch && <Search data={[]} context={getSearchContext(locationPathname)!} getOptionLabel={handleGetOptionLabel} />}
           </Grid>
           <Grid size="auto">
-            <ThemeSwitch isDarkTheme={isDarkTheme} onThemeChange={handleThemeChange} />
+            <ThemeButton isDarkTheme={isDarkTheme} onClick={handleThemeChange} />
           </Grid>
           <Grid size="auto">
             {user?.profile?.given_name && (
