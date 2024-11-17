@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import { toggleAppTheme } from 'store/features';
 import { setMockState, mockDispatch, resetMockState } from '../store';
 import { getUserManager } from '../oidc-client-mock';
@@ -31,9 +31,10 @@ describe('Header Component', () => {
       </MemoryRouter>
     );
 
-    const themeSwitch = await screen.findByTestId('theme-switch');
+    const themeButton = await screen.findByTestId('theme-button');
+    const darkModeIcon = within(themeButton).getByTestId('DarkModeIcon');
 
-    expect(themeSwitch).toHaveClass('Mui-checked');
+    expect(darkModeIcon).toBeInTheDocument();
   });
 
   it('should display dark theme switch as unchecked when dark theme is disabled', async () => {
@@ -45,9 +46,10 @@ describe('Header Component', () => {
       </MemoryRouter>
     );
 
-    const themeSwitch = await screen.findByTestId('theme-switch');
+    const themeButton = await screen.findByTestId('theme-button');
+    const lightModeIcon = within(themeButton).getByTestId('LightModeIcon');
 
-    expect(themeSwitch).not.toHaveClass('Mui-checked');
+    expect(lightModeIcon).toBeInTheDocument();
   });
 
   it('should dispatch action to update theme when switch is toggled', async () => {
@@ -59,9 +61,9 @@ describe('Header Component', () => {
       </MemoryRouter>
     );
 
-    const themeSwitch = await screen.findByTestId('theme-switch');
+    const themeButton = await screen.findByTestId('theme-button');
 
-    fireEvent.click(themeSwitch);
+    fireEvent.click(themeButton);
 
     expect(mockDispatch).toHaveBeenCalledWith(toggleAppTheme(true));
   });
