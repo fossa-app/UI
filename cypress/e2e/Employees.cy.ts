@@ -1,4 +1,4 @@
-import { getTableLoader, getTablePaginationDisplayedRows, getTablePaginationSizeInput } from '../support/helpers';
+import { getTableBodyRow, getTableLoader, getTablePaginationDisplayedRows, getTablePaginationSizeInput } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -43,7 +43,7 @@ describe('Employees Tests', () => {
     cy.wait('@fetchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
     cy.get('[data-cy="table-no-employees"]').should('not.exist');
     getTableLoader('employee-table').should('not.have.css', 'visibility', 'hidden');
-    cy.get('[data-cy="table-body-row"]').should('have.length', 3);
+    getTableBodyRow('employee-table').should('have.length', 3);
     cy.get('[data-cy="employee-table"]').find('[data-cy="table-header-cell-firstName"]').should('have.text', 'First Name');
     cy.get('[data-cy="employee-table"]').find('[data-cy="table-header-cell-lastName"]').should('have.text', 'Last Name');
     cy.get('[data-cy="employee-table"]').find('[data-cy="table-header-cell-fullName"]').should('have.text', 'Full Name');

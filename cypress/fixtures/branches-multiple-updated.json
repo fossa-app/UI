@@ -1,0 +1,18 @@
+{
+  "pageNumber": 1,
+  "pageSize": 5,
+  "items": [
+    {
+      "id": 222222222222,
+      "companyId": 111111111111,
+      "name": "London Updated"
+    },
+    {
+      "id": 222222222223,
+      "companyId": 111111111111,
+      "name": "New York"
+    }
+  ],
+  "totalItems": 2,
+  "totalPages": 1
+}

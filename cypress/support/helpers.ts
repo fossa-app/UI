@@ -9,3 +9,7 @@ export const getTablePaginationSizeInput = (tableSelector: string) => {
 export const getTablePaginationDisplayedRows = (tableSelector: string) => {
   return cy.get(`[data-cy=${tableSelector}]`).find('[data-cy="table-pagination"] .MuiTablePagination-displayedRows');
 };
+
+export const getTableBodyRow = (tableSelector: string) => {
+  return cy.get(`[data-cy=${tableSelector}]`).find('[data-cy="table-body-row"]');
+};

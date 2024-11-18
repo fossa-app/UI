@@ -33,10 +33,10 @@ const BranchTablePage: React.FC = () => {
       renderBodyCell: ({ id }) => {
         return isUserAdmin ? (
           <>
-            <IconButton data-cy="edit-branch-button" size="small" color="primary" onClick={() => handleEditBranch(id)}>
+            <IconButton data-cy={`edit-${id}-branch-button`} size="small" color="primary" onClick={() => handleEditBranch(id)}>
               <EditIcon />
             </IconButton>
-            <IconButton data-cy="delete-branch-button" size="small" color="error" onClick={() => handleDeleteBranch(id)}>
+            <IconButton data-cy={`delete-${id}-branch-button`} size="small" color="error" onClick={() => handleDeleteBranch(id)}>
               <DeleteIcon />
             </IconButton>
           </>

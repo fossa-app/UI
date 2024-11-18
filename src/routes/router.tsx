@@ -22,11 +22,11 @@ const EmployeeTablePage = createLazyComponent(() => import('pages/Manage/Employe
 const BranchPage = createLazyComponent(() => import('pages/Manage/Branch/Branch'));
 const BranchTablePage = createLazyComponent(() => import('pages/Manage/Branch/pages/BranchTable'), { title: ROUTES.branches.name });
 
-const CreateBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/CreateEditBranch'), {
+const CreateBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/ManageBranch'), {
   title: ROUTES.newBranch.name,
   isAdminRoute: true,
 });
-const EditBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/CreateEditBranch'), {
+const EditBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/ManageBranch'), {
   title: ROUTES.editBranch.name,
   isAdminRoute: true,
 });

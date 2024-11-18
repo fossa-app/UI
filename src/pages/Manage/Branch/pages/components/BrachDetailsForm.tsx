@@ -63,6 +63,7 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ data, formLoading, 
             <TextField
               fullWidth
               required
+              data-cy="branch-name-input"
               variant="outlined"
               name="name"
               label="Enter Branch name"
@@ -75,15 +76,26 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ data, formLoading, 
               error={!!inputError}
               onChange={handleInputChange}
             />
-            {inputError && <FormHelperText error>{inputError}</FormHelperText>}
+            {inputError && (
+              <FormHelperText error data-cy="branch-name-input-validation">
+                {inputError}
+              </FormHelperText>
+            )}
           </Grid>
           {/* Test field */}
           <Grid size={{ xs: 12, md: 6 }}>
-            <TextField fullWidth variant="outlined" name="address" label="Enter Branch address" />
+            <TextField fullWidth data-cy="branch-address-input" variant="outlined" name="address" label="Enter Branch address" />
           </Grid>
         </Grid>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 5 }}>
-          <LoadingButton type="submit" variant="contained" loadingPosition="end" loading={buttonLoading} endIcon={<SaveIcon />}>
+          <LoadingButton
+            data-cy="save-branch-button"
+            type="submit"
+            variant="contained"
+            loadingPosition="end"
+            loading={buttonLoading}
+            endIcon={<SaveIcon />}
+          >
             Save
           </LoadingButton>
         </Box>
