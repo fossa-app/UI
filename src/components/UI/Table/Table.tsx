@@ -64,7 +64,7 @@ const Table = <T extends Item>({
           <TableRow hover data-cy="table-body-row" key={row.id}>
             {columns.map((column) => (
               <TableCell
-                data-cy={`table-body-cell-${column.field}`}
+                data-cy={`table-body-cell-${row[column.field]}`}
                 key={column.field}
                 align={column.align || 'left'}
                 sx={{ width: column.width || 'auto' }}

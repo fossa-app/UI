@@ -85,8 +85,25 @@ export const interceptCreateCompanyFailedRequest = () => {
   cy.interceptWithAuth('POST', `${serverBaseUrl}/Company`, null, 'createCompanyFailedRequest', 404);
 };
 
+// TODO: make fetchBranches requests generic
 export const interceptFetchBranchesRequest = (pageNumber = 1, pageSize = 5, alias = 'fetchBranchesRequest') => {
   cy.fixture('branches').then((branches) => {
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Branches?pageNumber=${pageNumber}&pageSize=${pageSize}`, branches, alias);
+  });
+};
+
+export const interceptFetchMultipleBranchesRequest = (pageNumber = 1, pageSize = 5, alias = 'fetchMultipleBranchesRequest') => {
+  cy.fixture('branches-multiple').then((branches) => {
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Branches?pageNumber=${pageNumber}&pageSize=${pageSize}`, branches, alias);
+  });
+};
+
+export const interceptFetchMultipleUpdatedBranchesRequest = (
+  pageNumber = 1,
+  pageSize = 5,
+  alias = 'fetchMultipleUpdatedBranchesRequest'
+) => {
+  cy.fixture('branches-multiple-updated').then((branches) => {
     cy.interceptWithAuth('GET', `${serverBaseUrl}/Branches?pageNumber=${pageNumber}&pageSize=${pageSize}`, branches, alias);
   });
 };
@@ -97,12 +114,39 @@ export const interceptFetchBranchesFailedRequest = () => {
   });
 };
 
+export const interceptFetchBranchByIdRequest = (id: string) => {
+  cy.fixture('branches').then((branches) => {
+    cy.interceptWithAuth(
+      'GET',
+      `${serverBaseUrl}/Branches/${id}`,
+      branches.items.find((branch) => String(branch.id) === id),
+      'fetchBranchByIdRequest'
+    );
+  });
+};
+
 export const interceptCreateBranchRequest = () => {
   cy.interceptWithAuth('POST', `${serverBaseUrl}/Branches`, null, 'createBranchRequest');
 };
 
 export const interceptCreateBranchFailedRequest = () => {
   cy.interceptWithAuth('POST', `${serverBaseUrl}/Branches`, null, 'createBranchFailedRequest', 404);
+};
+
+export const interceptEditBranchRequest = (id: string) => {
+  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Branches/${id}`, null, 'editBranchRequest');
+};
+
+export const interceptEditBranchFailedRequest = (id: string) => {
+  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Branches/${id}`, null, 'editBranchFailedRequest', 404);
+};
+
+export const interceptDeleteBranchRequest = (id: string) => {
+  cy.interceptWithAuth('DELETE', `${serverBaseUrl}/Branches/${id}`, null, 'deleteBranchRequest');
+};
+
+export const interceptDeleteBranchFailedRequest = (id: string) => {
+  cy.interceptWithAuth('DELETE', `${serverBaseUrl}/Branches/${id}`, null, 'deleteBranchFailedRequest', 404);
 };
 
 export const interceptFetchEmployeeRequest = () => {

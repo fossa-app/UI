@@ -1,10 +1,14 @@
-import { getTableLoader, getTablePaginationDisplayedRows, getTablePaginationSizeInput } from '../support/helpers';
+import { getTableBodyRow, getTableLoader, getTablePaginationDisplayedRows, getTablePaginationSizeInput } from '../support/helpers';
 import {
+  interceptDeleteBranchFailedRequest,
+  interceptDeleteBranchRequest,
   interceptFetchBranchesFailedRequest,
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
+  interceptFetchCompanyLicenseFailedRequest,
   interceptFetchCompanyRequest,
   interceptFetchEmployeeRequest,
+  interceptFetchMultipleBranchesRequest,
   interceptFetchSystemLicenseRequest,
 } from '../support/interceptors';
 
@@ -14,6 +18,7 @@ describe('Branches Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
+    interceptFetchCompanyLicenseFailedRequest();
     interceptFetchCompanyRequest();
     interceptFetchEmployeeRequest();
     cy.visit('/manage/branches');
@@ -46,7 +51,7 @@ describe('Branches Tests', () => {
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
       cy.get('[data-cy="table-no-branches"]').should('not.exist');
       getTableLoader('branch-table').should('have.css', 'visibility', 'hidden');
-      cy.get('[data-cy="table-body-row"]').should('have.length', 1);
+      getTableBodyRow('branch-table').should('have.length', 1);
       cy.get('[data-cy="branch-table"]').find('[data-cy="table-header-cell-name"]').should('have.text', 'Name');
       getTablePaginationSizeInput('branch-table').should('have.value', '5');
       getTablePaginationDisplayedRows('branch-table').should('have.text', '1–1 of 1');
@@ -83,8 +88,8 @@ describe('Branches Tests', () => {
       interceptFetchBranchesRequest();
 
       cy.get('[data-cy="action-button"]').should('not.exist');
-      cy.get('[data-cy="edit-branch-button"]').should('not.exist');
-      cy.get('[data-cy="delete-branch-button"]').should('not.exist');
+      cy.get('[data-cy="edit-222222222222-branch-button"]').should('not.exist');
+      cy.get('[data-cy="delete-222222222222-branch-button"]').should('not.exist');
     });
   });
 
@@ -117,7 +122,7 @@ describe('Branches Tests', () => {
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
       cy.get('[data-cy="table-no-branches"]').should('not.exist');
       getTableLoader('branch-table').should('have.css', 'visibility', 'hidden');
-      cy.get('[data-cy="table-body-row"]').should('have.length', 1);
+      getTableBodyRow('branch-table').should('have.length', 1);
       cy.get('[data-cy="branch-table"]').find('[data-cy="table-header-cell-name"]').should('have.text', 'Name');
       getTablePaginationSizeInput('branch-table').should('have.value', '5');
       getTablePaginationDisplayedRows('branch-table').should('have.text', '1–1 of 1');
@@ -145,8 +150,8 @@ describe('Branches Tests', () => {
       interceptFetchBranchesRequest();
 
       cy.get('[data-cy="action-button"]').should('exist').and('have.text', 'New Branch');
-      cy.get('[data-cy="edit-branch-button"]').should('exist');
-      cy.get('[data-cy="delete-branch-button"]').should('exist');
+      cy.get('[data-cy="edit-222222222222-branch-button"]').should('exist');
+      cy.get('[data-cy="delete-222222222222-branch-button"]').should('exist');
     });
 
     it('should be able to manually navigate to branch management page', () => {
@@ -166,8 +171,37 @@ describe('Branches Tests', () => {
 
       cy.visit('/manage/branches');
 
-      cy.get('[data-cy="edit-branch-button"]').click();
+      cy.get('[data-cy="edit-222222222222-branch-button"]').click();
       cy.url().should('include', branchAdminRoutes[1]);
+    });
+
+    it('should not be able to delete a branch if the branch deletion failed', () => {
+      interceptFetchMultipleBranchesRequest();
+      cy.visit('/manage/branches');
+
+      interceptDeleteBranchFailedRequest('222222222223');
+      cy.get('[data-cy="delete-222222222223-branch-button"]').click();
+
+      cy.wait('@deleteBranchFailedRequest');
+
+      cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to delete Branch');
+      getTableBodyRow('branch-table').should('have.length', 2);
+      cy.get('[data-cy="branch-table"]').find('[data-cy="table-body-cell-New York"]').should('exist');
+    });
+
+    it('should be able to delete a branch if the branch deletion succeeded', () => {
+      interceptFetchMultipleBranchesRequest();
+      cy.visit('/manage/branches');
+
+      interceptDeleteBranchRequest('222222222223');
+      cy.get('[data-cy="delete-222222222223-branch-button"]').click();
+
+      interceptFetchBranchesRequest();
+      cy.wait('@deleteBranchRequest');
+      cy.wait('@fetchBranchesRequest');
+
+      getTableBodyRow('branch-table').should('have.length', 1);
+      cy.get('[data-cy="branch-table"]').find('[data-cy="table-body-cell-New York"]').should('not.exist');
     });
   });
 });

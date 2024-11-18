@@ -7,7 +7,7 @@ import { Branch } from 'shared/models';
 import FormLayout from '../../components/FormLayout';
 import BrachDetailsForm from './components/BrachDetailsForm';
 
-const CreateEditBranchPage: React.FC = () => {
+const ManageBranchPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { data: branch, fetchStatus, updateStatus } = useAppSelector(selectBranch);
@@ -48,4 +48,4 @@ const CreateEditBranchPage: React.FC = () => {
   );
 };
 
-export default CreateEditBranchPage;
+export default ManageBranchPage;

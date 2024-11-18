@@ -15,7 +15,7 @@ const ErrorLayout: React.FC = () => {
     return null;
   }
 
-  return <Snackbar type="error" open={!!error} message={error.title} onClose={handleSnackbarClose} />;
+  return <Snackbar data-cy="error-snackbar" type="error" open={!!error} message={error.title} onClose={handleSnackbarClose} />;
 };
 
 export default ErrorLayout;
