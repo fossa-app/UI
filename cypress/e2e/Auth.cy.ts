@@ -107,4 +107,6 @@ describe('Authentication Flow Tests', () => {
     cy.url().should('include', '/login');
     cy.get('[data-cy="user-menu"]').should('not.exist');
   });
+
+  // TODO: add test cases for auto-refresh and session expiration
 });

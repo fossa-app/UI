@@ -85,25 +85,8 @@ export const interceptCreateCompanyFailedRequest = () => {
   cy.interceptWithAuth('POST', `${serverBaseUrl}/Company`, null, 'createCompanyFailedRequest', 404);
 };
 
-// TODO: make fetchBranches requests generic
-export const interceptFetchBranchesRequest = (pageNumber = 1, pageSize = 5, alias = 'fetchBranchesRequest') => {
-  cy.fixture('branches').then((branches) => {
-    cy.interceptWithAuth('GET', `${serverBaseUrl}/Branches?pageNumber=${pageNumber}&pageSize=${pageSize}`, branches, alias);
-  });
-};
-
-export const interceptFetchMultipleBranchesRequest = (pageNumber = 1, pageSize = 5, alias = 'fetchMultipleBranchesRequest') => {
-  cy.fixture('branches-multiple').then((branches) => {
-    cy.interceptWithAuth('GET', `${serverBaseUrl}/Branches?pageNumber=${pageNumber}&pageSize=${pageSize}`, branches, alias);
-  });
-};
-
-export const interceptFetchMultipleUpdatedBranchesRequest = (
-  pageNumber = 1,
-  pageSize = 5,
-  alias = 'fetchMultipleUpdatedBranchesRequest'
-) => {
-  cy.fixture('branches-multiple-updated').then((branches) => {
+export const interceptFetchBranchesRequest = (pageNumber = 1, pageSize = 5, alias = 'fetchBranchesRequest', fixture = 'branches') => {
+  cy.fixture(fixture).then((branches) => {
     cy.interceptWithAuth('GET', `${serverBaseUrl}/Branches?pageNumber=${pageNumber}&pageSize=${pageSize}`, branches, alias);
   });
 };

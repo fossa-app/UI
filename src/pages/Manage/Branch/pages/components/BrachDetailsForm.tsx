@@ -17,7 +17,7 @@ interface BrachDetailsFormProps {
   onSubmit: (data: Branch) => void;
 }
 
-const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ data, formLoading, buttonLoading, onSubmit }) => {
+const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ data, formLoading, buttonLoading, onSubmit, ...props }) => {
   const [formData, setFormData] = React.useState<Branch>({
     name: data?.name ?? '',
   });
@@ -51,7 +51,7 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({ data, formLoading, 
 
   return (
     /* TODO: create a generic form component */
-    <Paper elevation={3} sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, padding: 6, position: 'relative' }}>
+    <Paper elevation={3} sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, padding: 6, position: 'relative' }} {...props}>
       <Box
         noValidate
         component="form"

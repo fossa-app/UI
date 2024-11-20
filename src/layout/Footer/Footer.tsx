@@ -70,7 +70,13 @@ const Footer: React.FC = () => {
           </Grid>
         </Toolbar>
       </AppBar>
-      <CompanyLicenseDialog open={dialogOpen} loading={updateStatus === 'loading'} onClose={handleClose} onFileUpload={handleUpload} />
+      <CompanyLicenseDialog
+        data-cy="company-license-dialog"
+        open={dialogOpen}
+        loading={updateStatus === 'loading'}
+        onClose={handleClose}
+        onFileUpload={handleUpload}
+      />
     </>
   );
 };

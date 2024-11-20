@@ -8,7 +8,6 @@ import {
   interceptFetchCompanyLicenseFailedRequest,
   interceptFetchCompanyRequest,
   interceptFetchEmployeeRequest,
-  interceptFetchMultipleBranchesRequest,
   interceptFetchSystemLicenseRequest,
 } from '../support/interceptors';
 
@@ -41,8 +40,8 @@ describe('Branches Tests', () => {
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
       getTableLoader('branch-table').should('not.have.css', 'visibility', 'hidden');
       cy.get('[data-cy="table-no-branches"]').should('not.exist');
-
       getTableLoader('branch-table').should('have.css', 'visibility', 'hidden');
+      cy.get('[data-cy="table-layout-title"]').should('have.text', 'Branches');
     });
 
     it('should render branches table if there are fetched branches', () => {
@@ -176,7 +175,7 @@ describe('Branches Tests', () => {
     });
 
     it('should not be able to delete a branch if the branch deletion failed', () => {
-      interceptFetchMultipleBranchesRequest();
+      interceptFetchBranchesRequest(1, 5, 'fetchMultipleBranchesRequest', 'branches-multiple');
       cy.visit('/manage/branches');
 
       interceptDeleteBranchFailedRequest('222222222223');
@@ -190,7 +189,7 @@ describe('Branches Tests', () => {
     });
 
     it('should be able to delete a branch if the branch deletion succeeded', () => {
-      interceptFetchMultipleBranchesRequest();
+      interceptFetchBranchesRequest(1, 5, 'fetchMultipleBranchesRequest', 'branches-multiple');
       cy.visit('/manage/branches');
 
       interceptDeleteBranchRequest('222222222223');
