@@ -39,6 +39,7 @@ const ManageBranchPage: React.FC = () => {
   return (
     <FormLayout withBackButton pageTitle={id ? 'Edit Branch' : 'Create Branch'} onBackButtonClick={navigateBack}>
       <BrachDetailsForm
+        data-cy="branch-details-form"
         data={branch}
         formLoading={fetchStatus === 'loading'}
         buttonLoading={updateStatus === 'loading'}

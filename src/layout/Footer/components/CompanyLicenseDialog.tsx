@@ -45,6 +45,7 @@ const CompanyLicenseDialog: React.FC<CompanyLicenseDialogProps> = ({ loading, on
   };
 
   return (
+    // TODO: move dialog to UI/components
     <Dialog
       {...props}
       fullWidth
@@ -58,21 +59,28 @@ const CompanyLicenseDialog: React.FC<CompanyLicenseDialogProps> = ({ loading, on
         },
       }}
     >
-      <DialogTitle>Upload License File</DialogTitle>
+      <DialogTitle data-cy="dialog-title">Upload License File</DialogTitle>
       <DialogContent>
         <DialogContentText>Please select a license file to upload.</DialogContentText>
         <FileUpload onFileSelect={handleFileSelect} sx={{ my: 2 }} />
         {errorMessage && (
-          <Typography variant="body2" color="error">
+          <Typography data-cy="dialog-validation-message" variant="body2" color="error">
             {errorMessage}
           </Typography>
         )}
       </DialogContent>
       <DialogActions>
-        <Button variant="text" color="secondary" onClick={() => handleClose({}, 'backdropClick')}>
+        <Button data-cy="dialog-cancel-button" variant="text" color="secondary" onClick={() => handleClose({}, 'backdropClick')}>
           Cancel
         </Button>
-        <LoadingButton type="submit" variant="contained" loadingPosition="end" loading={loading} endIcon={<UploadFileIcon />}>
+        <LoadingButton
+          data-cy="dialog-upload-button"
+          type="submit"
+          variant="contained"
+          loadingPosition="end"
+          loading={loading}
+          endIcon={<UploadFileIcon />}
+        >
           Upload
         </LoadingButton>
       </DialogActions>

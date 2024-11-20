@@ -1,4 +1,4 @@
-import { getTableBodyRow } from '../support/helpers';
+import { getFormLoader, getTableBodyRow } from '../support/helpers';
 import {
   interceptCreateBranchFailedRequest,
   interceptCreateBranchRequest,
@@ -10,8 +10,6 @@ import {
   interceptFetchCompanyLicenseFailedRequest,
   interceptFetchCompanyRequest,
   interceptFetchEmployeeRequest,
-  interceptFetchMultipleBranchesRequest,
-  interceptFetchMultipleUpdatedBranchesRequest,
   interceptFetchSystemLicenseRequest,
 } from '../support/interceptors';
 
@@ -42,6 +40,9 @@ describe('Branch Management Tests', () => {
     cy.visit('/manage/branches');
 
     cy.get('[data-cy="action-button"]').click();
+
+    cy.get('[data-cy="form-layout-title"]').should('have.text', 'Create Branch');
+
     cy.get('[data-cy="save-branch-button"]').click();
 
     cy.get('[data-cy="branch-name-input-validation"]').should('exist').and('have.text', 'Branch name is required');
@@ -63,7 +64,8 @@ describe('Branch Management Tests', () => {
 
     cy.get('[data-cy="branch-name-input"]').type('New York');
     cy.get('[data-cy="save-branch-button"]').click();
-    interceptFetchMultipleBranchesRequest();
+
+    interceptFetchBranchesRequest(1, 5, 'fetchMultipleBranchesRequest', 'branches-multiple');
     cy.wait('@createBranchRequest');
     cy.wait('@fetchMultipleBranchesRequest');
 
@@ -78,6 +80,7 @@ describe('Branch Management Tests', () => {
 
     cy.get('[data-cy="edit-222222222222-branch-button"]').click();
 
+    cy.get('[data-cy="form-layout-title"]').should('have.text', 'Edit Branch');
     cy.get('[data-cy="branch-name-input"] input').should('have.value', 'London');
 
     cy.get('[data-cy="branch-name-input"] input').clear();
@@ -100,14 +103,17 @@ describe('Branch Management Tests', () => {
 
     cy.get('[data-cy="edit-222222222222-branch-button"]').click();
 
+    getFormLoader('branch-details-form').should('not.have.css', 'visibility', 'hidden');
     cy.get('[data-cy="branch-name-input"] input').clear();
     cy.get('[data-cy="branch-name-input"] input').type('London Updated');
     cy.get('[data-cy="save-branch-button"]').click();
 
-    interceptFetchMultipleBranchesRequest();
-    cy.wait('@editBranchRequest');
+    cy.get('[data-cy="save-branch-button"]').should('have.attr', 'disabled');
+    cy.get('[data-cy="save-branch-button"]').find('.MuiLoadingButton-loadingIndicator').should('exist').and('be.visible');
 
-    interceptFetchMultipleUpdatedBranchesRequest();
+    interceptFetchBranchesRequest(1, 5, 'fetchMultipleBranchesRequest', 'branches-multiple');
+    cy.wait('@editBranchRequest');
+    interceptFetchBranchesRequest(1, 5, 'fetchMultipleUpdatedBranchesRequest', 'branches-multiple-updated');
 
     cy.url().should('include', '/manage/branches');
 

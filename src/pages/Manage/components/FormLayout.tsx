@@ -17,7 +17,7 @@ const FormLayout: React.FC<React.PropsWithChildren<FormLayoutProps>> = ({
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <Page>
-        <PageTitle withBackButton={withBackButton} onBackButtonClick={onBackButtonClick}>
+        <PageTitle data-cy="form-layout-title" withBackButton={withBackButton} onBackButtonClick={onBackButtonClick}>
           {pageTitle}
         </PageTitle>
       </Page>

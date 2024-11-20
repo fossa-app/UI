@@ -1,3 +1,4 @@
+import { getCompanyLicenseDialogElement, uploadFile } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -6,6 +7,7 @@ import {
   interceptFetchSystemLicenseRequest,
   interceptFetchCompanyLicenseRequest,
   interceptUploadCompanyLicenseFailedRequest,
+  interceptUploadCompanyLicenseRequest,
 } from '../support/interceptors';
 
 describe('License Tests', () => {
@@ -51,7 +53,73 @@ describe('License Tests', () => {
       cy.get('[data-cy="company-license-button"]').should('exist').and('have.text', 'Unlicensed Company');
     });
 
-    // TODO: add company license uploading tests
+    it('should not be able to upload a company license if a file is not selected or the uploading failed', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesRequest();
+      interceptFetchEmployeeRequest();
+      interceptUploadCompanyLicenseFailedRequest();
+      cy.loginMock(true);
+      cy.visit('/manage/dashboard');
+
+      cy.get('[data-cy="company-license-dialog"]').should('not.exist');
+      cy.get('[data-cy="company-license-button"]').click();
+
+      cy.get('[data-cy="company-license-dialog"]').should('be.visible');
+      getCompanyLicenseDialogElement('dialog-title').should('have.text', 'Upload License File');
+
+      getCompanyLicenseDialogElement('dialog-cancel-button').click();
+
+      cy.get('[data-cy="company-license-dialog"]').should('not.exist');
+
+      cy.get('[data-cy="company-license-button"]').click();
+      getCompanyLicenseDialogElement('dialog-upload-button').click();
+
+      getCompanyLicenseDialogElement('dialog-validation-message').should('exist').and('have.text', 'File is not selected');
+
+      uploadFile('input#file-upload-input', 'invalid-company-license.lic');
+
+      cy.get('[data-cy="selected-file-name"]').should('have.text', 'invalid-company-license.lic');
+
+      interceptUploadCompanyLicenseFailedRequest();
+      getCompanyLicenseDialogElement('dialog-upload-button').click();
+
+      getCompanyLicenseDialogElement('dialog-upload-button').find('.MuiLoadingButton-loadingIndicator').should('exist').and('be.visible');
+
+      cy.wait('@uploadCompanyLicenseFailedRequest').then(({ request }) => {
+        expect(request.headers['content-type']).to.include('multipart/form-data');
+      });
+
+      cy.get('[data-cy="company-license-dialog"]').should('exist');
+      cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to upload Company license');
+    });
+
+    it('should be able to upload a company license if the selected file is valid and the uploading succeeded', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesRequest();
+      interceptFetchEmployeeRequest();
+      interceptUploadCompanyLicenseFailedRequest();
+      cy.loginMock(true);
+      cy.visit('/manage/dashboard');
+
+      cy.get('[data-cy="company-license-button"]').click();
+      uploadFile('input#file-upload-input', 'valid-company-license.lic');
+
+      cy.get('[data-cy="selected-file-name"]').should('have.text', 'valid-company-license.lic');
+
+      interceptUploadCompanyLicenseRequest();
+      interceptFetchCompanyLicenseRequest();
+      getCompanyLicenseDialogElement('dialog-upload-button').click();
+
+      getCompanyLicenseDialogElement('dialog-upload-button').find('.MuiLoadingButton-loadingIndicator').should('exist').and('be.visible');
+
+      cy.wait('@uploadCompanyLicenseRequest').then(({ request }) => {
+        expect(request.headers['content-type']).to.include('multipart/form-data');
+      });
+
+      cy.wait('@fetchCompanyLicenseRequest');
+
+      cy.get('[data-cy="company-license-dialog"]').should('not.exist');
+    });
 
     it('should display correct company license', () => {
       interceptFetchCompanyRequest();
