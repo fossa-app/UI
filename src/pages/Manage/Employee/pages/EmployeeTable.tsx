@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchEmployees, selectEmployees, setEmployeesPagination } from 'store/features';
-import { Employee } from 'shared/models';
+import { Employee, Module, SubModule } from 'shared/models';
 import { APP_CONFIG, EMPLOYEE_FIELDS } from 'shared/constants';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import Table, { Column } from 'components/UI/Table';
@@ -52,9 +52,10 @@ const EmployeeTablePage: React.FC = () => {
   }, [pageNumber, pageSize, dispatch]);
 
   return (
-    <TableLayout pageTitle="Employees">
+    <TableLayout module={Module.employeeManagement} subModule={SubModule.employeeTable} pageTitle="Employees">
       <Table<Employee>
-        data-cy="employee-table"
+        module={Module.employeeManagement}
+        subModule={SubModule.employeeTable}
         loading={fetchStatus === 'loading'}
         columns={columns}
         items={employees?.items}

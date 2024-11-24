@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { createBranch, editBranch, fetchBranchById, resetBranch, selectBranch } from 'store/features';
 import { ROUTES } from 'shared/constants';
-import { Branch } from 'shared/models';
+import { Branch, Module, SubModule } from 'shared/models';
 import FormLayout from '../../components/FormLayout';
 import BrachDetailsForm from './components/BrachDetailsForm';
 
@@ -39,7 +39,13 @@ const ManageBranchPage: React.FC = () => {
 
   return (
     // TODO: handle not found branch case
-    <FormLayout withBackButton pageTitle={id ? 'Edit Branch' : 'Create Branch'} onBackButtonClick={navigateBack}>
+    <FormLayout
+      withBackButton
+      module={Module.branchManagement}
+      subModule={SubModule.branchDetails}
+      pageTitle={id ? 'Edit Branch' : 'Create Branch'}
+      onBackButtonClick={navigateBack}
+    >
       <BrachDetailsForm
         data={branch}
         formLoading={fetchStatus === 'loading'}

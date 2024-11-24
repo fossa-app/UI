@@ -1,5 +1,5 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getFormLoader, getTestSelectorByModule, getTableBodyRow } from '../support/helpers';
+import { getFormLoader, getTestSelectorByModule } from '../support/helpers';
 import {
   interceptCreateBranchFailedRequest,
   interceptCreateBranchRequest,
@@ -30,7 +30,7 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').should('not.have.value');
 
     cy.visit('/manage/branches');
-    cy.get('[data-cy="action-button"]').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').should('not.have.value');
   });
@@ -39,9 +39,9 @@ describe('Branch Management Tests', () => {
     interceptCreateBranchFailedRequest();
     cy.visit('/manage/branches');
 
-    cy.get('[data-cy="action-button"]').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
-    cy.get('[data-cy="form-layout-title"]').should('have.text', 'Create Branch');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-layout-title').should('have.text', 'Create Branch');
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
 
@@ -61,8 +61,8 @@ describe('Branch Management Tests', () => {
     interceptCreateBranchRequest();
     cy.visit('/manage/branches');
 
-    getTableBodyRow('branch-table').should('have.length', 1);
-    cy.get('[data-cy="action-button"]').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type('New York');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
@@ -72,7 +72,7 @@ describe('Branch Management Tests', () => {
     cy.wait('@fetchMultipleBranchesRequest');
 
     cy.url().should('include', '/manage/branches');
-    getTableBodyRow('branch-table').should('have.length', 2);
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
   });
 
   it('should not be able to edit the branch if the form is invalid or branch updating failed', () => {
@@ -80,9 +80,9 @@ describe('Branch Management Tests', () => {
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit('/manage/branches');
 
-    cy.get('[data-cy="edit-222222222222-branch-button"]').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'edit-222222222222-branch-button').click();
 
-    cy.get('[data-cy="form-layout-title"]').should('have.text', 'Edit Branch');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-layout-title').should('have.text', 'Edit Branch');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name')
       .find('input')
       .should('have.value', 'London');
@@ -107,9 +107,9 @@ describe('Branch Management Tests', () => {
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit('/manage/branches');
 
-    cy.get('[data-cy="edit-222222222222-branch-button"]').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'edit-222222222222-branch-button').click();
 
-    getFormLoader(`${Module.branchManagement}-${SubModule.branchDetails}-form`).should('not.have.css', 'visibility', 'hidden');
+    getFormLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('not.have.css', 'visibility', 'hidden');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').clear();
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').type('London Updated');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
@@ -128,9 +128,8 @@ describe('Branch Management Tests', () => {
 
     cy.wait('@fetchMultipleUpdatedBranchesRequest');
 
-    getTableBodyRow('branch-table').should('have.length', 2);
-    cy.get('[data-cy="branch-table"]')
-      .find('[data-cy="table-body-cell-London Updated"]')
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-London Updated')
       .should('exist')
       .and('have.text', 'London Updated');
   });

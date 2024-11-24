@@ -1,23 +1,20 @@
 import { Module, SubModule } from '../../src/shared/models';
 
-export const getTableLoader = (tableSelector: string) => {
-  return cy.get(`[data-cy=${tableSelector}]`).find('[data-cy="linear-loader"]');
+// TODO: merge getTableLoader and getFormLoader
+export const getTableLoader = (module: Module, subModule: SubModule, selector: string) => {
+  return getTestSelectorByModule(module, subModule, selector).find('[data-cy="linear-loader"]');
 };
 
-export const getTablePaginationSizeInput = (tableSelector: string) => {
-  return cy.get(`[data-cy=${tableSelector}]`).find('[data-cy="table-pagination"] .MuiTablePagination-input input');
+export const getTablePaginationSizeInput = (module: Module, subModule: SubModule, selector: string) => {
+  return getTestSelectorByModule(module, subModule, selector).find('.MuiTablePagination-input input');
 };
 
-export const getTablePaginationDisplayedRows = (tableSelector: string) => {
-  return cy.get(`[data-cy=${tableSelector}]`).find('[data-cy="table-pagination"] .MuiTablePagination-displayedRows');
+export const getTablePaginationDisplayedRows = (module: Module, subModule: SubModule, selector: string) => {
+  return getTestSelectorByModule(module, subModule, selector).find('.MuiTablePagination-displayedRows');
 };
 
-export const getTableBodyRow = (tableSelector: string) => {
-  return cy.get(`[data-cy=${tableSelector}]`).find('[data-cy="table-body-row"]');
-};
-
-export const getFormLoader = (formSelector: string) => {
-  return cy.get(`[data-cy=${formSelector}]`).find('[data-cy="linear-loader"]');
+export const getFormLoader = (module: Module, subModule: SubModule, selector: string) => {
+  return getTestSelectorByModule(module, subModule, selector).find('[data-cy="linear-loader"]');
 };
 
 export const getCompanyLicenseDialogElement = (elementSelector: string) => {
@@ -42,5 +39,5 @@ export const uploadFile = (selector: string, fixtureName: string, fileType = 'ap
 };
 
 export const getTestSelectorByModule = (module: Module, subModule: SubModule, selector: string) => {
-  return cy.get(`[data-cy=${module}-${subModule}-${selector}]`);
+  return cy.get(`[data-cy="${module}-${subModule}-${selector}"]`);
 };

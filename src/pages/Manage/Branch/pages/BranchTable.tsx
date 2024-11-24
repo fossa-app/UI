@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch, useAppSelector } from 'store';
 import { deleteBranch, fetchBranches, selectBranch, selectBranches, selectIsUserAdmin, setBranchesPagination } from 'store/features';
-import { Branch } from 'shared/models';
+import { Branch, Module, SubModule } from 'shared/models';
 import { APP_CONFIG, BRANCH_FIELDS, ROUTES } from 'shared/constants';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import Table, { Column } from 'components/UI/Table';
@@ -33,10 +33,20 @@ const BranchTablePage: React.FC = () => {
       renderBodyCell: ({ id }) => {
         return isUserAdmin ? (
           <>
-            <IconButton data-cy={`edit-${id}-branch-button`} size="small" color="primary" onClick={() => handleEditBranch(id)}>
+            <IconButton
+              data-cy={`${Module.branchManagement}-${SubModule.branchTable}-edit-${id}-branch-button`}
+              size="small"
+              color="primary"
+              onClick={() => handleEditBranch(id)}
+            >
               <EditIcon />
             </IconButton>
-            <IconButton data-cy={`delete-${id}-branch-button`} size="small" color="error" onClick={() => handleDeleteBranch(id)}>
+            <IconButton
+              data-cy={`${Module.branchManagement}-${SubModule.branchTable}-delete-${id}-branch-button`}
+              size="small"
+              color="error"
+              onClick={() => handleDeleteBranch(id)}
+            >
               <DeleteIcon />
             </IconButton>
           </>
@@ -47,7 +57,7 @@ const BranchTablePage: React.FC = () => {
 
   const noRecordsTemplate = (
     <Page sx={{ margin: 0 }}>
-      <PageSubtitle data-cy="table-no-branches" fontSize={20}>
+      <PageSubtitle data-cy={`${Module.branchManagement}-${SubModule.branchTable}-table-no-branches`} fontSize={20}>
         No Branches Found
       </PageSubtitle>
     </Page>
@@ -86,9 +96,17 @@ const BranchTablePage: React.FC = () => {
   }, [pageNumber, pageSize, dispatch]);
 
   return (
-    <TableLayout withActionButton={isUserAdmin} pageTitle="Branches" actionButtonLabel="New Branch" onActionClick={handleActionClick}>
+    <TableLayout
+      withActionButton={isUserAdmin}
+      module={Module.branchManagement}
+      subModule={SubModule.branchTable}
+      pageTitle="Branches"
+      actionButtonLabel="New Branch"
+      onActionClick={handleActionClick}
+    >
       <Table<Branch>
-        data-cy="branch-table"
+        module={Module.branchManagement}
+        subModule={SubModule.branchTable}
         loading={loading}
         columns={columns}
         items={branches?.items}

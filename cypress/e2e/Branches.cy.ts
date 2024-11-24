@@ -1,4 +1,5 @@
-import { getTableBodyRow, getTableLoader, getTablePaginationDisplayedRows, getTablePaginationSizeInput } from '../support/helpers';
+import { Module, SubModule } from '../../src/shared/models';
+import { getTableLoader, getTablePaginationDisplayedRows, getTablePaginationSizeInput, getTestSelectorByModule } from '../support/helpers';
 import {
   interceptDeleteBranchFailedRequest,
   interceptDeleteBranchRequest,
@@ -38,29 +39,29 @@ describe('Branches Tests', () => {
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
-      getTableLoader('branch-table').should('not.have.css', 'visibility', 'hidden');
-      cy.get('[data-cy="table-no-branches"]').should('not.exist');
-      getTableLoader('branch-table').should('have.css', 'visibility', 'hidden');
-      cy.get('[data-cy="table-layout-title"]').should('have.text', 'Branches');
+      getTableLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.have.css', 'visibility', 'hidden');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
+      getTableLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-title').should('have.text', 'Branches');
     });
 
     it('should render branches table if there are fetched branches', () => {
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
-      cy.get('[data-cy="table-no-branches"]').should('not.exist');
-      getTableLoader('branch-table').should('have.css', 'visibility', 'hidden');
-      getTableBodyRow('branch-table').should('have.length', 1);
-      cy.get('[data-cy="branch-table"]').find('[data-cy="table-header-cell-name"]').should('have.text', 'Name');
-      getTablePaginationSizeInput('branch-table').should('have.value', '5');
-      getTablePaginationDisplayedRows('branch-table').should('have.text', '1–1 of 1');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
+      getTableLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-header-cell-name').should('have.text', 'Name');
+      getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');
+      getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.text', '1–1 of 1');
     });
 
     it('should send correct request when pagination changes', () => {
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest');
-      cy.get('[data-cy="branch-table"]').find('[data-cy="table-pagination"] .MuiTablePagination-input').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-pagination').find('.MuiTablePagination-input').click();
 
       cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').should('have.length', 2);
       cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(0).should('have.text', '5');
@@ -71,7 +72,7 @@ describe('Branches Tests', () => {
 
       cy.wait('@fetch10BranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
 
-      getTablePaginationSizeInput('branch-table').should('have.value', '10');
+      getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '10');
     });
 
     it('should not be able to manually navigate to branch management page', () => {
@@ -86,9 +87,9 @@ describe('Branches Tests', () => {
     it('should not display branch management buttons', () => {
       interceptFetchBranchesRequest();
 
-      cy.get('[data-cy="action-button"]').should('not.exist');
-      cy.get('[data-cy="edit-222222222222-branch-button"]').should('not.exist');
-      cy.get('[data-cy="delete-222222222222-branch-button"]').should('not.exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').should('not.exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'edit-222222222222-branch-button').should('not.exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'delete-222222222222-branch-button').should('not.exist');
     });
   });
 
@@ -107,31 +108,31 @@ describe('Branches Tests', () => {
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
-      getTableLoader('branch-table').should('not.have.css', 'visibility', 'hidden');
-      cy.get('[data-cy="table-no-branches"]').should('not.exist');
+      getTableLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.have.css', 'visibility', 'hidden');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
 
       cy.wait('@fetchBranchesRequest');
 
-      getTableLoader('branch-table').should('have.css', 'visibility', 'hidden');
+      getTableLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
     });
 
     it('should render branches table if there are fetched branches', () => {
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
-      cy.get('[data-cy="table-no-branches"]').should('not.exist');
-      getTableLoader('branch-table').should('have.css', 'visibility', 'hidden');
-      getTableBodyRow('branch-table').should('have.length', 1);
-      cy.get('[data-cy="branch-table"]').find('[data-cy="table-header-cell-name"]').should('have.text', 'Name');
-      getTablePaginationSizeInput('branch-table').should('have.value', '5');
-      getTablePaginationDisplayedRows('branch-table').should('have.text', '1–1 of 1');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
+      getTableLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-header-cell-name').should('have.text', 'Name');
+      getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');
+      getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.text', '1–1 of 1');
     });
 
     it('should send correct request when pagination changes', () => {
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest');
-      cy.get('[data-cy="branch-table"]').find('[data-cy="table-pagination"] .MuiTablePagination-input').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-pagination').find('.MuiTablePagination-input').click();
 
       cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').should('have.length', 2);
       cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(0).should('have.text', '5');
@@ -142,15 +143,17 @@ describe('Branches Tests', () => {
 
       cy.wait('@fetch10BranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
 
-      getTablePaginationSizeInput('branch-table').should('have.value', '10');
+      getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '10');
     });
 
     it('should display branch management buttons', () => {
       interceptFetchBranchesRequest();
 
-      cy.get('[data-cy="action-button"]').should('exist').and('have.text', 'New Branch');
-      cy.get('[data-cy="edit-222222222222-branch-button"]').should('exist');
-      cy.get('[data-cy="delete-222222222222-branch-button"]').should('exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button')
+        .should('exist')
+        .and('have.text', 'New Branch');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'edit-222222222222-branch-button').should('exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'delete-222222222222-branch-button').should('exist');
     });
 
     it('should be able to manually navigate to branch management page', () => {
@@ -165,12 +168,12 @@ describe('Branches Tests', () => {
     it('should be able to navigate by buttons to branch management page', () => {
       interceptFetchBranchesRequest();
 
-      cy.get('[data-cy="action-button"]').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
       cy.url().should('include', branchAdminRoutes[0]);
 
       cy.visit('/manage/branches');
 
-      cy.get('[data-cy="edit-222222222222-branch-button"]').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'edit-222222222222-branch-button').click();
       cy.url().should('include', branchAdminRoutes[1]);
     });
 
@@ -179,13 +182,13 @@ describe('Branches Tests', () => {
       cy.visit('/manage/branches');
 
       interceptDeleteBranchFailedRequest('222222222223');
-      cy.get('[data-cy="delete-222222222223-branch-button"]').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'delete-222222222223-branch-button').click();
 
       cy.wait('@deleteBranchFailedRequest');
 
       cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to delete Branch');
-      getTableBodyRow('branch-table').should('have.length', 2);
-      cy.get('[data-cy="branch-table"]').find('[data-cy="table-body-cell-New York"]').should('exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-New York').should('exist');
     });
 
     it('should be able to delete a branch if the branch deletion succeeded', () => {
@@ -193,14 +196,14 @@ describe('Branches Tests', () => {
       cy.visit('/manage/branches');
 
       interceptDeleteBranchRequest('222222222223');
-      cy.get('[data-cy="delete-222222222223-branch-button"]').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'delete-222222222223-branch-button').click();
 
       interceptFetchBranchesRequest();
       cy.wait('@deleteBranchRequest');
       cy.wait('@fetchBranchesRequest');
 
-      getTableBodyRow('branch-table').should('have.length', 1);
-      cy.get('[data-cy="branch-table"]').find('[data-cy="table-body-cell-New York"]').should('not.exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-New York').should('not.exist');
     });
   });
 });
