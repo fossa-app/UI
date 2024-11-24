@@ -6,26 +6,26 @@ import { APP_CONFIG, MESSAGES, URLS } from 'shared/constants';
 import { setError } from './errorSlice';
 
 interface BranchState {
-  branch: StateEntity<Branch | null>;
-  branches: StateEntity<PaginatedResponse<Branch> | null>;
+  branch: StateEntity<Branch | undefined>;
+  branches: StateEntity<PaginatedResponse<Branch> | undefined>;
 }
 
 const initialState: BranchState = {
   branch: {
-    data: null,
+    data: undefined,
     fetchStatus: 'idle',
     updateStatus: 'idle',
     deleteStatus: 'idle',
   },
   branches: {
-    data: null,
+    data: undefined,
     page: APP_CONFIG.table.defaultPagination,
     fetchStatus: 'idle',
   },
 };
 
 export const fetchBranches = createAsyncThunk<
-  PaginatedResponse<Branch> | null,
+  PaginatedResponse<Branch> | undefined,
   [PaginationParams, boolean?],
   { rejectValue: ErrorResponse }
 >('branch/getBranches', async ([{ pageNumber, pageSize }, shouldRejectEmptyResponse = false], { rejectWithValue }) => {
@@ -140,11 +140,11 @@ const branchSlice = createSlice({
         state.branches.fetchStatus = 'loading';
       })
       .addCase(fetchBranches.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
-        state.branches.data = null;
+        state.branches.data = undefined;
         state.branches.fetchStatus = 'failed';
         state.branches.error = action.payload;
       })
-      .addCase(fetchBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<Branch> | null>) => {
+      .addCase(fetchBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<Branch> | undefined>) => {
         state.branches.data = action.payload;
         state.branches.page!.totalItems = action.payload?.totalItems;
         state.branches.page!.totalPages = action.payload?.totalPages;
@@ -155,11 +155,11 @@ const branchSlice = createSlice({
         state.branch.fetchStatus = 'loading';
       })
       .addCase(fetchBranchById.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
-        state.branch.data = null;
+        state.branch.data = undefined;
         state.branch.fetchStatus = 'failed';
         state.branch.error = action.payload;
       })
-      .addCase(fetchBranchById.fulfilled, (state, action: PayloadAction<Branch | null>) => {
+      .addCase(fetchBranchById.fulfilled, (state, action: PayloadAction<Branch | undefined>) => {
         state.branch.data = action.payload;
         state.branch.fetchStatus = 'succeeded';
         state.branch.error = undefined;

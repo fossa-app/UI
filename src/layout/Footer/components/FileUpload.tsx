@@ -5,11 +5,12 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 type FileUploadProps = {
+  accept?: string;
   // eslint-disable-next-line no-unused-vars
   onFileSelect: (file: File) => void;
 } & BoxProps;
 
-const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, sx, ...props }) => {
+const FileUpload: React.FC<FileUploadProps> = ({ accept = '*/*', onFileSelect, sx, ...props }) => {
   const [fileName, setFileName] = React.useState('');
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,8 +24,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, sx, ...props }) =
 
   return (
     <Box data-cy="upload-file" sx={{ display: 'flex', alignItems: 'center', gap: 2, ...sx }} {...props}>
-      {/* TODO: make accept field as an input */}
-      <Input id="file-upload-input" type="file" onChange={handleFileChange} inputProps={{ accept: '*/*' }} style={{ display: 'none' }} />
+      <Input id="file-upload-input" type="file" onChange={handleFileChange} inputProps={{ accept }} style={{ display: 'none' }} />
       <label htmlFor="file-upload-input">
         <Button variant="contained" component="span">
           Choose File

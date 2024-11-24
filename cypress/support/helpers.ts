@@ -1,3 +1,5 @@
+import { Module, SubModule } from '../../src/shared/models';
+
 export const getTableLoader = (tableSelector: string) => {
   return cy.get(`[data-cy=${tableSelector}]`).find('[data-cy="linear-loader"]');
 };
@@ -37,4 +39,8 @@ export const uploadFile = (selector: string, fixtureName: string, fileType = 'ap
       cy.wrap($input).trigger('change', { force: true });
     });
   });
+};
+
+export const getTestSelectorByModule = (module: Module, subModule: SubModule, selector: string) => {
+  return cy.get(`[data-cy=${module}-${subModule}-${selector}]`);
 };

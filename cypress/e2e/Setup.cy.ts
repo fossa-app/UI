@@ -30,7 +30,7 @@ describe('Setup Flow Tests', () => {
       cy.loginMock();
     });
 
-    it('should navigate to company setup page and no other setup pages if there is no company', () => {
+    it('should navigate to company setup page and no other setup page if there is no company', () => {
       interceptFetchCompanyFailedRequest();
 
       cy.visit('/setup/company');
@@ -48,7 +48,7 @@ describe('Setup Flow Tests', () => {
       });
     });
 
-    it('should navigate to branch setup page and no other setup pages if company exists', () => {
+    it('should navigate to branch setup page and no other setup page if company exists', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
 
@@ -67,7 +67,7 @@ describe('Setup Flow Tests', () => {
       });
     });
 
-    it('should navigate to employee setup page and no other setup pages if company and branch exist', () => {
+    it('should navigate to employee setup page and no other setup page if company and branch exist', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
       interceptFetchEmployeeFailedRequest();
@@ -151,7 +151,7 @@ describe('Setup Flow Tests', () => {
       cy.loginMock(true);
     });
 
-    it('should navigate to company setup page and no other setup pages if there is no company', () => {
+    it('should navigate to company setup page and no other setup page if there is no company', () => {
       interceptFetchCompanyFailedRequest();
 
       cy.visit('/setup/company');
@@ -166,7 +166,7 @@ describe('Setup Flow Tests', () => {
       });
     });
 
-    it('should navigate to branch setup page and no other setup pages if company exists', () => {
+    it('should navigate to branch setup page and no other setup page if company exists', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
 
@@ -182,7 +182,7 @@ describe('Setup Flow Tests', () => {
       });
     });
 
-    it('should navigate to employee setup page and no other setup pages if company and branch exist', () => {
+    it('should navigate to employee setup page and no other setup page if company and branch exist', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
       interceptFetchEmployeeFailedRequest();
