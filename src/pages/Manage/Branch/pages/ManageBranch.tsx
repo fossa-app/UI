@@ -24,6 +24,7 @@ const ManageBranchPage: React.FC = () => {
     setFormSubmitted(true);
   };
 
+  // TODO: move this logic to FormLayout
   React.useEffect(() => {
     if (updateStatus === 'succeeded' && formSubmitted) {
       navigateBack();
@@ -37,9 +38,9 @@ const ManageBranchPage: React.FC = () => {
   }, [id, dispatch]);
 
   return (
+    // TODO: handle not found branch case
     <FormLayout withBackButton pageTitle={id ? 'Edit Branch' : 'Create Branch'} onBackButtonClick={navigateBack}>
       <BrachDetailsForm
-        data-cy="branch-details-form"
         data={branch}
         formLoading={fetchStatus === 'loading'}
         buttonLoading={updateStatus === 'loading'}

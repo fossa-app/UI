@@ -26,7 +26,7 @@ const Header: React.FC = () => {
   const [locationPathname, setLocationPathname] = React.useState(location.pathname);
   const companyName = company?.name ?? '';
   const setupCompleted = status === 'succeeded';
-  const showSearch = setupCompleted && !!getSearchContext(locationPathname);
+  const showSearch = !!getSearchContext(locationPathname);
 
   const handleThemeChange = () => {
     dispatch(toggleAppTheme(!isDarkTheme));
@@ -45,6 +45,10 @@ const Header: React.FC = () => {
   };
 
   const showSideBar = () => {
+    if (!setupCompleted) {
+      return;
+    }
+
     dispatch(openSideBar());
   };
 
@@ -57,11 +61,9 @@ const Header: React.FC = () => {
       <Toolbar>
         <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexGrow: 1 }}>
           <Grid size="auto">
-            {setupCompleted && (
-              <IconButton edge="end" color="inherit" onClick={showSideBar}>
-                <MenuIcon />
-              </IconButton>
-            )}
+            <IconButton disabled={!setupCompleted} edge="end" color="inherit" onClick={showSideBar}>
+              <MenuIcon />
+            </IconButton>
           </Grid>
           <Grid size="grow">
             {companyName && (

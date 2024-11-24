@@ -1,4 +1,5 @@
-import { getFormLoader, getTableBodyRow } from '../support/helpers';
+import { Module, SubModule } from '../../src/shared/models';
+import { getFormLoader, getTestSelectorByModule, getTableBodyRow } from '../support/helpers';
 import {
   interceptCreateBranchFailedRequest,
   interceptCreateBranchRequest,
@@ -26,13 +27,12 @@ describe('Branch Management Tests', () => {
 
   it('should display an empty form on branch creation page', () => {
     cy.visit('/manage/branches/new');
-
-    cy.get('[data-cy="branch-name-input"] input').should('not.have.value');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').should('not.have.value');
 
     cy.visit('/manage/branches');
     cy.get('[data-cy="action-button"]').click();
 
-    cy.get('[data-cy="branch-name-input"] input').should('not.have.value');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').should('not.have.value');
   });
 
   it('should not be able to create a new branch if the form is invalid or branch creation failed', () => {
@@ -43,12 +43,14 @@ describe('Branch Management Tests', () => {
 
     cy.get('[data-cy="form-layout-title"]').should('have.text', 'Create Branch');
 
-    cy.get('[data-cy="save-branch-button"]').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
 
-    cy.get('[data-cy="branch-name-input-validation"]').should('exist').and('have.text', 'Branch name is required');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name-validation')
+      .should('exist')
+      .and('have.text', 'Branch name is required');
 
-    cy.get('[data-cy="branch-name-input"]').type('New Test Branch');
-    cy.get('[data-cy="save-branch-button"]').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type('New Test Branch');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
     cy.wait('@createBranchFailedRequest');
 
     cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to create a Branch');
@@ -62,8 +64,8 @@ describe('Branch Management Tests', () => {
     getTableBodyRow('branch-table').should('have.length', 1);
     cy.get('[data-cy="action-button"]').click();
 
-    cy.get('[data-cy="branch-name-input"]').type('New York');
-    cy.get('[data-cy="save-branch-button"]').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type('New York');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
 
     interceptFetchBranchesRequest(1, 5, 'fetchMultipleBranchesRequest', 'branches-multiple');
     cy.wait('@createBranchRequest');
@@ -81,15 +83,19 @@ describe('Branch Management Tests', () => {
     cy.get('[data-cy="edit-222222222222-branch-button"]').click();
 
     cy.get('[data-cy="form-layout-title"]').should('have.text', 'Edit Branch');
-    cy.get('[data-cy="branch-name-input"] input').should('have.value', 'London');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name')
+      .find('input')
+      .should('have.value', 'London');
 
-    cy.get('[data-cy="branch-name-input"] input').clear();
-    cy.get('[data-cy="save-branch-button"]').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').clear();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
 
-    cy.get('[data-cy="branch-name-input-validation"]').should('exist').and('have.text', 'Branch name is required');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name-validation')
+      .should('exist')
+      .and('have.text', 'Branch name is required');
 
-    cy.get('[data-cy="branch-name-input"] input').type('London Updated');
-    cy.get('[data-cy="save-branch-button"]').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').type('London Updated');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
     cy.wait('@editBranchFailedRequest');
 
     cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to update Branch');
@@ -103,13 +109,16 @@ describe('Branch Management Tests', () => {
 
     cy.get('[data-cy="edit-222222222222-branch-button"]').click();
 
-    getFormLoader('branch-details-form').should('not.have.css', 'visibility', 'hidden');
-    cy.get('[data-cy="branch-name-input"] input').clear();
-    cy.get('[data-cy="branch-name-input"] input').type('London Updated');
-    cy.get('[data-cy="save-branch-button"]').click();
+    getFormLoader(`${Module.branchManagement}-${SubModule.branchDetails}-form`).should('not.have.css', 'visibility', 'hidden');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').clear();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').type('London Updated');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
 
-    cy.get('[data-cy="save-branch-button"]').should('have.attr', 'disabled');
-    cy.get('[data-cy="save-branch-button"]').find('.MuiLoadingButton-loadingIndicator').should('exist').and('be.visible');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('have.attr', 'disabled');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button')
+      .find('.MuiLoadingButton-loadingIndicator')
+      .should('exist')
+      .and('be.visible');
 
     interceptFetchBranchesRequest(1, 5, 'fetchMultipleBranchesRequest', 'branches-multiple');
     cy.wait('@editBranchRequest');

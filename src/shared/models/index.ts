@@ -9,3 +9,4 @@ export * from './company';
 export * from './branch';
 export * from './employee';
 export * from './common';
+export * from './module';

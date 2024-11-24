@@ -6,8 +6,9 @@ import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import TablePagination from '@mui/material/TablePagination';
 import Paper, { PaperProps } from '@mui/material/Paper';
+import { Item } from 'shared/models';
 import Page, { PageSubtitle } from 'components/UI/Page';
-import { Column, Item } from './table.model';
+import { Column } from './table.model';
 import { StyledTable } from './StyledTable';
 import LinearLoader from '../LinearLoader';
 

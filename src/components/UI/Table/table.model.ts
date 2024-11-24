@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { TableCellProps } from '@mui/material/TableCell';
-
-export type Item = Record<string, any>;
+import { Item } from 'shared/models';
 
 export interface Column<T = Item> {
   name: React.ReactNode;
