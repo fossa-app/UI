@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { deleteBranch, fetchBranches, selectBranch, selectBranches, selectIsUserAdmin, setBranchesPagination } from 'store/features';
 import { Branch, Module, SubModule } from 'shared/models';
 import { APP_CONFIG, BRANCH_FIELDS, ROUTES } from 'shared/constants';
+import { getTestSelectorByModule } from 'shared/helpers';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import Table, { Column } from 'components/UI/Table';
 import TableLayout from '../../components/TableLayout';
@@ -34,7 +35,7 @@ const BranchTablePage: React.FC = () => {
         return isUserAdmin ? (
           <>
             <IconButton
-              data-cy={`${Module.branchManagement}-${SubModule.branchTable}-edit-${id}-branch-button`}
+              data-cy={getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, `edit-${id}-branch-button`)}
               size="small"
               color="primary"
               onClick={() => handleEditBranch(id)}
@@ -42,7 +43,7 @@ const BranchTablePage: React.FC = () => {
               <EditIcon />
             </IconButton>
             <IconButton
-              data-cy={`${Module.branchManagement}-${SubModule.branchTable}-delete-${id}-branch-button`}
+              data-cy={getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, `delete-${id}-branch-button`)}
               size="small"
               color="error"
               onClick={() => handleDeleteBranch(id)}
@@ -57,7 +58,7 @@ const BranchTablePage: React.FC = () => {
 
   const noRecordsTemplate = (
     <Page sx={{ margin: 0 }}>
-      <PageSubtitle data-cy={`${Module.branchManagement}-${SubModule.branchTable}-table-no-branches`} fontSize={20}>
+      <PageSubtitle data-cy={getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches')} fontSize={20}>
         No Branches Found
       </PageSubtitle>
     </Page>
@@ -97,9 +98,9 @@ const BranchTablePage: React.FC = () => {
 
   return (
     <TableLayout
-      withActionButton={isUserAdmin}
       module={Module.branchManagement}
       subModule={SubModule.branchTable}
+      withActionButton={isUserAdmin}
       pageTitle="Branches"
       actionButtonLabel="New Branch"
       onActionClick={handleActionClick}

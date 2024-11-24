@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { fetchEmployees, selectEmployees, setEmployeesPagination } from 'store/features';
 import { Employee, Module, SubModule } from 'shared/models';
 import { APP_CONFIG, EMPLOYEE_FIELDS } from 'shared/constants';
+import { getTestSelectorByModule } from 'shared/helpers';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import Table, { Column } from 'components/UI/Table';
 import TableLayout from '../../components/TableLayout';
@@ -33,7 +34,10 @@ const EmployeeTablePage: React.FC = () => {
 
   const noRecordsTemplate = (
     <Page sx={{ my: 0 }}>
-      <PageSubtitle data-cy="table-no-employees" fontSize={20}>
+      <PageSubtitle
+        data-cy={getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-no-employees')}
+        fontSize={20}
+      >
         No Employees Found
       </PageSubtitle>
     </Page>

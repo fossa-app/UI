@@ -1,5 +1,5 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getTableLoader, getTablePaginationDisplayedRows, getTablePaginationSizeInput, getTestSelectorByModule } from '../support/helpers';
+import { getLinearLoader, getTablePaginationDisplayedRows, getTablePaginationSizeInput, getTestSelectorByModule } from '../support/helpers';
 import {
   interceptDeleteBranchFailedRequest,
   interceptDeleteBranchRequest,
@@ -39,9 +39,9 @@ describe('Branches Tests', () => {
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
-      getTableLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.have.css', 'visibility', 'hidden');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.have.css', 'visibility', 'hidden');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
-      getTableLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-title').should('have.text', 'Branches');
     });
 
@@ -50,7 +50,7 @@ describe('Branches Tests', () => {
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
-      getTableLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-header-cell-name').should('have.text', 'Name');
       getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');
@@ -108,12 +108,12 @@ describe('Branches Tests', () => {
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
-      getTableLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.have.css', 'visibility', 'hidden');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.have.css', 'visibility', 'hidden');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
 
       cy.wait('@fetchBranchesRequest');
 
-      getTableLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
     });
 
     it('should render branches table if there are fetched branches', () => {
@@ -121,7 +121,7 @@ describe('Branches Tests', () => {
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
-      getTableLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-header-cell-name').should('have.text', 'Name');
       getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');

@@ -1,4 +1,4 @@
-import { getCompanyLicenseDialogElement, uploadFile } from '../support/helpers';
+import { getCompanyLicenseDialogElement, uploadTestFile } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -76,7 +76,7 @@ describe('License Tests', () => {
 
       getCompanyLicenseDialogElement('dialog-validation-message').should('exist').and('have.text', 'File is not selected');
 
-      uploadFile('input#file-upload-input', 'invalid-company-license.lic');
+      uploadTestFile('input#file-upload-input', 'invalid-company-license.lic');
 
       cy.get('[data-cy="selected-file-name"]').should('have.text', 'invalid-company-license.lic');
 
@@ -102,7 +102,7 @@ describe('License Tests', () => {
       cy.visit('/manage/dashboard');
 
       cy.get('[data-cy="company-license-button"]').click();
-      uploadFile('input#file-upload-input', 'valid-company-license.lic');
+      uploadTestFile('input#file-upload-input', 'valid-company-license.lic');
 
       cy.get('[data-cy="selected-file-name"]').should('have.text', 'valid-company-license.lic');
 
@@ -126,7 +126,7 @@ describe('License Tests', () => {
       interceptFetchBranchesRequest();
       interceptFetchEmployeeRequest();
       interceptFetchCompanyLicenseRequest();
-      cy.loginMock();
+      cy.loginMock(true);
 
       cy.visit('/manage/dashboard');
 
