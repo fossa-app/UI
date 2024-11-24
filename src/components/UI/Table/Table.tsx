@@ -6,13 +6,15 @@ import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import TablePagination from '@mui/material/TablePagination';
 import Paper, { PaperProps } from '@mui/material/Paper';
-import { Item } from 'shared/models';
+import { Item, Module, SubModule } from 'shared/models';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import { Column } from './table.model';
 import { StyledTable } from './StyledTable';
 import LinearLoader from '../LinearLoader';
 
 type TableProps<T> = {
+  module: Module;
+  subModule: SubModule;
   columns: Column<T>[];
   items?: T[];
   loading: boolean;
@@ -28,6 +30,8 @@ type TableProps<T> = {
 } & PaperProps;
 
 const Table = <T extends Item>({
+  module,
+  subModule,
   columns,
   items = [],
   loading,
@@ -62,10 +66,10 @@ const Table = <T extends Item>({
         </TableRow>
       ) : (
         items.map((row) => (
-          <TableRow hover data-cy="table-body-row" key={row.id}>
+          <TableRow hover data-cy={`${module}-${subModule}-table-body-row`} key={row.id}>
             {columns.map((column) => (
               <TableCell
-                data-cy={`table-body-cell-${row[column.field]}`}
+                data-cy={`${module}-${subModule}-table-body-cell-${row[column.field]}`}
                 key={column.field}
                 align={column.align || 'left'}
                 sx={{ width: column.width || 'auto' }}
@@ -81,6 +85,7 @@ const Table = <T extends Item>({
 
   return (
     <Paper
+      data-cy={`${module}-${subModule}-table`}
       elevation={3}
       sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, pt: 3, pr: 3, pb: 1, pl: 3, position: 'relative' }}
       {...props}
@@ -88,10 +93,10 @@ const Table = <T extends Item>({
       <TableContainer sx={{ flexGrow: 1 }}>
         <StyledTable stickyHeader>
           <TableHead>
-            <TableRow data-cy="table-head-row">
+            <TableRow data-cy={`${module}-${subModule}-table-head-row`}>
               {columns.map((column) => (
                 <TableCell
-                  data-cy={`table-header-cell-${column.field}`}
+                  data-cy={`${module}-${subModule}-table-header-cell-${column.field}`}
                   key={column.field}
                   align={column.align || 'left'}
                   sx={{ width: column.width, fontWeight: '700', fontSize: 16 }}
@@ -105,7 +110,7 @@ const Table = <T extends Item>({
         </StyledTable>
       </TableContainer>
       <TablePagination
-        data-cy="table-pagination"
+        data-cy={`${module}-${subModule}-table-pagination`}
         component="div"
         rowsPerPageOptions={pageSizeOptions}
         count={totalItems}

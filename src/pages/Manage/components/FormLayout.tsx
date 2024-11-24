@@ -1,14 +1,19 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import { Module, SubModule } from 'shared/models';
 import Page, { PageTitle } from 'components/UI/Page';
 
 interface FormLayoutProps {
+  module: Module;
+  subModule: SubModule;
   pageTitle: string;
   withBackButton?: boolean;
   onBackButtonClick?: () => void;
 }
 
 const FormLayout: React.FC<React.PropsWithChildren<FormLayoutProps>> = ({
+  module,
+  subModule,
   pageTitle,
   withBackButton = false,
   onBackButtonClick,
@@ -17,7 +22,11 @@ const FormLayout: React.FC<React.PropsWithChildren<FormLayoutProps>> = ({
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <Page>
-        <PageTitle data-cy="form-layout-title" withBackButton={withBackButton} onBackButtonClick={onBackButtonClick}>
+        <PageTitle
+          data-cy={`${module}-${subModule}-form-layout-title`}
+          withBackButton={withBackButton}
+          onBackButtonClick={onBackButtonClick}
+        >
           {pageTitle}
         </PageTitle>
       </Page>

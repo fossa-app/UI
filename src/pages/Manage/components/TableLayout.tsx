@@ -1,9 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import { Module, SubModule } from 'shared/models';
 import Page, { PageTitle } from 'components/UI/Page';
 
 interface TableLayoutProps {
+  module: Module;
+  subModule: SubModule;
   pageTitle: string;
   withActionButton?: boolean;
   actionButtonLabel?: string;
@@ -11,6 +14,8 @@ interface TableLayoutProps {
 }
 
 const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
+  module,
+  subModule,
   pageTitle,
   withActionButton = false,
   actionButtonLabel = 'New Item',
@@ -20,11 +25,11 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}>
       <Page sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', textAlign: 'left', mb: 5 }}>
-        <PageTitle data-cy="table-layout-title" sx={{ flexGrow: 1 }}>
+        <PageTitle data-cy={`${module}-${subModule}-table-layout-title`} sx={{ flexGrow: 1 }}>
           {pageTitle}
         </PageTitle>
         {withActionButton && (
-          <Button data-cy="action-button" variant="contained" color="primary" onClick={onActionClick}>
+          <Button data-cy={`${module}-${subModule}-table-layout-action-button`} variant="contained" color="primary" onClick={onActionClick}>
             {actionButtonLabel}
           </Button>
         )}

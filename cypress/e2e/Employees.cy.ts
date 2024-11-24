@@ -1,4 +1,5 @@
-import { getTableBodyRow, getTableLoader, getTablePaginationDisplayedRows, getTablePaginationSizeInput } from '../support/helpers';
+import { Module, SubModule } from '../../src/shared/models';
+import { getTableLoader, getTablePaginationDisplayedRows, getTablePaginationSizeInput, getTestSelectorByModule } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -23,7 +24,7 @@ describe('Employees Tests', () => {
   it('should display the default message within the table if there are no employees', () => {
     interceptFetchEmployeesFailedRequest();
 
-    cy.get('[data-cy="table-layout-title"]').should('have.text', 'Employees');
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-layout-title').should('have.text', 'Employees');
     cy.get('[data-cy="table-no-employees"]').should('have.text', 'No Employees Found');
   });
 
@@ -31,10 +32,10 @@ describe('Employees Tests', () => {
     interceptFetchEmployeesRequest();
 
     cy.wait('@fetchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
-    getTableLoader('employee-table').should('not.have.css', 'visibility', 'hidden');
+    getTableLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.have.css', 'visibility', 'hidden');
     cy.get('[data-cy="table-no-employees"]').should('not.exist');
 
-    getTableLoader('employee-table').should('have.css', 'visibility', 'hidden');
+    getTableLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('have.css', 'visibility', 'hidden');
   });
 
   it('should render employees table if there are fetched employees', () => {
@@ -42,20 +43,31 @@ describe('Employees Tests', () => {
 
     cy.wait('@fetchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
     cy.get('[data-cy="table-no-employees"]').should('not.exist');
-    getTableLoader('employee-table').should('not.have.css', 'visibility', 'hidden');
-    getTableBodyRow('employee-table').should('have.length', 3);
-    cy.get('[data-cy="employee-table"]').find('[data-cy="table-header-cell-firstName"]').should('have.text', 'First Name');
-    cy.get('[data-cy="employee-table"]').find('[data-cy="table-header-cell-lastName"]').should('have.text', 'Last Name');
-    cy.get('[data-cy="employee-table"]').find('[data-cy="table-header-cell-fullName"]').should('have.text', 'Full Name');
-    getTablePaginationSizeInput('employee-table').should('have.value', '5');
-    getTablePaginationDisplayedRows('employee-table').should('have.text', '1–3 of 3');
+    getTableLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.have.css', 'visibility', 'hidden');
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 3);
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-header-cell-firstName').should(
+      'have.text',
+      'First Name'
+    );
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-header-cell-lastName').should(
+      'have.text',
+      'Last Name'
+    );
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-header-cell-fullName').should(
+      'have.text',
+      'Full Name'
+    );
+    getTablePaginationSizeInput(Module.employeeManagement, SubModule.employeeTable, 'table').should('have.value', '5');
+    getTablePaginationDisplayedRows(Module.employeeManagement, SubModule.employeeTable, 'table-pagination').should('have.text', '1–3 of 3');
   });
 
   it('should send correct request when pagination changes', () => {
     interceptFetchEmployeesRequest();
     cy.wait('@fetchEmployeesRequest');
 
-    cy.get('[data-cy="employee-table"]').find('[data-cy="table-pagination"] .MuiTablePagination-input').click();
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-pagination')
+      .find('.MuiTablePagination-input')
+      .click();
 
     cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').should('have.length', 2);
     cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(0).should('have.text', '5');
@@ -67,6 +79,6 @@ describe('Employees Tests', () => {
 
     cy.wait('@fetch10EmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
 
-    getTablePaginationSizeInput('employee-table').should('have.value', '10');
+    getTablePaginationSizeInput(Module.employeeManagement, SubModule.employeeTable, 'table').should('have.value', '10');
   });
 });

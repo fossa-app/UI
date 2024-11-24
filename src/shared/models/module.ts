@@ -7,4 +7,6 @@ export enum Module {
 
 export enum SubModule {
   branchDetails = 'branchDetails',
+  branchTable = 'branchTable',
+  employeeTable = 'employeeTable',
 }

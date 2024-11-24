@@ -272,7 +272,6 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', '/setup/branch');
     });
 
-    // TODO: flaky test
     it('should be able to navigate to employee setup step if branch creation succeeded', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
