@@ -1,7 +1,10 @@
 import { Module, SubModule } from '../../src/shared/models';
 
-// TODO: merge getTableLoader and getFormLoader
-export const getTableLoader = (module: Module, subModule: SubModule, selector: string) => {
+export const getTestSelectorByModule = (module: Module, subModule: SubModule, selector: string) => {
+  return cy.get(`[data-cy="${module}-${subModule}-${selector}"]`);
+};
+
+export const getLinearLoader = (module: Module, subModule: SubModule, selector: string) => {
   return getTestSelectorByModule(module, subModule, selector).find('[data-cy="linear-loader"]');
 };
 
@@ -13,15 +16,11 @@ export const getTablePaginationDisplayedRows = (module: Module, subModule: SubMo
   return getTestSelectorByModule(module, subModule, selector).find('.MuiTablePagination-displayedRows');
 };
 
-export const getFormLoader = (module: Module, subModule: SubModule, selector: string) => {
-  return getTestSelectorByModule(module, subModule, selector).find('[data-cy="linear-loader"]');
-};
-
 export const getCompanyLicenseDialogElement = (elementSelector: string) => {
   return cy.get('[data-cy="company-license-dialog"]').find(`[data-cy=${elementSelector}]`);
 };
 
-export const uploadFile = (selector: string, fixtureName: string, fileType = 'application/octet-stream') => {
+export const uploadTestFile = (selector: string, fixtureName: string, fileType = 'application/octet-stream') => {
   cy.fixture(fixtureName, 'binary').then((fileContent) => {
     const blob = Cypress.Blob.binaryStringToBlob(fileContent, fileType);
     const file = new File([blob], fixtureName, { type: fileType });
@@ -36,8 +35,4 @@ export const uploadFile = (selector: string, fixtureName: string, fileType = 'ap
       cy.wrap($input).trigger('change', { force: true });
     });
   });
-};
-
-export const getTestSelectorByModule = (module: Module, subModule: SubModule, selector: string) => {
-  return cy.get(`[data-cy="${module}-${subModule}-${selector}"]`);
 };

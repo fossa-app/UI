@@ -1,5 +1,5 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getFormLoader, getTestSelectorByModule } from '../support/helpers';
+import { getLinearLoader, getTestSelectorByModule } from '../support/helpers';
 import {
   interceptCreateBranchFailedRequest,
   interceptCreateBranchRequest,
@@ -109,7 +109,7 @@ describe('Branch Management Tests', () => {
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'edit-222222222222-branch-button').click();
 
-    getFormLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('not.have.css', 'visibility', 'hidden');
+    getLinearLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('not.have.css', 'visibility', 'hidden');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').clear();
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').type('London Updated');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();

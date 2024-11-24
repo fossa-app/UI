@@ -1,5 +1,5 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getTableLoader, getTablePaginationDisplayedRows, getTablePaginationSizeInput, getTestSelectorByModule } from '../support/helpers';
+import { getLinearLoader, getTablePaginationDisplayedRows, getTablePaginationSizeInput, getTestSelectorByModule } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -25,25 +25,28 @@ describe('Employees Tests', () => {
     interceptFetchEmployeesFailedRequest();
 
     getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-layout-title').should('have.text', 'Employees');
-    cy.get('[data-cy="table-no-employees"]').should('have.text', 'No Employees Found');
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-no-employees').should(
+      'have.text',
+      'No Employees Found'
+    );
   });
 
   it('should display the loader if fetching employees is in progress', () => {
     interceptFetchEmployeesRequest();
 
     cy.wait('@fetchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
-    getTableLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.have.css', 'visibility', 'hidden');
-    cy.get('[data-cy="table-no-employees"]').should('not.exist');
+    getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.have.css', 'visibility', 'hidden');
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-no-employees').should('not.exist');
 
-    getTableLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('have.css', 'visibility', 'hidden');
+    getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('have.css', 'visibility', 'hidden');
   });
 
   it('should render employees table if there are fetched employees', () => {
     interceptFetchEmployeesRequest();
 
     cy.wait('@fetchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
-    cy.get('[data-cy="table-no-employees"]').should('not.exist');
-    getTableLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.have.css', 'visibility', 'hidden');
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-no-employees').should('not.exist');
+    getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.have.css', 'visibility', 'hidden');
     getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 3);
     getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-header-cell-firstName').should(
       'have.text',
