@@ -1,4 +1,4 @@
-export const URLS = {
+export const ENDPOINTS = {
   base: 'api/1',
   client: 'Identity/Client',
   systemLicense: 'License/System',

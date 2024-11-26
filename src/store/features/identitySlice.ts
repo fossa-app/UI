@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { Client, ErrorResponse } from 'shared/models';
-import { MESSAGES, ROUTES, URLS } from 'shared/constants';
+import { MESSAGES, ROUTES, ENDPOINTS } from 'shared/constants';
 import { updateAuthSettings } from './authSlice';
 import { parseResponseData } from 'shared/helpers';
 
@@ -21,7 +21,7 @@ export const fetchClient = createAsyncThunk<Client | null, void, { rejectValue: 
   'identity/getClient',
   async (_, { dispatch, rejectWithValue }) => {
     try {
-      const { data } = await axios.get<Client>(`${URLS.client}?origin=${window.location.origin}`);
+      const { data } = await axios.get<Client>(`${ENDPOINTS.client}?origin=${window.location.origin}`);
       // TODO: this should be handled in AxiosInterceptor, but this method is not being called in axios response
       const parseData = parseResponseData(data);
 

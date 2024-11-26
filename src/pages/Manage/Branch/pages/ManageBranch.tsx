@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
-import { createBranch, editBranch, fetchBranchById, resetBranch, selectBranch } from 'store/features';
+import { createBranch, editBranch, fetchBranchById, resetBranch, resetBranchesFetchStatus, selectBranch } from 'store/features';
 import { ROUTES } from 'shared/constants';
 import { Branch, Module, SubModule } from 'shared/models';
 import FormLayout from '../../components/FormLayout';
@@ -15,7 +15,6 @@ const ManageBranchPage: React.FC = () => {
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
 
   const navigateBack = () => {
-    dispatch(resetBranch());
     navigate(ROUTES.branches.path);
   };
 
@@ -36,6 +35,13 @@ const ManageBranchPage: React.FC = () => {
       dispatch(fetchBranchById(id));
     }
   }, [id, dispatch]);
+
+  React.useEffect(() => {
+    return () => {
+      dispatch(resetBranch());
+      dispatch(resetBranchesFetchStatus());
+    };
+  }, [dispatch]);
 
   return (
     // TODO: handle not found branch case

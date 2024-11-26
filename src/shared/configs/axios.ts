@@ -1,12 +1,12 @@
 import axios, { CreateAxiosDefaults } from 'axios';
-import { APP_CONFIG, URLS } from 'shared/constants';
+import { APP_CONFIG, ENDPOINTS } from 'shared/constants';
 import { getBackendOrigin } from 'shared/helpers';
 
 const origin = window.location.origin;
 const beOrigin = getBackendOrigin(origin);
 
 const defaultConfigs: CreateAxiosDefaults = {
-  baseURL: `${beOrigin}/${URLS.base}`,
+  baseURL: `${beOrigin}/${ENDPOINTS.base}`,
   timeout: APP_CONFIG.httpTimeout,
   headers: {
     'Content-Type': 'application/json',

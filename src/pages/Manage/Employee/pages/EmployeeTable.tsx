@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchEmployees, selectEmployees, setEmployeesPagination } from 'store/features';
+import { fetchEmployees, resetEmployeesFetchStatus, selectEmployees, setEmployeesPagination } from 'store/features';
 import { Employee, Module, SubModule } from 'shared/models';
 import { APP_CONFIG, EMPLOYEE_FIELDS } from 'shared/constants';
 import { getTestSelectorByModule } from 'shared/helpers';
@@ -44,16 +44,20 @@ const EmployeeTablePage: React.FC = () => {
   );
 
   const handlePageNumberChange = (pageNumber: number) => {
+    dispatch(resetEmployeesFetchStatus());
     dispatch(setEmployeesPagination({ ...page, pageNumber, pageSize }));
   };
 
   const handlePageSizeChange = (pageSize: number) => {
+    dispatch(resetEmployeesFetchStatus());
     dispatch(setEmployeesPagination({ ...page, pageSize, pageNumber: 1 }));
   };
 
   React.useEffect(() => {
-    dispatch(fetchEmployees({ pageNumber, pageSize }));
-  }, [pageNumber, pageSize, dispatch]);
+    if (fetchStatus === 'idle') {
+      dispatch(fetchEmployees({ pageNumber, pageSize }));
+    }
+  }, [fetchStatus, pageNumber, pageSize, dispatch]);
 
   return (
     <TableLayout module={Module.employeeManagement} subModule={SubModule.employeeTable} pageTitle="Employees">

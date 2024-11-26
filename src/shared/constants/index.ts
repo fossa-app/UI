@@ -1,4 +1,4 @@
-export * from './urls';
+export * from './endpoints';
 export * from './routes';
 export * from './configs';
 export * from './colors';

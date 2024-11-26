@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { Branch, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
-import { APP_CONFIG, MESSAGES, URLS } from 'shared/constants';
+import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
 import { setError } from './errorSlice';
 
 interface BranchState {
@@ -30,7 +30,7 @@ export const fetchBranches = createAsyncThunk<
   { rejectValue: ErrorResponse }
 >('branch/getBranches', async ([{ pageNumber, pageSize }, shouldRejectEmptyResponse = false], { rejectWithValue }) => {
   try {
-    const { data } = await axios.get<PaginatedResponse<Branch>>(`${URLS.branches}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+    const { data } = await axios.get<PaginatedResponse<Branch>>(`${ENDPOINTS.branches}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
 
     if (!data.items.length && shouldRejectEmptyResponse) {
       return rejectWithValue({
@@ -52,7 +52,7 @@ export const fetchBranchById = createAsyncThunk<Branch, string, { rejectValue: E
   'branch/getBranchById',
   async (id, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get<Branch>(`${URLS.branches}/${id}`);
+      const { data } = await axios.get<Branch>(`${ENDPOINTS.branches}/${id}`);
 
       return data;
     } catch (error) {
@@ -65,7 +65,7 @@ export const createBranch = createAsyncThunk<void, [Branch, boolean?], { rejectV
   'branch/setBranch',
   async ([branch, shouldFetchBranches = true], { dispatch, rejectWithValue }) => {
     try {
-      await axios.post<void>(URLS.branches, branch);
+      await axios.post<void>(ENDPOINTS.branches, branch);
 
       if (shouldFetchBranches) {
         await dispatch(fetchBranches([APP_CONFIG.table.defaultPagination])).unwrap();
@@ -87,7 +87,7 @@ export const editBranch = createAsyncThunk<void, [string, Omit<Branch, 'id'>], {
   'branch/editBranch',
   async ([id, branch], { dispatch, rejectWithValue }) => {
     try {
-      await axios.put<Branch>(`${URLS.branches}/${id}`, branch);
+      await axios.put<Branch>(`${ENDPOINTS.branches}/${id}`, branch);
     } catch (error) {
       dispatch(
         setError({
@@ -103,13 +103,11 @@ export const editBranch = createAsyncThunk<void, [string, Omit<Branch, 'id'>], {
 
 export const deleteBranch = createAsyncThunk<void, Branch['id'], { state: RootState; rejectValue: ErrorResponse }>(
   'branch/deleteBranch',
-  async (id, { dispatch, getState, rejectWithValue }) => {
+  async (id, { dispatch, rejectWithValue }) => {
     try {
-      await axios.delete<void>(`${URLS.branches}/${id}`);
-      // TODO: get rid of fetching branches on delete, set the status instead
-      const { pageNumber, pageSize } = getState().branch.branches.page!;
+      await axios.delete<void>(`${ENDPOINTS.branches}/${id}`);
 
-      await dispatch(fetchBranches([{ pageSize, pageNumber }])).unwrap();
+      dispatch(resetBranchesFetchStatus());
     } catch (error) {
       dispatch(
         setError({
@@ -132,6 +130,9 @@ const branchSlice = createSlice({
     },
     resetBranch(state) {
       state.branch = initialState.branch;
+    },
+    resetBranchesFetchStatus(state) {
+      state.branches.fetchStatus = initialState.branches.fetchStatus;
     },
   },
   extraReducers: (builder) => {
@@ -203,6 +204,6 @@ const branchSlice = createSlice({
 export const selectBranch = (state: RootState) => state.branch.branch;
 export const selectBranches = (state: RootState) => state.branch.branches;
 
-export const { setBranchesPagination, resetBranch } = branchSlice.actions;
+export const { setBranchesPagination, resetBranch, resetBranchesFetchStatus } = branchSlice.actions;
 
 export default branchSlice.reducer;
