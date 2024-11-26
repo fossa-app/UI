@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { Employee, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
-import { APP_CONFIG, MESSAGES, URLS } from 'shared/constants';
+import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
 import { setError } from './errorSlice';
 
 interface SetupState {
@@ -27,7 +27,7 @@ export const fetchEmployee = createAsyncThunk<Employee | null, void, { rejectVal
   'employee/getEmployee',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get<Employee>(URLS.employee);
+      const { data } = await axios.get<Employee>(ENDPOINTS.employee);
 
       if (data) {
         return data;
@@ -47,7 +47,7 @@ export const fetchEmployees = createAsyncThunk<PaginatedResponse<Employee> | nul
   'employee/getEmployees',
   async ({ pageNumber, pageSize }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get<PaginatedResponse<Employee>>(`${URLS.employees}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+      const { data } = await axios.get<PaginatedResponse<Employee>>(`${ENDPOINTS.employees}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
 
       if (data) {
         return data;
@@ -67,7 +67,7 @@ export const createEmployee = createAsyncThunk<void, Employee, { state: RootStat
   'employee/setEmployee',
   async (employee, { dispatch, rejectWithValue }) => {
     try {
-      await axios.post<void>(URLS.employee, employee);
+      await axios.post<void>(ENDPOINTS.employee, employee);
       await dispatch(fetchEmployee()).unwrap();
     } catch (error) {
       dispatch(
@@ -88,6 +88,9 @@ const employeeSlice = createSlice({
   reducers: {
     setEmployeesPagination(state, action: PayloadAction<PaginationParams>) {
       state.employees.page = action.payload;
+    },
+    resetEmployeesFetchStatus(state) {
+      state.employees.fetchStatus = initialState.employees.fetchStatus;
     },
   },
   extraReducers: (builder) => {
@@ -134,6 +137,6 @@ const employeeSlice = createSlice({
 export const selectEmployee = (state: RootState) => state.employee.employee;
 export const selectEmployees = (state: RootState) => state.employee.employees;
 
-export const { setEmployeesPagination } = employeeSlice.actions;
+export const { setEmployeesPagination, resetEmployeesFetchStatus } = employeeSlice.actions;
 
 export default employeeSlice.reducer;

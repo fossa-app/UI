@@ -35,11 +35,11 @@ describe('Branches Tests', () => {
       cy.url().should('include', '/setup/branch');
     });
 
-    it('should display the loader if fetching branches is in progress', () => {
+    it('should not display the linear loader if fetching branches is in progress, it is a part of fetchSetupData', () => {
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
-      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.have.css', 'visibility', 'hidden');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-title').should('have.text', 'Branches');
@@ -104,11 +104,11 @@ describe('Branches Tests', () => {
       cy.url().should('include', '/setup/branch');
     });
 
-    it('should display the loader if fetching branches is in progress', () => {
+    it('should not display the linear loader if fetching branches is in progress, it is a part of fetchSetupData', () => {
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
-      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.have.css', 'visibility', 'hidden');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
 
       cy.wait('@fetchBranchesRequest');

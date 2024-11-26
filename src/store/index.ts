@@ -1,5 +1,5 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { useDispatch, useSelector } from 'react-redux';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { ErrorResponse, PaginationParams, Status } from 'shared/models';
 import clientReducer from './features/identitySlice';
 import appConfigReducer from './features/appConfigSlice';
@@ -12,22 +12,24 @@ import employeeReducer from './features/employeeSlice';
 import errorReducer from './features/errorSlice';
 import appLoadingReducer from './features/appLoadingSlice';
 
-const store = configureStore({
-  reducer: {
-    identity: clientReducer,
-    appConfig: appConfigReducer,
-    license: licenseReducer,
-    auth: authReducer,
-    setup: setupReducer,
-    company: companyReducer,
-    branch: branchReducer,
-    employee: employeeReducer,
-    error: errorReducer,
-    appLoading: appLoadingReducer,
-  },
+const rootReducer = combineReducers({
+  identity: clientReducer,
+  appConfig: appConfigReducer,
+  license: licenseReducer,
+  auth: authReducer,
+  setup: setupReducer,
+  company: companyReducer,
+  branch: branchReducer,
+  employee: employeeReducer,
+  error: errorReducer,
+  appLoading: appLoadingReducer,
 });
 
-export type RootState = ReturnType<typeof store.getState>;
+const store = configureStore({
+  reducer: rootReducer,
+});
+
+export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 
 export interface StateEntity<T = unknown> {
@@ -40,6 +42,6 @@ export interface StateEntity<T = unknown> {
   page?: PaginationParams;
 }
 
-export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
-export const useAppSelector = useSelector.withTypes<RootState>();
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 export default store;

@@ -4,7 +4,15 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch, useAppSelector } from 'store';
-import { deleteBranch, fetchBranches, selectBranch, selectBranches, selectIsUserAdmin, setBranchesPagination } from 'store/features';
+import {
+  deleteBranch,
+  fetchBranches,
+  resetBranchesFetchStatus,
+  selectBranch,
+  selectBranches,
+  selectIsUserAdmin,
+  setBranchesPagination,
+} from 'store/features';
 import { Branch, Module, SubModule } from 'shared/models';
 import { APP_CONFIG, BRANCH_FIELDS, ROUTES } from 'shared/constants';
 import { getTestSelectorByModule } from 'shared/helpers';
@@ -65,10 +73,12 @@ const BranchTablePage: React.FC = () => {
   );
 
   const handlePageNumberChange = (pageNumber: number) => {
+    dispatch(resetBranchesFetchStatus());
     dispatch(setBranchesPagination({ ...page, pageNumber, pageSize }));
   };
 
   const handlePageSizeChange = (pageSize: number) => {
+    dispatch(resetBranchesFetchStatus());
     dispatch(setBranchesPagination({ ...page, pageSize, pageNumber: 1 }));
   };
 
@@ -93,8 +103,10 @@ const BranchTablePage: React.FC = () => {
   };
 
   React.useEffect(() => {
-    dispatch(fetchBranches([{ pageNumber, pageSize }]));
-  }, [pageNumber, pageSize, dispatch]);
+    if (fetchStatus === 'idle') {
+      dispatch(fetchBranches([{ pageNumber, pageSize }]));
+    }
+  }, [fetchStatus, pageNumber, pageSize, dispatch]);
 
   return (
     <TableLayout

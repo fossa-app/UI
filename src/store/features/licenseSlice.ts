@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'shared/configs/axios';
 import { CompanyLicense, ErrorResponse, SystemLicense } from 'shared/models';
-import { MESSAGES, URLS } from 'shared/constants';
+import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import { RootState, StateEntity } from 'store';
 import { setError } from './errorSlice';
 
@@ -26,7 +26,7 @@ export const fetchSystemLicense = createAsyncThunk<SystemLicense | null, void, {
   'license/getSystemLicense',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get<SystemLicense>(URLS.systemLicense);
+      const { data } = await axios.get<SystemLicense>(ENDPOINTS.systemLicense);
 
       return data || rejectWithValue({ title: MESSAGES.error.license.system.notFound });
     } catch (error) {
@@ -39,7 +39,7 @@ export const fetchCompanyLicense = createAsyncThunk<CompanyLicense | null, void,
   'license/getCompanyLicense',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get<CompanyLicense>(URLS.companyLicense);
+      const { data } = await axios.get<CompanyLicense>(ENDPOINTS.companyLicense);
 
       return data;
     } catch (error) {
@@ -65,7 +65,7 @@ export const uploadCompanyLicense = createAsyncThunk<CompanyLicense | null, File
         },
       };
 
-      const { data } = await axios.post<CompanyLicense>(URLS.companyLicense, formData, config);
+      const { data } = await axios.post<CompanyLicense>(ENDPOINTS.companyLicense, formData, config);
       await dispatch(fetchCompanyLicense()).unwrap();
 
       return data || null;
