@@ -1,4 +1,4 @@
-import { Branch, BranchFormField, Module, SubModule } from 'shared/models';
+import { Branch, BranchFormField, Module, SubModule, UserRole } from 'shared/models';
 import { FieldProps, FieldType } from 'components/UI/Form';
 
 type BranchFieldConfig = {
@@ -16,7 +16,7 @@ export const BRANCH_FIELDS: BranchFieldConfig = {
   },
 };
 
-export const BRANCH_DETAILS_FORM_SCHEMA: FieldProps[] = [
+export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
   {
     type: FieldType.text,
     name: BranchFormField.name,
@@ -32,6 +32,7 @@ export const BRANCH_DETAILS_FORM_SCHEMA: FieldProps[] = [
         message: 'The Branch name must not exceed 50 characters.',
       },
     },
+    roles: [UserRole.administrator],
   },
   {
     type: FieldType.select,
@@ -41,5 +42,12 @@ export const BRANCH_DETAILS_FORM_SCHEMA: FieldProps[] = [
     options: [{ label: 'Timezone 1', value: '1' }],
     module: Module.branchManagement,
     subModule: SubModule.branchDetails,
+    roles: [UserRole.administrator],
   },
 ];
+
+export const BRANCH_SETUP_DETAILS_FORM_SCHEMA = [...BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA].map((field) => ({
+  ...field,
+  module: Module.branchSetup,
+  subModule: SubModule.branchDetails,
+}));

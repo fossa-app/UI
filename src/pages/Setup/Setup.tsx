@@ -35,7 +35,7 @@ const SetupPage: React.FC = () => {
   }
 
   return (
-    <Box sx={{ width: { md: 544, xs: '100%' }, margin: '0 auto' }}>
+    <Box sx={{ display: 'flex', flexGrow: 1, width: { md: 744, xs: '100%' }, margin: '0 auto' }}>
       <Outlet />
     </Box>
   );

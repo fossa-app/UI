@@ -16,7 +16,7 @@ interface CompanyDetailsFormProps {
   // eslint-disable-next-line no-unused-vars
   onSubmit: (name: string) => void;
 }
-
+// TODO: remove this component
 const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({ title, label, isAdmin, validationMessage, loading, onSubmit }) => {
   const [inputValue, setInputValue] = React.useState<string>('');
   const [inputError, setInputError] = React.useState<string | null>(null);

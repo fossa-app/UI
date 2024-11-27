@@ -2,7 +2,7 @@ import { FieldValues, RegisterOptions } from 'react-hook-form';
 import { TextFieldProps } from '@mui/material/TextField';
 import { SelectProps } from '@mui/material/Select';
 import { GridBaseProps } from '@mui/material/Grid2';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule, UserRole } from 'shared/models';
 
 /* eslint-disable no-unused-vars */
 
@@ -26,6 +26,7 @@ interface BaseFieldProps {
   type: FieldType;
   module: Module;
   subModule: SubModule;
+  roles: UserRole[];
   grid?: GridBaseProps;
   rules?: FormControlRules;
 }

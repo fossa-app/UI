@@ -8,7 +8,7 @@ import ProtectedPage from 'pages/Protected';
 import CallbackPage from 'pages/Callback';
 import SetupPage from 'pages/Setup/Setup';
 import CompanySetupPage from 'pages/Setup/CompanySetup';
-import BranchSetupPage from 'pages/Setup/BranchSetup';
+import SetupBranchPage from 'pages/Setup/pages/SetupBranch';
 import EmployeeSetupPage from 'pages/Setup/EmployeeSetup';
 import ManagePage from 'pages/Manage/Manage';
 import { createLazyComponent } from './lazy-loaded-component';
@@ -74,7 +74,7 @@ const router = createBrowserRouter([
                 path: ROUTES.setCompany.path,
                 element: (
                   <>
-                    <RouteTitle title="Create a Company" />
+                    <RouteTitle title="Create Company" />
                     <CompanySetupPage />
                   </>
                 ),
@@ -83,8 +83,8 @@ const router = createBrowserRouter([
                 path: ROUTES.setBranches.path,
                 element: (
                   <>
-                    <RouteTitle title="Create a Branch" />
-                    <BranchSetupPage />
+                    <RouteTitle title="Create Branch" />
+                    <SetupBranchPage />
                   </>
                 ),
               },
@@ -92,7 +92,7 @@ const router = createBrowserRouter([
                 path: ROUTES.setEmployee.path,
                 element: (
                   <>
-                    <RouteTitle title="Create an Employee" />
+                    <RouteTitle title="Create Employee" />
                     <EmployeeSetupPage />
                   </>
                 ),
