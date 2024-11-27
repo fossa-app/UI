@@ -7,3 +7,4 @@ export enum UserRole {
 }
 
 export type AppUser = Omit<User, 'toStorageString' | 'expires_in' | 'expired' | 'scopes'> & { roles?: UserRole[] };
+export type UserProfile = AppUser['profile'];

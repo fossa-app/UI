@@ -18,7 +18,7 @@ import { APP_CONFIG, BRANCH_FIELDS, ROUTES } from 'shared/constants';
 import { getTestSelectorByModule } from 'shared/helpers';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import Table, { Column } from 'components/UI/Table';
-import TableLayout from '../../components/TableLayout';
+import TableLayout from 'components/layouts/TableLayout';
 
 const BranchTablePage: React.FC = () => {
   const navigate = useNavigate();

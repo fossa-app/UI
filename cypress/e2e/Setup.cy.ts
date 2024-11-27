@@ -80,7 +80,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchEmployeeFailedRequest');
 
       cy.url().should('include', '/setup/employee');
-      cy.get('[data-cy="setup-finish-button"]').should('not.have.attr', 'disabled');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('not.have.attr', 'disabled');
       cy.get('[data-cy="company-branch-input-validation"]').should('not.exist');
 
       setupRoutes.forEach((route) => {
@@ -100,7 +100,7 @@ describe('Setup Flow Tests', () => {
 
       cy.url().should('include', '/setup/employee');
 
-      cy.get('[data-cy="setup-finish-button"]').click();
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').click();
 
       cy.wait('@createEmployeeFailedRequest');
 
@@ -118,15 +118,17 @@ describe('Setup Flow Tests', () => {
 
       cy.url().should('include', '/setup/employee');
 
-      cy.get('[data-cy="employee-firstname-input"] input').clear();
-      cy.get('[data-cy="employee-firstname-input"] input').type('Anthony');
-      cy.get('[data-cy="employee-lastname-input"] input').clear();
-      cy.get('[data-cy="employee-lastname-input"] input').type('Crowley');
-      cy.get('[data-cy="employee-fullname-input"] input').clear();
-      cy.get('[data-cy="employee-fullname-input"] input').type('Anthony User Crowley');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').clear();
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').type('Anthony');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName').find('input').clear();
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName').find('input').type('Crowley');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-fullName').find('input').clear();
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-fullName')
+        .find('input')
+        .type('Anthony User Crowley');
 
       interceptFetchEmployeeRequest();
-      cy.get('[data-cy="setup-finish-button"]').click();
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').click();
 
       cy.wait('@createEmployeeRequest');
       cy.wait('@fetchEmployeeRequest');
@@ -196,7 +198,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchEmployeeFailedRequest');
 
       cy.url().should('include', '/setup/employee');
-      cy.get('[data-cy="setup-finish-button"]').should('not.have.attr', 'disabled');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('not.have.attr', 'disabled');
 
       setupRoutes.forEach((route) => {
         cy.visit(route);
@@ -295,9 +297,15 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchBranchesRequest');
 
       cy.url().should('include', '/setup/employee');
-      cy.get('[data-cy="employee-firstname-input"] input').should('have.value', 'Admin');
-      cy.get('[data-cy="employee-lastname-input"] input').should('have.value', 'Mock');
-      cy.get('[data-cy="employee-fullname-input"] input').should('have.value', 'Admin Oidc Mock');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName')
+        .find('input')
+        .should('have.value', 'Admin');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName')
+        .find('input')
+        .should('have.value', 'Mock');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-fullName')
+        .find('input')
+        .should('have.value', 'Admin Oidc Mock');
     });
 
     it('should not be able to navigate to dashboard if employee creation failed', () => {
@@ -311,7 +319,7 @@ describe('Setup Flow Tests', () => {
 
       cy.url().should('include', '/setup/employee');
 
-      cy.get('[data-cy="setup-finish-button"]').click();
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').click();
 
       cy.wait('@createEmployeeFailedRequest');
 
@@ -329,15 +337,17 @@ describe('Setup Flow Tests', () => {
 
       cy.url().should('include', '/setup/employee');
 
-      cy.get('[data-cy="employee-firstname-input"] input').clear();
-      cy.get('[data-cy="employee-firstname-input"] input').type('Gabriel');
-      cy.get('[data-cy="employee-lastname-input"] input').clear();
-      cy.get('[data-cy="employee-lastname-input"] input').type('Archangel');
-      cy.get('[data-cy="employee-fullname-input"] input').clear();
-      cy.get('[data-cy="employee-fullname-input"] input').type('Gabriel Admin Archangel');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').clear();
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').type('Gabriel');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName').find('input').clear();
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName').find('input').type('Archangel');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-fullName').find('input').clear();
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-fullName')
+        .find('input')
+        .type('Gabriel Admin Archangel');
 
       interceptFetchEmployeeRequest();
-      cy.get('[data-cy="setup-finish-button"]').click();
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').click();
 
       cy.wait('@createEmployeeRequest');
       cy.wait('@fetchEmployeeRequest');
