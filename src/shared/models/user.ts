@@ -1,3 +1,9 @@
 import { User } from 'oidc-client-ts';
 
-export type AppUser = Omit<User, 'toStorageString' | 'expires_in' | 'expired' | 'scopes'> & { roles?: string[] };
+/* eslint-disable no-unused-vars */
+
+export enum UserRole {
+  administrator = 'administrator',
+}
+
+export type AppUser = Omit<User, 'toStorageString' | 'expires_in' | 'expired' | 'scopes'> & { roles?: UserRole[] };

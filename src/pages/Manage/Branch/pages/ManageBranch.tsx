@@ -1,15 +1,24 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
-import { createBranch, editBranch, fetchBranchById, resetBranch, resetBranchesFetchStatus, selectBranch } from 'store/features';
-import { ROUTES } from 'shared/constants';
+import {
+  createBranch,
+  editBranch,
+  fetchBranchById,
+  resetBranch,
+  resetBranchesFetchStatus,
+  selectBranch,
+  selectIsUserAdmin,
+} from 'store/features';
+import { BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
 import { Branch, Module, SubModule } from 'shared/models';
+import BrachDetailsForm from 'components/forms/BrachDetailsForm';
 import FormLayout from '../../components/FormLayout';
-import BrachDetailsForm from './components/BrachDetailsForm';
 
 const ManageBranchPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { data: branch, fetchStatus, updateStatus } = useAppSelector(selectBranch);
   const { id } = useParams();
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
@@ -53,7 +62,11 @@ const ManageBranchPage: React.FC = () => {
       onBackButtonClick={navigateBack}
     >
       <BrachDetailsForm
+        module={Module.branchManagement}
+        subModule={SubModule.branchDetails}
+        isAdmin={isUserAdmin}
         data={branch}
+        fields={BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA}
         formLoading={fetchStatus === 'loading'}
         buttonLoading={updateStatus === 'loading'}
         onSubmit={handleSubmit}

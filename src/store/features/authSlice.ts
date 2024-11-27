@@ -2,8 +2,8 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { OidcClientSettings } from 'oidc-client-ts';
 import { RootState, StateEntity } from 'store';
 import { getUserManager, updateUserManager, mapUser, decodeJwt } from 'shared/helpers';
-import { AppUser, ErrorResponse } from 'shared/models';
-import { ADMIN_ROLE_NAME, MESSAGES, OIDC_INITIAL_CONFIG } from 'shared/constants';
+import { AppUser, ErrorResponse, UserRole } from 'shared/models';
+import { MESSAGES, OIDC_INITIAL_CONFIG } from 'shared/constants';
 
 interface AuthState {
   settings: StateEntity<OidcClientSettings>;
@@ -76,7 +76,7 @@ const authSlice = createSlice({
         const atClaims = decodeJwt(action.payload?.access_token);
 
         if (state.user.data && atClaims?.roles?.length) {
-          state.user.data.roles = atClaims.roles;
+          state.user.data.roles = atClaims.roles as UserRole[];
         }
       });
   },
@@ -84,7 +84,8 @@ const authSlice = createSlice({
 
 export const { updateAuthSettings, removeUser } = authSlice.actions;
 export const selectUser = (state: RootState) => state.auth.user;
-export const selectIsUserAdmin = (state: RootState) => state.auth.user.data?.roles?.includes(ADMIN_ROLE_NAME) ?? false;
+export const selectUserRoles = (state: RootState) => state.auth.user.data?.roles;
+export const selectIsUserAdmin = (state: RootState) => state.auth.user.data?.roles?.includes(UserRole.administrator) ?? false;
 export const selectAuthSettings = (state: RootState) => state.auth.settings;
 
 export default authSlice.reducer;

@@ -3,6 +3,7 @@
 export enum Module {
   employeeManagement = 'employeeManagement',
   branchManagement = 'branchManagement',
+  branchSetup = 'branchSetup',
 }
 
 export enum SubModule {

@@ -1,3 +1,5 @@
+import { Module, SubModule } from '../../src/shared/models';
+import { getTestSelectorByModule } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -56,8 +58,8 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchCompanyRequest');
 
       cy.url().should('include', '/setup/branch');
-      cy.get('[data-cy="setup-next-button"]').should('have.attr', 'disabled');
-      cy.get('[data-cy="company-branch-input-validation"]')
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').should('have.attr', 'disabled');
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-general-validation-message')
         .should('exist')
         .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
 
@@ -174,7 +176,8 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchCompanyRequest');
 
       cy.url().should('include', '/setup/branch');
-      cy.get('[data-cy="setup-next-button"]').should('not.have.attr', 'disabled');
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').should('not.have.attr', 'disabled');
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-general-validation-message').should('not.exist');
 
       setupRoutes.forEach((route) => {
         cy.visit(route);
@@ -264,8 +267,8 @@ describe('Setup Flow Tests', () => {
 
       cy.url().should('include', '/setup/branch');
 
-      cy.get('[data-cy="company-branch-input"]').type('Test Branch');
-      cy.get('[data-cy="setup-next-button"]').click();
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type('Test Branch');
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').click();
 
       cy.wait('@createBranchFailedRequest');
 
@@ -285,8 +288,8 @@ describe('Setup Flow Tests', () => {
 
       interceptFetchBranchesRequest();
 
-      cy.get('[data-cy="company-branch-input"]').type('London');
-      cy.get('[data-cy="setup-next-button"]').click();
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type('London');
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').click();
 
       cy.wait('@createBranchRequest');
       cy.wait('@fetchBranchesRequest');

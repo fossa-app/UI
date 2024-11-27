@@ -16,6 +16,7 @@ interface EmployeeDetailsFormProps {
 
 type EmployeeFormData = Partial<Record<keyof Employee, string>>;
 
+// TODO: remove this component
 const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({ title, loading, userProfile, onSubmit }) => {
   const [formErrors, setFormErrors] = React.useState<EmployeeFormData>({});
   const [formData, setFormData] = React.useState<Employee>({
@@ -60,7 +61,7 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({ title, loadin
   };
 
   return (
-    <Box>
+    <Box sx={{ flexGrow: 1 }}>
       <Page>
         <PageTitle>{title}</PageTitle>
       </Page>
