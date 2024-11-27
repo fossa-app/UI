@@ -26,7 +26,7 @@ interface BaseFieldProps {
   type: FieldType;
   module: Module;
   subModule: SubModule;
-  roles: UserRole[];
+  roles?: UserRole[];
   grid?: GridBaseProps;
   rules?: FormControlRules;
 }

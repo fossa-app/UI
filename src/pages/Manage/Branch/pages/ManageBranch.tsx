@@ -13,7 +13,7 @@ import {
 import { BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
 import { Branch, Module, SubModule } from 'shared/models';
 import BrachDetailsForm from 'components/forms/BrachDetailsForm';
-import FormLayout from '../../components/FormLayout';
+import FormLayout from 'components/layouts/FormLayout';
 
 const ManageBranchPage: React.FC = () => {
   const navigate = useNavigate();

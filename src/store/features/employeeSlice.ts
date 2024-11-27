@@ -6,13 +6,13 @@ import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
 import { setError } from './errorSlice';
 
 interface SetupState {
-  employee: StateEntity<Employee | null>;
+  employee: StateEntity<Employee | undefined>;
   employees: StateEntity<PaginatedResponse<Employee> | null>;
 }
 
 const initialState: SetupState = {
   employee: {
-    data: null,
+    data: undefined,
     fetchStatus: 'idle',
     updateStatus: 'idle',
   },
@@ -23,7 +23,7 @@ const initialState: SetupState = {
   },
 };
 
-export const fetchEmployee = createAsyncThunk<Employee | null, void, { rejectValue: ErrorResponse }>(
+export const fetchEmployee = createAsyncThunk<Employee | undefined, void, { rejectValue: ErrorResponse }>(
   'employee/getEmployee',
   async (_, { rejectWithValue }) => {
     try {
@@ -32,8 +32,6 @@ export const fetchEmployee = createAsyncThunk<Employee | null, void, { rejectVal
       if (data) {
         return data;
       }
-
-      return null;
     } catch (error) {
       return rejectWithValue({
         ...(error as ErrorResponse),
@@ -99,11 +97,11 @@ const employeeSlice = createSlice({
         state.employee.fetchStatus = 'loading';
       })
       .addCase(fetchEmployee.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
-        state.employee.data = null;
+        state.employee.data = undefined;
         state.employee.fetchStatus = 'failed';
         state.employee.error = action.payload;
       })
-      .addCase(fetchEmployee.fulfilled, (state, action: PayloadAction<Employee | null>) => {
+      .addCase(fetchEmployee.fulfilled, (state, action: PayloadAction<Employee | undefined>) => {
         state.employee.data = action.payload;
         state.employee.fetchStatus = 'succeeded';
       })

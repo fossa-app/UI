@@ -9,7 +9,7 @@ import CallbackPage from 'pages/Callback';
 import SetupPage from 'pages/Setup/Setup';
 import CompanySetupPage from 'pages/Setup/CompanySetup';
 import SetupBranchPage from 'pages/Setup/pages/SetupBranch';
-import EmployeeSetupPage from 'pages/Setup/EmployeeSetup';
+import SetupEmployeePage from 'pages/Setup/pages/SetupEmployee';
 import ManagePage from 'pages/Manage/Manage';
 import { createLazyComponent } from './lazy-loaded-component';
 
@@ -93,7 +93,7 @@ const router = createBrowserRouter([
                 element: (
                   <>
                     <RouteTitle title="Create Employee" />
-                    <EmployeeSetupPage />
+                    <SetupEmployeePage />
                   </>
                 ),
               },

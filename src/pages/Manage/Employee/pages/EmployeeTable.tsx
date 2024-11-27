@@ -6,7 +6,7 @@ import { APP_CONFIG, EMPLOYEE_FIELDS } from 'shared/constants';
 import { getTestSelectorByModule } from 'shared/helpers';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import Table, { Column } from 'components/UI/Table';
-import TableLayout from '../../components/TableLayout';
+import TableLayout from 'components/layouts/TableLayout';
 
 const EmployeeTablePage: React.FC = () => {
   const dispatch = useAppDispatch();
