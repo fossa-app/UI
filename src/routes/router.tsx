@@ -7,7 +7,7 @@ import LoginPage from 'pages/Login';
 import ProtectedPage from 'pages/Protected';
 import CallbackPage from 'pages/Callback';
 import SetupPage from 'pages/Setup/Setup';
-import CompanySetupPage from 'pages/Setup/CompanySetup';
+import SetupCompanyPage from 'pages/Setup/pages/SetupCompany';
 import SetupBranchPage from 'pages/Setup/pages/SetupBranch';
 import SetupEmployeePage from 'pages/Setup/pages/SetupEmployee';
 import ManagePage from 'pages/Manage/Manage';
@@ -75,7 +75,7 @@ const router = createBrowserRouter([
                 element: (
                   <>
                     <RouteTitle title="Create Company" />
-                    <CompanySetupPage />
+                    <SetupCompanyPage />
                   </>
                 ),
               },

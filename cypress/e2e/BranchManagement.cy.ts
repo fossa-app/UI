@@ -35,19 +35,33 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').should('not.have.value');
   });
 
-  it('should not be able to create a new branch if the form is invalid or branch creation failed', () => {
+  it('should display validation messages if the form is invalid', () => {
     interceptCreateBranchFailedRequest();
     cy.visit('/manage/branches');
-
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
-
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-layout-title').should('have.text', 'Create Branch');
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name-validation')
       .should('exist')
-      .and('have.text', 'Branch name is required');
+      .and('have.text', 'Branch Name is required');
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type(
+      'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long branch name'
+    );
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name-validation')
+      .should('exist')
+      .and('have.text', 'The Branch Name must not exceed 50 characters.');
+  });
+
+  it('should not be able to create a new branch if the form is invalid or branch creation failed', () => {
+    interceptCreateBranchFailedRequest();
+    cy.visit('/manage/branches');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-layout-title').should('have.text', 'Create Branch');
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type('New Test Branch');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
@@ -92,7 +106,7 @@ describe('Branch Management Tests', () => {
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name-validation')
       .should('exist')
-      .and('have.text', 'Branch name is required');
+      .and('have.text', 'Branch Name is required');
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').type('London Updated');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();

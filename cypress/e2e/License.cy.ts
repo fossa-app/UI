@@ -8,6 +8,7 @@ import {
   interceptFetchCompanyLicenseRequest,
   interceptUploadCompanyLicenseFailedRequest,
   interceptUploadCompanyLicenseRequest,
+  interceptFetchCompanyLicenseFailedRequest,
 } from '../support/interceptors';
 
 describe('License Tests', () => {
@@ -31,9 +32,12 @@ describe('License Tests', () => {
   });
 
   describe('Authenticated', () => {
+    beforeEach(() => {
+      cy.loginMock(true);
+    });
+
     it('should not display default company license if setup has not completed', () => {
       interceptUploadCompanyLicenseFailedRequest();
-      cy.loginMock();
 
       cy.visit('/setup');
 
@@ -45,8 +49,8 @@ describe('License Tests', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
       interceptFetchEmployeeRequest();
+      interceptFetchCompanyLicenseFailedRequest();
       interceptUploadCompanyLicenseFailedRequest();
-      cy.loginMock();
 
       cy.visit('/manage/dashboard');
 
@@ -57,8 +61,8 @@ describe('License Tests', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
       interceptFetchEmployeeRequest();
+      interceptFetchCompanyLicenseFailedRequest();
       interceptUploadCompanyLicenseFailedRequest();
-      cy.loginMock(true);
       cy.visit('/manage/dashboard');
 
       cy.get('[data-cy="company-license-dialog"]').should('not.exist');
@@ -97,8 +101,8 @@ describe('License Tests', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
       interceptFetchEmployeeRequest();
+      interceptFetchCompanyLicenseFailedRequest();
       interceptUploadCompanyLicenseFailedRequest();
-      cy.loginMock(true);
       cy.visit('/manage/dashboard');
 
       cy.get('[data-cy="company-license-button"]').click();
@@ -126,7 +130,6 @@ describe('License Tests', () => {
       interceptFetchBranchesRequest();
       interceptFetchEmployeeRequest();
       interceptFetchCompanyLicenseRequest();
-      cy.loginMock(true);
 
       cy.visit('/manage/dashboard');
 

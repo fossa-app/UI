@@ -3,6 +3,7 @@ import { getLinearLoader, getTablePaginationDisplayedRows, getTablePaginationSiz
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
+  interceptFetchCompanyLicenseFailedRequest,
   interceptFetchCompanyRequest,
   interceptFetchEmployeeRequest,
   interceptFetchEmployeesFailedRequest,
@@ -14,6 +15,7 @@ describe('Employees Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
+    interceptFetchCompanyLicenseFailedRequest();
     interceptFetchCompanyRequest();
     interceptFetchBranchesRequest();
     interceptFetchEmployeeRequest();

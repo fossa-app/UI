@@ -20,16 +20,16 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
   {
     type: FieldType.text,
     name: BranchFormField.name,
-    label: 'Enter Branch name',
+    label: 'Enter Branch Name',
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
     subModule: SubModule.branchDetails,
     autoFocus: true,
     rules: {
-      required: { value: true, message: 'Branch name is required' },
+      required: { value: true, message: 'Branch Name is required' },
       maxLength: {
         value: 50,
-        message: 'The Branch name must not exceed 50 characters.',
+        message: 'The Branch Name must not exceed 50 characters.',
       },
     },
     roles: [UserRole.administrator],

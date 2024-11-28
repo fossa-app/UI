@@ -26,10 +26,10 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({
   buttonLoading,
   onSubmit,
 }) => {
-  const defaultValues = {
-    id: undefined,
-    companyId: undefined,
-    ...data,
+  const defaultValues: Employee = {
+    firstName: data?.firstName ?? '',
+    lastName: data?.lastName ?? '',
+    fullName: data?.fullName ?? '',
   };
 
   const handleFormSubmit = (formValue: Employee) => {
@@ -42,7 +42,6 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({
       subModule={subModule}
       fields={fields}
       defaultValues={defaultValues}
-      values={data}
       loading={formLoading}
       actionLabel={buttonLabel}
       actionIcon={buttonIcon}
