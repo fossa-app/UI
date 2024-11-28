@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Branch, Module, SubModule } from 'shared/models';
+import { Company, Module, SubModule } from 'shared/models';
 import { MESSAGES } from 'shared/constants';
 import Form, { FieldProps } from 'components/UI/Form';
 
-interface BrachDetailsFormProps {
+interface CompanyDetailsFormProps {
   module: Module;
   subModule: SubModule;
   isAdmin: boolean;
@@ -12,12 +12,12 @@ interface BrachDetailsFormProps {
   buttonLabel?: string;
   buttonIcon?: React.ReactNode;
   formLoading?: boolean;
-  data?: Branch;
+  data?: Company;
   // eslint-disable-next-line no-unused-vars
-  onSubmit: (data: Branch) => void;
+  onSubmit: (data: Company) => void;
 }
 
-const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({
+const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({
   module,
   subModule,
   isAdmin,
@@ -29,16 +29,16 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({
   buttonLoading,
   onSubmit,
 }) => {
-  const defaultValues: Branch = {
+  const defaultValues: Company = {
     name: '',
   };
 
-  const handleFormSubmit = (formValue: Branch) => {
+  const handleFormSubmit = (formValue: Company) => {
     onSubmit(formValue);
   };
 
   return (
-    <Form<Branch>
+    <Form<Company>
       module={module}
       subModule={subModule}
       fields={fields}
@@ -55,4 +55,4 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({
   );
 };
 
-export default BrachDetailsForm;
+export default CompanyDetailsForm;
