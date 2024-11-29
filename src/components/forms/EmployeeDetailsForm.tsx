@@ -40,14 +40,17 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({
     <Form<Employee>
       module={module}
       subModule={subModule}
-      fields={fields}
       defaultValues={defaultValues}
+      values={data}
       loading={formLoading}
-      actionLabel={buttonLabel}
-      actionIcon={buttonIcon}
-      actionLoading={buttonLoading}
       onSubmit={handleFormSubmit}
-    />
+    >
+      <Form.Header>Employee Details</Form.Header>
+
+      <Form.Content fields={fields} />
+
+      <Form.Actions actionLabel={buttonLabel} actionIcon={buttonIcon} actionLoading={buttonLoading} />
+    </Form>
   );
 };
 

@@ -57,7 +57,7 @@ const Header: React.FC = () => {
   }, [pathname]);
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" component="nav">
       <Toolbar>
         <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexGrow: 1 }}>
           <Grid size="auto">

@@ -53,9 +53,9 @@ describe('Setup Flow Tests', () => {
     it('should navigate to branch setup page and no other setup page if company exists', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
+      interceptFetchEmployeeFailedRequest();
 
       cy.visit('/setup/branch');
-      cy.wait('@fetchCompanyRequest');
 
       cy.url().should('include', '/setup/branch');
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').should('have.attr', 'disabled');
@@ -163,6 +163,7 @@ describe('Setup Flow Tests', () => {
 
       cy.url().should('include', '/setup/company');
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').should('not.have.attr', 'disabled');
+      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').should('contain.text', 'Next');
 
       setupRoutes.forEach((route) => {
         cy.visit(route);
@@ -173,12 +174,13 @@ describe('Setup Flow Tests', () => {
     it('should navigate to branch setup page and no other setup page if company exists', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
+      interceptFetchEmployeeFailedRequest();
 
       cy.visit('/setup/branch');
-      cy.wait('@fetchCompanyRequest');
 
       cy.url().should('include', '/setup/branch');
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').should('not.have.attr', 'disabled');
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').should('contain.text', 'Next');
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-general-validation-message').should('not.exist');
 
       setupRoutes.forEach((route) => {
@@ -199,6 +201,7 @@ describe('Setup Flow Tests', () => {
 
       cy.url().should('include', '/setup/employee');
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('not.have.attr', 'disabled');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('contain.text', 'Finish');
 
       setupRoutes.forEach((route) => {
         cy.visit(route);
@@ -269,6 +272,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchCompanyFailedRequest');
 
       cy.url().should('include', '/setup/company');
+      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-header').should('have.text', 'Company Details');
       cy.get('[data-cy="company-logo"]').should('not.exist');
 
       interceptFetchCompanyRequest();
@@ -336,6 +340,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchBranchesFailedRequest');
 
       cy.url().should('include', '/setup/branch');
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-header').should('have.text', 'Branch Details');
 
       interceptFetchBranchesRequest();
 
@@ -409,6 +414,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchEmployeeFailedRequest');
 
       cy.url().should('include', '/setup/employee');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-header').should('have.text', 'Employee Details');
 
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').clear();
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').type('Gabriel');

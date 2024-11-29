@@ -41,17 +41,23 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({
     <Form<Branch>
       module={module}
       subModule={subModule}
-      fields={fields}
       defaultValues={defaultValues}
       values={data}
       loading={formLoading}
-      actionLabel={buttonLabel}
-      actionIcon={buttonIcon}
-      actionLoading={buttonLoading}
-      actionDisabled={!isAdmin}
-      generalValidationMessage={isAdmin ? undefined : MESSAGES.error.general.permission}
       onSubmit={handleFormSubmit}
-    />
+    >
+      <Form.Header>Branch Details</Form.Header>
+
+      <Form.Content fields={fields} />
+
+      <Form.Actions
+        actionLoading={buttonLoading}
+        actionDisabled={!isAdmin}
+        actionLabel={buttonLabel}
+        actionIcon={buttonIcon}
+        generalValidationMessage={isAdmin ? undefined : MESSAGES.error.general.permission}
+      />
+    </Form>
   );
 };
 
