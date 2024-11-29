@@ -79,6 +79,7 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type('New York');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('contain.text', 'Save');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
 
     interceptFetchBranchesRequest(1, 5, 'fetchMultipleBranchesRequest', 'branches-multiple');
@@ -124,6 +125,7 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'edit-222222222222-branch-button').click();
 
     getLinearLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('not.have.css', 'visibility', 'hidden');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-header').should('have.text', 'Branch Details');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').clear();
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').type('London Updated');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
