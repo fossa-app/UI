@@ -1,9 +1,9 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import { toggleAppTheme } from 'store/features';
 import { setMockState, mockDispatch, resetMockState } from '../store';
 import { getUserManager } from '../oidc-client-mock';
+import { MockRouterWrapper } from '../test-utils';
 import { SetupStep } from 'shared/models';
 import Header from 'layout/Header';
 
@@ -26,9 +26,9 @@ describe('Header Component', () => {
 
   it('should display dark theme switch as checked when dark theme is enabled', async () => {
     render(
-      <MemoryRouter>
+      <MockRouterWrapper>
         <Header />
-      </MemoryRouter>
+      </MockRouterWrapper>
     );
 
     const themeButton = await screen.findByTestId('theme-button');
@@ -41,9 +41,9 @@ describe('Header Component', () => {
     setMockState({ appConfig: { isDarkTheme: false } });
 
     render(
-      <MemoryRouter>
+      <MockRouterWrapper>
         <Header />
-      </MemoryRouter>
+      </MockRouterWrapper>
     );
 
     const themeButton = await screen.findByTestId('theme-button');
@@ -56,9 +56,9 @@ describe('Header Component', () => {
     setMockState({ appConfig: { isDarkTheme: false } });
 
     render(
-      <MemoryRouter>
+      <MockRouterWrapper>
         <Header />
-      </MemoryRouter>
+      </MockRouterWrapper>
     );
 
     const themeButton = await screen.findByTestId('theme-button');
@@ -74,9 +74,9 @@ describe('Header Component', () => {
     });
 
     render(
-      <MemoryRouter>
+      <MockRouterWrapper>
         <Header />
-      </MemoryRouter>
+      </MockRouterWrapper>
     );
 
     const userName = await screen.findByTestId('user-name');
@@ -94,9 +94,9 @@ describe('Header Component', () => {
     });
 
     render(
-      <MemoryRouter>
+      <MockRouterWrapper>
         <Header />
-      </MemoryRouter>
+      </MockRouterWrapper>
     );
 
     const userMenuButton = await screen.findByTestId('user-menu');

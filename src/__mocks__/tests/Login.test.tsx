@@ -1,8 +1,8 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { resetMockState, setMockState } from '../store';
 import { getUserManager } from '../oidc-client-mock';
+import { MockRouterWrapper } from '../test-utils';
 import LoginPage from '../../pages/Login';
 
 describe('Login Component', () => {
@@ -19,9 +19,9 @@ describe('Login Component', () => {
 
   it('should render the login button when not authenticated', async () => {
     render(
-      <MemoryRouter>
+      <MockRouterWrapper>
         <LoginPage />
-      </MemoryRouter>
+      </MockRouterWrapper>
     );
 
     const loginButton = await screen.findByTestId('login-button');
@@ -33,9 +33,9 @@ describe('Login Component', () => {
     const mockUserManager = getUserManager();
 
     render(
-      <MemoryRouter>
+      <MockRouterWrapper>
         <LoginPage />
-      </MemoryRouter>
+      </MockRouterWrapper>
     );
 
     const loginButton = await screen.findByTestId('login-button');
