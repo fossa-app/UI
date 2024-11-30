@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-vars */
 
 export enum Module {
-  branchManagement = 'branchManagement',
-  employeeManagement = 'employeeManagement',
   companySetup = 'companySetup',
   branchSetup = 'branchSetup',
   employeeSetup = 'employeeSetup',
+  companyManagement = 'companyManagement',
+  branchManagement = 'branchManagement',
+  employeeManagement = 'employeeManagement',
+  dashboard = 'dashboard',
 }
 
 export enum SubModule {
@@ -14,4 +16,5 @@ export enum SubModule {
   employeeDetails = 'employeeDetails',
   branchTable = 'branchTable',
   employeeTable = 'employeeTable',
+  dashboardDetails = 'dashboardDetails',
 }
