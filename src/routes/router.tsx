@@ -31,132 +31,143 @@ const EditBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pag
   isAdminRoute: true,
 });
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <RootPage />,
+      children: [
+        {
+          path: ROUTES.login.path,
+          element: (
+            <>
+              <RouteTitle title="Login" />
+              <LoginPage />
+            </>
+          ),
+        },
+        {
+          path: ROUTES.callback.path,
+          element: (
+            <>
+              <RouteTitle title="Callback" />
+              <CallbackPage />
+            </>
+          ),
+        },
+        {
+          path: '/',
+          element: <ProtectedPage />,
+          children: [
+            {
+              index: true,
+              element: <Navigate to={ROUTES.manage.path} replace />,
+            },
+            {
+              path: ROUTES.setup.path,
+              element: <SetupPage />,
+              children: [
+                {
+                  index: true,
+                  element: <Navigate to={ROUTES.setCompany.path} replace />,
+                },
+                {
+                  path: ROUTES.setCompany.path,
+                  element: (
+                    <>
+                      <RouteTitle title="Create Company" />
+                      <SetupCompanyPage />
+                    </>
+                  ),
+                },
+                {
+                  path: ROUTES.setBranches.path,
+                  element: (
+                    <>
+                      <RouteTitle title="Create Branch" />
+                      <SetupBranchPage />
+                    </>
+                  ),
+                },
+                {
+                  path: ROUTES.setEmployee.path,
+                  element: (
+                    <>
+                      <RouteTitle title="Create Employee" />
+                      <SetupEmployeePage />
+                    </>
+                  ),
+                },
+              ],
+            },
+            {
+              path: ROUTES.manage.path,
+              element: <ManagePage />,
+              children: [
+                {
+                  index: true,
+                  element: <Navigate to={ROUTES.dashboard.path} replace />,
+                },
+                {
+                  path: ROUTES.dashboard.path,
+                  element: DashboardPage,
+                },
+                {
+                  path: ROUTES.company.path,
+                  element: CompanyPage,
+                },
+                {
+                  path: ROUTES.branches.path,
+                  element: BranchPage,
+                  children: [
+                    {
+                      index: true,
+                      element: BranchTablePage,
+                    },
+                    {
+                      path: ROUTES.newBranch.path,
+                      element: CreateBranchPage,
+                    },
+                    {
+                      path: ROUTES.editBranch.path,
+                      element: EditBranchPage,
+                    },
+                  ],
+                },
+                {
+                  path: ROUTES.employees.path,
+                  element: EmployeePage,
+                  children: [
+                    {
+                      index: true,
+                      element: EmployeeTablePage,
+                    },
+                  ],
+                },
+                {
+                  path: '*',
+                  element: <Navigate to={ROUTES.dashboard.path} replace />,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          path: '*',
+          element: NotFoundPage,
+        },
+      ],
+    },
+  ],
   {
-    path: '/',
-    element: <RootPage />,
-    children: [
-      {
-        path: ROUTES.login.path,
-        element: (
-          <>
-            <RouteTitle title="Login" />
-            <LoginPage />
-          </>
-        ),
-      },
-      {
-        path: ROUTES.callback.path,
-        element: (
-          <>
-            <RouteTitle title="Callback" />
-            <CallbackPage />
-          </>
-        ),
-      },
-      {
-        path: '/',
-        element: <ProtectedPage />,
-        children: [
-          {
-            index: true,
-            element: <Navigate to={ROUTES.manage.path} replace />,
-          },
-          {
-            path: ROUTES.setup.path,
-            element: <SetupPage />,
-            children: [
-              {
-                index: true,
-                element: <Navigate to={ROUTES.setCompany.path} replace />,
-              },
-              {
-                path: ROUTES.setCompany.path,
-                element: (
-                  <>
-                    <RouteTitle title="Create Company" />
-                    <SetupCompanyPage />
-                  </>
-                ),
-              },
-              {
-                path: ROUTES.setBranches.path,
-                element: (
-                  <>
-                    <RouteTitle title="Create Branch" />
-                    <SetupBranchPage />
-                  </>
-                ),
-              },
-              {
-                path: ROUTES.setEmployee.path,
-                element: (
-                  <>
-                    <RouteTitle title="Create Employee" />
-                    <SetupEmployeePage />
-                  </>
-                ),
-              },
-            ],
-          },
-          {
-            path: ROUTES.manage.path,
-            element: <ManagePage />,
-            children: [
-              {
-                index: true,
-                element: <Navigate to={ROUTES.dashboard.path} replace />,
-              },
-              {
-                path: ROUTES.dashboard.path,
-                element: DashboardPage,
-              },
-              {
-                path: ROUTES.company.path,
-                element: CompanyPage,
-              },
-              {
-                path: ROUTES.branches.path,
-                element: BranchPage,
-                children: [
-                  {
-                    index: true,
-                    element: BranchTablePage,
-                  },
-                  {
-                    path: ROUTES.newBranch.path,
-                    element: CreateBranchPage,
-                  },
-                  {
-                    path: ROUTES.editBranch.path,
-                    element: EditBranchPage,
-                  },
-                ],
-              },
-              {
-                path: ROUTES.employees.path,
-                element: EmployeePage,
-                children: [
-                  {
-                    index: true,
-                    element: EmployeeTablePage,
-                  },
-                ],
-              },
-              {
-                path: '*',
-                element: <Navigate to={ROUTES.dashboard.path} replace />,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        path: '*',
-        element: NotFoundPage,
-      },
-    ],
-  },
-]);
+    future: {
+      v7_fetcherPersist: true,
+      v7_normalizeFormMethod: true,
+      v7_partialHydration: true,
+      v7_relativeSplatPath: true,
+      v7_skipActionErrorRevalidation: true,
+    },
+  }
+);
 
 export default router;
