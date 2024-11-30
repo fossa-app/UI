@@ -53,12 +53,12 @@ const ManageBranchPage: React.FC = () => {
   }, [dispatch]);
 
   return (
-    // TODO: handle not found branch case
     <FormLayout
       withBackButton
       module={Module.branchManagement}
       subModule={SubModule.branchDetails}
       pageTitle={id ? 'Edit Branch' : 'Create Branch'}
+      displayNotFoundPage={fetchStatus === 'failed' && !branch}
       onBackButtonClick={navigateBack}
     >
       <BrachDetailsForm

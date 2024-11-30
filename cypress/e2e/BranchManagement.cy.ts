@@ -5,6 +5,7 @@ import {
   interceptCreateBranchRequest,
   interceptEditBranchFailedRequest,
   interceptEditBranchRequest,
+  interceptFetchBranchByIdFailedRequest,
   interceptFetchBranchByIdRequest,
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -88,6 +89,17 @@ describe('Branch Management Tests', () => {
 
     cy.url().should('include', '/manage/branches');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
+  });
+
+  it('should display not found page if the branch was not found', () => {
+    interceptFetchBranchByIdFailedRequest('222222222224');
+    cy.visit('/manage/branches/edit/222222222224');
+
+    cy.get('[data-cy="not-found-page-title"]').should('exist').and('contain.text', 'Page Not Found');
+
+    cy.get('[data-cy="not-found-page-button"]').should('exist').click();
+
+    cy.url().should('include', '/manage/dashboard');
   });
 
   it('should not be able to edit the branch if the form is invalid or branch updating failed', () => {

@@ -19,6 +19,7 @@ const RootPage: React.FC = () => {
         <CssBaseline />
         <ClientLoader />
         <ErrorLayout />
+        {/* TODO: add SuccessLayout */}
         <LoaderLayout />
       </ThemeProvider>
     </AxiosInterceptor>

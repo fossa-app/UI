@@ -108,6 +108,18 @@ export const interceptFetchBranchByIdRequest = (id: string) => {
   });
 };
 
+export const interceptFetchBranchByIdFailedRequest = (id: string) => {
+  cy.fixture('branches').then((branches) => {
+    cy.interceptWithAuth(
+      'GET',
+      `${serverBaseUrl}/Branches/${id}`,
+      branches.items.find((branch) => String(branch.id) === id),
+      'fetchBranchByIdFailedRequest',
+      404
+    );
+  });
+};
+
 export const interceptCreateBranchRequest = () => {
   cy.interceptWithAuth('POST', `${serverBaseUrl}/Branches`, null, 'createBranchRequest');
 };
