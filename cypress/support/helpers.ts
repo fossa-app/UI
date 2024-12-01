@@ -16,6 +16,10 @@ export const getTablePaginationDisplayedRows = (module: Module, subModule: SubMo
   return getTestSelectorByModule(module, subModule, selector).find('.MuiTablePagination-displayedRows');
 };
 
+export const getLoadingButtonLoadingIcon = (module: Module, subModule: SubModule, selector: string) => {
+  return getTestSelectorByModule(module, subModule, selector).find('[data-cy="loading-button-end-icon"]');
+};
+
 export const getCompanyLicenseDialogElement = (elementSelector: string) => {
   return cy.get('[data-cy="company-license-dialog"]').find(`[data-cy=${elementSelector}]`);
 };

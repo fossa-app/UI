@@ -1,5 +1,5 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getLinearLoader, getTestSelectorByModule } from '../support/helpers';
+import { getLinearLoader, getLoadingButtonLoadingIcon, getTestSelectorByModule } from '../support/helpers';
 import {
   interceptCreateBranchFailedRequest,
   interceptCreateBranchRequest,
@@ -143,10 +143,7 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('have.attr', 'disabled');
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button')
-      .find('.MuiLoadingButton-loadingIndicator')
-      .should('exist')
-      .and('be.visible');
+    getLoadingButtonLoadingIcon(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('be.visible');
 
     interceptFetchBranchesRequest(1, 5, 'fetchMultipleBranchesRequest', 'branches-multiple');
     cy.wait('@editBranchRequest');
@@ -160,5 +157,21 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-London Updated')
       .should('exist')
       .and('have.text', 'London Updated');
+  });
+
+  it('should be able to navigate back when the back button is clicked', () => {
+    interceptFetchBranchByIdRequest('222222222222');
+    cy.visit('/manage/branches');
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
+    cy.get('[data-cy="page-title-back-button"]').click();
+
+    cy.url().should('include', '/manage/branches');
+
+    cy.visit('/manage/branches');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'edit-222222222222-branch-button').click();
+    cy.get('[data-cy="page-title-back-button"]').click();
+
+    cy.url().should('include', '/manage/branches');
   });
 });

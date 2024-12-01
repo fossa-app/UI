@@ -61,7 +61,7 @@ const Header: React.FC = () => {
       <Toolbar>
         <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexGrow: 1 }}>
           <Grid size="auto">
-            <IconButton disabled={!setupCompleted} edge="end" color="inherit" onClick={showSideBar}>
+            <IconButton data-cy="menu-icon" disabled={!setupCompleted} edge="end" color="inherit" onClick={showSideBar}>
               <MenuIcon />
             </IconButton>
           </Grid>

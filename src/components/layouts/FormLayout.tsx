@@ -2,7 +2,9 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { Module, SubModule } from 'shared/models';
 import Page, { PageTitle } from 'components/UI/Page';
-import NotFoundPage from 'pages/NotFound';
+import { createLazyComponent } from 'routes/lazy-loaded-component';
+
+const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
 
 interface FormLayoutProps {
   module: Module;
@@ -23,7 +25,7 @@ const FormLayout: React.FC<React.PropsWithChildren<FormLayoutProps>> = ({
   children,
 }) => {
   if (displayNotFoundPage) {
-    return <NotFoundPage />;
+    return NotFoundPage;
   }
 
   return (
