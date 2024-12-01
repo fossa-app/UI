@@ -43,6 +43,7 @@ describe('Setup Flow Tests', () => {
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-general-validation-message')
         .should('exist')
         .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
+      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
 
       setupRoutes.forEach((route) => {
         cy.visit(route);
@@ -62,6 +63,7 @@ describe('Setup Flow Tests', () => {
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-general-validation-message')
         .should('exist')
         .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
+      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
 
       setupRoutes.forEach((route) => {
         cy.visit(route);
@@ -82,6 +84,7 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', '/setup/employee');
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('not.have.attr', 'disabled');
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-general-validation-message').should('not.exist');
+      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
 
       setupRoutes.forEach((route) => {
         cy.visit(route);
@@ -133,6 +136,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@createEmployeeRequest');
       cy.wait('@fetchEmployeeRequest');
 
+      cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
       cy.url().should('include', '/manage/dashboard');
     });
 
@@ -164,6 +168,7 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', '/setup/company');
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').should('not.have.attr', 'disabled');
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').should('contain.text', 'Next');
+      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
 
       setupRoutes.forEach((route) => {
         cy.visit(route);
@@ -182,6 +187,7 @@ describe('Setup Flow Tests', () => {
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').should('not.have.attr', 'disabled');
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').should('contain.text', 'Next');
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-general-validation-message').should('not.exist');
+      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
 
       setupRoutes.forEach((route) => {
         cy.visit(route);
@@ -202,6 +208,7 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', '/setup/employee');
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('not.have.attr', 'disabled');
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('contain.text', 'Finish');
+      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
 
       setupRoutes.forEach((route) => {
         cy.visit(route);
@@ -219,6 +226,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchBranchesRequest');
       cy.wait('@fetchEmployeeRequest');
 
+      cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
       cy.url().should('include', '/manage/dashboard');
     });
 
@@ -274,6 +282,7 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', '/setup/company');
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-header').should('have.text', 'Company Details');
       cy.get('[data-cy="company-logo"]').should('not.exist');
+      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
 
       interceptFetchCompanyRequest();
 
@@ -284,6 +293,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchCompanyRequest');
 
       cy.url().should('include', '/setup/branch');
+      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
       cy.get('[data-cy="company-logo"]').should('exist').and('have.text', 'Good Omens');
     });
 
@@ -351,6 +361,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchBranchesRequest');
 
       cy.url().should('include', '/setup/employee');
+      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName')
         .find('input')
         .should('have.value', 'Admin');
@@ -401,6 +412,7 @@ describe('Setup Flow Tests', () => {
 
       cy.wait('@createEmployeeFailedRequest');
 
+      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
       cy.url().should('include', '/setup/employee');
     });
 
@@ -431,6 +443,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@createEmployeeRequest');
       cy.wait('@fetchEmployeeRequest');
 
+      cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
       cy.url().should('include', '/manage/dashboard');
     });
   });

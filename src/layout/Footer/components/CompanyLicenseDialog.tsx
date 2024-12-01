@@ -6,8 +6,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import LoadingButton from '@mui/lab/LoadingButton';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import LoadingButton from 'components/UI/LoadingButton';
 import FileUpload from './FileUpload';
 
 type CompanyLicenseDialogProps = {

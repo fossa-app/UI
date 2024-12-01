@@ -1,8 +1,8 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import LoadingButton from '@mui/lab/LoadingButton';
 import FormHelperText from '@mui/material/FormHelperText';
 import SaveIcon from '@mui/icons-material/Save';
+import LoadingButton from '../LoadingButton';
 import { useFormContext } from './FormContext';
 
 const FormActions: React.FC<{

@@ -87,7 +87,7 @@ describe('License Tests', () => {
       interceptUploadCompanyLicenseFailedRequest();
       getCompanyLicenseDialogElement('dialog-upload-button').click();
 
-      getCompanyLicenseDialogElement('dialog-upload-button').find('.MuiLoadingButton-loadingIndicator').should('exist').and('be.visible');
+      getCompanyLicenseDialogElement('dialog-upload-button').find('[data-cy="loading-button-end-icon"]').should('be.visible');
 
       cy.wait('@uploadCompanyLicenseFailedRequest').then(({ request }) => {
         expect(request.headers['content-type']).to.include('multipart/form-data');
@@ -114,7 +114,7 @@ describe('License Tests', () => {
       interceptFetchCompanyLicenseRequest();
       getCompanyLicenseDialogElement('dialog-upload-button').click();
 
-      getCompanyLicenseDialogElement('dialog-upload-button').find('.MuiLoadingButton-loadingIndicator').should('exist').and('be.visible');
+      getCompanyLicenseDialogElement('dialog-upload-button').find('[data-cy="loading-button-end-icon"]').should('be.visible');
 
       cy.wait('@uploadCompanyLicenseRequest').then(({ request }) => {
         expect(request.headers['content-type']).to.include('multipart/form-data');

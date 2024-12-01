@@ -99,7 +99,7 @@ const Table = <T extends Item>({
                   data-cy={`${module}-${subModule}-table-header-cell-${column.field}`}
                   key={column.field}
                   align={column.align || 'left'}
-                  sx={{ width: column.width, fontWeight: '700', fontSize: 16 }}
+                  sx={{ width: column.width, fontSize: 16 }}
                 >
                   {column.name}
                 </TableCell>

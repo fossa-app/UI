@@ -10,6 +10,7 @@ type FileUploadProps = {
   onFileSelect: (file: File) => void;
 } & BoxProps;
 
+// TODO: move to components/UI
 const FileUpload: React.FC<FileUploadProps> = ({ accept = '*/*', onFileSelect, sx, ...props }) => {
   const [fileName, setFileName] = React.useState('');
 
