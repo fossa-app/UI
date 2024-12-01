@@ -2,21 +2,20 @@ import * as React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ROUTES } from 'shared/constants';
 import RootPage from 'pages/Root';
-import RouteTitle from 'components/RouteTitle';
-import LoginPage from 'pages/Login';
 import ProtectedPage from 'pages/Protected';
-import CallbackPage from 'pages/Callback';
 import SetupPage from 'pages/Setup/Setup';
-import SetupCompanyPage from 'pages/Setup/pages/SetupCompany';
-import SetupBranchPage from 'pages/Setup/pages/SetupBranch';
-import SetupEmployeePage from 'pages/Setup/pages/SetupEmployee';
 import ManagePage from 'pages/Manage/Manage';
 import { createLazyComponent } from './lazy-loaded-component';
 
 // Lazy loaded pages
+const LoginPage = createLazyComponent(() => import('pages/Login'), { title: ROUTES.login.name });
+const CallbackPage = createLazyComponent(() => import('pages/Callback'), { title: ROUTES.callback.name });
+const SetupCompanyPage = createLazyComponent(() => import('pages/Setup/pages/SetupCompany'), { title: ROUTES.setCompany.name });
+const SetupBranchPage = createLazyComponent(() => import('pages/Setup/pages/SetupBranch'), { title: ROUTES.setBranch.name });
+const SetupEmployeePage = createLazyComponent(() => import('pages/Setup/pages/SetupEmployee'), { title: ROUTES.setEmployee.name });
 const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
 const DashboardPage = createLazyComponent(() => import('pages/Dashboard'), { title: ROUTES.dashboard.name });
-const CompanyPage = createLazyComponent(() => import('pages/Company'));
+const CompanyPage = createLazyComponent(() => import('pages/Company'), { title: ROUTES.company.name });
 const EmployeePage = createLazyComponent(() => import('pages/Manage/Employee/Employee'));
 const EmployeeTablePage = createLazyComponent(() => import('pages/Manage/Employee/pages/EmployeeTable'), { title: ROUTES.employees.name });
 const BranchPage = createLazyComponent(() => import('pages/Manage/Branch/Branch'));
@@ -39,21 +38,11 @@ const router = createBrowserRouter(
       children: [
         {
           path: ROUTES.login.path,
-          element: (
-            <>
-              <RouteTitle title="Login" />
-              <LoginPage />
-            </>
-          ),
+          element: LoginPage,
         },
         {
           path: ROUTES.callback.path,
-          element: (
-            <>
-              <RouteTitle title="Callback" />
-              <CallbackPage />
-            </>
-          ),
+          element: CallbackPage,
         },
         {
           path: '/',
@@ -73,30 +62,15 @@ const router = createBrowserRouter(
                 },
                 {
                   path: ROUTES.setCompany.path,
-                  element: (
-                    <>
-                      <RouteTitle title="Create Company" />
-                      <SetupCompanyPage />
-                    </>
-                  ),
+                  element: SetupCompanyPage,
                 },
                 {
-                  path: ROUTES.setBranches.path,
-                  element: (
-                    <>
-                      <RouteTitle title="Create Branch" />
-                      <SetupBranchPage />
-                    </>
-                  ),
+                  path: ROUTES.setBranch.path,
+                  element: SetupBranchPage,
                 },
                 {
                   path: ROUTES.setEmployee.path,
-                  element: (
-                    <>
-                      <RouteTitle title="Create Employee" />
-                      <SetupEmployeePage />
-                    </>
-                  ),
+                  element: SetupEmployeePage,
                 },
               ],
             },

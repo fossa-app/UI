@@ -28,7 +28,14 @@ const License: React.FC<LicenseProps> = ({
 
     if (setupCompleted && !company) {
       return (
-        <Button data-cy="company-license-button" variant="text" color="error" size="small" onClick={onCompanyLicenseClick}>
+        <Button
+          data-cy="company-license-button"
+          aria-label="No License"
+          variant="text"
+          color="error"
+          size="small"
+          onClick={onCompanyLicenseClick}
+        >
           Unlicensed Company
         </Button>
       );

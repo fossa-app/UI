@@ -10,7 +10,6 @@ type FileUploadProps = {
   onFileSelect: (file: File) => void;
 } & BoxProps;
 
-// TODO: move to components/UI
 const FileUpload: React.FC<FileUploadProps> = ({ accept = '*/*', onFileSelect, sx, ...props }) => {
   const [fileName, setFileName] = React.useState('');
 
@@ -24,15 +23,15 @@ const FileUpload: React.FC<FileUploadProps> = ({ accept = '*/*', onFileSelect, s
   };
 
   return (
-    <Box data-cy="upload-file" sx={{ display: 'flex', alignItems: 'center', gap: 2, ...sx }} {...props}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ...sx }} {...props}>
       <Input id="file-upload-input" type="file" onChange={handleFileChange} inputProps={{ accept }} style={{ display: 'none' }} />
       <label htmlFor="file-upload-input">
-        <Button variant="contained" component="span">
+        <Button aria-label="Choose File" variant="contained" component="span">
           Choose File
         </Button>
       </label>
       {fileName && (
-        <Typography noWrap data-cy="selected-file-name" variant="body2" color="textSecondary" sx={{ flexGrow: 1 }}>
+        <Typography noWrap data-cy="file-upload-selected-file-name" variant="body2" color="textSecondary" sx={{ flexGrow: 1 }}>
           {fileName}
         </Typography>
       )}

@@ -7,7 +7,7 @@ export enum RouteKey {
   callback = 'callback',
   setup = 'setup',
   setCompany = 'setCompany',
-  setBranches = 'setBranches',
+  setBranch = 'setBranch',
   setEmployee = 'setEmployee',
   manage = 'manage',
   dashboard = 'dashboard',

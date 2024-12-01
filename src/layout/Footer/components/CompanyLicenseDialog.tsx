@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import LoadingButton from 'components/UI/LoadingButton';
-import FileUpload from './FileUpload';
+import FileUpload from 'components/UI/FileUpload';
 
 type CompanyLicenseDialogProps = {
   loading: boolean;
@@ -70,7 +70,13 @@ const CompanyLicenseDialog: React.FC<CompanyLicenseDialogProps> = ({ loading, on
         )}
       </DialogContent>
       <DialogActions>
-        <Button data-cy="dialog-cancel-button" variant="text" color="secondary" onClick={() => handleClose({}, 'backdropClick')}>
+        <Button
+          data-cy="dialog-cancel-button"
+          aria-label="Cancel"
+          variant="text"
+          color="secondary"
+          onClick={() => handleClose({}, 'backdropClick')}
+        >
           Cancel
         </Button>
         <LoadingButton

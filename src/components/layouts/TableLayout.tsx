@@ -29,7 +29,13 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
           {pageTitle}
         </PageTitle>
         {withActionButton && (
-          <Button data-cy={`${module}-${subModule}-table-layout-action-button`} variant="contained" color="primary" onClick={onActionClick}>
+          <Button
+            data-cy={`${module}-${subModule}-table-layout-action-button`}
+            aria-label="New Item"
+            variant="contained"
+            color="primary"
+            onClick={onActionClick}
+          >
             {actionButtonLabel}
           </Button>
         )}

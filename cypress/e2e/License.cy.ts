@@ -82,7 +82,7 @@ describe('License Tests', () => {
 
       uploadTestFile('input#file-upload-input', 'invalid-company-license.lic');
 
-      cy.get('[data-cy="selected-file-name"]').should('have.text', 'invalid-company-license.lic');
+      cy.get('[data-cy="file-upload-selected-file-name"]').should('have.text', 'invalid-company-license.lic');
 
       interceptUploadCompanyLicenseFailedRequest();
       getCompanyLicenseDialogElement('dialog-upload-button').click();
@@ -108,7 +108,7 @@ describe('License Tests', () => {
       cy.get('[data-cy="company-license-button"]').click();
       uploadTestFile('input#file-upload-input', 'valid-company-license.lic');
 
-      cy.get('[data-cy="selected-file-name"]').should('have.text', 'valid-company-license.lic');
+      cy.get('[data-cy="file-upload-selected-file-name"]').should('have.text', 'valid-company-license.lic');
 
       interceptUploadCompanyLicenseRequest();
       interceptFetchCompanyLicenseRequest();

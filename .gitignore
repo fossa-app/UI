@@ -222,3 +222,6 @@ build/
 # Ignore Cypress screenshots
 cypress/screenshots/
 cypress/downloads/
+
+# Ignore visualizer
+bundle-report.html

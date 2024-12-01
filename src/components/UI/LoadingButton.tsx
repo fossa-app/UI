@@ -20,6 +20,7 @@ const LoadingButton: React.FC<React.PropsWithChildren<LoadingButtonProps>> = ({
   return (
     <Button
       {...props}
+      aria-label="Loading"
       disabled={disabled || loading}
       startIcon={isStart && loading ? <CircularProgress size={20} color="inherit" /> : props.startIcon}
       endIcon={isEnd && loading ? <CircularProgress data-cy="loading-button-end-icon" size={20} color="inherit" /> : props.endIcon}

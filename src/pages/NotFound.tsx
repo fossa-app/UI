@@ -19,7 +19,7 @@ const NotFoundPage: React.FC<NotFoundPageProps> = ({
         <PageTitle data-cy="not-found-page-title">{title}</PageTitle>
         <PageSubtitle>{subtitle}</PageSubtitle>
       </Page>
-      <Button data-cy="not-found-page-button" component={Link} to="/" variant="contained" color="primary">
+      <Button data-cy="not-found-page-button" aria-label="Navigate Home" component={Link} to="/" variant="contained" color="primary">
         Go Back to Home
       </Button>
     </Box>
