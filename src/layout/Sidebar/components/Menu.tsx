@@ -34,7 +34,7 @@ const Menu: React.FC<MenuProps> = ({ onCloseSideBar }) => {
 
           return (
             <ListItem disablePadding key={item.name}>
-              <ListItemButton component={Link} to={item.path} onClick={closeSideBar}>
+              <ListItemButton aria-label={item.name} component={Link} to={item.path} onClick={closeSideBar}>
                 <ListItemIcon sx={buttonStyles}>{item.icon && <item.icon />}</ListItemIcon>
                 <ListItemText primary={item.name} sx={buttonStyles} />
               </ListItemButton>

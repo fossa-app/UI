@@ -44,6 +44,7 @@ const BranchTablePage: React.FC = () => {
           <>
             <IconButton
               data-cy={getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, `edit-${id}-branch-button`)}
+              aria-label="Edit"
               size="small"
               color="primary"
               onClick={() => handleEditBranch(id)}
@@ -52,6 +53,7 @@ const BranchTablePage: React.FC = () => {
             </IconButton>
             <IconButton
               data-cy={getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, `delete-${id}-branch-button`)}
+              aria-label="Delete"
               size="small"
               color="error"
               onClick={() => handleDeleteBranch(id)}
