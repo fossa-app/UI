@@ -1,23 +1,18 @@
-import * as React from 'react';
+import React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 interface LicenseProps {
+  isAdmin: boolean;
   company?: string;
   system?: string;
   setupCompleted: boolean;
   onCompanyLicenseClick: () => void;
 }
 
-const License: React.FC<LicenseProps> = ({
-  // TODO: move the default values to state
-  company,
-  system = 'Unlicensed System',
-  setupCompleted,
-  onCompanyLicenseClick,
-}) => {
-  const companyLicenseContent = () => {
+const License: React.FC<LicenseProps> = ({ isAdmin, company, system = 'Unlicensed System', setupCompleted, onCompanyLicenseClick }) => {
+  const renderCompanyLicense = () => {
     if (company) {
       return (
         <Typography data-cy="company-license-text" variant="caption" textAlign="right">
@@ -27,7 +22,7 @@ const License: React.FC<LicenseProps> = ({
     }
 
     if (setupCompleted && !company) {
-      return (
+      return isAdmin ? (
         <Button
           data-cy="company-license-button"
           aria-label="No License"
@@ -38,6 +33,10 @@ const License: React.FC<LicenseProps> = ({
         >
           Unlicensed Company
         </Button>
+      ) : (
+        <Typography data-cy="company-license-text" color="error" variant="caption" textAlign="right">
+          Unlicensed Company
+        </Typography>
       );
     }
 
@@ -45,8 +44,14 @@ const License: React.FC<LicenseProps> = ({
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      {companyLicenseContent()}
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+      }}
+    >
+      {renderCompanyLicense()}
       <Typography data-cy="system-license" variant="caption" textAlign="right">
         {system}
       </Typography>

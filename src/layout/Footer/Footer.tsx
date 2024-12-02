@@ -5,7 +5,14 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchSystemLicense, selectCompanyLicense, selectStep, selectSystemLicense, uploadCompanyLicense } from 'store/features';
+import {
+  fetchSystemLicense,
+  selectCompanyLicense,
+  selectIsUserAdmin,
+  selectStep,
+  selectSystemLicense,
+  uploadCompanyLicense,
+} from 'store/features';
 import Logo from 'components/UI/Logo';
 import License from './components/License';
 import Environment from './components/Environment';
@@ -13,6 +20,7 @@ import CompanyLicenseDialog from './components/CompanyLicenseDialog';
 
 const Footer: React.FC = () => {
   const dispatch = useAppDispatch();
+  const isAdmin = useAppSelector(selectIsUserAdmin);
   const { data: system, status: systemLicenseStatus } = useAppSelector(selectSystemLicense);
   const { data: company, updateStatus } = useAppSelector(selectCompanyLicense);
   const { status: stepStatus } = useAppSelector(selectStep);
@@ -29,6 +37,7 @@ const Footer: React.FC = () => {
 
   const handleUpload = (file: File) => {
     dispatch(uploadCompanyLicense(file));
+    // TODO: display a success message on upload
   };
 
   React.useEffect(() => {
@@ -60,6 +69,7 @@ const Footer: React.FC = () => {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Environment kind={system?.entitlements.environmentKind} name={system?.entitlements.environmentName} />
                 <License
+                  isAdmin={isAdmin}
                   system={system?.terms.licensee.longName}
                   company={company?.terms?.licensee.longName}
                   setupCompleted={setupCompleted}
