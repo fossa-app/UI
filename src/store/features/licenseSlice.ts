@@ -17,7 +17,7 @@ const initialState: LicenseState = {
   },
   company: {
     data: null,
-    status: 'idle',
+    fetchStatus: 'idle',
     updateStatus: 'idle',
   },
 };
@@ -51,7 +51,7 @@ export const fetchCompanyLicense = createAsyncThunk<CompanyLicense | null, void,
   }
 );
 
-export const uploadCompanyLicense = createAsyncThunk<CompanyLicense | null, File, { rejectValue: ErrorResponse }>(
+export const uploadCompanyLicense = createAsyncThunk<void, File, { rejectValue: ErrorResponse }>(
   'license/uploadCompanyLicense',
   async (file, { dispatch, rejectWithValue }) => {
     try {
@@ -65,10 +65,8 @@ export const uploadCompanyLicense = createAsyncThunk<CompanyLicense | null, File
         },
       };
 
-      const { data } = await axios.post<CompanyLicense>(ENDPOINTS.companyLicense, formData, config);
-      await dispatch(fetchCompanyLicense()).unwrap();
-
-      return data || null;
+      await axios.post<CompanyLicense>(ENDPOINTS.companyLicense, formData, config);
+      dispatch(fetchCompanyLicense());
     } catch (error) {
       dispatch(
         setError({
@@ -101,16 +99,16 @@ const licenseSlice = createSlice({
         state.system.status = 'succeeded';
       })
       .addCase(fetchCompanyLicense.pending, (state) => {
-        state.company.status = 'loading';
+        state.company.fetchStatus = 'loading';
       })
       .addCase(fetchCompanyLicense.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
         state.company.data = null;
-        state.company.status = 'failed';
+        state.company.fetchStatus = 'failed';
         state.company.error = action.payload;
       })
       .addCase(fetchCompanyLicense.fulfilled, (state, action: PayloadAction<CompanyLicense | null>) => {
         state.company.data = action.payload;
-        state.company.status = 'succeeded';
+        state.company.fetchStatus = 'succeeded';
       })
       .addCase(uploadCompanyLicense.pending, (state) => {
         state.company.updateStatus = 'loading';
@@ -120,8 +118,7 @@ const licenseSlice = createSlice({
         state.company.updateStatus = 'failed';
         state.company.error = action.payload;
       })
-      .addCase(uploadCompanyLicense.fulfilled, (state, action: PayloadAction<CompanyLicense | null>) => {
-        state.company.data = action.payload;
+      .addCase(uploadCompanyLicense.fulfilled, (state) => {
         state.company.updateStatus = 'succeeded';
       });
   },

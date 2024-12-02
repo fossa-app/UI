@@ -10,7 +10,7 @@ const ManagePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { status } = useAppSelector(selectStep);
-  const { status: companyLicenseStatus } = useAppSelector(selectCompanyLicense);
+  const { fetchStatus: companyLicenseStatus } = useAppSelector(selectCompanyLicense);
 
   React.useEffect(() => {
     if (status === 'idle') {
