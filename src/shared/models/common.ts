@@ -3,3 +3,13 @@ export type DeepPartial<T> = {
 };
 
 export type Item = Record<string, any>;
+
+export interface Country {
+  name: string;
+  code: string;
+}
+
+export interface Timezone {
+  id: string;
+  name: string;
+}

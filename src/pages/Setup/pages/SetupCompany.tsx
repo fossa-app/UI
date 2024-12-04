@@ -1,9 +1,9 @@
 import * as React from 'react';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectCompany, createCompany, selectIsUserAdmin, selectUserRoles } from 'store/features';
-import { Company, Module, SubModule } from 'shared/models';
-import { mapDisabledFields } from 'shared/helpers';
+import { selectCompany, createCompany, selectIsUserAdmin, selectUserRoles, selectSystemCountries } from 'store/features';
+import { CompanyDTO, Module, SubModule } from 'shared/models';
+import { mapCompanyDTO, mapCountriesToFieldSelectOptions, mapDisabledFields } from 'shared/helpers';
 import { COMPANY_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import CompanyDetailsForm from 'components/forms/CompanyDetailsForm';
 import FormLayout from 'components/layouts/FormLayout';
@@ -11,11 +11,14 @@ import FormLayout from 'components/layouts/FormLayout';
 const SetupCompanyPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const userRoles = useAppSelector(selectUserRoles);
+  const countries = useAppSelector(selectSystemCountries);
   const { updateStatus } = useAppSelector(selectCompany);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
 
-  const handleSubmit = (data: Company) => {
-    dispatch(createCompany(data));
+  const handleSubmit = (data: CompanyDTO) => {
+    const companyDTO = mapCompanyDTO(data);
+
+    dispatch(createCompany(companyDTO));
   };
 
   return (
@@ -27,7 +30,7 @@ const SetupCompanyPage: React.FC = () => {
         buttonLabel="Next"
         buttonIcon={<NavigateNextIcon />}
         buttonLoading={updateStatus === 'loading'}
-        fields={mapDisabledFields(COMPANY_SETUP_DETAILS_FORM_SCHEMA, userRoles)}
+        fields={mapCountriesToFieldSelectOptions(mapDisabledFields(COMPANY_SETUP_DETAILS_FORM_SCHEMA, userRoles), countries)}
         onSubmit={handleSubmit}
       />
     </FormLayout>

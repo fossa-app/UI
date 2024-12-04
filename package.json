@@ -22,7 +22,7 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
-    "serve": "npm run build && vite preview",
+    "preview": "npm run build && vite preview",
     "test:unit": "jest",
     "test:e2e": "npx cypress run --e2e",
     "test:e2e:open": "npx cypress open --e2e --browser chrome",

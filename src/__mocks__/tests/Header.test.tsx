@@ -20,7 +20,7 @@ describe('Header Component', () => {
         step: { data: SetupStep.COMPLETED, status: 'succeeded' },
       },
       appConfig: { isDarkTheme: true },
-      company: { company: { data: { name: 'Test' } } },
+      company: { company: { data: { name: 'Test', country: { name: 'Ukraine', code: 'UA' } } } },
     });
   });
 

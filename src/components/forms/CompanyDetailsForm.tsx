@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Company, Module, SubModule } from 'shared/models';
+import { Company, CompanyDTO, Module, SubModule } from 'shared/models';
 import { MESSAGES } from 'shared/constants';
 import Form, { FieldProps } from 'components/UI/Form';
 
@@ -14,7 +14,7 @@ interface CompanyDetailsFormProps {
   formLoading?: boolean;
   data?: Company;
   // eslint-disable-next-line no-unused-vars
-  onSubmit: (data: Company) => void;
+  onSubmit: (data: CompanyDTO) => void;
 }
 
 const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({
@@ -29,16 +29,17 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({
   buttonLoading,
   onSubmit,
 }) => {
-  const defaultValues: Company = {
+  const defaultValues: CompanyDTO = {
     name: '',
+    countryCode: '',
   };
 
-  const handleFormSubmit = (formValue: Company) => {
+  const handleFormSubmit = (formValue: CompanyDTO) => {
     onSubmit(formValue);
   };
 
   return (
-    <Form<Company>
+    <Form<Company, CompanyDTO>
       module={module}
       subModule={subModule}
       defaultValues={defaultValues}

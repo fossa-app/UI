@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Company, ErrorResponse } from 'shared/models';
+import { Company, CompanyDTO, ErrorResponse } from 'shared/models';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import { setError } from './errorSlice';
 
@@ -37,14 +37,12 @@ export const fetchCompany = createAsyncThunk<Company | null, boolean | undefined
   }
 );
 
-export const createCompany = createAsyncThunk<Company, Company, { rejectValue: ErrorResponse }>(
+export const createCompany = createAsyncThunk<void, CompanyDTO, { rejectValue: ErrorResponse }>(
   'company/setCompany',
   async (company, { dispatch, rejectWithValue }) => {
     try {
       await axios.post<Company>(ENDPOINTS.company, company);
       await dispatch(fetchCompany(false)).unwrap();
-
-      return company;
     } catch (error) {
       dispatch(
         setError({
@@ -83,9 +81,8 @@ const companySlice = createSlice({
         state.company.updateStatus = 'failed';
         state.company.error = action.payload;
       })
-      .addCase(createCompany.fulfilled, (state, action: PayloadAction<Company>) => {
+      .addCase(createCompany.fulfilled, (state) => {
         state.company.updateStatus = 'succeeded';
-        state.company.data = action.payload;
       });
   },
 });

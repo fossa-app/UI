@@ -8,18 +8,26 @@ import FormHeader from './FormHeader';
 import FormContent from './FormContent';
 import FormActions from './FormActions';
 
-type FormProps<T> = React.PropsWithChildren<{
+type FormProps<TDisplay, TSubmit> = React.PropsWithChildren<{
   module: Module;
   subModule: SubModule;
-  defaultValues: DefaultValues<T>;
-  values?: T;
+  defaultValues: DefaultValues<TDisplay>;
+  values?: TDisplay;
   loading?: boolean;
   // eslint-disable-next-line no-unused-vars
-  onSubmit: (formValue: T) => void;
+  onSubmit: (formValue: TSubmit) => void;
 }>;
 
-const Form = <T extends Item>({ module, subModule, defaultValues, values, loading = false, onSubmit, children }: FormProps<T>) => {
-  const methods = useForm<T>({
+const Form = <TDisplay extends Item, TSubmit extends Item>({
+  module,
+  subModule,
+  defaultValues,
+  values,
+  loading = false,
+  onSubmit,
+  children,
+}: FormProps<TDisplay, TSubmit>) => {
+  const methods = useForm<TDisplay>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
     defaultValues,
@@ -34,7 +42,12 @@ const Form = <T extends Item>({ module, subModule, defaultValues, values, loadin
           elevation={3}
           sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, position: 'relative' }}
         >
-          <form style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }} onSubmit={methods.handleSubmit(onSubmit)}>
+          <form
+            style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
+            onSubmit={methods.handleSubmit((data) => {
+              onSubmit(data as unknown as TSubmit);
+            })}
+          >
             {children}
           </form>
           <LinearLoader open={loading} />
