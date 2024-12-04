@@ -6,7 +6,8 @@ export interface Branch {
   name: string;
 }
 
-export enum BranchFormField {
-  name = 'name',
-  timezone = 'timezone',
-}
+export interface BranchDTO extends Branch {}
+
+export type BranchFieldConfig = {
+  [K in keyof BranchDTO]: { field: K; name: string };
+};

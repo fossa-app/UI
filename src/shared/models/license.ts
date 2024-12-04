@@ -1,3 +1,5 @@
+import { Country, Timezone } from './common';
+
 export type EnvironmentKind = 'Development' | 'Staging' | 'Production';
 
 export interface License {
@@ -27,5 +29,7 @@ export interface SystemLicense extends License {
     environmentName: string;
     environmentKind: EnvironmentKind;
     maximumCompanyCount: number;
+    countries: Country[];
+    timezones: Timezone[];
   };
 }

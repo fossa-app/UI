@@ -14,6 +14,16 @@
   "entitlements": {
     "environmentName": "TEST-LOCAL-DEVELOPMENT",
     "environmentKind": "Development",
-    "maximumCompanyCount": 15
+    "maximumCompanyCount": 15,
+    "countries": [
+      {
+        "name": "United States",
+        "code": "US"
+      },
+      {
+        "name": "Ukraine",
+        "code": "UA"
+      }
+    ]
   }
 }

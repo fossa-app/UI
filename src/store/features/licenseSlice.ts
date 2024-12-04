@@ -126,4 +126,6 @@ const licenseSlice = createSlice({
 
 export const selectSystemLicense = (state: RootState) => state.license.system;
 export const selectCompanyLicense = (state: RootState) => state.license.company;
+export const selectSystemCountries = (state: RootState) => state.license.system.data?.entitlements?.countries;
+export const selectSystemTimezones = (state: RootState) => state.license.system.data?.entitlements?.timezones;
 export default licenseSlice.reducer;

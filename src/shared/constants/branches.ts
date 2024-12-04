@@ -1,9 +1,5 @@
-import { Branch, BranchFormField, Module, SubModule, UserRole } from 'shared/models';
+import { BranchFieldConfig, Module, SubModule, UserRole } from 'shared/models';
 import { FieldProps, FieldType } from 'components/UI/Form';
-
-type BranchFieldConfig = {
-  [K in keyof Branch]: { field: K; name: string };
-};
 
 export const BRANCH_FIELDS: BranchFieldConfig = {
   id: {
@@ -19,7 +15,7 @@ export const BRANCH_FIELDS: BranchFieldConfig = {
 export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
   {
     type: FieldType.text,
-    name: BranchFormField.name,
+    name: BRANCH_FIELDS.name.field,
     label: 'Enter Branch Name',
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
@@ -36,7 +32,8 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
   },
   {
     type: FieldType.select,
-    name: BranchFormField.timezone,
+    // TODO: set timezone field in Branch model
+    name: 'timezone',
     label: 'Enter Timezone',
     grid: { size: { xs: 12, md: 6 } },
     options: [{ label: 'Timezone 1', value: '1' }],

@@ -6,3 +6,4 @@ export * from './jwt.helpers';
 export * from './data.helpers';
 export * from './test.helpers';
 export * from './form.helpers';
+export * from './company.helpers';

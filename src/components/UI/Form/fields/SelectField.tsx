@@ -21,13 +21,13 @@ const SelectField: React.FC<SelectFieldProps> = ({ module, subModule, label, nam
       <InputLabel shrink={!!value}>{label}</InputLabel>
       <Select
         data-cy={`${module}-${subModule}-form-field-${name}`}
-        value=""
+        value={(!!options?.length && value) || ''}
         error={!!errors[name]}
         {...register(name, { ...props.rules })}
         {...props}
       >
         {options.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
+          <MenuItem key={option.value} data-cy={`${module}-${subModule}-form-field-${name}-option-${option.value}`} value={option.value}>
             {option.label}
           </MenuItem>
         ))}

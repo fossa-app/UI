@@ -31,13 +31,18 @@ interface BaseFieldProps {
   rules?: FormControlRules;
 }
 
+export interface SelectOption {
+  label: string;
+  value: string;
+}
+
 export type InputFieldProps = BaseFieldProps & {
   type: FieldType.text;
 } & TextFieldProps;
 
 export type SelectFieldProps = BaseFieldProps & {
   type: FieldType.select;
-  options: { label: string; value: string }[];
+  options: SelectOption[];
 } & SelectProps;
 
 export type FieldProps = InputFieldProps | SelectFieldProps;

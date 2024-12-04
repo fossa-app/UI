@@ -8,8 +8,8 @@ export interface Employee {
   fullName: string;
 }
 
-export enum EmployeeFormField {
-  firstName = 'firstName',
-  lastName = 'lastName',
-  fullName = 'fullName',
-}
+export interface EmployeeDTO extends Employee {}
+
+export type EmployeeFieldConfig = {
+  [K in keyof EmployeeDTO]: { field: K; name: string };
+};

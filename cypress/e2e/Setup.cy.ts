@@ -243,6 +243,10 @@ describe('Setup Flow Tests', () => {
         .should('exist')
         .and('have.text', 'Company Name is required');
 
+      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-countryCode-validation')
+        .should('exist')
+        .and('have.text', 'Country is required');
+
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type(
         'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long company name'
       );
@@ -264,6 +268,8 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', '/setup/company');
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('Test Company');
+      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-countryCode').click();
+      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-countryCode-option-UA').click();
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').click();
 
       cy.wait('@createCompanyFailedRequest');
@@ -287,6 +293,8 @@ describe('Setup Flow Tests', () => {
       interceptFetchCompanyRequest();
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('Good Omens');
+      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-countryCode').click();
+      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-countryCode-option-US').click();
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').click();
 
       cy.wait('@createCompanyRequest');
