@@ -8,6 +8,8 @@ export interface EmployeeDTO {
   fullName: string;
 }
 
+export interface Employee extends EmployeeDTO {}
+
 export type EmployeeFieldConfig = {
-  [K in keyof EmployeeDTO]: { field: K; name: string };
+  [K in keyof Employee]: { field: K; name: string };
 };

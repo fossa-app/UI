@@ -14,7 +14,7 @@ import {
 } from 'store/features';
 import { BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
 import { BranchDTO, Module, SubModule } from 'shared/models';
-import BrachDetailsForm from 'components/forms/BrachDetailsForm';
+import BrachDetailsForm from 'components/forms/BranchDetailsForm';
 import FormLayout from 'components/layouts/FormLayout';
 import { mapDisabledFields, mapTimeZonesToFieldSelectOptions } from 'shared/helpers';
 

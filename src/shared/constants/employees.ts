@@ -1,5 +1,6 @@
-import { EmployeeFieldConfig, Module, SubModule } from 'shared/models';
+import { Employee, EmployeeFieldConfig, Module, SubModule } from 'shared/models';
 import { FieldProps, FieldType } from 'components/UI/Form';
+import { Column } from 'components/UI/Table';
 
 export const EMPLOYEE_FIELDS: EmployeeFieldConfig = {
   id: {
@@ -51,5 +52,23 @@ export const EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA: FieldProps[] = [
     grid: { size: { xs: 12 } },
     module: Module.employeeSetup,
     subModule: SubModule.employeeDetails,
+  },
+];
+
+export const EMPLOYEE_TABLE_SCHEMA: Column<Employee>[] = [
+  {
+    name: EMPLOYEE_FIELDS.firstName.name,
+    field: EMPLOYEE_FIELDS.firstName.field,
+    width: 240,
+  },
+  {
+    name: EMPLOYEE_FIELDS.lastName.name,
+    field: EMPLOYEE_FIELDS.lastName.field,
+    width: 240,
+  },
+  {
+    name: EMPLOYEE_FIELDS.fullName.name,
+    field: EMPLOYEE_FIELDS.fullName.field,
+    width: 'auto',
   },
 ];

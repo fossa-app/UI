@@ -1,36 +1,20 @@
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchEmployees, resetEmployeesFetchStatus, selectEmployees, setEmployeesPagination } from 'store/features';
-import { EmployeeDTO, Module, SubModule } from 'shared/models';
-import { APP_CONFIG, EMPLOYEE_FIELDS } from 'shared/constants';
-import { getTestSelectorByModule } from 'shared/helpers';
+import { fetchEmployees, resetEmployeesFetchStatus, selectEmployees, selectUserRoles, setEmployeesPagination } from 'store/features';
+import { Employee, Module, SubModule } from 'shared/models';
+import { APP_CONFIG, EMPLOYEE_TABLE_SCHEMA } from 'shared/constants';
+import { getTestSelectorByModule, mapTableColumnsByRoles } from 'shared/helpers';
 import Page, { PageSubtitle } from 'components/UI/Page';
-import Table, { Column } from 'components/UI/Table';
+import Table from 'components/UI/Table';
 import TableLayout from 'components/layouts/TableLayout';
 
 const EmployeeTablePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { fetchStatus, data: employees, page } = useAppSelector(selectEmployees);
+  const userRoles = useAppSelector(selectUserRoles);
   const { pageNumber, pageSize, totalItems } = page || APP_CONFIG.table.defaultPagination;
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
-
-  const columns: Column<EmployeeDTO>[] = [
-    {
-      name: EMPLOYEE_FIELDS.firstName.name,
-      field: EMPLOYEE_FIELDS.firstName.field,
-      width: 200,
-    },
-    {
-      name: EMPLOYEE_FIELDS.lastName.name,
-      field: EMPLOYEE_FIELDS.lastName.field,
-      width: 200,
-    },
-    {
-      name: EMPLOYEE_FIELDS.fullName.name,
-      field: EMPLOYEE_FIELDS.fullName.field,
-      width: 'auto',
-    },
-  ];
+  const columns = mapTableColumnsByRoles(EMPLOYEE_TABLE_SCHEMA, userRoles);
 
   const noRecordsTemplate = (
     <Page sx={{ my: 0 }}>
@@ -61,7 +45,7 @@ const EmployeeTablePage: React.FC = () => {
 
   return (
     <TableLayout module={Module.employeeManagement} subModule={SubModule.employeeTable} pageTitle="Employees">
-      <Table<EmployeeDTO>
+      <Table<Employee>
         module={Module.employeeManagement}
         subModule={SubModule.employeeTable}
         loading={fetchStatus === 'loading'}
