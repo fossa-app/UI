@@ -5,12 +5,14 @@
     {
       "id": 222222222222,
       "companyId": 111111111111,
-      "name": "London Updated"
+      "name": "New York Branch",
+      "timeZoneId": "America/New_York"
     },
     {
       "id": 222222222223,
       "companyId": 111111111111,
-      "name": "New York"
+      "name": "Anchorage Branch",
+      "timeZoneId": "America/Anchorage"
     }
   ],
   "totalItems": 2,

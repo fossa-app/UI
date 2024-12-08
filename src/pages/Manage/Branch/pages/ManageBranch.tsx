@@ -9,16 +9,21 @@ import {
   resetBranchesFetchStatus,
   selectBranch,
   selectIsUserAdmin,
+  selectCompanyTimeZones,
+  selectUserRoles,
 } from 'store/features';
 import { BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
-import { Branch, Module, SubModule } from 'shared/models';
+import { BranchDTO, Module, SubModule } from 'shared/models';
 import BrachDetailsForm from 'components/forms/BrachDetailsForm';
 import FormLayout from 'components/layouts/FormLayout';
+import { mapDisabledFields, mapTimeZonesToFieldSelectOptions } from 'shared/helpers';
 
 const ManageBranchPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
+  const userRoles = useAppSelector(selectUserRoles);
+  const companyTimeZones = useAppSelector(selectCompanyTimeZones);
   const { data: branch, fetchStatus, updateStatus } = useAppSelector(selectBranch);
   const { id } = useParams();
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
@@ -27,8 +32,8 @@ const ManageBranchPage: React.FC = () => {
     navigate(ROUTES.branches.path);
   };
 
-  const handleSubmit = (formData: Omit<Branch, 'id'>) => {
-    id ? dispatch(editBranch([id, formData])) : dispatch(createBranch([formData, false]));
+  const handleSubmit = (data: Omit<BranchDTO, 'id'>) => {
+    id ? dispatch(editBranch([id, data])) : dispatch(createBranch([data, false]));
     setFormSubmitted(true);
   };
 
@@ -66,7 +71,7 @@ const ManageBranchPage: React.FC = () => {
         subModule={SubModule.branchDetails}
         isAdmin={isUserAdmin}
         data={branch}
-        fields={BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA}
+        fields={mapTimeZonesToFieldSelectOptions(mapDisabledFields(BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, userRoles), companyTimeZones)}
         formLoading={fetchStatus === 'loading'}
         buttonLoading={updateStatus === 'loading'}
         onSubmit={handleSubmit}

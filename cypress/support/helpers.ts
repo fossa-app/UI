@@ -20,8 +20,13 @@ export const getLoadingButtonLoadingIcon = (module: Module, subModule: SubModule
   return getTestSelectorByModule(module, subModule, selector).find('[data-cy="loading-button-end-icon"]');
 };
 
-export const getCompanyLicenseDialogElement = (elementSelector: string) => {
-  return cy.get('[data-cy="company-license-dialog"]').find(`[data-cy=${elementSelector}]`);
+export const getCompanyLicenseDialogElement = (selector: string) => {
+  return cy.get('[data-cy="company-license-dialog"]').find(`[data-cy=${selector}]`);
+};
+
+export const selectOption = (module: Module, subModule: SubModule, fieldName: string, optionName) => {
+  getTestSelectorByModule(module, subModule, `form-field-${fieldName}`).click();
+  getTestSelectorByModule(module, subModule, `form-field-${fieldName}-option-${optionName}`).click();
 };
 
 export const uploadTestFile = (selector: string, fixtureName: string, fileType = 'application/octet-stream') => {

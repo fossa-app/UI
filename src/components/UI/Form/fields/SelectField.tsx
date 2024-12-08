@@ -16,6 +16,16 @@ const SelectField: React.FC<SelectFieldProps> = ({ module, subModule, label, nam
 
   const value = useWatch({ control, name });
 
+  const menuProps = {
+    MenuProps: {
+      PaperProps: {
+        style: {
+          maxHeight: 240,
+        },
+      },
+    },
+  };
+
   return (
     <FormControl variant="filled" fullWidth>
       <InputLabel shrink={!!value}>{label}</InputLabel>
@@ -24,6 +34,7 @@ const SelectField: React.FC<SelectFieldProps> = ({ module, subModule, label, nam
         value={(!!options?.length && value) || ''}
         error={!!errors[name]}
         {...register(name, { ...props.rules })}
+        {...menuProps}
         {...props}
       >
         {options.map((option) => (

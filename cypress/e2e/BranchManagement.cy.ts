@@ -1,5 +1,5 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getLinearLoader, getLoadingButtonLoadingIcon, getTestSelectorByModule } from '../support/helpers';
+import { getLinearLoader, getLoadingButtonLoadingIcon, getTestSelectorByModule, selectOption } from '../support/helpers';
 import {
   interceptCreateBranchFailedRequest,
   interceptCreateBranchRequest,
@@ -47,6 +47,11 @@ describe('Branch Management Tests', () => {
       .should('exist')
       .and('have.text', 'Branch Name is required');
 
+    // TODO: uncomment this once TimeZone field is required
+    // getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-timeZoneId-validation')
+    //   .should('exist')
+    //   .and('have.text', 'TimeZone is required');
+
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type(
       'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long branch name'
     );
@@ -65,6 +70,7 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-layout-title').should('have.text', 'Create Branch');
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type('New Test Branch');
+    selectOption(Module.branchManagement, SubModule.branchDetails, 'timeZoneId', 'America/Chicago');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
     cy.wait('@createBranchFailedRequest');
 
@@ -79,7 +85,8 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type('New York');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type('New York Branch');
+    selectOption(Module.branchManagement, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('contain.text', 'Save');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
 
@@ -109,10 +116,12 @@ describe('Branch Management Tests', () => {
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'edit-222222222222-branch-button').click();
 
+    cy.wait('@fetchBranchByIdRequest');
+
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-layout-title').should('have.text', 'Edit Branch');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name')
       .find('input')
-      .should('have.value', 'London');
+      .should('have.value', 'New York Branch');
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').clear();
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
@@ -121,7 +130,8 @@ describe('Branch Management Tests', () => {
       .should('exist')
       .and('have.text', 'Branch Name is required');
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').type('London Updated');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').type('Hawaii Branch');
+    selectOption(Module.branchManagement, SubModule.branchDetails, 'timeZoneId', 'Pacific/Honolulu');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
     cy.wait('@editBranchFailedRequest');
 
@@ -138,8 +148,11 @@ describe('Branch Management Tests', () => {
 
     getLinearLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('not.have.css', 'visibility', 'hidden');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-header').should('have.text', 'Branch Details');
+    cy.wait('@fetchBranchByIdRequest');
+
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').clear();
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').type('London Updated');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').type('Anchorage Branch');
+    selectOption(Module.branchManagement, SubModule.branchDetails, 'timeZoneId', 'America/Anchorage');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('have.attr', 'disabled');
@@ -154,9 +167,11 @@ describe('Branch Management Tests', () => {
     cy.wait('@fetchMultipleUpdatedBranchesRequest');
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-London Updated')
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Anchorage Branch')
       .should('exist')
-      .and('have.text', 'London Updated');
+      .and('have.text', 'Anchorage Branch');
+
+    // TODO: add timeZone column in table
   });
 
   it('should be able to navigate back when the back button is clicked', () => {

@@ -8,26 +8,18 @@ import FormHeader from './FormHeader';
 import FormContent from './FormContent';
 import FormActions from './FormActions';
 
-type FormProps<TDisplay, TSubmit> = React.PropsWithChildren<{
+type FormProps<T> = React.PropsWithChildren<{
   module: Module;
   subModule: SubModule;
-  defaultValues: DefaultValues<TDisplay>;
-  values?: TDisplay;
+  defaultValues: DefaultValues<T>;
+  values?: T;
   loading?: boolean;
   // eslint-disable-next-line no-unused-vars
-  onSubmit: (formValue: TSubmit) => void;
+  onSubmit: (formValue: T) => void;
 }>;
 
-const Form = <TDisplay extends Item, TSubmit extends Item>({
-  module,
-  subModule,
-  defaultValues,
-  values,
-  loading = false,
-  onSubmit,
-  children,
-}: FormProps<TDisplay, TSubmit>) => {
-  const methods = useForm<TDisplay>({
+const Form = <T extends Item>({ module, subModule, defaultValues, values, loading = false, onSubmit, children }: FormProps<T>) => {
+  const methods = useForm<T>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
     defaultValues,
@@ -45,7 +37,7 @@ const Form = <TDisplay extends Item, TSubmit extends Item>({
           <form
             style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
             onSubmit={methods.handleSubmit((data) => {
-              onSubmit(data as unknown as TSubmit);
+              onSubmit(data as T);
             })}
           >
             {children}

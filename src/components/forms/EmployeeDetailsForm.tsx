@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Employee, EmployeeDTO, Module, SubModule } from 'shared/models';
+import { EmployeeDTO, Module, SubModule } from 'shared/models';
 import Form, { FieldProps } from 'components/UI/Form';
 
 interface EmployeeDetailsFormProps {
@@ -10,7 +10,7 @@ interface EmployeeDetailsFormProps {
   buttonLabel?: string;
   buttonIcon?: React.ReactNode;
   formLoading?: boolean;
-  data?: Employee;
+  data?: EmployeeDTO;
   // eslint-disable-next-line no-unused-vars
   onSubmit: (data: EmployeeDTO) => void;
 }
@@ -26,7 +26,7 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({
   buttonLoading,
   onSubmit,
 }) => {
-  const defaultValues: Employee = {
+  const defaultValues: EmployeeDTO = {
     firstName: data?.firstName ?? '',
     lastName: data?.lastName ?? '',
     fullName: data?.fullName ?? '',
@@ -37,7 +37,7 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({
   };
 
   return (
-    <Form<Employee, EmployeeDTO>
+    <Form<EmployeeDTO>
       module={module}
       subModule={subModule}
       defaultValues={defaultValues}

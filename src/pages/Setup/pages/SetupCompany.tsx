@@ -3,7 +3,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompany, createCompany, selectIsUserAdmin, selectUserRoles, selectSystemCountries } from 'store/features';
 import { CompanyDTO, Module, SubModule } from 'shared/models';
-import { mapCompanyDTO, mapCountriesToFieldSelectOptions, mapDisabledFields } from 'shared/helpers';
+import { mapCountriesToFieldSelectOptions, mapDisabledFields } from 'shared/helpers';
 import { COMPANY_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import CompanyDetailsForm from 'components/forms/CompanyDetailsForm';
 import FormLayout from 'components/layouts/FormLayout';
@@ -16,9 +16,7 @@ const SetupCompanyPage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
 
   const handleSubmit = (data: CompanyDTO) => {
-    const companyDTO = mapCompanyDTO(data);
-
-    dispatch(createCompany(companyDTO));
+    dispatch(createCompany(data));
   };
 
   return (

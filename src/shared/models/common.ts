@@ -9,7 +9,9 @@ export interface Country {
   code: string;
 }
 
-export interface Timezone {
+export interface TimeZone {
   id: string;
   name: string;
+  countryCode: Country['code'];
+  currentOffset: string;
 }

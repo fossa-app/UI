@@ -10,12 +10,16 @@ export const BRANCH_FIELDS: BranchFieldConfig = {
     field: 'name',
     name: 'Name',
   },
+  timeZoneId: {
+    field: 'timeZoneId',
+    name: 'TimeZone',
+  },
 };
 
 export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
   {
     type: FieldType.text,
-    name: BRANCH_FIELDS.name.field,
+    name: BRANCH_FIELDS.name!.field,
     label: 'Enter Branch Name',
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
@@ -32,13 +36,16 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
   },
   {
     type: FieldType.select,
-    // TODO: set timezone field in Branch model
-    name: 'timezone',
-    label: 'Enter Timezone',
+    name: BRANCH_FIELDS.timeZoneId!.field,
+    label: 'Select TimeZone',
     grid: { size: { xs: 12, md: 6 } },
-    options: [{ label: 'Timezone 1', value: '1' }],
+    options: [],
     module: Module.branchManagement,
     subModule: SubModule.branchDetails,
+    // TODO: uncomment this once TimeZone field is required
+    // rules: {
+    //   required: { value: true, message: 'TimeZone is required' },
+    // },
     roles: [UserRole.administrator],
   },
 ];

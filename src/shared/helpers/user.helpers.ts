@@ -1,5 +1,5 @@
 import { User } from 'oidc-client-ts';
-import { AppUser, Employee, UserProfile } from 'shared/models';
+import { AppUser, EmployeeDTO, UserProfile } from 'shared/models';
 
 export const mapUser = (user: User): AppUser => {
   // eslint-disable-next-line no-unused-vars
@@ -8,7 +8,7 @@ export const mapUser = (user: User): AppUser => {
   return rest;
 };
 
-export const mapUserProfileToEmployee = (userProfile?: UserProfile): Employee | undefined => {
+export const mapUserProfileToEmployee = (userProfile?: UserProfile): EmployeeDTO | undefined => {
   if (!userProfile) {
     return;
   }

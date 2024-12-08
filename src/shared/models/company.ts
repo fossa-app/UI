@@ -2,13 +2,9 @@ import { Country } from './common';
 
 /* eslint-disable no-unused-vars */
 
-export interface Company {
+export interface CompanyDTO {
   id?: number;
   name: string;
-  country: Country;
-}
-
-export interface CompanyDTO extends Omit<Company, 'country'> {
   countryCode: Country['code'];
 }
 

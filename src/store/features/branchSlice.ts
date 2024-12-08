@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Branch, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
+import { BranchDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
 import { setError } from './errorSlice';
 
 interface BranchState {
-  branch: StateEntity<Branch | undefined>;
-  branches: StateEntity<PaginatedResponse<Branch> | undefined>;
+  branch: StateEntity<BranchDTO | undefined>;
+  branches: StateEntity<PaginatedResponse<BranchDTO> | undefined>;
 }
 
 const initialState: BranchState = {
@@ -25,12 +25,12 @@ const initialState: BranchState = {
 };
 
 export const fetchBranches = createAsyncThunk<
-  PaginatedResponse<Branch> | undefined,
+  PaginatedResponse<BranchDTO> | undefined,
   [PaginationParams, boolean?],
   { rejectValue: ErrorResponse }
 >('branch/getBranches', async ([{ pageNumber, pageSize }, shouldRejectEmptyResponse = false], { rejectWithValue }) => {
   try {
-    const { data } = await axios.get<PaginatedResponse<Branch>>(`${ENDPOINTS.branches}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+    const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
 
     if (!data.items.length && shouldRejectEmptyResponse) {
       return rejectWithValue({
@@ -48,11 +48,11 @@ export const fetchBranches = createAsyncThunk<
   }
 });
 
-export const fetchBranchById = createAsyncThunk<Branch, string, { rejectValue: ErrorResponse }>(
+export const fetchBranchById = createAsyncThunk<BranchDTO, string, { rejectValue: ErrorResponse }>(
   'branch/getBranchById',
   async (id, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get<Branch>(`${ENDPOINTS.branches}/${id}`);
+      const { data } = await axios.get<BranchDTO>(`${ENDPOINTS.branches}/${id}`);
 
       return data;
     } catch (error) {
@@ -61,7 +61,7 @@ export const fetchBranchById = createAsyncThunk<Branch, string, { rejectValue: E
   }
 );
 
-export const createBranch = createAsyncThunk<void, [Branch, boolean?], { rejectValue: ErrorResponse }>(
+export const createBranch = createAsyncThunk<void, [BranchDTO, boolean?], { rejectValue: ErrorResponse }>(
   'branch/setBranch',
   async ([branch, shouldFetchBranches = true], { dispatch, rejectWithValue }) => {
     try {
@@ -83,11 +83,11 @@ export const createBranch = createAsyncThunk<void, [Branch, boolean?], { rejectV
   }
 );
 
-export const editBranch = createAsyncThunk<void, [string, Omit<Branch, 'id'>], { rejectValue: ErrorResponse }>(
+export const editBranch = createAsyncThunk<void, [string, Omit<BranchDTO, 'id'>], { rejectValue: ErrorResponse }>(
   'branch/editBranch',
   async ([id, branch], { dispatch, rejectWithValue }) => {
     try {
-      await axios.put<Branch>(`${ENDPOINTS.branches}/${id}`, branch);
+      await axios.put<BranchDTO>(`${ENDPOINTS.branches}/${id}`, branch);
     } catch (error) {
       dispatch(
         setError({
@@ -101,7 +101,7 @@ export const editBranch = createAsyncThunk<void, [string, Omit<Branch, 'id'>], {
   }
 );
 
-export const deleteBranch = createAsyncThunk<void, Branch['id'], { state: RootState; rejectValue: ErrorResponse }>(
+export const deleteBranch = createAsyncThunk<void, BranchDTO['id'], { state: RootState; rejectValue: ErrorResponse }>(
   'branch/deleteBranch',
   async (id, { dispatch, rejectWithValue }) => {
     try {
@@ -145,7 +145,7 @@ const branchSlice = createSlice({
         state.branches.fetchStatus = 'failed';
         state.branches.error = action.payload;
       })
-      .addCase(fetchBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<Branch> | undefined>) => {
+      .addCase(fetchBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<BranchDTO> | undefined>) => {
         state.branches.data = action.payload;
         state.branches.page!.totalItems = action.payload?.totalItems;
         state.branches.page!.totalPages = action.payload?.totalPages;
@@ -160,7 +160,7 @@ const branchSlice = createSlice({
         state.branch.fetchStatus = 'failed';
         state.branch.error = action.payload;
       })
-      .addCase(fetchBranchById.fulfilled, (state, action: PayloadAction<Branch | undefined>) => {
+      .addCase(fetchBranchById.fulfilled, (state, action: PayloadAction<BranchDTO | undefined>) => {
         state.branch.data = action.payload;
         state.branch.fetchStatus = 'succeeded';
         state.branch.error = undefined;

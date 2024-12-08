@@ -1,5 +1,5 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getTestSelectorByModule } from '../support/helpers';
+import { getTestSelectorByModule, selectOption } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -268,8 +268,7 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', '/setup/company');
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('Test Company');
-      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-countryCode').click();
-      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-countryCode-option-UA').click();
+      selectOption(Module.companySetup, SubModule.companyDetails, 'countryCode', 'UA');
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').click();
 
       cy.wait('@createCompanyFailedRequest');
@@ -293,8 +292,7 @@ describe('Setup Flow Tests', () => {
       interceptFetchCompanyRequest();
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('Good Omens');
-      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-countryCode').click();
-      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-countryCode-option-US').click();
+      selectOption(Module.companySetup, SubModule.companyDetails, 'countryCode', 'US');
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').click();
 
       cy.wait('@createCompanyRequest');
@@ -303,6 +301,35 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', '/setup/branch');
       cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
       cy.get('[data-cy="company-logo"]').should('exist').and('have.text', 'Good Omens');
+    });
+
+    it('should display only available timezones for selected company country', () => {
+      interceptFetchCompanyFailedRequest();
+      interceptCreateCompanyRequest();
+
+      cy.visit('/setup/company');
+
+      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('US Company');
+      selectOption(Module.companySetup, SubModule.companyDetails, 'countryCode', 'US');
+      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').click();
+
+      interceptFetchCompanyRequest();
+
+      cy.wait('@createCompanyRequest');
+      cy.wait('@fetchCompanyRequest');
+
+      cy.url().should('include', '/setup/branch');
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, `form-field-timeZoneId`).click();
+
+      cy.get(`[data-cy^="${Module.branchSetup}-${SubModule.branchDetails}-form-field-timeZoneId-option"]`)
+        .should('have.length', 4)
+        .then((items) => {
+          const expectedValues = ['Pacific/Honolulu', 'America/Anchorage', 'America/New_York', 'America/Chicago'];
+
+          cy.wrap(items).each((item, index) => {
+            cy.wrap(item).invoke('attr', 'data-cy').should('include', expectedValues[index]);
+          });
+        });
     });
 
     it('should display validation messages if the branch creation form is invalid', () => {
@@ -318,6 +345,11 @@ describe('Setup Flow Tests', () => {
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name-validation')
         .should('exist')
         .and('have.text', 'Branch Name is required');
+
+      // TODO: uncomment this once TimeZone field is required
+      // getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-timeZoneId-validation')
+      //   .should('exist')
+      //   .and('have.text', 'TimeZone is required');
 
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type(
         'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long branch name'
@@ -341,6 +373,7 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', '/setup/branch');
 
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type('Test Branch');
+      selectOption(Module.branchSetup, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').click();
 
       cy.wait('@createBranchFailedRequest');
@@ -362,7 +395,8 @@ describe('Setup Flow Tests', () => {
 
       interceptFetchBranchesRequest();
 
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type('London');
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type('America/New_York');
+      selectOption(Module.branchSetup, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').click();
 
       cy.wait('@createBranchRequest');
