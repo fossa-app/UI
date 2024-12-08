@@ -9,8 +9,10 @@ export interface BranchDTO {
   timeZoneId: TimeZone['id'];
 }
 
-// TODO: create Branch interface inherited from BranchDTO and add timeZoneName Field, map in branchSlice and use in Table views
+export interface Branch extends BranchDTO {
+  timeZoneName?: TimeZone['name'];
+}
 
 export type BranchFieldConfig = {
-  [K in keyof BranchDTO]: { field: K; name: string };
+  [K in keyof Branch]: { field: K; name: string };
 };

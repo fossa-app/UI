@@ -3,7 +3,7 @@ import { BranchDTO, Module, SubModule } from 'shared/models';
 import { MESSAGES } from 'shared/constants';
 import Form, { FieldProps } from 'components/UI/Form';
 
-interface BrachDetailsFormProps {
+interface BranchDetailsFormProps {
   module: Module;
   subModule: SubModule;
   isAdmin: boolean;
@@ -17,7 +17,7 @@ interface BrachDetailsFormProps {
   onSubmit: (data: BranchDTO) => void;
 }
 
-const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({
+const BranchDetailsForm: React.FC<BranchDetailsFormProps> = ({
   module,
   subModule,
   isAdmin,
@@ -62,4 +62,4 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({
   );
 };
 
-export default BrachDetailsForm;
+export default BranchDetailsForm;

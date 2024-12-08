@@ -14,7 +14,7 @@ import { BranchDTO, Module, SubModule } from 'shared/models';
 import { BRANCH_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import { mapDisabledFields, mapTimeZonesToFieldSelectOptions } from 'shared/helpers';
 import FormLayout from 'components/layouts/FormLayout';
-import BrachDetailsForm from 'components/forms/BrachDetailsForm';
+import BrachDetailsForm from 'components/forms/BranchDetailsForm';
 
 const SetupBranchPage: React.FC = () => {
   const userRoles = useAppSelector(selectUserRoles);

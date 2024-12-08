@@ -346,10 +346,9 @@ describe('Setup Flow Tests', () => {
         .should('exist')
         .and('have.text', 'Branch Name is required');
 
-      // TODO: uncomment this once TimeZone field is required
-      // getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-timeZoneId-validation')
-      //   .should('exist')
-      //   .and('have.text', 'TimeZone is required');
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-timeZoneId-validation')
+        .should('exist')
+        .and('have.text', 'TimeZone is required');
 
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type(
         'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long branch name'

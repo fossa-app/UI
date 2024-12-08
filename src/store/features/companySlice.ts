@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { CompanyDTO, ErrorResponse } from 'shared/models';
-import { filterUniqueByField } from 'shared/helpers';
+import { Company, CompanyDTO, ErrorResponse } from 'shared/models';
+import { filterUniqueByField, mapCompany } from 'shared/helpers';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import { setError } from './errorSlice';
 
 interface CompanyState {
-  company: StateEntity<CompanyDTO | undefined>;
+  company: StateEntity<Company | undefined>;
 }
 
 const initialState: CompanyState = {
@@ -18,7 +18,7 @@ const initialState: CompanyState = {
   },
 };
 
-export const fetchCompany = createAsyncThunk<CompanyDTO | undefined, boolean | undefined, { rejectValue: ErrorResponse }>(
+export const fetchCompany = createAsyncThunk<Company | undefined, boolean | undefined, { rejectValue: ErrorResponse }>(
   'company/getCompany',
   async (_, { rejectWithValue }) => {
     try {
@@ -27,7 +27,7 @@ export const fetchCompany = createAsyncThunk<CompanyDTO | undefined, boolean | u
       if (data) {
         // TODO: this is a temporary workaround to replace {name, code} field with countryCode, should be removed
         if (data.countryCode) {
-          return data;
+          return mapCompany(data);
         }
         const { country, ...restData } = data as any;
         return { ...restData, countryCode: country?.code };
@@ -101,7 +101,7 @@ export const selectCompanyTimeZones = createSelector(
       return [];
     }
 
-    const res = filterUniqueByField(
+    return filterUniqueByField(
       timeZones?.filter((timeZone) => {
         // TODO: remove this check
         if (timeZone.countryCode) {
@@ -112,7 +112,6 @@ export const selectCompanyTimeZones = createSelector(
       }) || [],
       'name'
     );
-    return res;
   }
 );
 

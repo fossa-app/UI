@@ -47,10 +47,9 @@ describe('Branch Management Tests', () => {
       .should('exist')
       .and('have.text', 'Branch Name is required');
 
-    // TODO: uncomment this once TimeZone field is required
-    // getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-timeZoneId-validation')
-    //   .should('exist')
-    //   .and('have.text', 'TimeZone is required');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-timeZoneId-validation')
+      .should('exist')
+      .and('have.text', 'TimeZone is required');
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type(
       'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long branch name'
@@ -171,10 +170,14 @@ describe('Branch Management Tests', () => {
       .should('exist')
       .and('have.text', 'Anchorage Branch');
 
-    // TODO: add timeZone column in table
+    // TODO: uncomment when the branch timeZone is available
+    // getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Alaskan Standard Time')
+    //   .should('exist')
+    //   .and('have.text', 'Alaskan Standard Time');
   });
 
   it('should be able to navigate back when the back button is clicked', () => {
+    interceptFetchBranchesRequest(1, 5, 'fetchMultipleBranchesRequest', 'branches');
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit('/manage/branches');
 
@@ -188,5 +191,6 @@ describe('Branch Management Tests', () => {
     cy.get('[data-cy="page-title-back-button"]').click();
 
     cy.url().should('include', '/manage/branches');
+    getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.have.css', 'visibility', 'hidden');
   });
 });

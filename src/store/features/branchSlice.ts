@@ -1,13 +1,14 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { BranchDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
+import { Branch, BranchDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
 import { setError } from './errorSlice';
+import { mapBranch, mapBranches, mapTestBranchesTimeZone, mapTestBranchTimeZone } from 'shared/helpers';
 
 interface BranchState {
-  branch: StateEntity<BranchDTO | undefined>;
-  branches: StateEntity<PaginatedResponse<BranchDTO> | undefined>;
+  branch: StateEntity<Branch | undefined>;
+  branches: StateEntity<PaginatedResponse<Branch> | undefined>;
 }
 
 const initialState: BranchState = {
@@ -25,10 +26,10 @@ const initialState: BranchState = {
 };
 
 export const fetchBranches = createAsyncThunk<
-  PaginatedResponse<BranchDTO> | undefined,
+  PaginatedResponse<Branch> | undefined,
   [PaginationParams, boolean?],
   { rejectValue: ErrorResponse }
->('branch/getBranches', async ([{ pageNumber, pageSize }, shouldRejectEmptyResponse = false], { rejectWithValue }) => {
+>('branch/getBranches', async ([{ pageNumber, pageSize }, shouldRejectEmptyResponse = false], { getState, rejectWithValue }) => {
   try {
     const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
 
@@ -39,7 +40,15 @@ export const fetchBranches = createAsyncThunk<
       });
     }
 
-    return data;
+    // TODO: remove mapTestBranchesTimeZone, for testing purposes
+    const state = getState() as RootState;
+    const timeZones = state.license.system.data?.entitlements.timeZones || [];
+    const company = state.company.company.data;
+
+    return {
+      ...data,
+      items: mapBranches(mapTestBranchesTimeZone(data.items, timeZones, company), timeZones),
+    };
   } catch (error) {
     return rejectWithValue({
       ...(error as ErrorResponse),
@@ -48,13 +57,18 @@ export const fetchBranches = createAsyncThunk<
   }
 });
 
-export const fetchBranchById = createAsyncThunk<BranchDTO, string, { rejectValue: ErrorResponse }>(
+export const fetchBranchById = createAsyncThunk<Branch, string, { rejectValue: ErrorResponse }>(
   'branch/getBranchById',
-  async (id, { rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
     try {
       const { data } = await axios.get<BranchDTO>(`${ENDPOINTS.branches}/${id}`);
 
-      return data;
+      // TODO: remove mapTestBranchTimeZone, for testing purposes
+      const state = getState() as RootState;
+      const timeZones = state.license.system.data?.entitlements.timeZones || [];
+      const company = state.company.company.data;
+
+      return mapBranch(mapTestBranchTimeZone(data, timeZones, company), timeZones);
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);
     }
@@ -145,7 +159,7 @@ const branchSlice = createSlice({
         state.branches.fetchStatus = 'failed';
         state.branches.error = action.payload;
       })
-      .addCase(fetchBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<BranchDTO> | undefined>) => {
+      .addCase(fetchBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<Branch> | undefined>) => {
         state.branches.data = action.payload;
         state.branches.page!.totalItems = action.payload?.totalItems;
         state.branches.page!.totalPages = action.payload?.totalPages;
@@ -160,7 +174,7 @@ const branchSlice = createSlice({
         state.branch.fetchStatus = 'failed';
         state.branch.error = action.payload;
       })
-      .addCase(fetchBranchById.fulfilled, (state, action: PayloadAction<BranchDTO | undefined>) => {
+      .addCase(fetchBranchById.fulfilled, (state, action: PayloadAction<Branch | undefined>) => {
         state.branch.data = action.payload;
         state.branch.fetchStatus = 'succeeded';
         state.branch.error = undefined;

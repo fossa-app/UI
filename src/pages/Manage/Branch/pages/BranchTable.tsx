@@ -11,13 +11,14 @@ import {
   selectBranch,
   selectBranches,
   selectIsUserAdmin,
+  selectUserRoles,
   setBranchesPagination,
 } from 'store/features';
-import { BranchDTO, Module, SubModule } from 'shared/models';
-import { APP_CONFIG, BRANCH_FIELDS, ROUTES } from 'shared/constants';
-import { getTestSelectorByModule } from 'shared/helpers';
+import { Branch, BranchDTO, Module, SubModule } from 'shared/models';
+import { APP_CONFIG, BRANCH_TABLE_SCHEMA, ROUTES } from 'shared/constants';
+import { getTestSelectorByModule, mapTableColumnsByRoles } from 'shared/helpers';
 import Page, { PageSubtitle } from 'components/UI/Page';
-import Table, { Column } from 'components/UI/Table';
+import Table from 'components/UI/Table';
 import TableLayout from 'components/layouts/TableLayout';
 
 const BranchTablePage: React.FC = () => {
@@ -26,45 +27,35 @@ const BranchTablePage: React.FC = () => {
   const { fetchStatus, data: branches, page } = useAppSelector(selectBranches);
   const { deleteStatus } = useAppSelector(selectBranch);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
+  const userRoles = useAppSelector(selectUserRoles);
   const { pageNumber, pageSize, totalItems } = page || APP_CONFIG.table.defaultPagination;
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
   const loading = fetchStatus === 'loading' || deleteStatus === 'loading';
 
-  const columns: Column<BranchDTO>[] = [
-    {
-      name: BRANCH_FIELDS.name.name,
-      field: BRANCH_FIELDS.name.field,
-    },
-    {
-      name: '',
-      field: 'actions',
-      align: 'right',
-      renderBodyCell: ({ id }) => {
-        return isUserAdmin ? (
-          <>
-            <IconButton
-              data-cy={getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, `edit-${id}-branch-button`)}
-              aria-label="Edit"
-              size="small"
-              color="primary"
-              onClick={() => handleEditBranch(id)}
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              data-cy={getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, `delete-${id}-branch-button`)}
-              aria-label="Delete"
-              size="small"
-              color="error"
-              onClick={() => handleDeleteBranch(id)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </>
-        ) : null;
-      },
-    },
-  ];
+  const renderActionButtons = ({ id }: BranchDTO) => (
+    <>
+      <IconButton
+        data-cy={getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, `edit-${id}-branch-button`)}
+        aria-label="Edit"
+        size="small"
+        color="primary"
+        onClick={() => handleEditBranch(id)}
+      >
+        <EditIcon />
+      </IconButton>
+      <IconButton
+        data-cy={getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, `delete-${id}-branch-button`)}
+        aria-label="Delete"
+        size="small"
+        color="error"
+        onClick={() => handleDeleteBranch(id)}
+      >
+        <DeleteIcon />
+      </IconButton>
+    </>
+  );
+
+  const columns = mapTableColumnsByRoles(BRANCH_TABLE_SCHEMA, userRoles, renderActionButtons);
 
   const noRecordsTemplate = (
     <Page sx={{ margin: 0 }}>
@@ -119,7 +110,7 @@ const BranchTablePage: React.FC = () => {
       actionButtonLabel="New Branch"
       onActionClick={handleActionClick}
     >
-      <Table<BranchDTO>
+      <Table<Branch>
         module={Module.branchManagement}
         subModule={SubModule.branchTable}
         loading={loading}
