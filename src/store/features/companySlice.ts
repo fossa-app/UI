@@ -1,33 +1,37 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Company, CompanyDTO, ErrorResponse } from 'shared/models';
+import { CompanyDTO, ErrorResponse } from 'shared/models';
+import { filterUniqueByField } from 'shared/helpers';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import { setError } from './errorSlice';
 
 interface CompanyState {
-  company: StateEntity<Company | null>;
+  company: StateEntity<CompanyDTO | undefined>;
 }
 
 const initialState: CompanyState = {
   company: {
-    data: null,
+    data: undefined,
     fetchStatus: 'idle',
     updateStatus: 'idle',
   },
 };
 
-export const fetchCompany = createAsyncThunk<Company | null, boolean | undefined, { rejectValue: ErrorResponse }>(
+export const fetchCompany = createAsyncThunk<CompanyDTO | undefined, boolean | undefined, { rejectValue: ErrorResponse }>(
   'company/getCompany',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get<Company>(ENDPOINTS.company);
+      const { data } = await axios.get<CompanyDTO>(ENDPOINTS.company);
 
       if (data) {
-        return data;
+        // TODO: this is a temporary workaround to replace {name, code} field with countryCode, should be removed
+        if (data.countryCode) {
+          return data;
+        }
+        const { country, ...restData } = data as any;
+        return { ...restData, countryCode: country?.code };
       }
-
-      return null;
     } catch (error) {
       return rejectWithValue({
         ...(error as ErrorResponse),
@@ -41,7 +45,7 @@ export const createCompany = createAsyncThunk<void, CompanyDTO, { rejectValue: E
   'company/setCompany',
   async (company, { dispatch, rejectWithValue }) => {
     try {
-      await axios.post<Company>(ENDPOINTS.company, company);
+      await axios.post<CompanyDTO>(ENDPOINTS.company, company);
       await dispatch(fetchCompany(false)).unwrap();
     } catch (error) {
       dispatch(
@@ -66,11 +70,11 @@ const companySlice = createSlice({
         state.company.fetchStatus = 'loading';
       })
       .addCase(fetchCompany.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
-        state.company.data = null;
+        state.company.data = undefined;
         state.company.fetchStatus = 'failed';
         state.company.error = action.payload;
       })
-      .addCase(fetchCompany.fulfilled, (state, action: PayloadAction<Company | null>) => {
+      .addCase(fetchCompany.fulfilled, (state, action: PayloadAction<CompanyDTO | undefined>) => {
         state.company.data = action.payload;
         state.company.fetchStatus = 'succeeded';
       })
@@ -88,4 +92,28 @@ const companySlice = createSlice({
 });
 
 export const selectCompany = (state: RootState) => state.company.company;
+
+export const selectCompanyTimeZones = createSelector(
+  // NOTE: always select state slices directly instead of passing selectors due to memoization issues
+  [(state: RootState) => state.license.system.data?.entitlements.timeZones, (state: RootState) => state.company.company.data?.countryCode],
+  (timeZones, countryCode) => {
+    if (!countryCode || !timeZones?.length) {
+      return [];
+    }
+
+    const res = filterUniqueByField(
+      timeZones?.filter((timeZone) => {
+        // TODO: remove this check
+        if (timeZone.countryCode) {
+          return timeZone.countryCode === countryCode;
+        }
+        // TODO: replace (timeZone as any).country with timeZones.countryCode when the BE changes
+        return (timeZone as any).country.code === countryCode;
+      }) || [],
+      'name'
+    );
+    return res;
+  }
+);
+
 export default companySlice.reducer;

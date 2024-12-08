@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchEmployees, resetEmployeesFetchStatus, selectEmployees, setEmployeesPagination } from 'store/features';
-import { Employee, Module, SubModule } from 'shared/models';
+import { EmployeeDTO, Module, SubModule } from 'shared/models';
 import { APP_CONFIG, EMPLOYEE_FIELDS } from 'shared/constants';
 import { getTestSelectorByModule } from 'shared/helpers';
 import Page, { PageSubtitle } from 'components/UI/Page';
@@ -14,7 +14,7 @@ const EmployeeTablePage: React.FC = () => {
   const { pageNumber, pageSize, totalItems } = page || APP_CONFIG.table.defaultPagination;
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
 
-  const columns: Column<Employee>[] = [
+  const columns: Column<EmployeeDTO>[] = [
     {
       name: EMPLOYEE_FIELDS.firstName.name,
       field: EMPLOYEE_FIELDS.firstName.field,
@@ -61,7 +61,7 @@ const EmployeeTablePage: React.FC = () => {
 
   return (
     <TableLayout module={Module.employeeManagement} subModule={SubModule.employeeTable} pageTitle="Employees">
-      <Table<Employee>
+      <Table<EmployeeDTO>
         module={Module.employeeManagement}
         subModule={SubModule.employeeTable}
         loading={fetchStatus === 'loading'}

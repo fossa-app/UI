@@ -13,7 +13,7 @@ import {
   selectIsUserAdmin,
   setBranchesPagination,
 } from 'store/features';
-import { Branch, Module, SubModule } from 'shared/models';
+import { BranchDTO, Module, SubModule } from 'shared/models';
 import { APP_CONFIG, BRANCH_FIELDS, ROUTES } from 'shared/constants';
 import { getTestSelectorByModule } from 'shared/helpers';
 import Page, { PageSubtitle } from 'components/UI/Page';
@@ -30,7 +30,7 @@ const BranchTablePage: React.FC = () => {
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
   const loading = fetchStatus === 'loading' || deleteStatus === 'loading';
 
-  const columns: Column<Branch>[] = [
+  const columns: Column<BranchDTO>[] = [
     {
       name: BRANCH_FIELDS.name.name,
       field: BRANCH_FIELDS.name.field,
@@ -88,7 +88,7 @@ const BranchTablePage: React.FC = () => {
     navigate(ROUTES.newBranch.path);
   };
 
-  const handleDeleteBranch = (id: Branch['id']) => {
+  const handleDeleteBranch = (id: BranchDTO['id']) => {
     const itemsLength = branches?.items.length || 0;
 
     if (pageNumber > 1 && itemsLength <= 1) {
@@ -98,7 +98,7 @@ const BranchTablePage: React.FC = () => {
     dispatch(deleteBranch(id));
   };
 
-  const handleEditBranch = (id: Branch['id']) => {
+  const handleEditBranch = (id: BranchDTO['id']) => {
     const editPath = generatePath(ROUTES.editBranch.path, { id });
 
     navigate(editPath);
@@ -119,7 +119,7 @@ const BranchTablePage: React.FC = () => {
       actionButtonLabel="New Branch"
       onActionClick={handleActionClick}
     >
-      <Table<Branch>
+      <Table<BranchDTO>
         module={Module.branchManagement}
         subModule={SubModule.branchTable}
         loading={loading}

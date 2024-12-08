@@ -17,12 +17,84 @@
     "maximumCompanyCount": 15,
     "countries": [
       {
-        "name": "United States",
-        "code": "US"
+        "name": "Armenia",
+        "code": "AM"
+      },
+      {
+        "name": "Canada",
+        "code": "CA"
+      },
+      {
+        "name": "Germany",
+        "code": "DE"
+      },
+      {
+        "name": "Poland",
+        "code": "PL"
       },
       {
         "name": "Ukraine",
         "code": "UA"
+      },
+      {
+        "name": "United States",
+        "code": "US"
+      }
+    ],
+    "timeZones": [
+      {
+        "id": "Pacific/Honolulu",
+        "name": "Hawaiian Standard Time",
+        "countryCode": "US",
+        "currentOffset": "-10:00:00"
+      },
+      {
+        "id": "America/Anchorage",
+        "name": "Alaskan Standard Time",
+        "countryCode": "US",
+        "currentOffset": "-09:00:00"
+      },
+      {
+        "id": "America/New_York",
+        "name": "Eastern Standard Time",
+        "countryCode": "US",
+        "currentOffset": "-05:00:00"
+      },
+      {
+        "id": "America/Winnipeg",
+        "name": "Central Standard Time",
+        "countryCode": "CA",
+        "currentOffset": "-06:00:00"
+      },
+      {
+        "id": "America/Chicago",
+        "name": "Central Standard Time",
+        "countryCode": "US",
+        "currentOffset": "-06:00:00"
+      },
+      {
+        "id": "Europe/Berlin",
+        "name": "W. Europe Standard Time",
+        "countryCode": "DE",
+        "currentOffset": "01:00:00"
+      },
+      {
+        "id": "Europe/Warsaw",
+        "name": "Central European Standard Time",
+        "countryCode": "PL",
+        "currentOffset": "01:00:00"
+      },
+      {
+        "id": "Europe/Kyiv",
+        "name": "FLE Standard Time",
+        "countryCode": "UA",
+        "currentOffset": "02:00:00"
+      },
+      {
+        "id": "Asia/Yerevan",
+        "name": "Caucasus Standard Time",
+        "countryCode": "AM",
+        "currentOffset": "04:00:00"
       }
     ]
   }

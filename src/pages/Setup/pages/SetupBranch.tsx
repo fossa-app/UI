@@ -1,10 +1,18 @@
 import * as React from 'react';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useAppDispatch, useAppSelector } from 'store';
-import { createBranch, fetchCompanyLicense, selectBranch, selectCompanyLicense, selectIsUserAdmin, selectUserRoles } from 'store/features';
-import { Branch, Module, SubModule } from 'shared/models';
+import {
+  createBranch,
+  fetchCompanyLicense,
+  selectBranch,
+  selectCompanyLicense,
+  selectIsUserAdmin,
+  selectCompanyTimeZones,
+  selectUserRoles,
+} from 'store/features';
+import { BranchDTO, Module, SubModule } from 'shared/models';
 import { BRANCH_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
-import { mapDisabledFields } from 'shared/helpers';
+import { mapDisabledFields, mapTimeZonesToFieldSelectOptions } from 'shared/helpers';
 import FormLayout from 'components/layouts/FormLayout';
 import BrachDetailsForm from 'components/forms/BrachDetailsForm';
 
@@ -13,9 +21,10 @@ const SetupBranchPage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { updateStatus } = useAppSelector(selectBranch);
   const { status: companyLicenseStatus } = useAppSelector(selectCompanyLicense);
+  const companyTimeZones = useAppSelector(selectCompanyTimeZones);
   const dispatch = useAppDispatch();
 
-  const handleSubmit = (data: Branch) => {
+  const handleSubmit = (data: BranchDTO) => {
     dispatch(createBranch([data]));
   };
 
@@ -34,7 +43,7 @@ const SetupBranchPage: React.FC = () => {
         buttonLabel="Next"
         buttonIcon={<NavigateNextIcon />}
         buttonLoading={updateStatus === 'loading'}
-        fields={mapDisabledFields(BRANCH_SETUP_DETAILS_FORM_SCHEMA, userRoles)}
+        fields={mapTimeZonesToFieldSelectOptions(mapDisabledFields(BRANCH_SETUP_DETAILS_FORM_SCHEMA, userRoles), companyTimeZones)}
         onSubmit={handleSubmit}
       />
     </FormLayout>

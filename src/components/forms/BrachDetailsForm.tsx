@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Branch, BranchDTO, Module, SubModule } from 'shared/models';
+import { BranchDTO, Module, SubModule } from 'shared/models';
 import { MESSAGES } from 'shared/constants';
 import Form, { FieldProps } from 'components/UI/Form';
 
@@ -12,7 +12,7 @@ interface BrachDetailsFormProps {
   buttonLabel?: string;
   buttonIcon?: React.ReactNode;
   formLoading?: boolean;
-  data?: Branch;
+  data?: BranchDTO;
   // eslint-disable-next-line no-unused-vars
   onSubmit: (data: BranchDTO) => void;
 }
@@ -29,8 +29,9 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({
   buttonLoading,
   onSubmit,
 }) => {
-  const defaultValues: Branch = {
+  const defaultValues: BranchDTO = {
     name: '',
+    timeZoneId: '',
   };
 
   const handleFormSubmit = (formValue: BranchDTO) => {
@@ -38,7 +39,7 @@ const BrachDetailsForm: React.FC<BrachDetailsFormProps> = ({
   };
 
   return (
-    <Form<Branch, BranchDTO>
+    <Form<BranchDTO>
       module={module}
       subModule={subModule}
       defaultValues={defaultValues}

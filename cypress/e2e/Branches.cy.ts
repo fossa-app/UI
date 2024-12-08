@@ -3,6 +3,7 @@ import { getLinearLoader, getTablePaginationDisplayedRows, getTablePaginationSiz
 import {
   interceptDeleteBranchFailedRequest,
   interceptDeleteBranchRequest,
+  interceptFetchBranchByIdRequest,
   interceptFetchBranchesFailedRequest,
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -167,6 +168,7 @@ describe('Branches Tests', () => {
 
     it('should be able to navigate by buttons to branch management page', () => {
       interceptFetchBranchesRequest();
+      interceptFetchBranchByIdRequest('222222222222');
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
       cy.url().should('include', branchAdminRoutes[0]);
@@ -188,7 +190,7 @@ describe('Branches Tests', () => {
 
       cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to delete Branch');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-New York').should('exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-New York Branch').should('exist');
     });
 
     it('should be able to delete a branch if the branch deletion succeeded', () => {

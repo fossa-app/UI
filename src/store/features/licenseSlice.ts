@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'shared/configs/axios';
-import { CompanyLicense, ErrorResponse, SystemLicense } from 'shared/models';
+import { CompanyLicense, ErrorResponse, SystemLicense, TimeZone } from 'shared/models';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import { RootState, StateEntity } from 'store';
 import { setError } from './errorSlice';
@@ -127,5 +127,16 @@ const licenseSlice = createSlice({
 export const selectSystemLicense = (state: RootState) => state.license.system;
 export const selectCompanyLicense = (state: RootState) => state.license.company;
 export const selectSystemCountries = (state: RootState) => state.license.system.data?.entitlements?.countries;
-export const selectSystemTimezones = (state: RootState) => state.license.system.data?.entitlements?.timezones;
+export const selectSystemTimeZones = (state: RootState) => {
+  // TODO: this is a temporary workaround to replace country field with countryCode, should be removed
+  return state.license.system.data?.entitlements?.timeZones.map((timeZone) => {
+    if (timeZone.countryCode) {
+      return timeZone;
+    }
+    return {
+      ...timeZone,
+      countryCode: (timeZone as any).country?.code,
+    } as TimeZone;
+  });
+};
 export default licenseSlice.reducer;

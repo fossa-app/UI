@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Employee, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
+import { EmployeeDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
 import { setError } from './errorSlice';
 
 interface SetupState {
-  employee: StateEntity<Employee | undefined>;
-  employees: StateEntity<PaginatedResponse<Employee> | null>;
+  employee: StateEntity<EmployeeDTO | undefined>;
+  employees: StateEntity<PaginatedResponse<EmployeeDTO> | undefined>;
 }
 
 const initialState: SetupState = {
@@ -17,17 +17,17 @@ const initialState: SetupState = {
     updateStatus: 'idle',
   },
   employees: {
-    data: null,
+    data: undefined,
     page: APP_CONFIG.table.defaultPagination,
     fetchStatus: 'idle',
   },
 };
 
-export const fetchEmployee = createAsyncThunk<Employee | undefined, void, { rejectValue: ErrorResponse }>(
+export const fetchEmployee = createAsyncThunk<EmployeeDTO | undefined, void, { rejectValue: ErrorResponse }>(
   'employee/getEmployee',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get<Employee>(ENDPOINTS.employee);
+      const { data } = await axios.get<EmployeeDTO>(ENDPOINTS.employee);
 
       if (data) {
         return data;
@@ -41,27 +41,28 @@ export const fetchEmployee = createAsyncThunk<Employee | undefined, void, { reje
   }
 );
 
-export const fetchEmployees = createAsyncThunk<PaginatedResponse<Employee> | null, PaginationParams, { rejectValue: ErrorResponse }>(
-  'employee/getEmployees',
-  async ({ pageNumber, pageSize }, { rejectWithValue }) => {
-    try {
-      const { data } = await axios.get<PaginatedResponse<Employee>>(`${ENDPOINTS.employees}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+export const fetchEmployees = createAsyncThunk<
+  PaginatedResponse<EmployeeDTO> | undefined,
+  PaginationParams,
+  { rejectValue: ErrorResponse }
+>('employee/getEmployees', async ({ pageNumber, pageSize }, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(
+      `${ENDPOINTS.employees}?pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
 
-      if (data) {
-        return data;
-      }
-
-      return null;
-    } catch (error) {
-      return rejectWithValue({
-        ...(error as ErrorResponse),
-        title: MESSAGES.error.employee.notFound,
-      });
+    if (data) {
+      return data;
     }
+  } catch (error) {
+    return rejectWithValue({
+      ...(error as ErrorResponse),
+      title: MESSAGES.error.employee.notFound,
+    });
   }
-);
+});
 
-export const createEmployee = createAsyncThunk<void, Employee, { state: RootState; rejectValue: ErrorResponse }>(
+export const createEmployee = createAsyncThunk<void, EmployeeDTO, { state: RootState; rejectValue: ErrorResponse }>(
   'employee/setEmployee',
   async (employee, { dispatch, rejectWithValue }) => {
     try {
@@ -101,7 +102,7 @@ const employeeSlice = createSlice({
         state.employee.fetchStatus = 'failed';
         state.employee.error = action.payload;
       })
-      .addCase(fetchEmployee.fulfilled, (state, action: PayloadAction<Employee | undefined>) => {
+      .addCase(fetchEmployee.fulfilled, (state, action: PayloadAction<EmployeeDTO | undefined>) => {
         state.employee.data = action.payload;
         state.employee.fetchStatus = 'succeeded';
       })
@@ -119,11 +120,11 @@ const employeeSlice = createSlice({
         state.employees.fetchStatus = 'loading';
       })
       .addCase(fetchEmployees.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
-        state.employees.data = null;
+        state.employees.data = undefined;
         state.employees.fetchStatus = 'failed';
         state.employees.error = action.payload;
       })
-      .addCase(fetchEmployees.fulfilled, (state, action: PayloadAction<PaginatedResponse<Employee> | null>) => {
+      .addCase(fetchEmployees.fulfilled, (state, action: PayloadAction<PaginatedResponse<EmployeeDTO> | undefined>) => {
         state.employees.data = action.payload;
         state.employees.page!.totalItems = action.payload?.totalItems;
         state.employees.page!.totalPages = action.payload?.totalPages;

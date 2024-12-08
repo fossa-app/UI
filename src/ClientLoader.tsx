@@ -26,7 +26,7 @@ const ClientLoader: React.FC = () => {
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <Header />
       <SideBar variant="temporary" />
-      <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, padding: 3 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, padding: 4 }}>
         <Outlet />
       </Box>
       <Footer />
