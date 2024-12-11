@@ -6,7 +6,7 @@ import { createLazyComponent } from 'routes/lazy-loaded-component';
 
 const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
 
-interface FormLayoutProps {
+interface PageLayoutProps {
   module: Module;
   subModule: SubModule;
   pageTitle: string;
@@ -15,7 +15,7 @@ interface FormLayoutProps {
   onBackButtonClick?: () => void;
 }
 
-const FormLayout: React.FC<React.PropsWithChildren<FormLayoutProps>> = ({
+const PageLayout: React.FC<React.PropsWithChildren<PageLayoutProps>> = ({
   module,
   subModule,
   pageTitle,
@@ -32,7 +32,7 @@ const FormLayout: React.FC<React.PropsWithChildren<FormLayoutProps>> = ({
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <Page>
         <PageTitle
-          data-cy={`${module}-${subModule}-form-layout-title`}
+          data-cy={`${module}-${subModule}-page-layout-title`}
           withBackButton={withBackButton}
           onBackButtonClick={onBackButtonClick}
         >
@@ -44,4 +44,4 @@ const FormLayout: React.FC<React.PropsWithChildren<FormLayoutProps>> = ({
   );
 };
 
-export default FormLayout;
+export default PageLayout;

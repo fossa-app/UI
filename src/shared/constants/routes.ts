@@ -54,4 +54,8 @@ export const ROUTES: AppRoute = {
     name: 'Edit Branch',
     path: '/manage/branches/edit/:id',
   },
+  viewBranch: {
+    name: 'View Branch',
+    path: '/manage/branches/view/:id',
+  },
 };

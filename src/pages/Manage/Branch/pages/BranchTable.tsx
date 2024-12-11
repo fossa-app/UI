@@ -1,8 +1,5 @@
 import * as React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   deleteBranch,
@@ -14,12 +11,13 @@ import {
   selectUserRoles,
   setBranchesPagination,
 } from 'store/features';
-import { Branch, BranchDTO, Module, SubModule } from 'shared/models';
-import { APP_CONFIG, BRANCH_TABLE_SCHEMA, ROUTES } from 'shared/constants';
-import { getTestSelectorByModule, mapTableColumnsByRoles } from 'shared/helpers';
+import { Branch, Module, SubModule } from 'shared/models';
+import { ACTION_FIELDS, APP_CONFIG, BRANCH_TABLE_ACTIONS_SCHEMA, BRANCH_TABLE_SCHEMA, ROUTES } from 'shared/constants';
+import { filterTableActionsByRoles, getTestSelectorByModule, mapTableActionsColumn } from 'shared/helpers';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import Table from 'components/UI/Table';
 import TableLayout from 'components/layouts/TableLayout';
+import ActionsMenu from 'components/UI/Table/ActionsMenu';
 
 const BranchTablePage: React.FC = () => {
   const navigate = useNavigate();
@@ -31,31 +29,6 @@ const BranchTablePage: React.FC = () => {
   const { pageNumber, pageSize, totalItems } = page || APP_CONFIG.table.defaultPagination;
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
   const loading = fetchStatus === 'loading' || deleteStatus === 'loading';
-
-  const renderActionButtons = ({ id }: BranchDTO) => (
-    <>
-      <IconButton
-        data-cy={getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, `edit-${id}-branch-button`)}
-        aria-label="Edit"
-        size="small"
-        color="primary"
-        onClick={() => handleEditBranch(id)}
-      >
-        <EditIcon />
-      </IconButton>
-      <IconButton
-        data-cy={getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, `delete-${id}-branch-button`)}
-        aria-label="Delete"
-        size="small"
-        color="error"
-        onClick={() => handleDeleteBranch(id)}
-      >
-        <DeleteIcon />
-      </IconButton>
-    </>
-  );
-
-  const columns = mapTableColumnsByRoles(BRANCH_TABLE_SCHEMA, userRoles, renderActionButtons);
 
   const noRecordsTemplate = (
     <Page sx={{ margin: 0 }}>
@@ -75,11 +48,17 @@ const BranchTablePage: React.FC = () => {
     dispatch(setBranchesPagination({ ...page, pageSize, pageNumber: 1 }));
   };
 
-  const handleActionClick = () => {
+  const handleTableLayoutActionClick = () => {
     navigate(ROUTES.newBranch.path);
   };
 
-  const handleDeleteBranch = (id: BranchDTO['id']) => {
+  const handleViewBranch = ({ id }: Branch) => {
+    const viewPath = generatePath(ROUTES.viewBranch.path, { id });
+
+    navigate(viewPath);
+  };
+
+  const handleDeleteBranch = ({ id }: Branch) => {
     const itemsLength = branches?.items.length || 0;
 
     if (pageNumber > 1 && itemsLength <= 1) {
@@ -89,11 +68,28 @@ const BranchTablePage: React.FC = () => {
     dispatch(deleteBranch(id));
   };
 
-  const handleEditBranch = (id: BranchDTO['id']) => {
+  const handleEditBranch = ({ id }: Branch) => {
     const editPath = generatePath(ROUTES.editBranch.path, { id });
 
     navigate(editPath);
   };
+
+  const actionHandlers = {
+    [ACTION_FIELDS.view.field]: handleViewBranch,
+    [ACTION_FIELDS.edit.field]: handleEditBranch,
+    [ACTION_FIELDS.delete.field]: handleDeleteBranch,
+  };
+
+  const actions = filterTableActionsByRoles<Branch>(BRANCH_TABLE_ACTIONS_SCHEMA, userRoles).map((action) => ({
+    ...action,
+    onClick: actionHandlers[action.field],
+  }));
+
+  const renderActionButtons = (branch: Branch) => (
+    <ActionsMenu<Branch> module={Module.branchManagement} subModule={SubModule.branchTable} actions={actions} context={branch} />
+  );
+
+  const columns = mapTableActionsColumn(BRANCH_TABLE_SCHEMA, renderActionButtons);
 
   React.useEffect(() => {
     if (fetchStatus === 'idle') {
@@ -108,7 +104,7 @@ const BranchTablePage: React.FC = () => {
       withActionButton={isUserAdmin}
       pageTitle="Branches"
       actionButtonLabel="New Branch"
-      onActionClick={handleActionClick}
+      onActionClick={handleTableLayoutActionClick}
     >
       <Table<Branch>
         module={Module.branchManagement}

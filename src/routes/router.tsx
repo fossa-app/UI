@@ -20,7 +20,7 @@ const EmployeePage = createLazyComponent(() => import('pages/Manage/Employee/Emp
 const EmployeeTablePage = createLazyComponent(() => import('pages/Manage/Employee/pages/EmployeeTable'), { title: ROUTES.employees.name });
 const BranchPage = createLazyComponent(() => import('pages/Manage/Branch/Branch'));
 const BranchTablePage = createLazyComponent(() => import('pages/Manage/Branch/pages/BranchTable'), { title: ROUTES.branches.name });
-
+const ViewBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/ViewBranch'), { title: ROUTES.viewBranch.name });
 const CreateBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/ManageBranch'), {
   title: ROUTES.newBranch.name,
   isAdminRoute: true,
@@ -105,6 +105,10 @@ const router = createBrowserRouter(
                     {
                       path: ROUTES.editBranch.path,
                       element: EditBranchPage,
+                    },
+                    {
+                      path: ROUTES.viewBranch.path,
+                      element: ViewBranchPage,
                     },
                   ],
                 },

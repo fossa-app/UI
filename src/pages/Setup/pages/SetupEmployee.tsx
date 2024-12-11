@@ -6,7 +6,7 @@ import { EmployeeDTO, Module, SubModule } from 'shared/models';
 import { EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import { mapUserProfileToEmployee } from 'shared/helpers';
 import EmployeeDetailsForm from 'components/forms/EmployeeDetailsForm';
-import FormLayout from 'components/layouts/FormLayout';
+import PageLayout from 'components/layouts/PageLayout';
 
 const SetupEmployeePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -24,7 +24,7 @@ const SetupEmployeePage: React.FC = () => {
   }, [employee, fetchStatus]);
 
   return (
-    <FormLayout module={Module.employeeSetup} subModule={SubModule.employeeDetails} pageTitle={'Create Employee'}>
+    <PageLayout module={Module.employeeSetup} subModule={SubModule.employeeDetails} pageTitle="Create Employee">
       <EmployeeDetailsForm
         module={Module.employeeSetup}
         subModule={SubModule.employeeDetails}
@@ -35,7 +35,7 @@ const SetupEmployeePage: React.FC = () => {
         data={mapUserProfileToEmployee(user?.profile)}
         onSubmit={handleSubmit}
       />
-    </FormLayout>
+    </PageLayout>
   );
 };
 
