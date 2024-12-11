@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchEmployees, resetEmployeesFetchStatus, selectEmployees, selectUserRoles, setEmployeesPagination } from 'store/features';
+import { fetchEmployees, resetEmployeesFetchStatus, selectEmployees, setEmployeesPagination } from 'store/features';
 import { Employee, Module, SubModule } from 'shared/models';
 import { APP_CONFIG, EMPLOYEE_TABLE_SCHEMA } from 'shared/constants';
-import { getTestSelectorByModule, mapTableColumnsByRoles } from 'shared/helpers';
+import { getTestSelectorByModule } from 'shared/helpers';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import Table from 'components/UI/Table';
 import TableLayout from 'components/layouts/TableLayout';
@@ -11,10 +11,9 @@ import TableLayout from 'components/layouts/TableLayout';
 const EmployeeTablePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { fetchStatus, data: employees, page } = useAppSelector(selectEmployees);
-  const userRoles = useAppSelector(selectUserRoles);
   const { pageNumber, pageSize, totalItems } = page || APP_CONFIG.table.defaultPagination;
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
-  const columns = mapTableColumnsByRoles(EMPLOYEE_TABLE_SCHEMA, userRoles);
+  const columns = EMPLOYEE_TABLE_SCHEMA;
 
   const noRecordsTemplate = (
     <Page sx={{ my: 0 }}>

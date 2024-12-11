@@ -6,7 +6,7 @@ import { CompanyDTO, Module, SubModule } from 'shared/models';
 import { mapCountriesToFieldSelectOptions, mapDisabledFields } from 'shared/helpers';
 import { COMPANY_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import CompanyDetailsForm from 'components/forms/CompanyDetailsForm';
-import FormLayout from 'components/layouts/FormLayout';
+import PageLayout from 'components/layouts/PageLayout';
 
 const SetupCompanyPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -20,7 +20,7 @@ const SetupCompanyPage: React.FC = () => {
   };
 
   return (
-    <FormLayout module={Module.companySetup} subModule={SubModule.companyDetails} pageTitle={'Create Company'}>
+    <PageLayout module={Module.companySetup} subModule={SubModule.companyDetails} pageTitle="Create Company">
       <CompanyDetailsForm
         module={Module.companySetup}
         subModule={SubModule.companyDetails}
@@ -31,7 +31,7 @@ const SetupCompanyPage: React.FC = () => {
         fields={mapCountriesToFieldSelectOptions(mapDisabledFields(COMPANY_SETUP_DETAILS_FORM_SCHEMA, userRoles), countries)}
         onSubmit={handleSubmit}
       />
-    </FormLayout>
+    </PageLayout>
   );
 };
 

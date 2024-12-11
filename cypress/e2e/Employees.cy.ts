@@ -86,4 +86,14 @@ describe('Employees Tests', () => {
 
     getTablePaginationSizeInput(Module.employeeManagement, SubModule.employeeTable, 'table').should('have.value', '10');
   });
+
+  it('should not display action column and actions', () => {
+    interceptFetchEmployeesRequest();
+
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-layout-action-button').should('not.exist');
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'actions-menu-icon-222222222222').should('not.exist');
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'action-view-222222222222').should('not.exist');
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'action-edit-222222222222').should('not.exist');
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'action-delete-222222222222').should('not.exist');
+  });
 });

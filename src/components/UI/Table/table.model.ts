@@ -11,3 +11,11 @@ export interface Column<T = Item> {
   // eslint-disable-next-line no-unused-vars
   renderBodyCell?: (item: T) => React.ReactNode;
 }
+
+export interface Action<T = Item> {
+  name: React.ReactNode;
+  field: string;
+  roles?: UserRole[];
+  // eslint-disable-next-line no-unused-vars
+  onClick?: (context: T) => void;
+}

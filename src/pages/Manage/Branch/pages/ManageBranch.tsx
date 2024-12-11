@@ -14,10 +14,11 @@ import {
 } from 'store/features';
 import { BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
 import { BranchDTO, Module, SubModule } from 'shared/models';
-import BrachDetailsForm from 'components/forms/BranchDetailsForm';
-import FormLayout from 'components/layouts/FormLayout';
 import { mapDisabledFields, mapTimeZonesToFieldSelectOptions } from 'shared/helpers';
+import BrachDetailsForm from 'components/forms/BranchDetailsForm';
+import PageLayout from 'components/layouts/PageLayout';
 
+// TODO: maybe rename to CreateEditBranch
 const ManageBranchPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -58,7 +59,7 @@ const ManageBranchPage: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <FormLayout
+    <PageLayout
       withBackButton
       module={Module.branchManagement}
       subModule={SubModule.branchDetails}
@@ -76,7 +77,7 @@ const ManageBranchPage: React.FC = () => {
         buttonLoading={updateStatus === 'loading'}
         onSubmit={handleSubmit}
       />
-    </FormLayout>
+    </PageLayout>
   );
 };
 

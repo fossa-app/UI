@@ -85,12 +85,21 @@ describe('Branches Tests', () => {
       });
     });
 
-    it('should not display branch management buttons', () => {
+    it('should be able to navigate by buttons to branch view page', () => {
       interceptFetchBranchesRequest();
+      interceptFetchBranchByIdRequest('222222222222');
+
+      cy.visit('/manage/branches');
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').should('not.exist');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'edit-222222222222-branch-button').should('not.exist');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'delete-222222222222-branch-button').should('not.exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').should('exist').click();
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').should('exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-edit-222222222222').should('not.exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-delete-222222222222').should('not.exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').click();
+
+      cy.url().should('include', '/manage/branches/view/222222222222');
     });
   });
 
@@ -153,8 +162,9 @@ describe('Branches Tests', () => {
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button')
         .should('exist')
         .and('have.text', 'New Branch');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'edit-222222222222-branch-button').should('exist');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'delete-222222222222-branch-button').should('exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').should('exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-edit-222222222222').should('exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-delete-222222222222').should('exist');
     });
 
     it('should be able to manually navigate to branch management page', () => {
@@ -175,8 +185,21 @@ describe('Branches Tests', () => {
 
       cy.visit('/manage/branches');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'edit-222222222222-branch-button').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-edit-222222222222').click();
       cy.url().should('include', branchAdminRoutes[1]);
+    });
+
+    it('should be able to navigate by buttons to branch view page', () => {
+      interceptFetchBranchesRequest();
+      interceptFetchBranchByIdRequest('222222222222');
+
+      cy.visit('/manage/branches');
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').click();
+
+      cy.url().should('include', '/manage/branches/view/222222222222');
     });
 
     it('should not be able to delete a branch if the branch deletion failed', () => {
@@ -184,7 +207,8 @@ describe('Branches Tests', () => {
       cy.visit('/manage/branches');
 
       interceptDeleteBranchFailedRequest('222222222223');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'delete-222222222223-branch-button').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222223').should('exist').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-delete-222222222223').click();
 
       cy.wait('@deleteBranchFailedRequest');
 
@@ -198,7 +222,8 @@ describe('Branches Tests', () => {
       cy.visit('/manage/branches');
 
       interceptDeleteBranchRequest('222222222223');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'delete-222222222223-branch-button').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222223').should('exist').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-delete-222222222223').click();
 
       interceptFetchBranchesRequest();
       cy.wait('@deleteBranchRequest');

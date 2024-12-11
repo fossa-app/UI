@@ -13,7 +13,7 @@ import {
 import { BranchDTO, Module, SubModule } from 'shared/models';
 import { BRANCH_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import { mapDisabledFields, mapTimeZonesToFieldSelectOptions } from 'shared/helpers';
-import FormLayout from 'components/layouts/FormLayout';
+import PageLayout from 'components/layouts/PageLayout';
 import BrachDetailsForm from 'components/forms/BranchDetailsForm';
 
 const SetupBranchPage: React.FC = () => {
@@ -35,7 +35,7 @@ const SetupBranchPage: React.FC = () => {
   }, [companyLicenseStatus]);
 
   return (
-    <FormLayout module={Module.branchSetup} subModule={SubModule.branchDetails} pageTitle={'Create Branch'}>
+    <PageLayout module={Module.branchSetup} subModule={SubModule.branchDetails} pageTitle="Create Branch">
       <BrachDetailsForm
         module={Module.branchSetup}
         subModule={SubModule.branchDetails}
@@ -46,7 +46,7 @@ const SetupBranchPage: React.FC = () => {
         fields={mapTimeZonesToFieldSelectOptions(mapDisabledFields(BRANCH_SETUP_DETAILS_FORM_SCHEMA, userRoles), companyTimeZones)}
         onSubmit={handleSubmit}
       />
-    </FormLayout>
+    </PageLayout>
   );
 };
 
