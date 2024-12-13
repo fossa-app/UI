@@ -36,22 +36,6 @@
 //   }
 // }
 
-/* eslint-disable no-unused-vars */
-declare namespace Cypress {
-  interface Chainable {
-    loginMock(isAdmin?: boolean, expiresIn?: number): Chainable<void>;
-    logoutMock(): Chainable<void>;
-    interceptWithAuth(
-      method: string,
-      url: string | RegExp,
-      response: any,
-      alias?: string,
-      statusCode?: number,
-      delay?: number
-    ): Chainable<void>;
-  }
-}
-
 const createMockJwt = (isAdmin: boolean): string => {
   const header = { alg: 'HS256', typ: 'JWT' };
   const payload = {
@@ -94,7 +78,7 @@ Cypress.Commands.add('logoutMock', () => {
   localStorage.removeItem('oidc.user:http://localhost:9011:mock-client-id');
 });
 
-Cypress.Commands.add('interceptWithAuth', (method, url, response, alias = '', statusCode = 200, delay = 200) => {
+Cypress.Commands.add('interceptWithAuth', (method, url, response, alias = '', statusCode = 200, delay = 300) => {
   cy.intercept(
     {
       method,

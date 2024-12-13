@@ -40,9 +40,9 @@ describe('Branches Tests', () => {
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
-      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
-      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-title').should('have.text', 'Branches');
     });
 
@@ -51,7 +51,7 @@ describe('Branches Tests', () => {
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
-      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-header-cell-name').should('have.text', 'Name');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-header-cell-timeZoneName').should(
@@ -122,12 +122,18 @@ describe('Branches Tests', () => {
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
-      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
 
       cy.wait('@fetchBranchesRequest');
 
-      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
+    });
+
+    it('should not display the loader if the request resolves quickly', () => {
+      interceptFetchBranchesRequest(1, 5, 'fetchBranchesQuickRequest', 'branches', 200, 50);
+
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
     });
 
     it('should render branches table if there are fetched branches', () => {
@@ -135,7 +141,7 @@ describe('Branches Tests', () => {
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
-      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('have.css', 'visibility', 'hidden');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-header-cell-name').should('have.text', 'Name');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-header-cell-timeZoneName').should(

@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography';
 
 type FileUploadProps = {
   accept?: string;
-  // eslint-disable-next-line no-unused-vars
   onFileSelect: (file: File) => void;
 } & BoxProps;
 

@@ -23,5 +23,5 @@
       "module": "esnext"
     }
   },
-  "include": ["src", "node_modules/cypress/types/index.d.ts"]
+  "include": ["src", "cypress/**/*.ts", "types/**/*.ts"]
 }

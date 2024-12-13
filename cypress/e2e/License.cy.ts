@@ -114,7 +114,7 @@ describe('License Tests', () => {
         getCompanyLicenseDialogElement('dialog-upload-button').find('[data-cy="loading-button-end-icon"]').should('be.visible');
 
         cy.wait('@uploadCompanyLicenseFailedRequest').then(({ request }) => {
-          expect(request.headers['content-type']).to.include('multipart/form-data');
+          cy.wrap(request.headers['content-type']).should('contain', 'multipart/form-data');
         });
 
         cy.get('[data-cy="company-license-dialog"]').should('exist');
@@ -141,7 +141,7 @@ describe('License Tests', () => {
         getCompanyLicenseDialogElement('dialog-upload-button').find('[data-cy="loading-button-end-icon"]').should('be.visible');
 
         cy.wait('@uploadCompanyLicenseRequest').then(({ request }) => {
-          expect(request.headers['content-type']).to.include('multipart/form-data');
+          cy.wrap(request.headers['content-type']).should('contain', 'multipart/form-data');
         });
 
         cy.wait('@fetchCompanyLicenseRequest');

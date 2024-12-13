@@ -14,7 +14,6 @@ type FormProps<T> = React.PropsWithChildren<{
   defaultValues: DefaultValues<T>;
   values?: T;
   loading?: boolean;
-  // eslint-disable-next-line no-unused-vars
   onSubmit: (formValue: T) => void;
 }>;
 
