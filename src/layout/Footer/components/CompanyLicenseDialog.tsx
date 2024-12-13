@@ -12,7 +12,6 @@ import FileUpload from 'components/UI/FileUpload';
 
 type CompanyLicenseDialogProps = {
   loading: boolean;
-  // eslint-disable-next-line no-unused-vars
   onFileUpload: (file: File) => void;
 } & DialogProps;
 
@@ -35,7 +34,7 @@ const CompanyLicenseDialog: React.FC<CompanyLicenseDialogProps> = ({ loading, on
     onFileUpload(selectedFile);
   };
 
-  const handleClose = (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => {
+  const handleClose = (event: object, reason: 'backdropClick' | 'escapeKeyDown') => {
     setErrorMessage('');
 
     if (props.onClose) {

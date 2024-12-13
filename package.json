@@ -26,7 +26,7 @@
     "test:unit": "jest",
     "test:e2e": "npx cypress run --e2e",
     "test:e2e:open": "npx cypress open --e2e --browser chrome",
-    "lint": "eslint src cypress --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint",
     "format": "prettier --write \"{src,public,cypress}/**/*.{js,jsx,ts,tsx,css,json,html}\"",
     "prepare": "husky install"
   },
@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@eslint/js": "^9.16.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
@@ -58,15 +59,17 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/redux-mock-store": "^1.0.6",
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "@typescript-eslint/parser": "^5.62.0",
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0",
     "@vitejs/plugin-react-swc": "^3.7.2",
     "cypress": "^13.17.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.16.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-cypress": "^3.6.0",
+    "eslint-plugin-cypress": "^4.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.3",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "globals": "^15.13.0",
     "husky": "^9.1.6",
     "jest-environment-jsdom": "^29.7.0",
     "lint-staged": "^15.3.0",
@@ -76,8 +79,8 @@
     "sass": "^1.80.6",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.1.6",
     "vite": "^6.0.6",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite-tsconfig-paths": "^5.1.4",
+    "typescript": "^5.7.2"
   }
 }

@@ -1,6 +1,5 @@
 import { ROUTES } from './routes';
 
-/* eslint-disable no-unused-vars */
 export enum SearchContext {
   BRANCHES = 'branches',
   EMPLOYEES = 'employees',

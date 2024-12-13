@@ -1,7 +1,6 @@
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { SvgIconTypeMap } from '@mui/material/SvgIcon';
 
-/* eslint-disable no-unused-vars */
 export enum RouteKey {
   login = 'login',
   callback = 'callback',
@@ -22,7 +21,7 @@ export enum RouteKey {
 export interface RouteItem {
   name: string;
   path: string;
-  icon?: OverridableComponent<SvgIconTypeMap<{}, 'svg'>>;
+  icon?: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;
 }
 
 export type AppRoute = { [key in RouteKey]: RouteItem };

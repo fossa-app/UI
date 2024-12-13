@@ -2,9 +2,25 @@ import * as React from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
-const CircularLoader: React.FC = () => {
+interface CircularLoaderProps {
+  delay?: number;
+}
+
+const CircularLoader: React.FC<CircularLoaderProps> = ({ delay = 150 }) => {
+  const [showLoader, setShowLoader] = React.useState(false);
+
+  React.useEffect(() => {
+    const loaderTimeout = setTimeout(() => setShowLoader(true), delay);
+
+    return () => clearTimeout(loaderTimeout);
+  }, [delay]);
+
+  if (!showLoader) {
+    return null;
+  }
+
   return (
-    <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
+    <Backdrop open sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <CircularProgress color="secondary" />
     </Backdrop>
   );

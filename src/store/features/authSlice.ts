@@ -73,7 +73,7 @@ const authSlice = createSlice({
         state.user.data = action.payload;
         state.user.status = 'succeeded';
 
-        const atClaims = decodeJwt(action.payload?.access_token);
+        const atClaims = decodeJwt<AppUser>(action.payload?.access_token);
 
         if (state.user.data && atClaims?.roles?.length) {
           state.user.data.roles = atClaims.roles as UserRole[];

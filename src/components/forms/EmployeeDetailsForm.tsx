@@ -11,7 +11,6 @@ interface EmployeeDetailsFormProps {
   buttonIcon?: React.ReactNode;
   formLoading?: boolean;
   data?: EmployeeDTO;
-  // eslint-disable-next-line no-unused-vars
   onSubmit: (data: EmployeeDTO) => void;
 }
 

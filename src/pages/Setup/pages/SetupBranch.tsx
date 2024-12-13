@@ -32,7 +32,7 @@ const SetupBranchPage: React.FC = () => {
     if (companyLicenseStatus === 'idle') {
       dispatch(fetchCompanyLicense());
     }
-  }, [companyLicenseStatus]);
+  }, [companyLicenseStatus, dispatch]);
 
   return (
     <PageLayout module={Module.branchSetup} subModule={SubModule.branchDetails} pageTitle="Create Branch">

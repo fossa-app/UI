@@ -4,8 +4,6 @@ import { SelectProps } from '@mui/material/Select';
 import { GridBaseProps } from '@mui/material/Grid2';
 import { Module, SubModule, UserRole } from 'shared/models';
 
-/* eslint-disable no-unused-vars */
-
 type Validate<T> = {
   [key: string]: (value: T) => boolean | string | Promise<boolean | string>;
 };

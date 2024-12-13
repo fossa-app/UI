@@ -21,7 +21,7 @@ const SetupEmployeePage: React.FC = () => {
     if (!employee && fetchStatus === 'idle') {
       dispatch(fetchEmployee());
     }
-  }, [employee, fetchStatus]);
+  }, [employee, fetchStatus, dispatch]);
 
   return (
     <PageLayout module={Module.employeeSetup} subModule={SubModule.employeeDetails} pageTitle="Create Employee">

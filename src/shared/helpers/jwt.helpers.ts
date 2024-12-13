@@ -1,4 +1,4 @@
-export const decodeJwt = (token?: string): Record<string, any> | null => {
+export const decodeJwt = <T = unknown>(token?: string): T | null => {
   if (!token) {
     return null;
   }

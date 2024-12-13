@@ -29,12 +29,17 @@ const ManageBranchPage: React.FC = () => {
   const { id } = useParams();
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
 
-  const navigateBack = () => {
+  const navigateBack = React.useCallback(() => {
     navigate(ROUTES.branches.path);
-  };
+  }, [navigate]);
 
   const handleSubmit = (data: Omit<BranchDTO, 'id'>) => {
-    id ? dispatch(editBranch([id, data])) : dispatch(createBranch([data, false]));
+    if (id) {
+      dispatch(editBranch([id, data]));
+    } else {
+      dispatch(createBranch([data, false]));
+    }
+
     setFormSubmitted(true);
   };
 
@@ -43,7 +48,7 @@ const ManageBranchPage: React.FC = () => {
     if (updateStatus === 'succeeded' && formSubmitted) {
       navigateBack();
     }
-  }, [updateStatus, formSubmitted]);
+  }, [updateStatus, formSubmitted, navigateBack]);
 
   React.useEffect(() => {
     if (id) {

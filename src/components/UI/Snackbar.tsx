@@ -10,7 +10,7 @@ type SnackbarProps = {
 } & MuiSnackbarProps;
 
 const Snackbar: React.FC<SnackbarProps> = ({ open = false, message = '', type, onClose, ...props }) => {
-  const onSnackbarClose = (event: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
+  const onSnackbarClose = (_: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
     if (reason === 'clickaway') {
       return;
     }
