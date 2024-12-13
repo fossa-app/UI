@@ -8,7 +8,6 @@ import { StyledTextField } from './StyledSearch';
 interface SearchProps<T> {
   data: T[];
   context: SearchContext;
-  // eslint-disable-next-line no-unused-vars
   getOptionLabel: (option: T) => string;
 }
 

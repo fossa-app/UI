@@ -3,11 +3,7 @@ import { UserRole } from 'shared/models';
 import { ACTION_FIELD } from 'shared/constants';
 import { Action, Column } from 'components/UI/Table';
 
-export const mapTableActionsColumn = <T>(
-  columns: Column<T>[],
-  // eslint-disable-next-line no-unused-vars
-  renderBodyCell?: (item: T) => React.ReactNode
-): Column<T>[] => {
+export const mapTableActionsColumn = <T>(columns: Column<T>[], renderBodyCell?: (item: T) => React.ReactNode): Column<T>[] => {
   return columns.map((column) => {
     return {
       ...column,

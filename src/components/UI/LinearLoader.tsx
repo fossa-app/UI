@@ -3,11 +3,27 @@ import { alpha } from '@mui/material/styles';
 import Backdrop, { BackdropProps } from '@mui/material/Backdrop';
 import LinearProgress from '@mui/material/LinearProgress';
 
-const LinearLoader: React.FC<BackdropProps> = (props) => {
+type LinearLoaderProps = {
+  delay?: number;
+} & BackdropProps;
+
+const LinearLoader: React.FC<LinearLoaderProps> = ({ open, delay = 100, ...props }) => {
+  const [showLoader, setShowLoader] = React.useState(false);
+
+  React.useEffect(() => {
+    const loaderTimeout = setTimeout(() => setShowLoader(true), delay);
+
+    return () => clearTimeout(loaderTimeout);
+  }, [delay]);
+
+  if (!showLoader || !open) {
+    return null;
+  }
+
   return (
     <Backdrop
       data-cy="linear-loader"
-      open={props.open}
+      open={open}
       sx={{
         position: 'absolute',
         top: 0,
@@ -18,6 +34,7 @@ const LinearLoader: React.FC<BackdropProps> = (props) => {
         backgroundColor: (theme) => alpha(theme.palette.background.paper, 0.7),
         ...props.sx,
       }}
+      {...props}
     >
       <LinearProgress sx={{ position: 'absolute', top: 0, left: 0, right: 0 }} color="secondary" />
     </Backdrop>

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useAppSelector } from 'store';
 import { selectAppLoading } from 'store/features';
 import CircularLoader from 'components/UI/CircularLoader';

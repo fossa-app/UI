@@ -145,7 +145,7 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-edit-222222222222').click();
 
-    getLinearLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('not.have.css', 'visibility', 'hidden');
+    getLinearLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('exist');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-header').should('have.text', 'Branch Details');
     cy.wait('@fetchBranchByIdRequest');
 
@@ -191,6 +191,48 @@ describe('Branch Management Tests', () => {
     cy.get('[data-cy="page-title-back-button"]').click();
 
     cy.url().should('include', '/manage/branches');
-    getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.have.css', 'visibility', 'hidden');
+    getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
+  });
+
+  it('should reset the branch after editing and navigating back', () => {
+    interceptFetchBranchByIdRequest('222222222222');
+    cy.visit('/manage/branches');
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-edit-222222222222').click();
+    cy.wait('@fetchBranchByIdRequest');
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name')
+      .find('input')
+      .should('have.value', 'New York Branch');
+
+    cy.get('[data-cy="page-title-back-button"]').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
+
+    // TODO: fix flaky test
+    cy.url().should('include', '/manage/branches/new');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').should('have.value', '');
+  });
+
+  it('should fetch and display the branch by id when refreshing the page', () => {
+    interceptFetchBranchByIdRequest('222222222222');
+    cy.visit('/manage/branches/edit/222222222222');
+
+    cy.reload();
+
+    getLinearLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('exist');
+    cy.wait('@fetchBranchByIdRequest');
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name')
+      .find('input')
+      .should('have.value', 'New York Branch');
+  });
+
+  it('should not display the loader if the request resolves quickly', () => {
+    interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdQuickRequest', 200, 50);
+    cy.visit('/manage/branches/edit/222222222222');
+
+    getLinearLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('not.exist');
+    cy.wait('@fetchBranchByIdQuickRequest');
   });
 });

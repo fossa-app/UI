@@ -16,7 +16,7 @@ const SetupPage: React.FC = () => {
     if (status === 'idle') {
       dispatch(fetchSetupData());
     }
-  }, [status]);
+  }, [status, dispatch]);
 
   React.useEffect(() => {
     if (step === SetupStep.COMPANY) {
@@ -28,7 +28,7 @@ const SetupPage: React.FC = () => {
     } else if (step === SetupStep.COMPLETED) {
       navigate(ROUTES.manage.path);
     }
-  }, [step]);
+  }, [step, navigate]);
 
   if (status === 'loading') {
     return <CircularLoader />;

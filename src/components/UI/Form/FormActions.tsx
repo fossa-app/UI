@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import Box from '@mui/material/Box';
 import FormHelperText from '@mui/material/FormHelperText';
 import SaveIcon from '@mui/icons-material/Save';
