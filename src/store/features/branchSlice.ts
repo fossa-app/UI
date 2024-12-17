@@ -4,7 +4,7 @@ import axios from 'shared/configs/axios';
 import { Branch, BranchDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
 import { setError } from './errorSlice';
-import { mapBranch, mapBranches, mapTestBranchesTimeZone, mapTestBranchTimeZone } from 'shared/helpers';
+import { mapBranch, mapBranches } from 'shared/helpers';
 
 interface BranchState {
   branch: StateEntity<Branch | undefined>;
@@ -40,14 +40,12 @@ export const fetchBranches = createAsyncThunk<
       });
     }
 
-    // TODO: remove mapTestBranchesTimeZone, for testing purposes
     const state = getState() as RootState;
     const timeZones = state.license.system.data?.entitlements.timeZones || [];
-    const company = state.company.company.data;
 
     return {
       ...data,
-      items: mapBranches(mapTestBranchesTimeZone(data.items, timeZones, company), timeZones),
+      items: mapBranches(data.items, timeZones),
     };
   } catch (error) {
     return rejectWithValue({
@@ -62,13 +60,10 @@ export const fetchBranchById = createAsyncThunk<Branch, string, { rejectValue: E
   async (id, { getState, rejectWithValue }) => {
     try {
       const { data } = await axios.get<BranchDTO>(`${ENDPOINTS.branches}/${id}`);
-
-      // TODO: remove mapTestBranchTimeZone, for testing purposes
       const state = getState() as RootState;
       const timeZones = state.license.system.data?.entitlements.timeZones || [];
-      const company = state.company.company.data;
 
-      return mapBranch(mapTestBranchTimeZone(data, timeZones, company), timeZones);
+      return mapBranch(data, timeZones);
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);
     }

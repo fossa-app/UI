@@ -59,10 +59,9 @@ describe('Branch View Tests', () => {
       'have.text',
       'TimeZone'
     );
-    // TODO: add correct text for value
     getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-timeZoneName').should(
       'have.text',
-      'N/A'
+      'Eastern Standard Time'
     );
 
     cy.get('[data-cy="page-title-back-button"]').click();

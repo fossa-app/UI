@@ -170,10 +170,9 @@ describe('Branch Management Tests', () => {
       .should('exist')
       .and('have.text', 'Anchorage Branch');
 
-    // TODO: uncomment when the branch timeZone is available
-    // getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Alaskan Standard Time')
-    //   .should('exist')
-    //   .and('have.text', 'Alaskan Standard Time');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Alaskan Standard Time')
+      .should('exist')
+      .and('have.text', 'Alaskan Standard Time');
   });
 
   it('should be able to navigate back when the back button is clicked', () => {
