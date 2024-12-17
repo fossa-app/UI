@@ -1,7 +1,5 @@
 import { Country } from './common';
 
-/* eslint-disable no-unused-vars */
-
 export interface CompanyDTO {
   id?: number;
   name: string;

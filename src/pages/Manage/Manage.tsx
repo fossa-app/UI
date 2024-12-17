@@ -24,7 +24,7 @@ const ManagePage: React.FC = () => {
     if (companyLicenseStatus === 'idle') {
       dispatch(fetchCompanyLicense());
     }
-  }, [companyLicenseStatus]);
+  }, [companyLicenseStatus, dispatch]);
 
   if (status === 'loading') {
     return <CircularLoader />;

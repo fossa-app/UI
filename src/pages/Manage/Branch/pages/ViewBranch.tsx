@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchBranchById, selectBranch } from 'store/features';
+import { fetchBranchById, resetBranch, selectBranch } from 'store/features';
 import { Module, SubModule } from 'shared/models';
 import { BRANCH_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
@@ -22,6 +22,12 @@ const ViewBranchPage: React.FC = () => {
       dispatch(fetchBranchById(id));
     }
   }, [id, dispatch]);
+
+  React.useEffect(() => {
+    return () => {
+      dispatch(resetBranch());
+    };
+  }, [dispatch]);
 
   return (
     <PageLayout

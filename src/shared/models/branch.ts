@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 import { TimeZone } from './common';
 
 export interface BranchDTO {

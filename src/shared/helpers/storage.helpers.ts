@@ -1,11 +1,11 @@
 import { User } from 'oidc-client-ts';
 import { OIDC_INITIAL_CONFIG } from 'shared/constants';
 
-export const saveToLocalStorage = <T = any>(key: string, value: T) => {
+export const saveToLocalStorage = <T = unknown>(key: string, value: T) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
-export const getFromLocalStorage = <T = any>(key: string): T | null => {
+export const getFromLocalStorage = <T = unknown>(key: string): T | null => {
   const data = localStorage.getItem(key);
 
   if (!data) {
@@ -14,7 +14,7 @@ export const getFromLocalStorage = <T = any>(key: string): T | null => {
 
   try {
     return JSON.parse(data) as T;
-  } catch (error) {
+  } catch {
     return null;
   }
 };

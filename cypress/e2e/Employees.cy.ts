@@ -36,19 +36,26 @@ describe('Employees Tests', () => {
   it('should display the loader if fetching employees is in progress', () => {
     interceptFetchEmployeesRequest();
 
+    getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
     cy.wait('@fetchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
-    getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.have.css', 'visibility', 'hidden');
     getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-no-employees').should('not.exist');
 
-    getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('have.css', 'visibility', 'hidden');
+    getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.exist');
+  });
+
+  it('should not display the loader if the request resolves quickly', () => {
+    interceptFetchEmployeesRequest(1, 5, 'fetchEmployeesQuickRequest', 200, 50);
+
+    getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.exist');
   });
 
   it('should render employees table if there are fetched employees', () => {
     interceptFetchEmployeesRequest();
 
+    getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
     cy.wait('@fetchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
     getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-no-employees').should('not.exist');
-    getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.have.css', 'visibility', 'hidden');
+    getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.exist');
     getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 3);
     getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-header-cell-firstName').should(
       'have.text',
