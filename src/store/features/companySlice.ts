@@ -20,17 +20,15 @@ const initialState: CompanyState = {
 
 export const fetchCompany = createAsyncThunk<Company | undefined, boolean | undefined, { rejectValue: ErrorResponse }>(
   'company/getCompany',
-  async (_, { rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
     try {
       const { data } = await axios.get<CompanyDTO>(ENDPOINTS.company);
 
       if (data) {
-        // TODO: this is a temporary workaround to replace {name, code} field with countryCode, should be removed
-        if (data.countryCode) {
-          return mapCompany(data);
-        }
-        const { country, ...restData } = data as any;
-        return { ...restData, countryCode: country?.code };
+        const state = getState() as RootState;
+        const countries = state.license.system.data?.entitlements.countries || [];
+
+        return mapCompany(data, countries);
       }
     } catch (error) {
       return rejectWithValue({
