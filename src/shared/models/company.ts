@@ -8,7 +8,9 @@ export interface CompanyDTO {
   countryCode: Country['code'];
 }
 
-export interface Company extends CompanyDTO {}
+export interface Company extends CompanyDTO {
+  countryName?: Country['name'];
+}
 
 export type CompanyFieldConfig = {
   [K in keyof Company]: { field: K; name: string };
