@@ -14,35 +14,38 @@ const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { data: authSettings } = useAppSelector(selectAuthSettings);
   const [shouldNavigate, setShouldNavigate] = React.useState(false);
 
-  const refreshToken = async (errorConfig: AxiosRequestConfig): Promise<ErrorResponse | null> => {
-    try {
-      const user = await userManager.signinSilent();
+  const refreshToken = React.useCallback(
+    async (errorConfig: AxiosRequestConfig): Promise<ErrorResponse | null> => {
+      try {
+        const user = await userManager.signinSilent();
 
-      if (user?.access_token && errorConfig.headers) {
-        errorConfig.headers.Authorization = `${user.token_type} ${user.access_token}`;
+        if (user?.access_token && errorConfig.headers) {
+          errorConfig.headers.Authorization = `${user.token_type} ${user.access_token}`;
 
-        return axios(errorConfig);
-      }
-    } catch (error) {
-      await userManager.removeUser();
+          return axios(errorConfig);
+        }
+      } catch {
+        await userManager.removeUser();
 
-      setShouldNavigate(true);
-      dispatch(removeUser());
+        setShouldNavigate(true);
+        dispatch(removeUser());
 
-      dispatch(
-        setError({
+        dispatch(
+          setError({
+            title: MESSAGES.error.general.unAuthorized,
+          })
+        );
+
+        return Promise.reject({
           title: MESSAGES.error.general.unAuthorized,
-        })
-      );
+          status: 401,
+        });
+      }
 
-      return Promise.reject({
-        title: MESSAGES.error.general.unAuthorized,
-        status: 401,
-      });
-    }
-
-    return null;
-  };
+      return null;
+    },
+    [dispatch, userManager]
+  );
 
   React.useEffect(() => {
     if (shouldNavigate) {
@@ -115,7 +118,7 @@ const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
       axios.interceptors.request.eject(requestInterceptor);
       axios.interceptors.response.eject(responseInterceptor);
     };
-  }, [authSettings]);
+  }, [authSettings, dispatch, refreshToken]);
 
   return <>{children}</>;
 };

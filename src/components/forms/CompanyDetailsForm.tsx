@@ -13,7 +13,6 @@ interface CompanyDetailsFormProps {
   buttonIcon?: React.ReactNode;
   formLoading?: boolean;
   data?: CompanyDTO;
-  // eslint-disable-next-line no-unused-vars
   onSubmit: (data: CompanyDTO) => void;
 }
 

@@ -13,7 +13,6 @@ interface BranchDetailsFormProps {
   buttonIcon?: React.ReactNode;
   formLoading?: boolean;
   data?: BranchDTO;
-  // eslint-disable-next-line no-unused-vars
   onSubmit: (data: BranchDTO) => void;
 }
 

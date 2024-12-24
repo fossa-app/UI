@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { resetMockState, setMockState } from '../store';
 import { getUserManager } from '../oidc-client-mock';
