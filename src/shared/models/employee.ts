@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 export interface EmployeeDTO {
   id?: number;
   companyId?: number;

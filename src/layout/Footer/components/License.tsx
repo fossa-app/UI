@@ -1,17 +1,17 @@
-import React from 'react';
+import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 interface LicenseProps {
   isAdmin: boolean;
+  setupCompleted: boolean;
   company?: string;
   system?: string;
-  setupCompleted: boolean;
   onCompanyLicenseClick: () => void;
 }
 
-const License: React.FC<LicenseProps> = ({ isAdmin, company, system = 'Unlicensed System', setupCompleted, onCompanyLicenseClick }) => {
+const License: React.FC<LicenseProps> = ({ isAdmin, company, setupCompleted, system = 'Unlicensed System', onCompanyLicenseClick }) => {
   const renderCompanyLicense = () => {
     if (company) {
       return (

@@ -23,9 +23,7 @@ type TableProps<T> = {
   pageSizeOptions: number[];
   totalItems?: number;
   noRecordsTemplate?: React.ReactElement;
-  // eslint-disable-next-line no-unused-vars
   onPageNumberChange: (pageNumber: number) => void;
-  // eslint-disable-next-line no-unused-vars
   onPageSizeChange: (pageSize: number) => void;
 } & PaperProps;
 

@@ -24,7 +24,7 @@ export const getCompanyLicenseDialogElement = (selector: string) => {
   return cy.get('[data-cy="company-license-dialog"]').find(`[data-cy=${selector}]`);
 };
 
-export const selectOption = (module: Module, subModule: SubModule, fieldName: string, optionName) => {
+export const selectOption = (module: Module, subModule: SubModule, fieldName: string, optionName: string) => {
   getTestSelectorByModule(module, subModule, `form-field-${fieldName}`).click();
   getTestSelectorByModule(module, subModule, `form-field-${fieldName}-option-${optionName}`).click();
 };

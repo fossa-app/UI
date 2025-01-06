@@ -3,8 +3,8 @@ import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { Client, ErrorResponse } from 'shared/models';
 import { MESSAGES, ROUTES, ENDPOINTS } from 'shared/constants';
-import { updateAuthSettings } from './authSlice';
 import { parseResponseData } from 'shared/helpers';
+import { updateAuthSettings } from './authSlice';
 
 interface IdentityState {
   client: StateEntity<Client | null>;
@@ -23,18 +23,18 @@ export const fetchClient = createAsyncThunk<Client | null, void, { rejectValue: 
     try {
       const { data } = await axios.get<Client>(`${ENDPOINTS.client}?origin=${window.location.origin}`);
       // TODO: this should be handled in AxiosInterceptor, but this method is not being called in axios response
-      const parseData = parseResponseData(data);
+      const parsedData = parseResponseData<Client>(data);
 
-      if (parseData) {
+      if (parsedData) {
         dispatch(
           updateAuthSettings({
-            client_id: parseData.clientId,
+            client_id: parsedData.clientId,
             redirect_uri: `${window.location.origin}${ROUTES.callback.path}`,
             post_logout_redirect_uri: `${window.location.origin}/`,
           })
         );
 
-        return parseData;
+        return parsedData;
       }
 
       return rejectWithValue({ title: MESSAGES.error.client.notFound });

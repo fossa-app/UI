@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 const reportWebVitals = (
   onPerfEntry?: (metric: { name: string; value: number; delta: number; id: string; entries: PerformanceEntry[] }) => void
 ) => {

@@ -19,14 +19,14 @@ const CallbackPage = () => {
     try {
       await userManager.signinRedirectCallback();
       navigate(ROUTES.manage.path);
-    } catch (error) {
+    } catch {
       navigate(ROUTES.login.path);
     }
   };
 
   React.useEffect(() => {
     handleSignInCallback();
-  }, []);
+  });
 
   return <CircularLoader />;
 };

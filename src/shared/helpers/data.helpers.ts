@@ -1,6 +1,6 @@
-export const parseResponseData = (data: string | object): any => {
+export const parseResponseData = <T = unknown>(data: string | object): T => {
   if (data === '') {
-    return data;
+    return data as T;
   }
 
   if (typeof data === 'string') {
@@ -8,7 +8,6 @@ export const parseResponseData = (data: string | object): any => {
       return !isNaN(Number(num)) && !Number.isSafeInteger(Number(num));
     };
 
-    // eslint-disable-next-line no-unused-vars
     const enquoteBigNumber = (jsonString: string, bigNumChecker: (num: string | number) => boolean): string =>
       jsonString.replaceAll(/([:\s,[]*)(\d+)([\s,\]]*)/g, (matchingSubstr, prefix, bigNum, suffix) =>
         bigNumChecker(bigNum) ? `${prefix}"${bigNum}"${suffix}` : matchingSubstr
@@ -21,12 +20,12 @@ export const parseResponseData = (data: string | object): any => {
           return BigInt(value);
         }
         return value;
-      });
+      }) as T;
     } catch (error) {
       console.error('Error parsing response data:', error);
-      return data;
+      return data as T;
     }
   }
 
-  return data;
+  return data as T;
 };

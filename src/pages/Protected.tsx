@@ -16,7 +16,7 @@ const ProtectedPage: React.FC = () => {
     } else if (!user && status === 'failed') {
       navigate(ROUTES.login.path);
     }
-  }, [user, status]);
+  }, [user, status, dispatch, navigate]);
 
   if (status === 'failed') {
     return null;

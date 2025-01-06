@@ -27,12 +27,11 @@ const SelectField: React.FC<SelectFieldProps> = ({ module, subModule, label, nam
   };
 
   return (
-    <FormControl variant="filled" fullWidth>
+    <FormControl variant="filled" error={!!errors[name]} fullWidth>
       <InputLabel shrink={!!value}>{label}</InputLabel>
       <Select
         data-cy={`${module}-${subModule}-form-field-${name}`}
         value={(!!options?.length && value) || ''}
-        error={!!errors[name]}
         {...register(name, { ...props.rules })}
         {...menuProps}
         {...props}

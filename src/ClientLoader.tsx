@@ -16,7 +16,7 @@ const ClientLoader: React.FC = () => {
     if (status === 'idle') {
       dispatch(fetchClient());
     }
-  }, [status]);
+  }, [status, dispatch]);
 
   if (loading || !client) {
     return null;
