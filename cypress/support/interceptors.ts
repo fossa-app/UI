@@ -87,23 +87,21 @@ export const interceptCreateCompanyFailedRequest = () => {
   cy.interceptWithAuth('POST', `${serverBaseUrl}/Company`, null, 'createCompanyFailedRequest', 404);
 };
 
+// TODO: change params structure, combine pagination and configs separately
 export const interceptFetchBranchesRequest = (
   pageNumber = 1,
   pageSize = 5,
+  search = '',
   alias = 'fetchBranchesRequest',
   fixture = 'branches',
   statusCode = 200,
   delay = 300
 ) => {
   cy.fixture(fixture).then((branches) => {
-    cy.interceptWithAuth(
-      'GET',
-      `${serverBaseUrl}/Branches?pageNumber=${pageNumber}&pageSize=${pageSize}`,
-      branches,
-      alias,
-      statusCode,
-      delay
-    );
+    const searchParam = search ? `&search=${search}` : '';
+    const url = `${serverBaseUrl}/Branches?pageNumber=${pageNumber}&pageSize=${pageSize}${searchParam}`;
+
+    cy.interceptWithAuth('GET', url, branches, alias, statusCode, delay);
   });
 };
 
@@ -180,22 +178,21 @@ export const interceptCreateEmployeeFailedRequest = () => {
   cy.interceptWithAuth('POST', `${serverBaseUrl}/Employee`, null, 'createEmployeeFailedRequest', 404);
 };
 
+// TODO: change params structure, combine pagination and configs separately
 export const interceptFetchEmployeesRequest = (
   pageNumber = 1,
   pageSize = 5,
+  search = '',
   alias = 'fetchEmployeesRequest',
+  fixture = 'employees',
   statusCode = 200,
   delay = 300
 ) => {
-  cy.fixture('employees').then((employees) => {
-    cy.interceptWithAuth(
-      'GET',
-      `${serverBaseUrl}/Employees?pageNumber=${pageNumber}&pageSize=${pageSize}`,
-      employees,
-      alias,
-      statusCode,
-      delay
-    );
+  cy.fixture(fixture).then((employees) => {
+    const searchParam = search ? `&search=${search}` : '';
+    const url = `${serverBaseUrl}/Employees?pageNumber=${pageNumber}&pageSize=${pageSize}${searchParam}`;
+
+    cy.interceptWithAuth('GET', url, employees, alias, statusCode, delay);
   });
 };
 

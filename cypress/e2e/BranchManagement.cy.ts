@@ -61,7 +61,7 @@ describe('Branch Management Tests', () => {
       .and('have.text', 'The Branch Name must not exceed 50 characters.');
   });
 
-  it('should not be able to create a new branch if the form is invalid or branch creation failed', () => {
+  it('should not be able to create new branch if the form is invalid or branch creation failed', () => {
     interceptCreateBranchFailedRequest();
     cy.visit('/manage/branches');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
@@ -77,7 +77,7 @@ describe('Branch Management Tests', () => {
     cy.url().should('include', '/manage/branches/new');
   });
 
-  it('should be able to create a new branch and be navigated back to branch table page if the form is valid and branch creation succeeded', () => {
+  it('should be able to create new branch and be navigated back to branch table page if the form is valid and branch creation succeeded', () => {
     interceptCreateBranchRequest();
     cy.visit('/manage/branches');
 
@@ -89,7 +89,7 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('contain.text', 'Save');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
 
-    interceptFetchBranchesRequest(1, 5, 'fetchMultipleBranchesRequest', 'branches-multiple');
+    interceptFetchBranchesRequest(1, 5, '', 'fetchMultipleBranchesRequest', 'branches-multiple');
     cy.wait('@createBranchRequest');
     cy.wait('@fetchMultipleBranchesRequest');
 
@@ -157,9 +157,9 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('have.attr', 'disabled');
     getLoadingButtonLoadingIcon(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('be.visible');
 
-    interceptFetchBranchesRequest(1, 5, 'fetchMultipleBranchesRequest', 'branches-multiple');
+    interceptFetchBranchesRequest(1, 5, '', 'fetchMultipleBranchesRequest', 'branches-multiple');
     cy.wait('@editBranchRequest');
-    interceptFetchBranchesRequest(1, 5, 'fetchMultipleUpdatedBranchesRequest', 'branches-multiple-updated');
+    interceptFetchBranchesRequest(1, 5, '', 'fetchMultipleUpdatedBranchesRequest', 'branches-multiple-updated');
 
     cy.url().should('include', '/manage/branches');
 
@@ -176,7 +176,7 @@ describe('Branch Management Tests', () => {
   });
 
   it('should be able to navigate back when the back button is clicked', () => {
-    interceptFetchBranchesRequest(1, 5, 'fetchMultipleBranchesRequest', 'branches');
+    interceptFetchBranchesRequest(1, 5, '', 'fetchMultipleBranchesRequest', 'branches');
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit('/manage/branches');
 

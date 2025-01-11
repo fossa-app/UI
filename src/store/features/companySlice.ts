@@ -99,17 +99,7 @@ export const selectCompanyTimeZones = createSelector(
       return [];
     }
 
-    return filterUniqueByField(
-      timeZones?.filter((timeZone) => {
-        // TODO: remove this check
-        if (timeZone.countryCode) {
-          return timeZone.countryCode === countryCode;
-        }
-        // TODO: replace (timeZone as any).country with timeZones.countryCode when the BE changes
-        return (timeZone as any).country.code === countryCode;
-      }) || [],
-      'name'
-    );
+    return filterUniqueByField(timeZones?.filter((timeZone) => timeZone.countryCode === countryCode) || [], 'name');
   }
 );
 

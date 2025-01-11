@@ -25,10 +25,10 @@ const SetupPage: React.FC = () => {
       navigate(ROUTES.setBranch.path);
     } else if (step === SetupStep.EMPLOYEE) {
       navigate(ROUTES.setEmployee.path);
-    } else if (step === SetupStep.COMPLETED) {
+    } else if (step === SetupStep.COMPLETED && status !== 'failed') {
       navigate(ROUTES.manage.path);
     }
-  }, [step, navigate]);
+  }, [step, status, navigate]);
 
   if (status === 'loading') {
     return <CircularLoader />;

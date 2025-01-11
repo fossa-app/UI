@@ -4,6 +4,7 @@ import axios from 'shared/configs/axios';
 import { EmployeeDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
 import { setError } from './errorSlice';
+import { prepareQueryParams } from 'shared/helpers';
 
 interface SetupState {
   employee: StateEntity<EmployeeDTO | undefined>;
@@ -43,13 +44,12 @@ export const fetchEmployee = createAsyncThunk<EmployeeDTO | undefined, void, { r
 
 export const fetchEmployees = createAsyncThunk<
   PaginatedResponse<EmployeeDTO> | undefined,
-  PaginationParams,
+  Partial<PaginationParams>,
   { rejectValue: ErrorResponse }
->('employee/getEmployees', async ({ pageNumber, pageSize }, { rejectWithValue }) => {
+>('employee/getEmployees', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
   try {
-    const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(
-      `${ENDPOINTS.employees}?pageNumber=${pageNumber}&pageSize=${pageSize}`
-    );
+    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
+    const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
 
     if (data) {
       return data;
@@ -85,8 +85,8 @@ const employeeSlice = createSlice({
   name: 'employee',
   initialState,
   reducers: {
-    setEmployeesPagination(state, action: PayloadAction<PaginationParams>) {
-      state.employees.page = action.payload;
+    setEmployeesPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
+      state.employees.page = { ...state.employees.page, ...action.payload };
     },
     resetEmployeesFetchStatus(state) {
       state.employees.fetchStatus = initialState.employees.fetchStatus;

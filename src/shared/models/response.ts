@@ -16,6 +16,7 @@ export interface PaginatedResponse<T> {
 export interface PaginationParams {
   pageNumber: number;
   pageSize: number;
+  search: string;
   totalItems?: number;
   totalPages?: number;
 }

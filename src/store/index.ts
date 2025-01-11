@@ -39,7 +39,7 @@ export interface StateEntity<T = unknown> {
   updateStatus?: Status;
   deleteStatus?: Status;
   error?: ErrorResponse;
-  page?: PaginationParams;
+  page?: Partial<PaginationParams>;
 }
 
 export const useAppDispatch: () => AppDispatch = useDispatch;

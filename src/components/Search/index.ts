@@ -1,1 +1,2 @@
-export { default } from './Search';
+export { default } from './SearchPortal';
+export * from './SearchContext';

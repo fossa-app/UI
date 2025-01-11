@@ -6,6 +6,7 @@ import { fetchClient, selectClient } from 'store/features';
 import Header from 'layout/Header';
 import Footer from 'layout/Footer';
 import SideBar from 'layout/Sidebar';
+import { SearchProvider } from 'components/Search';
 
 const ClientLoader: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -23,14 +24,16 @@ const ClientLoader: React.FC = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-      <Header />
-      <SideBar variant="temporary" />
-      <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, padding: 4 }}>
-        <Outlet />
+    <SearchProvider>
+      <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+        <Header />
+        <SideBar variant="temporary" />
+        <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, padding: 4 }}>
+          <Outlet />
+        </Box>
+        <Footer />
       </Box>
-      <Footer />
-    </Box>
+    </SearchProvider>
   );
 };
 
