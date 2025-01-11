@@ -44,16 +44,16 @@ describe('Employees Tests', () => {
   });
 
   it('should not display the loader if the request resolves quickly', () => {
-    interceptFetchEmployeesRequest(1, 5, 'fetchEmployeesQuickRequest', 200, 50);
+    interceptFetchEmployeesRequest(1, 5, '', 'fetchEmployeesQuickRequest', 'employees', 200, 50);
 
     getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.exist');
   });
 
   it('should render employees table if there are fetched employees', () => {
-    interceptFetchEmployeesRequest();
+    interceptFetchEmployeesRequest(1, 5, '', 'fetchMultipleEmployeesRequest', 'employees-multiple');
 
     getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
-    cy.wait('@fetchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
+    cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
     getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-no-employees').should('not.exist');
     getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.exist');
     getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 3);
@@ -85,13 +85,50 @@ describe('Employees Tests', () => {
     cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(0).should('have.text', '5');
     cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(1).should('have.text', '10');
 
-    interceptFetchEmployeesRequest(1, 10, 'fetch10EmployeesRequest');
+    interceptFetchEmployeesRequest(1, 10, '', 'fetch10EmployeesRequest');
 
     cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="10"]').click();
 
     cy.wait('@fetch10EmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
 
     getTablePaginationSizeInput(Module.employeeManagement, SubModule.employeeTable, 'table').should('have.value', '10');
+  });
+
+  it('should send correct request when search changes', () => {
+    interceptFetchEmployeesRequest(1, 5, '', 'fetchMultipleEmployeesRequest', 'employees-multiple');
+
+    cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
+
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 3);
+
+    cy.get('[data-cy="search-employees"]').find('input').clear();
+    cy.get('[data-cy="search-employees"]').find('input').type('Anthony');
+
+    interceptFetchEmployeesRequest(1, 5, 'Anthony', 'fetchSearchedEmployeesRequest', 'employees');
+
+    getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
+
+    cy.wait('@fetchSearchedEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5&search=Anthony');
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 1);
+
+    cy.get('[data-cy="search-employees"]').find('input').clear();
+    cy.get('[data-cy="search-employees"]').find('input').type('Joe');
+
+    interceptFetchEmployeesRequest(1, 5, 'Joe', 'fetchSearchedNoEmployeesRequest', 'employees-empty');
+
+    getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
+
+    cy.wait('@fetchSearchedNoEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5&search=Joe');
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 0);
+
+    cy.get('[data-cy="search-employees"]').find('input').clear();
+
+    interceptFetchEmployeesRequest(1, 5, '', 'fetchMultipleEmployeesRequest', 'employees-multiple');
+
+    getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
+    cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
+
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 3);
   });
 
   it('should not display action column and actions', () => {

@@ -3,20 +3,6 @@
   "pageSize": 5,
   "items": [
     {
-      "id": 333333333333,
-      "companyId": 111111111111,
-      "firstName": "Gabriel",
-      "lastName": "Archangel",
-      "fullName": "Gabriel Admin Archangel"
-    },
-    {
-      "id": 333333333334,
-      "companyId": 111111111111,
-      "firstName": "Aziraphale",
-      "lastName": "Fell",
-      "fullName": "Aziraphale User Fell"
-    },
-    {
       "id": 333333333335,
       "companyId": 111111111111,
       "firstName": "Anthony",
@@ -24,6 +10,6 @@
       "fullName": "Anthony User Crowley"
     }
   ],
-  "totalItems": 3,
+  "totalItems": 1,
   "totalPages": 1
 }

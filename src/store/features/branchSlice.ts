@@ -4,7 +4,7 @@ import axios from 'shared/configs/axios';
 import { Branch, BranchDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
 import { setError } from './errorSlice';
-import { mapBranch, mapBranches } from 'shared/helpers';
+import { mapBranch, mapBranches, prepareQueryParams } from 'shared/helpers';
 
 interface BranchState {
   branch: StateEntity<Branch | undefined>;
@@ -27,11 +27,12 @@ const initialState: BranchState = {
 
 export const fetchBranches = createAsyncThunk<
   PaginatedResponse<Branch> | undefined,
-  [PaginationParams, boolean?],
+  [Partial<PaginationParams>, boolean?],
   { rejectValue: ErrorResponse }
->('branch/getBranches', async ([{ pageNumber, pageSize }, shouldRejectEmptyResponse = false], { getState, rejectWithValue }) => {
+>('branch/getBranches', async ([{ pageNumber, pageSize, search }, shouldRejectEmptyResponse = false], { getState, rejectWithValue }) => {
   try {
-    const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
+    const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?${queryParams}`);
 
     if (!data.items.length && shouldRejectEmptyResponse) {
       return rejectWithValue({
@@ -134,8 +135,8 @@ const branchSlice = createSlice({
   name: 'branch',
   initialState,
   reducers: {
-    setBranchesPagination(state, action: PayloadAction<PaginationParams>) {
-      state.branches.page = action.payload;
+    setBranchesPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
+      state.branches.page = { ...state.branches.page, ...action.payload };
     },
     resetBranch(state) {
       state.branch = initialState.branch;

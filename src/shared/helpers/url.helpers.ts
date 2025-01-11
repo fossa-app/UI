@@ -1,5 +1,3 @@
-import { SEARCH_CONTEXTS, SearchContext } from 'shared/constants';
-
 export const getBackendOrigin = (frontendOrigin: string): string => {
   const suffixMappings = new Map([
     ['.dev.localhost:4211', '.dev.localhost:5210'],
@@ -17,10 +15,11 @@ export const getBackendOrigin = (frontendOrigin: string): string => {
   return frontendOrigin;
 };
 
-export const getSearchContext = (pathname: string): SearchContext | undefined => {
-  for (const [route, context] of SEARCH_CONTEXTS) {
-    if (pathname.includes(route)) {
-      return context;
-    }
-  }
+export const prepareQueryParams = (params: Record<string, any>): string => {
+  const queryParams = Object.entries(params)
+    .filter(([_, value]) => value)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&');
+
+  return queryParams;
 };

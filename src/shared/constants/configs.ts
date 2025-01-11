@@ -1,4 +1,5 @@
 import { OidcClientSettings } from 'oidc-client-ts';
+import { PaginationParams } from 'shared/models';
 
 export const OIDC_INITIAL_CONFIG: OidcClientSettings = {
   authority: 'http://localhost:9011',
@@ -13,7 +14,7 @@ export const APP_CONFIG = {
   snackbarAutoHideDuration: 10000,
   httpTimeout: 15000,
   table: {
-    defaultPagination: { pageNumber: 1, pageSize: 5, totalItems: undefined },
+    defaultPagination: { pageNumber: 1, pageSize: 5, search: '', totalItems: undefined } as PaginationParams,
     defaultPageSizeOptions: [5, 10],
   },
 };

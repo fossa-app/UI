@@ -17,3 +17,5 @@ export const ACTION_FIELD = {
   name: 'Actions',
   field: 'actions',
 };
+
+export const SEARCH_PORTAL_ID = 'search-field';

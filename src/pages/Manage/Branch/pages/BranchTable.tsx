@@ -11,22 +11,23 @@ import {
   selectUserRoles,
   setBranchesPagination,
 } from 'store/features';
-import { Branch, Module, SubModule } from 'shared/models';
+import { Branch, Module, PaginationParams, SubModule } from 'shared/models';
 import { ACTION_FIELDS, APP_CONFIG, BRANCH_TABLE_ACTIONS_SCHEMA, BRANCH_TABLE_SCHEMA, ROUTES } from 'shared/constants';
 import { filterTableActionsByRoles, getTestSelectorByModule, mapTableActionsColumn } from 'shared/helpers';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import Table from 'components/UI/Table';
 import TableLayout from 'components/layouts/TableLayout';
 import ActionsMenu from 'components/UI/Table/ActionsMenu';
+import { useSearch } from 'components/Search';
 
 const BranchTablePage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { fetchStatus, data: branches, page } = useAppSelector(selectBranches);
+  const { fetchStatus, data: branches, page = APP_CONFIG.table.defaultPagination as PaginationParams } = useAppSelector(selectBranches);
   const { deleteStatus } = useAppSelector(selectBranch);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const userRoles = useAppSelector(selectUserRoles);
-  const { pageNumber, pageSize, totalItems } = page || APP_CONFIG.table.defaultPagination;
+  const { search, searchChanged, setSearchChanged, setProps } = useSearch();
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
   const loading = fetchStatus === 'loading' || deleteStatus === 'loading';
 
@@ -40,12 +41,12 @@ const BranchTablePage: React.FC = () => {
 
   const handlePageNumberChange = (pageNumber: number) => {
     dispatch(resetBranchesFetchStatus());
-    dispatch(setBranchesPagination({ ...page, pageNumber, pageSize }));
+    dispatch(setBranchesPagination({ pageNumber }));
   };
 
   const handlePageSizeChange = (pageSize: number) => {
     dispatch(resetBranchesFetchStatus());
-    dispatch(setBranchesPagination({ ...page, pageSize, pageNumber: 1 }));
+    dispatch(setBranchesPagination({ pageSize, pageNumber: 1 }));
   };
 
   const handleTableLayoutActionClick = () => {
@@ -61,8 +62,8 @@ const BranchTablePage: React.FC = () => {
   const handleDeleteBranch = ({ id }: Branch) => {
     const itemsLength = branches?.items.length || 0;
 
-    if (pageNumber > 1 && itemsLength <= 1) {
-      dispatch(setBranchesPagination({ ...page, pageSize, pageNumber: pageNumber - 1 }));
+    if (page.pageNumber! > 1 && itemsLength <= 1) {
+      dispatch(setBranchesPagination({ pageNumber: page.pageNumber! - 1 }));
     }
 
     dispatch(deleteBranch(id));
@@ -93,9 +94,21 @@ const BranchTablePage: React.FC = () => {
 
   React.useEffect(() => {
     if (fetchStatus === 'idle') {
-      dispatch(fetchBranches([{ pageNumber, pageSize }]));
+      dispatch(fetchBranches([page]));
     }
-  }, [fetchStatus, pageNumber, pageSize, dispatch]);
+  }, [fetchStatus, page, dispatch]);
+
+  React.useEffect(() => {
+    setProps({ label: 'Search Branches', testSelector: 'search-branches' });
+  }, [setProps]);
+
+  React.useEffect(() => {
+    if (searchChanged) {
+      dispatch(resetBranchesFetchStatus());
+      dispatch(setBranchesPagination({ search }));
+      setSearchChanged(false);
+    }
+  }, [search, searchChanged, dispatch, setSearchChanged]);
 
   return (
     <TableLayout
@@ -112,9 +125,9 @@ const BranchTablePage: React.FC = () => {
         loading={loading}
         columns={columns}
         items={branches?.items}
-        pageNumber={pageNumber}
-        pageSize={pageSize}
-        totalItems={totalItems}
+        pageNumber={page.pageNumber!}
+        pageSize={page.pageSize!}
+        totalItems={page.totalItems}
         pageSizeOptions={pageSizeOptions}
         noRecordsTemplate={noRecordsTemplate}
         onPageNumberChange={handlePageNumberChange}

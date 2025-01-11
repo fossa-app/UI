@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -8,25 +8,22 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
 import { openSideBar, selectAppConfig, selectCompany, selectStep, selectUser, toggleAppTheme } from 'store/features';
-import { getSearchContext, getUserManager } from 'shared/helpers';
-import { ROUTES } from 'shared/constants';
-import Search from 'components/Search';
+import { getUserManager } from 'shared/helpers';
+import { ROUTES, SEARCH_PORTAL_ID } from 'shared/constants';
+import SearchPortal from 'components/Search';
 import UserMenu from './components/UserMenu';
 import ThemeButton from './components/ThemeButton';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
   const dispatch = useAppDispatch();
   const { isDarkTheme } = useAppSelector(selectAppConfig);
   const { data: user } = useAppSelector(selectUser);
   const { data: company } = useAppSelector(selectCompany);
   const { status } = useAppSelector(selectStep);
   const userManager = getUserManager();
-  const [locationPathname, setLocationPathname] = React.useState(location.pathname);
   const companyName = company?.name ?? '';
   const setupCompleted = status === 'succeeded';
-  const showSearch = !!getSearchContext(locationPathname);
 
   const handleThemeChange = () => {
     dispatch(toggleAppTheme(!isDarkTheme));
@@ -34,10 +31,6 @@ const Header: React.FC = () => {
 
   const handleLogout = async () => {
     await userManager.signoutRedirect();
-  };
-
-  const handleGetOptionLabel = (option: { id: string; name: string }) => {
-    return option.name;
   };
 
   const handleCompanyClick = () => {
@@ -51,10 +44,6 @@ const Header: React.FC = () => {
 
     dispatch(openSideBar());
   };
-
-  React.useEffect(() => {
-    setLocationPathname(pathname);
-  }, [pathname]);
 
   return (
     <AppBar position="static" component="nav">
@@ -80,7 +69,8 @@ const Header: React.FC = () => {
             )}
           </Grid>
           <Grid size="auto">
-            {showSearch && <Search data={[]} context={getSearchContext(locationPathname)!} getOptionLabel={handleGetOptionLabel} />}
+            <div id={SEARCH_PORTAL_ID} />
+            <SearchPortal fullWidth size="small" />
           </Grid>
           <Grid size="auto">
             <ThemeButton isDarkTheme={isDarkTheme} onClick={handleThemeChange} />
