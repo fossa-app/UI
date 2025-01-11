@@ -89,7 +89,10 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('contain.text', 'Save');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
 
-    interceptFetchBranchesRequest(1, 5, '', 'fetchMultipleBranchesRequest', 'branches-multiple');
+    interceptFetchBranchesRequest(
+      { pageNumber: 1, pageSize: 5, search: '' },
+      { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+    );
     cy.wait('@createBranchRequest');
     cy.wait('@fetchMultipleBranchesRequest');
 
@@ -157,9 +160,15 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('have.attr', 'disabled');
     getLoadingButtonLoadingIcon(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('be.visible');
 
-    interceptFetchBranchesRequest(1, 5, '', 'fetchMultipleBranchesRequest', 'branches-multiple');
+    interceptFetchBranchesRequest(
+      { pageNumber: 1, pageSize: 5, search: '' },
+      { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+    );
     cy.wait('@editBranchRequest');
-    interceptFetchBranchesRequest(1, 5, '', 'fetchMultipleUpdatedBranchesRequest', 'branches-multiple-updated');
+    interceptFetchBranchesRequest(
+      { pageNumber: 1, pageSize: 5, search: '' },
+      { alias: 'fetchMultipleUpdatedBranchesRequest', fixture: 'branches-multiple-updated' }
+    );
 
     cy.url().should('include', '/manage/branches');
 
@@ -176,7 +185,10 @@ describe('Branch Management Tests', () => {
   });
 
   it('should be able to navigate back when the back button is clicked', () => {
-    interceptFetchBranchesRequest(1, 5, '', 'fetchMultipleBranchesRequest', 'branches');
+    interceptFetchBranchesRequest(
+      { pageNumber: 1, pageSize: 5, search: '' },
+      { alias: 'fetchMultipleBranchesRequest', fixture: 'branches' }
+    );
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit('/manage/branches');
 

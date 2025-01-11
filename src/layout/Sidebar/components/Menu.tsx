@@ -29,7 +29,7 @@ const Menu: React.FC<MenuProps> = ({ onCloseSideBar }) => {
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <List>
         {MENU_ITEMS.map((item) => {
-          const isActive = location.pathname === item.path;
+          const isActive = location.pathname.includes(item.path);
           const buttonStyles = getButtonStyles(isActive);
 
           return (
