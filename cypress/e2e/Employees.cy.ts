@@ -44,13 +44,19 @@ describe('Employees Tests', () => {
   });
 
   it('should not display the loader if the request resolves quickly', () => {
-    interceptFetchEmployeesRequest(1, 5, '', 'fetchEmployeesQuickRequest', 'employees', 200, 50);
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 5 },
+      { alias: 'fetchEmployeesQuickRequest', fixture: 'employees', statusCode: 200, delay: 50 }
+    );
 
     getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.exist');
   });
 
   it('should render employees table if there are fetched employees', () => {
-    interceptFetchEmployeesRequest(1, 5, '', 'fetchMultipleEmployeesRequest', 'employees-multiple');
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 5 },
+      { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+    );
 
     getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
     cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
@@ -85,7 +91,7 @@ describe('Employees Tests', () => {
     cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(0).should('have.text', '5');
     cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(1).should('have.text', '10');
 
-    interceptFetchEmployeesRequest(1, 10, '', 'fetch10EmployeesRequest');
+    interceptFetchEmployeesRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetch10EmployeesRequest' });
 
     cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="10"]').click();
 
@@ -95,7 +101,10 @@ describe('Employees Tests', () => {
   });
 
   it('should send correct request when search changes', () => {
-    interceptFetchEmployeesRequest(1, 5, '', 'fetchMultipleEmployeesRequest', 'employees-multiple');
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 5 },
+      { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+    );
 
     cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
 
@@ -104,7 +113,10 @@ describe('Employees Tests', () => {
     cy.get('[data-cy="search-employees"]').find('input').clear();
     cy.get('[data-cy="search-employees"]').find('input').type('Anthony');
 
-    interceptFetchEmployeesRequest(1, 5, 'Anthony', 'fetchSearchedEmployeesRequest', 'employees');
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 5, search: 'Anthony' },
+      { alias: 'fetchSearchedEmployeesRequest', fixture: 'employees' }
+    );
 
     getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
 
@@ -114,7 +126,10 @@ describe('Employees Tests', () => {
     cy.get('[data-cy="search-employees"]').find('input').clear();
     cy.get('[data-cy="search-employees"]').find('input').type('Joe');
 
-    interceptFetchEmployeesRequest(1, 5, 'Joe', 'fetchSearchedNoEmployeesRequest', 'employees-empty');
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 5, search: 'Joe' },
+      { alias: 'fetchSearchedNoEmployeesRequest', fixture: 'employees-empty' }
+    );
 
     getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
 
@@ -123,7 +138,10 @@ describe('Employees Tests', () => {
 
     cy.get('[data-cy="search-employees"]').find('input').clear();
 
-    interceptFetchEmployeesRequest(1, 5, '', 'fetchMultipleEmployeesRequest', 'employees-multiple');
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 5 },
+      { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+    );
 
     getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
     cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
