@@ -15,5 +15,6 @@ export enum SubModule {
   branchTable = 'branchTable',
   employeeTable = 'employeeTable',
   branchViewDetails = 'branchViewDetails',
+  companyViewDetails = 'companyViewDetails',
   dashboardDetails = 'dashboardDetails',
 }

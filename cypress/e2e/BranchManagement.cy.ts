@@ -106,7 +106,7 @@ describe('Branch Management Tests', () => {
 
     cy.get('[data-cy="not-found-page-title"]').should('exist').and('contain.text', 'Page Not Found');
     cy.get('[data-cy="not-found-page-button"]').should('exist').click();
-    cy.url().should('include', '/manage/dashboard');
+    cy.url().should('include', '/manage/company');
   });
 
   it('should not be able to edit the branch if the form is invalid or branch updating failed', () => {
@@ -221,7 +221,6 @@ describe('Branch Management Tests', () => {
     cy.get('[data-cy="page-title-back-button"]').click();
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
-    // TODO: fix flaky test
     cy.url().should('include', '/manage/branches/new');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').should('have.value', '');
   });

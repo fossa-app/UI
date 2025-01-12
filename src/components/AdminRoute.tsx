@@ -9,7 +9,7 @@ const AdminRoute: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { status } = useAppSelector(selectUser);
 
   if (status === 'succeeded' && !isUserAdmin) {
-    return <Navigate to={ROUTES.dashboard.path} replace />;
+    return <Navigate to={ROUTES.company.path} replace />;
   }
 
   return <>{children}</>;

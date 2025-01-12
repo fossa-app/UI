@@ -131,7 +131,7 @@ describe('Branches Tests', () => {
 
       branchAdminRoutes.forEach((route) => {
         cy.visit(route);
-        cy.url().should('include', '/manage/dashboard');
+        cy.url().should('include', '/manage/company');
       });
     });
 

@@ -15,7 +15,12 @@ const SetupBranchPage = createLazyComponent(() => import('pages/Setup/pages/Setu
 const SetupEmployeePage = createLazyComponent(() => import('pages/Setup/pages/SetupEmployee'), { title: ROUTES.setEmployee.name });
 const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
 const DashboardPage = createLazyComponent(() => import('pages/Dashboard'), { title: ROUTES.dashboard.name });
-const CompanyPage = createLazyComponent(() => import('pages/Company'), { title: ROUTES.company.name });
+const CompanyPage = createLazyComponent(() => import('pages/Manage/Company/Company'));
+const EditCompanyPage = createLazyComponent(() => import('pages/Manage/Company/pages/EditCompany'), {
+  title: ROUTES.editCompany.name,
+  isAdminRoute: true,
+});
+const ViewCompanyPage = createLazyComponent(() => import('pages/Manage/Company/pages/ViewCompany'), { title: ROUTES.viewCompany.name });
 const EmployeePage = createLazyComponent(() => import('pages/Manage/Employee/Employee'));
 const EmployeeTablePage = createLazyComponent(() => import('pages/Manage/Employee/pages/EmployeeTable'), { title: ROUTES.employees.name });
 const BranchPage = createLazyComponent(() => import('pages/Manage/Branch/Branch'));
@@ -80,7 +85,7 @@ const router = createBrowserRouter(
               children: [
                 {
                   index: true,
-                  element: <Navigate to={ROUTES.dashboard.path} replace />,
+                  element: <Navigate to={ROUTES.company.path} replace />,
                 },
                 {
                   path: ROUTES.dashboard.path,
@@ -89,6 +94,20 @@ const router = createBrowserRouter(
                 {
                   path: ROUTES.company.path,
                   element: CompanyPage,
+                  children: [
+                    {
+                      index: true,
+                      element: <Navigate to={ROUTES.viewCompany.path} replace />,
+                    },
+                    {
+                      path: ROUTES.viewCompany.path,
+                      element: ViewCompanyPage,
+                    },
+                    {
+                      path: ROUTES.editCompany.path,
+                      element: EditCompanyPage,
+                    },
+                  ],
                 },
                 {
                   path: ROUTES.branches.path,

@@ -110,7 +110,7 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', '/setup/employee');
     });
 
-    it('should be able to navigate to dashboard if employee creation succeeded', () => {
+    it('should be able to navigate to company page if employee creation succeeded', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
       interceptFetchEmployeeFailedRequest();
@@ -137,10 +137,10 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchEmployeeRequest');
 
       cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
-      cy.url().should('include', '/manage/dashboard');
+      cy.url().should('include', '/manage/company');
     });
 
-    it('should navigate to dashboard if company, branch and employee data exist', () => {
+    it('should navigate to company page if company, branch and employee data exist', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
       interceptFetchEmployeeRequest();
@@ -150,7 +150,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchBranchesRequest');
       cy.wait('@fetchEmployeeRequest');
 
-      cy.url().should('include', '/manage/dashboard');
+      cy.url().should('include', '/manage/company');
     });
   });
 
@@ -216,7 +216,7 @@ describe('Setup Flow Tests', () => {
       });
     });
 
-    it('should navigate to dashboard if company, branch and employee data exist', () => {
+    it('should navigate to company page if company, branch and employee data exist', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
       interceptFetchEmployeeRequest();
@@ -227,7 +227,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchEmployeeRequest');
 
       cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
-      cy.url().should('include', '/manage/dashboard');
+      cy.url().should('include', '/manage/company');
     });
 
     it('should display validation messages if the company creation form is invalid', () => {
@@ -457,7 +457,7 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', '/setup/employee');
     });
 
-    it('should be able to navigate to dashboard if employee creation succeeded', () => {
+    it('should be able to navigate to company page if employee creation succeeded', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
       interceptFetchEmployeeFailedRequest();
@@ -485,7 +485,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchEmployeeRequest');
 
       cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
-      cy.url().should('include', '/manage/dashboard');
+      cy.url().should('include', '/manage/company');
     });
   });
 });

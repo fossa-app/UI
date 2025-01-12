@@ -51,14 +51,22 @@ export const interceptFetchTokenRequest = () => {
   });
 };
 
-export const interceptFetchCompanyRequest = () => {
-  cy.fixture('company').then((company) => {
-    cy.interceptWithAuth('GET', `${serverBaseUrl}/Company`, company, 'fetchCompanyRequest');
+export const interceptFetchCompanyRequest = (alias = 'fetchCompanyRequest', fixture = 'company') => {
+  cy.fixture(fixture).then((company) => {
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Company`, company, alias);
   });
 };
 
 export const interceptFetchCompanyFailedRequest = () => {
   cy.interceptWithAuth('GET', `${serverBaseUrl}/Company`, null, 'fetchCompanyFailedRequest', 404);
+};
+
+export const interceptEditCompanyRequest = () => {
+  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Company`, null, 'editCompanyRequest');
+};
+
+export const interceptEditCompanyFailedRequest = () => {
+  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Company`, null, 'editCompanyFailedRequest', 404);
 };
 
 export const interceptFetchCompanyLicenseRequest = () => {

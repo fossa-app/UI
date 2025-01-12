@@ -3,7 +3,6 @@ import { FieldProps, FieldType } from 'components/UI/Form';
 import { Action, Column } from 'components/UI/Table';
 import { ViewItemProps } from 'components/UI/ViewDetails';
 import { ACTION_FIELD, ACTION_FIELDS } from './common';
-// import { ACTION_FIELDS } from './common';
 
 export const BRANCH_FIELDS: BranchFieldConfig = {
   id: {
