@@ -2,25 +2,34 @@ import * as React from 'react';
 import { Outlet } from 'react-router-dom';
 import Box from '@mui/system/Box';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchClient, selectClient } from 'store/features';
+import { fetchClient, fetchSystemLicense, selectClient, selectSystemLicense } from 'store/features';
 import Header from 'layout/Header';
 import Footer from 'layout/Footer';
 import SideBar from 'layout/Sidebar';
 import { SearchProvider } from 'components/Search';
+import CircularLoader from 'components/UI/CircularLoader';
 
 const ClientLoader: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { data: client, status } = useAppSelector(selectClient);
-  const loading = status === 'loading';
+  const { data: client, status: clientStatus } = useAppSelector(selectClient);
+  const { data: system, status: systemLicenseStatus } = useAppSelector(selectSystemLicense);
+  const loading = clientStatus === 'loading' || systemLicenseStatus === 'loading';
 
   React.useEffect(() => {
-    if (status === 'idle') {
+    if (clientStatus === 'idle') {
       dispatch(fetchClient());
     }
-  }, [status, dispatch]);
+  }, [clientStatus, dispatch]);
 
-  if (loading || !client) {
-    return null;
+  React.useEffect(() => {
+    if (systemLicenseStatus === 'idle') {
+      dispatch(fetchSystemLicense());
+    }
+  }, [systemLicenseStatus, dispatch]);
+
+  if (loading || !client || !system) {
+    // TODO: combine all loaders
+    return <CircularLoader />;
   }
 
   return (

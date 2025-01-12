@@ -7,7 +7,7 @@ import { useDebounce } from 'shared/hooks';
 import { useSearch } from './SearchContext';
 import { StyledTextField } from './StyledTextField';
 
-type SearchPortalProps = TextFieldProps;
+export type SearchPortalProps = { testSelector?: string } & TextFieldProps;
 
 const SearchPortal: React.FC<SearchPortalProps> = (searchPortalProps) => {
   const { search, props, setSearch, setSearchChanged, setProps } = useSearch();
@@ -35,9 +35,9 @@ const SearchPortal: React.FC<SearchPortalProps> = (searchPortalProps) => {
 
   return ReactDOM.createPortal(
     <StyledTextField
+      variant="filled"
       label={props.label}
       data-cy={props.testSelector}
-      variant="filled"
       value={search}
       onChange={handleChange}
       {...searchPortalProps}

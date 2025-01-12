@@ -1,21 +1,21 @@
 import * as React from 'react';
+import { SearchPortalProps } from './SearchPortal';
 
 interface SearchContextType {
   search: string;
   // TODO: find better solution
   searchChanged: boolean;
-  // TODO: add type for props
-  props: Record<string, string>;
+  props: SearchPortalProps;
   setSearch: (search: string) => void;
   setSearchChanged: (changed: boolean) => void;
-  setProps: (props: Record<string, string>) => void;
+  setProps: (props: SearchPortalProps) => void;
 }
 
 const SearchContext = React.createContext<SearchContextType | undefined>(undefined);
 
 export const SearchProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [search, setSearch] = React.useState('');
-  const [props, setProps] = React.useState({});
+  const [props, setProps] = React.useState<SearchPortalProps>({});
   const [searchChanged, setSearchChanged] = React.useState(false);
 
   return (

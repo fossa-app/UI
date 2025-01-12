@@ -5,6 +5,7 @@ import LinearLoader from '../LinearLoader';
 import ViewDetailsContext from './ViewDetailsContext';
 import ViewDetailsHeader from './ViewDetailsHeader';
 import ViewDetailsContent from './ViewDetailsContent';
+import ViewDetailsActions from './ViewDetailsActions';
 
 type ViewDetailsProps = React.PropsWithChildren<{
   module: Module;
@@ -29,5 +30,6 @@ const ViewDetails = ({ module, subModule, loading = false, children }: ViewDetai
 
 ViewDetails.Header = ViewDetailsHeader;
 ViewDetails.Content = ViewDetailsContent;
+ViewDetails.Actions = ViewDetailsActions;
 
 export default ViewDetails;

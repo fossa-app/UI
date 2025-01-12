@@ -38,6 +38,14 @@ export const ROUTES: AppRoute = {
     name: 'Company',
     path: '/manage/company',
   },
+  editCompany: {
+    name: 'Edit Company',
+    path: '/manage/company/edit',
+  },
+  viewCompany: {
+    name: 'View Company',
+    path: '/manage/company/view',
+  },
   branches: {
     name: 'Branches',
     path: '/manage/branches',

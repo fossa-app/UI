@@ -21,8 +21,6 @@ describe('License Tests', () => {
     it('should fetch and display correct system license and not display company license if not logged in', () => {
       cy.visit('/login');
 
-      cy.get('[data-cy="system-license"]').should('exist').and('have.text', 'Unlicensed System');
-
       cy.wait('@fetchSystemLicenseRequest');
 
       cy.get('[data-cy="system-license"]').should('exist').and('have.text', 'Test System Licensee');

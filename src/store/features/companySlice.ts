@@ -58,10 +58,32 @@ export const createCompany = createAsyncThunk<void, CompanyDTO, { rejectValue: E
   }
 );
 
+export const editCompany = createAsyncThunk<void, Omit<CompanyDTO, 'id'>, { rejectValue: ErrorResponse }>(
+  'company/editCompany',
+  async (company, { dispatch, rejectWithValue }) => {
+    try {
+      await axios.put<CompanyDTO>(ENDPOINTS.company, company);
+    } catch (error) {
+      dispatch(
+        setError({
+          ...(error as ErrorResponse),
+          title: MESSAGES.error.company.updateFailed,
+        })
+      );
+
+      return rejectWithValue(error as ErrorResponse);
+    }
+  }
+);
+
 const companySlice = createSlice({
   name: 'company',
   initialState,
-  reducers: {},
+  reducers: {
+    resetCompanyFetchStatus(state) {
+      state.company.fetchStatus = initialState.company.fetchStatus;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCompany.pending, (state) => {
@@ -85,6 +107,17 @@ const companySlice = createSlice({
       })
       .addCase(createCompany.fulfilled, (state) => {
         state.company.updateStatus = 'succeeded';
+      })
+      .addCase(editCompany.pending, (state) => {
+        state.company.updateStatus = 'loading';
+      })
+      .addCase(editCompany.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+        state.company.updateStatus = 'failed';
+        state.company.error = action.payload;
+      })
+      .addCase(editCompany.fulfilled, (state) => {
+        state.company.updateStatus = 'succeeded';
+        state.company.error = undefined;
       });
   },
 });
@@ -102,5 +135,7 @@ export const selectCompanyTimeZones = createSelector(
     return filterUniqueByField(timeZones?.filter((timeZone) => timeZone.countryCode === countryCode) || [], 'name');
   }
 );
+
+export const { resetCompanyFetchStatus } = companySlice.actions;
 
 export default companySlice.reducer;

@@ -3,7 +3,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useViewDetailsContext } from './ViewDetailsContext';
 
-const ViewDetailsHeader: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const ViewDetailsHeader: React.FC<React.PropsWithChildren> = ({ children }) => {
   const context = useViewDetailsContext();
 
   if (!context) {
