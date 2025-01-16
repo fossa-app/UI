@@ -78,14 +78,7 @@ const CompanyLicenseDialog: React.FC<CompanyLicenseDialogProps> = ({ loading, on
         >
           Cancel
         </Button>
-        <LoadingButton
-          data-cy="dialog-upload-button"
-          type="submit"
-          variant="contained"
-          loadingPosition="end"
-          loading={loading}
-          endIcon={<UploadFileIcon />}
-        >
+        <LoadingButton data-cy="dialog-upload-button" type="submit" loadingPosition="end" loading={loading} endIcon={<UploadFileIcon />}>
           Upload
         </LoadingButton>
       </DialogActions>

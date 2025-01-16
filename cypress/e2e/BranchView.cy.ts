@@ -87,6 +87,7 @@ describe('Branch View Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
     cy.url().should('include', '/manage/branches/new');
+    // TODO: flaky part
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').should('have.value', '');
   });
 

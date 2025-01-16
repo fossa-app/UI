@@ -33,6 +33,11 @@ const EditCompanyPage: React.FC = () => {
     setFormSubmitted(true);
   };
 
+  const handleCancel = () => {
+    setFormSubmitted(false);
+    navigateToViewCompany();
+  };
+
   // TODO: move this logic to FormLayout
   React.useEffect(() => {
     if (updateStatus === 'succeeded' && formSubmitted) {
@@ -42,21 +47,25 @@ const EditCompanyPage: React.FC = () => {
 
   React.useEffect(() => {
     return () => {
-      dispatch(resetCompanyFetchStatus());
+      if (formSubmitted) {
+        dispatch(resetCompanyFetchStatus());
+      }
     };
-  }, [dispatch]);
+  }, [formSubmitted, dispatch]);
 
   return (
     <PageLayout module={Module.companyManagement} subModule={SubModule.companyDetails} pageTitle="Edit Company">
       <CompanyDetailsForm
+        withCancel
         module={Module.companyManagement}
         subModule={SubModule.companyDetails}
         isAdmin={isUserAdmin}
         data={company}
-        buttonLoading={updateStatus === 'loading'}
-        fields={mapCountriesToFieldSelectOptions(mapDisabledFields(COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA, userRoles), countries)}
+        actionLoading={updateStatus === 'loading'}
         formLoading={fetchStatus === 'loading'}
+        fields={mapCountriesToFieldSelectOptions(mapDisabledFields(COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA, userRoles), countries)}
         onSubmit={handleSubmit}
+        onCancel={handleCancel}
       />
     </PageLayout>
   );

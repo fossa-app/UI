@@ -1,14 +1,16 @@
 import * as React from 'react';
+import DoneIcon from '@mui/icons-material/Done';
 import { EmployeeDTO, Module, SubModule } from 'shared/models';
 import Form, { FieldProps } from 'components/UI/Form';
+import LoadingButton from 'components/UI/LoadingButton';
 
 interface EmployeeDetailsFormProps {
   module: Module;
   subModule: SubModule;
-  buttonLoading: boolean;
   fields: FieldProps[];
-  buttonLabel?: string;
-  buttonIcon?: React.ReactNode;
+  actionLabel?: string;
+  actionIcon?: React.ReactNode;
+  actionLoading?: boolean;
   formLoading?: boolean;
   data?: EmployeeDTO;
   onSubmit: (data: EmployeeDTO) => void;
@@ -18,11 +20,11 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({
   module,
   subModule,
   data,
-  buttonLabel,
-  buttonIcon,
+  actionLabel = 'Finish',
+  actionIcon = <DoneIcon />,
+  actionLoading = false,
   fields,
   formLoading,
-  buttonLoading,
   onSubmit,
 }) => {
   const defaultValues: EmployeeDTO = {
@@ -48,7 +50,18 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({
 
       <Form.Content fields={fields} />
 
-      <Form.Actions actionLabel={buttonLabel} actionIcon={buttonIcon} actionLoading={buttonLoading} />
+      <Form.Actions>
+        <LoadingButton
+          data-cy={`${module}-${subModule}-form-action-button`}
+          aria-label="Save Employee"
+          type="submit"
+          loadingPosition="end"
+          loading={actionLoading}
+          endIcon={actionIcon}
+        >
+          {actionLabel}
+        </LoadingButton>
+      </Form.Actions>
     </Form>
   );
 };

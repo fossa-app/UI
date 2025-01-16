@@ -25,9 +25,9 @@ const SetupCompanyPage: React.FC = () => {
         module={Module.companySetup}
         subModule={SubModule.companyDetails}
         isAdmin={isUserAdmin}
-        buttonLabel="Next"
-        buttonIcon={<NavigateNextIcon />}
-        buttonLoading={updateStatus === 'loading'}
+        actionLabel="Next"
+        actionIcon={<NavigateNextIcon />}
+        actionLoading={updateStatus === 'loading'}
         fields={mapCountriesToFieldSelectOptions(mapDisabledFields(COMPANY_SETUP_DETAILS_FORM_SCHEMA, userRoles), countries)}
         onSubmit={handleSubmit}
       />

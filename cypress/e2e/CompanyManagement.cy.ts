@@ -1,5 +1,5 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getLinearLoader, getTestSelectorByModule, selectOption } from '../support/helpers';
+import { getLinearLoader, getLoadingButtonLoadingIcon, getTestSelectorByModule, selectOption } from '../support/helpers';
 import {
   interceptEditCompanyFailedRequest,
   interceptEditCompanyRequest,
@@ -69,11 +69,11 @@ describe('Company Management Tests', () => {
 
   describe('Admin Role', () => {
     beforeEach(() => {
+      interceptFetchCompanyRequest();
       cy.loginMock(true);
     });
 
     it('should be able to navigate and view the company page', () => {
-      interceptFetchCompanyRequest();
       cy.visit('/manage/dashboard');
 
       cy.get('[data-cy="menu-icon"]').click();
@@ -103,13 +103,38 @@ describe('Company Management Tests', () => {
       cy.get('[data-cy="edit-company-button"]').should('exist');
     });
 
-    it('should not be able to edit the company if the form is invalid or company updating failed', () => {
-      interceptFetchCompanyRequest();
+    it('should reset the form and navigate to view company page if the cancel button is clicked', () => {
       cy.visit('/manage/company/view');
 
       cy.get('[data-cy="edit-company-button"]').should('exist').click();
 
       cy.url().should('include', '/manage/company/edit');
+
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name').find('input').clear();
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name')
+        .find('input')
+        .type('Good Omens Changed');
+      selectOption(Module.companyManagement, SubModule.companyDetails, 'countryCode', 'UA');
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-cancel-button').should('exist').click();
+
+      cy.url().should('include', '/manage/company/view');
+
+      cy.get('[data-cy="edit-company-button"]').click();
+
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name')
+        .find('input')
+        .should('have.value', 'Good Omens');
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-countryCode')
+        .find('input')
+        .should('have.value', 'US');
+    });
+
+    // TODO: flaky test
+    it('should not be able to edit the company if the form is invalid or company updating failed', () => {
+      interceptEditCompanyFailedRequest();
+      cy.visit('/manage/company/view');
+
+      cy.get('[data-cy="edit-company-button"]').click();
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-action-button').should('not.have.attr', 'disabled');
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name').find('input').clear();
@@ -125,8 +150,6 @@ describe('Company Management Tests', () => {
         .type('Fail Company Name');
       selectOption(Module.companyManagement, SubModule.companyDetails, 'countryCode', 'PL');
 
-      interceptEditCompanyFailedRequest();
-
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-action-button').click();
 
       cy.wait('@editCompanyFailedRequest');
@@ -135,12 +158,14 @@ describe('Company Management Tests', () => {
     });
 
     it('should be able to edit the company and be navigated to view company page if the form is valid and company updating succeeded', () => {
-      interceptFetchCompanyRequest();
+      interceptEditCompanyRequest();
       cy.visit('/manage/company/view');
 
       cy.get('[data-cy="edit-company-button"]').should('exist').click();
 
       cy.url().should('include', '/manage/company/edit');
+
+      cy.wait('@fetchCompanyRequest');
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name').find('input').clear();
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name')
@@ -149,12 +174,14 @@ describe('Company Management Tests', () => {
 
       selectOption(Module.companyManagement, SubModule.companyDetails, 'countryCode', 'CA');
 
-      interceptEditCompanyRequest();
       interceptFetchCompanyRequest('fetchUpdatedCompanyRequest', 'company-updated');
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-action-button').click();
 
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-action-button').should('have.attr', 'disabled');
+      getLoadingButtonLoadingIcon(Module.companyManagement, SubModule.companyDetails, 'form-action-button').should('be.visible');
       getLinearLoader(Module.companyManagement, SubModule.companyViewDetails, 'view-details').should('exist');
+
       cy.wait('@editCompanyRequest');
       cy.wait('@fetchUpdatedCompanyRequest');
 
@@ -168,7 +195,5 @@ describe('Company Management Tests', () => {
         'Canada'
       );
     });
-
-    // TODO: add test case for cancel editing
   });
 });

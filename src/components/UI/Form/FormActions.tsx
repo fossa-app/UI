@@ -1,17 +1,14 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import FormHelperText from '@mui/material/FormHelperText';
-import SaveIcon from '@mui/icons-material/Save';
-import LoadingButton from '../LoadingButton';
 import { useFormContext } from './FormContext';
 
-const FormActions: React.FC<{
-  actionLoading: boolean;
-  actionDisabled?: boolean;
-  actionLabel?: string;
-  actionIcon?: React.ReactNode;
-  generalValidationMessage?: string;
-}> = ({ actionLoading, actionDisabled = false, actionLabel = 'Save', actionIcon = <SaveIcon />, generalValidationMessage }) => {
+// TODO: consider passing actions buttons as a config
+const FormActions: React.FC<
+  React.PropsWithChildren<{
+    generalValidationMessage?: string;
+  }>
+> = ({ generalValidationMessage, children }) => {
   const context = useFormContext();
 
   if (!context) {
@@ -27,20 +24,7 @@ const FormActions: React.FC<{
           {generalValidationMessage}
         </FormHelperText>
       )}
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        {/* TODO: need cancel button, move action buttons outside of FormActions */}
-        <LoadingButton
-          data-cy={`${module}-${subModule}-form-action-button`}
-          disabled={actionDisabled}
-          type="submit"
-          variant="contained"
-          loadingPosition="end"
-          loading={actionLoading}
-          endIcon={actionIcon}
-        >
-          {actionLabel}
-        </LoadingButton>
-      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 4 }}>{children}</Box>
     </Box>
   );
 };

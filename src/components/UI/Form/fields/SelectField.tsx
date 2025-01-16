@@ -15,6 +15,8 @@ const SelectField: React.FC<SelectFieldProps> = ({ module, subModule, label, nam
   } = useFormContext();
 
   const value = useWatch({ control, name });
+  const isValueAvailable = options.some((option) => option.value === value);
+  const fieldValue = !!options?.length && isValueAvailable ? value : '';
 
   const menuProps = {
     MenuProps: {
@@ -31,7 +33,7 @@ const SelectField: React.FC<SelectFieldProps> = ({ module, subModule, label, nam
       <InputLabel shrink={!!value}>{label}</InputLabel>
       <Select
         data-cy={`${module}-${subModule}-form-field-${name}`}
-        value={(!!options?.length && value) || ''}
+        value={fieldValue}
         {...register(name, { ...props.rules })}
         {...menuProps}
         {...props}

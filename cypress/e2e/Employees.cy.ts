@@ -149,6 +149,29 @@ describe('Employees Tests', () => {
     getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 3);
   });
 
+  it('should reset the search state when the clear icon is clicked', () => {
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 5 },
+      { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+    );
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 5, search: 'Anthony' },
+      { alias: 'fetchSearchedEmployeesRequest', fixture: 'employees' }
+    );
+
+    cy.get('[data-cy="search-employees"]').find('input').type('Anthony');
+
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 1);
+
+    cy.get('[data-cy="search-employees-clear"]').click();
+
+    cy.get('[data-cy="search-employees"]').find('input').should('have.value', '');
+
+    cy.wait('@fetchMultipleEmployeesRequest');
+
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 3);
+  });
+
   it('should not display action column and actions', () => {
     interceptFetchEmployeesRequest();
 
