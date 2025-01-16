@@ -33,6 +33,11 @@ const ManageBranchPage: React.FC = () => {
     navigate(ROUTES.branches.path);
   }, [navigate]);
 
+  const resetState = () => {
+    setFormSubmitted(false);
+    dispatch(resetBranch());
+  };
+
   const handleSubmit = (data: Omit<BranchDTO, 'id'>) => {
     if (id) {
       dispatch(editBranch([id, data]));
@@ -41,6 +46,16 @@ const ManageBranchPage: React.FC = () => {
     }
 
     setFormSubmitted(true);
+  };
+
+  const handleCancel = () => {
+    resetState();
+    navigateBack();
+  };
+
+  const handleBackButtonClick = () => {
+    resetState();
+    navigateBack();
   };
 
   // TODO: move this logic to FormLayout
@@ -58,10 +73,11 @@ const ManageBranchPage: React.FC = () => {
 
   React.useEffect(() => {
     return () => {
-      dispatch(resetBranch());
-      dispatch(resetBranchesFetchStatus());
+      if (formSubmitted) {
+        dispatch(resetBranchesFetchStatus());
+      }
     };
-  }, [dispatch]);
+  }, [formSubmitted, dispatch]);
 
   return (
     <PageLayout
@@ -70,17 +86,19 @@ const ManageBranchPage: React.FC = () => {
       subModule={SubModule.branchDetails}
       pageTitle={id ? 'Edit Branch' : 'Create Branch'}
       displayNotFoundPage={fetchStatus === 'failed' && !branch}
-      onBackButtonClick={navigateBack}
+      onBackButtonClick={handleBackButtonClick}
     >
       <BrachDetailsForm
+        withCancel
         module={Module.branchManagement}
         subModule={SubModule.branchDetails}
         isAdmin={isUserAdmin}
         data={branch}
         fields={mapTimeZonesToFieldSelectOptions(mapDisabledFields(BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, userRoles), companyTimeZones)}
+        actionLoading={updateStatus === 'loading'}
         formLoading={fetchStatus === 'loading'}
-        buttonLoading={updateStatus === 'loading'}
         onSubmit={handleSubmit}
+        onCancel={handleCancel}
       />
     </PageLayout>
   );

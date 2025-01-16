@@ -1,6 +1,13 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getLinearLoader, getTablePaginationDisplayedRows, getTablePaginationSizeInput, getTestSelectorByModule } from '../support/helpers';
 import {
+  getLinearLoader,
+  getTablePaginationDisplayedRows,
+  getTablePaginationSizeInput,
+  getTestSelectorByModule,
+  selectOption,
+} from '../support/helpers';
+import {
+  interceptCreateBranchRequest,
   interceptDeleteBranchFailedRequest,
   interceptDeleteBranchRequest,
   interceptFetchBranchByIdRequest,
@@ -262,6 +269,61 @@ describe('Branches Tests', () => {
 
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
       cy.wait('@fetchMultipleBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
+    });
+
+    it('should reset the search state after a new branch has been created', () => {
+      interceptCreateBranchRequest();
+      interceptFetchBranchesRequest();
+      interceptFetchBranchesRequest(
+        { pageNumber: 1, pageSize: 5, search: 'New' },
+        { alias: 'fetchSearchedBranchesRequest', fixture: 'branches' }
+      );
+
+      cy.get('[data-cy="search-branches"]').find('input').type('New');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
+
+      cy.get('[data-cy="page-title-back-button"]').click();
+      cy.get('[data-cy="search-branches"]').find('input').should('have.value', '');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').type('Anchorage Branch');
+      selectOption(Module.branchManagement, SubModule.branchDetails, 'timeZoneId', 'America/Anchorage');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
+
+      interceptFetchBranchesRequest(
+        { pageNumber: 1, pageSize: 5, search: '' },
+        { alias: 'fetchMultipleUpdatedBranchesRequest', fixture: 'branches-multiple-updated' }
+      );
+
+      cy.wait('@createBranchRequest');
+      cy.wait('@fetchMultipleUpdatedBranchesRequest');
+
+      cy.get('[data-cy="search-branches"]').find('input').should('have.value', '');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
+    });
+
+    it('should reset the search state when the clear icon is clicked', () => {
+      interceptFetchBranchesRequest(
+        { pageNumber: 1, pageSize: 5, search: '' },
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+      );
+      interceptFetchBranchesRequest(
+        { pageNumber: 1, pageSize: 5, search: 'New' },
+        { alias: 'fetchSearchedBranchesRequest', fixture: 'branches' }
+      );
+
+      cy.get('[data-cy="search-branches"]').find('input').type('New');
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
+
+      cy.get('[data-cy="search-branches-clear"]').click();
+
+      cy.get('[data-cy="search-branches"]').find('input').should('have.value', '');
+
+      cy.wait('@fetchMultipleBranchesRequest');
+
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
     });
 

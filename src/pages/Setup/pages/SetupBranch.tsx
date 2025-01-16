@@ -40,9 +40,9 @@ const SetupBranchPage: React.FC = () => {
         module={Module.branchSetup}
         subModule={SubModule.branchDetails}
         isAdmin={isUserAdmin}
-        buttonLabel="Next"
-        buttonIcon={<NavigateNextIcon />}
-        buttonLoading={updateStatus === 'loading'}
+        actionLabel="Next"
+        actionIcon={<NavigateNextIcon />}
+        actionLoading={updateStatus === 'loading'}
         fields={mapTimeZonesToFieldSelectOptions(mapDisabledFields(BRANCH_SETUP_DETAILS_FORM_SCHEMA, userRoles), companyTimeZones)}
         onSubmit={handleSubmit}
       />

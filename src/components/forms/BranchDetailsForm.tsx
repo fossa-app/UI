@@ -1,19 +1,24 @@
 import * as React from 'react';
+import Button from '@mui/material/Button';
+import SaveIcon from '@mui/icons-material/Save';
 import { BranchDTO, Module, SubModule } from 'shared/models';
 import { MESSAGES } from 'shared/constants';
 import Form, { FieldProps } from 'components/UI/Form';
+import LoadingButton from 'components/UI/LoadingButton';
 
 interface BranchDetailsFormProps {
   module: Module;
   subModule: SubModule;
   isAdmin: boolean;
-  buttonLoading: boolean;
   fields: FieldProps[];
-  buttonLabel?: string;
-  buttonIcon?: React.ReactNode;
+  actionLabel?: string;
+  actionIcon?: React.ReactNode;
+  actionLoading?: boolean;
+  withCancel?: boolean;
   formLoading?: boolean;
   data?: BranchDTO;
   onSubmit: (data: BranchDTO) => void;
+  onCancel?: () => void;
 }
 
 const BranchDetailsForm: React.FC<BranchDetailsFormProps> = ({
@@ -21,12 +26,14 @@ const BranchDetailsForm: React.FC<BranchDetailsFormProps> = ({
   subModule,
   isAdmin,
   data,
-  buttonLabel,
-  buttonIcon,
+  actionLabel = 'Save',
+  actionIcon = <SaveIcon />,
+  actionLoading = false,
+  withCancel = false,
   fields,
   formLoading,
-  buttonLoading,
   onSubmit,
+  onCancel,
 }) => {
   const defaultValues: BranchDTO = {
     name: '',
@@ -35,6 +42,12 @@ const BranchDetailsForm: React.FC<BranchDetailsFormProps> = ({
 
   const handleFormSubmit = (formValue: BranchDTO) => {
     onSubmit(formValue);
+  };
+
+  const handleFormCancel = () => {
+    if (onCancel) {
+      onCancel();
+    }
   };
 
   return (
@@ -50,13 +63,30 @@ const BranchDetailsForm: React.FC<BranchDetailsFormProps> = ({
 
       <Form.Content fields={fields} />
 
-      <Form.Actions
-        actionLoading={buttonLoading}
-        actionDisabled={!isAdmin}
-        actionLabel={buttonLabel}
-        actionIcon={buttonIcon}
-        generalValidationMessage={isAdmin ? undefined : MESSAGES.error.general.permission}
-      />
+      <Form.Actions generalValidationMessage={isAdmin ? undefined : MESSAGES.error.general.permission}>
+        {withCancel && (
+          <Button
+            data-cy={`${module}-${subModule}-form-cancel-button`}
+            aria-label="Cancel Branch"
+            variant="text"
+            color="secondary"
+            onClick={handleFormCancel}
+          >
+            Cancel
+          </Button>
+        )}
+        <LoadingButton
+          data-cy={`${module}-${subModule}-form-action-button`}
+          aria-label="Save Branch"
+          type="submit"
+          loadingPosition="end"
+          disabled={!isAdmin}
+          loading={actionLoading}
+          endIcon={actionIcon}
+        >
+          {actionLabel}
+        </LoadingButton>
+      </Form.Actions>
     </Form>
   );
 };

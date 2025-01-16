@@ -105,7 +105,7 @@ const BranchTablePage: React.FC = () => {
   React.useEffect(() => {
     if (searchChanged) {
       dispatch(resetBranchesFetchStatus());
-      dispatch(setBranchesPagination({ search }));
+      dispatch(setBranchesPagination({ search, pageNumber: 1 }));
       setSearchChanged(false);
     }
   }, [search, searchChanged, dispatch, setSearchChanged]);
