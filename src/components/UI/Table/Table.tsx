@@ -88,7 +88,8 @@ const Table = <T extends Item>({
       sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, pt: 3, pr: 3, pb: 1, pl: 3, position: 'relative' }}
       {...props}
     >
-      <TableContainer sx={{ flexGrow: 1 }}>
+      {/* TODO: make maxHeight configurable */}
+      <TableContainer sx={{ flexGrow: 1, maxHeight: 420 }}>
         <StyledTable stickyHeader>
           <TableHead>
             <TableRow data-cy={`${module}-${subModule}-table-head-row`}>

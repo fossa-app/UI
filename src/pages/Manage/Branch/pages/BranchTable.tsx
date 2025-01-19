@@ -12,13 +12,15 @@ import {
   setBranchesPagination,
 } from 'store/features';
 import { Branch, Module, PaginationParams, SubModule } from 'shared/models';
-import { ACTION_FIELDS, APP_CONFIG, BRANCH_TABLE_ACTIONS_SCHEMA, BRANCH_TABLE_SCHEMA, ROUTES } from 'shared/constants';
+import { ACTION_FIELDS, APP_CONFIG, BRANCH_FIELDS, BRANCH_TABLE_ACTIONS_SCHEMA, BRANCH_TABLE_SCHEMA, ROUTES } from 'shared/constants';
 import { filterTableActionsByRoles, getTestSelectorByModule, mapTableActionsColumn } from 'shared/helpers';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import Table from 'components/UI/Table';
-import TableLayout from 'components/layouts/TableLayout';
 import ActionsMenu from 'components/UI/Table/ActionsMenu';
+import TableLayout from 'components/layouts/TableLayout';
 import { useSearch } from 'components/Search';
+import { renderBranchName } from '../components/BranchName';
+import { renderBranchTimeZone } from '../components/BranchTimeZone';
 
 const BranchTablePage: React.FC = () => {
   const navigate = useNavigate();
@@ -59,6 +61,12 @@ const BranchTablePage: React.FC = () => {
     navigate(viewPath);
   };
 
+  const handleEditBranch = ({ id }: Branch) => {
+    const editPath = generatePath(ROUTES.editBranch.path, { id });
+
+    navigate(editPath);
+  };
+
   const handleDeleteBranch = ({ id }: Branch) => {
     const itemsLength = branches?.items.length || 0;
 
@@ -67,12 +75,6 @@ const BranchTablePage: React.FC = () => {
     }
 
     dispatch(deleteBranch(id));
-  };
-
-  const handleEditBranch = ({ id }: Branch) => {
-    const editPath = generatePath(ROUTES.editBranch.path, { id });
-
-    navigate(editPath);
   };
 
   const actionHandlers = {
@@ -90,7 +92,26 @@ const BranchTablePage: React.FC = () => {
     <ActionsMenu<Branch> module={Module.branchManagement} subModule={SubModule.branchTable} actions={actions} context={branch} />
   );
 
-  const columns = mapTableActionsColumn(BRANCH_TABLE_SCHEMA, renderActionButtons);
+  // TODO: find better solution, e.g. like renderActionButtons
+  const mappedCellActions = BRANCH_TABLE_SCHEMA.map((column) => {
+    if (column.field === BRANCH_FIELDS.name.field) {
+      return {
+        ...column,
+        renderBodyCell: (branch: Branch) => renderBranchName(branch, handleViewBranch),
+      };
+    }
+
+    if (column.field === BRANCH_FIELDS.timeZoneName?.field) {
+      return {
+        ...column,
+        renderBodyCell: (branch: Branch) => renderBranchTimeZone(branch),
+      };
+    }
+
+    return column;
+  });
+
+  const columns = mapTableActionsColumn(mappedCellActions, renderActionButtons);
 
   React.useEffect(() => {
     if (fetchStatus === 'idle') {

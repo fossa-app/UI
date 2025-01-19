@@ -16,6 +16,7 @@ declare global {
         statusCode?: number,
         delay?: number
       ): Chainable<T>;
+      setDarkTheme(): Chainable<T>;
     }
   }
 }

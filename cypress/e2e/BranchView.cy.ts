@@ -20,97 +20,143 @@ describe('Branch View Tests', () => {
     interceptFetchCompanyRequest();
     interceptFetchBranchesRequest();
     interceptFetchEmployeeRequest();
-    cy.loginMock(true);
   });
 
-  it('should display not found page if the branch was not found', () => {
-    interceptFetchBranchByIdFailedRequest('222222222224');
-    cy.visit('/manage/branches/view/222222222224');
+  describe('User Role', () => {
+    beforeEach(() => {
+      cy.loginMock();
+    });
 
-    cy.get('[data-cy="not-found-page-title"]').should('exist').and('contain.text', 'Page Not Found');
-    cy.get('[data-cy="not-found-page-button"]').should('exist').click();
-    cy.url().should('include', '/manage/company');
+    it('should not render the Edit branch button', () => {
+      interceptFetchBranchByIdRequest('222222222222');
+      cy.visit('/manage/branches/view/222222222222');
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-action-button').should('not.exist');
+    });
   });
 
-  it('should be able to view the branch and navigate back', () => {
-    interceptEditBranchRequest('222222222222');
-    interceptFetchBranchByIdRequest('222222222222');
-    cy.visit('/manage/branches');
+  describe('Admin Role', () => {
+    beforeEach(() => {
+      cy.loginMock(true);
+    });
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').click();
+    it('should display not found page if the branch was not found', () => {
+      interceptFetchBranchByIdFailedRequest('222222222224');
+      cy.visit('/manage/branches/view/222222222224');
 
-    getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-header').should(
-      'have.text',
-      'Branch Details'
-    );
-    cy.wait('@fetchBranchByIdRequest');
+      cy.get('[data-cy="not-found-page-title"]').should('exist').and('contain.text', 'Page Not Found');
+      cy.get('[data-cy="not-found-page-button"]').should('exist').click();
+      cy.url().should('include', '/manage/company');
+    });
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-name').should(
-      'have.text',
-      'Branch Name'
-    );
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-name').should(
-      'have.text',
-      'New York Branch'
-    );
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-timeZoneName').should(
-      'have.text',
-      'TimeZone'
-    );
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-timeZoneName').should(
-      'have.text',
-      'Eastern Standard Time'
-    );
+    it('should be able to view the branch and navigate back', () => {
+      interceptEditBranchRequest('222222222222');
+      interceptFetchBranchByIdRequest('222222222222');
+      cy.visit('/manage/branches');
+      cy.setDarkTheme();
 
-    cy.get('[data-cy="page-title-back-button"]').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').click();
 
-    cy.url().should('include', '/manage/branches');
-    getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
-  });
+      getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-header').should(
+        'have.text',
+        'Branch Details'
+      );
+      cy.wait('@fetchBranchByIdRequest');
 
-  it('should reset the branch after viewing and navigating back', () => {
-    interceptFetchBranchByIdRequest('222222222222');
-    cy.visit('/manage/branches');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-name').should(
+        'have.text',
+        'Branch Name'
+      );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-name').should(
+        'have.text',
+        'New York Branch'
+      );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-timeZoneName').should(
+        'have.text',
+        'TimeZone'
+      );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-timeZoneName')
+        .should('have.text', 'Eastern Standard Time')
+        .find('p')
+        .should('have.css', 'color', 'rgb(255, 255, 255)');
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').click();
-    cy.wait('@fetchBranchByIdRequest');
+      cy.get('[data-cy="page-title-back-button"]').click();
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-name').should(
-      'have.text',
-      'New York Branch'
-    );
+      cy.url().should('include', '/manage/branches');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
+    });
 
-    cy.get('[data-cy="page-title-back-button"]').click();
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
+    it('should reset the branch after viewing and navigating back', () => {
+      interceptFetchBranchByIdRequest('222222222222');
+      cy.visit('/manage/branches');
 
-    cy.url().should('include', '/manage/branches/new');
-    // TODO: flaky part
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').should('have.value', '');
-  });
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').click();
+      cy.wait('@fetchBranchByIdRequest');
 
-  it('should fetch and display the branch by id when refreshing the page', () => {
-    interceptFetchBranchByIdRequest('222222222222');
-    cy.visit('/manage/branches/view/222222222222');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-name').should(
+        'have.text',
+        'New York Branch'
+      );
 
-    cy.reload();
+      cy.get('[data-cy="page-title-back-button"]').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
-    getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
-    cy.wait('@fetchBranchByIdRequest');
+      cy.url().should('include', '/manage/branches/new');
+      // TODO: flaky part
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').should('have.value', '');
+    });
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-name').should(
-      'have.text',
-      'New York Branch'
-    );
-  });
+    it('should fetch and display the branch by id when refreshing the page', () => {
+      interceptFetchBranchByIdRequest('222222222222');
+      cy.visit('/manage/branches/view/222222222222');
 
-  it('should not display the loader if the request resolves quickly', () => {
-    interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdQuickRequest', 200, 50);
-    cy.visit('/manage/branches/view/222222222222');
+      cy.reload();
 
-    getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('not.exist');
-    cy.wait('@fetchBranchByIdQuickRequest');
+      getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
+      cy.wait('@fetchBranchByIdRequest');
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-name').should(
+        'have.text',
+        'New York Branch'
+      );
+    });
+
+    it('should not display the loader if the request resolves quickly', () => {
+      interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdQuickRequest', 200, 50);
+      cy.visit('/manage/branches/view/222222222222');
+
+      getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('not.exist');
+      cy.wait('@fetchBranchByIdQuickRequest');
+    });
+
+    it('should mark the timeZone as invalid if it is an invalid company timeZone', () => {
+      interceptFetchCompanyRequest('fetchUpdatedCompanyRequest', 'company-updated');
+      interceptFetchBranchByIdRequest('222222222222');
+      cy.visit('/manage/branches/view/222222222222');
+      cy.setDarkTheme();
+
+      cy.wait('@fetchUpdatedCompanyRequest');
+      cy.wait('@fetchBranchByIdRequest');
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-timeZoneName')
+        .find('p')
+        .should('have.css', 'color', 'rgb(255, 153, 153)');
+    });
+
+    it('should render the Edit branch button', () => {
+      interceptFetchBranchByIdRequest('222222222222');
+      cy.visit('/manage/branches/view/222222222222');
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-action-button').should('exist').click();
+
+      cy.url().should('include', '/manage/branches/edit/222222222222');
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-cancel-button').should('exist').click();
+
+      cy.url().should('include', '/manage/branches');
+    });
   });
 });

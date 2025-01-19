@@ -16,14 +16,14 @@ interface ActionsMenuProps<T> {
 }
 
 const ActionsMenu = <T extends Item>({ module, subModule, actions, context }: ActionsMenuProps<T>) => {
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleOpenActionsMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
+    setAnchorEl(event.currentTarget);
   };
 
   const handleCloseActionsMenu = () => {
-    setAnchorElUser(null);
+    setAnchorEl(null);
   };
 
   const handleActionClick = (action: Action<T>) => {
@@ -48,8 +48,8 @@ const ActionsMenu = <T extends Item>({ module, subModule, actions, context }: Ac
       <Menu
         keepMounted
         data-cy={`${module}-${subModule}-actions-menu-${context.id}`}
-        open={Boolean(anchorElUser)}
-        anchorEl={anchorElUser}
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
