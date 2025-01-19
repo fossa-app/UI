@@ -54,6 +54,7 @@ describe('Branches Tests', () => {
     });
 
     it('should render branches table if there are fetched branches', () => {
+      cy.setDarkTheme();
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
@@ -65,6 +66,9 @@ describe('Branches Tests', () => {
         'have.text',
         'TimeZone'
       );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Eastern Standard Time')
+        .find('p')
+        .should('have.css', 'color', 'rgb(255, 255, 255)');
       getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');
       getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.text', '1–1 of 1');
     });
@@ -158,6 +162,29 @@ describe('Branches Tests', () => {
 
       cy.url().should('include', '/manage/branches/view/222222222222');
     });
+
+    it('should mark the timeZone as invalid if it is an invalid company timeZone', () => {
+      interceptFetchBranchesRequest(
+        { pageNumber: 1, pageSize: 5, search: '' },
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-timezones' }
+      );
+      cy.visit('/manage/branches');
+      cy.setDarkTheme();
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Central European Standard Time')
+        .find('p')
+        .should('have.css', 'color', 'rgb(255, 153, 153)');
+    });
+
+    it('should be able to navigate to the branch view page by clicking the branch name cell', () => {
+      interceptFetchBranchesRequest();
+      interceptFetchBranchByIdRequest('222222222222');
+      cy.visit('/manage/branches');
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-New York Branch').click();
+
+      cy.url().should('include', '/manage/branches/view/222222222222');
+    });
   });
 
   describe('Admin Role', () => {
@@ -193,6 +220,7 @@ describe('Branches Tests', () => {
     });
 
     it('should render branches table if there are fetched branches', () => {
+      cy.setDarkTheme();
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
@@ -204,6 +232,9 @@ describe('Branches Tests', () => {
         'have.text',
         'TimeZone'
       );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Eastern Standard Time')
+        .find('p')
+        .should('have.css', 'color', 'rgb(255, 255, 255)');
       getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');
       getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.text', '1–1 of 1');
     });
@@ -408,6 +439,29 @@ describe('Branches Tests', () => {
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-New York').should('not.exist');
+    });
+
+    it('should mark the timeZone as invalid if it is an invalid company timeZone', () => {
+      interceptFetchBranchesRequest(
+        { pageNumber: 1, pageSize: 5, search: '' },
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-timezones' }
+      );
+      cy.visit('/manage/branches');
+      cy.setDarkTheme();
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Central European Standard Time')
+        .find('p')
+        .should('have.css', 'color', 'rgb(255, 153, 153)');
+    });
+
+    it('should be able to navigate to the branch view page by clicking the branch name cell', () => {
+      interceptFetchBranchesRequest();
+      interceptFetchBranchByIdRequest('222222222222');
+      cy.visit('/manage/branches');
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-New York Branch').click();
+
+      cy.url().should('include', '/manage/branches/view/222222222222');
     });
   });
 });

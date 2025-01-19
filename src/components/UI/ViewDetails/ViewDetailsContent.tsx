@@ -34,9 +34,13 @@ const ViewDetailsContent = <T,>({ fields, values }: ViewDetailsContentProps<T>) 
               <Typography data-cy={`${module}-${subModule}-view-details-item-label-${field.name}`} variant="caption" color="textSecondary">
                 {field.label}
               </Typography>
-              <Typography data-cy={`${module}-${subModule}-view-details-item-value-${field.name}`} variant="body1">
-                {fieldValue ? String(fieldValue) : 'N/A'}
-              </Typography>
+              <Box data-cy={`${module}-${subModule}-view-details-item-value-${field.name}`}>
+                {field.renderDetailField ? (
+                  field.renderDetailField(values)
+                ) : (
+                  <Typography variant="body1">{fieldValue ? String(fieldValue) : 'N/A'}</Typography>
+                )}
+              </Box>
             </Grid>
           );
         })}

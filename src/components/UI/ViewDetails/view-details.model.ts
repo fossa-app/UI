@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { GridBaseProps } from '@mui/material/Grid2';
 import { Module, SubModule } from 'shared/models';
 
@@ -8,4 +9,5 @@ export interface ViewItemProps<T> {
   subModule: SubModule;
   value?: T;
   grid?: GridBaseProps;
+  renderDetailField?: (item: T) => React.ReactNode;
 }

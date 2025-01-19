@@ -3,6 +3,7 @@ import { FieldProps, FieldType } from 'components/UI/Form';
 import { Action, Column } from 'components/UI/Table';
 import { ViewItemProps } from 'components/UI/ViewDetails';
 import { ACTION_FIELD, ACTION_FIELDS } from './common';
+import { renderBranchTimeZone } from 'pages/Manage/Branch/components/BranchTimeZone';
 
 export const BRANCH_FIELDS: BranchFieldConfig = {
   id: {
@@ -70,6 +71,7 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
     subModule: SubModule.branchDetails,
+    renderDetailField: renderBranchTimeZone,
   },
 ];
 

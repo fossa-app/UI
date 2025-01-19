@@ -79,8 +79,8 @@
     "sass": "^1.80.6",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
+    "typescript": "^5.7.2",
     "vite": "^6.0.6",
-    "vite-tsconfig-paths": "^5.1.4",
-    "typescript": "^5.7.2"
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }

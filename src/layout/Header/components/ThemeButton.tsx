@@ -9,7 +9,7 @@ type ThemeButtonProps = {
 
 const ThemeButton: React.FC<ThemeButtonProps> = ({ isDarkTheme, ...props }) => {
   return (
-    <IconButton data-testid="theme-button" aria-label="Theme" {...props}>
+    <IconButton data-testid="theme-button" data-cy="theme-button" aria-label="Theme Button" {...props}>
       {isDarkTheme ? <DarkModeIcon /> : <LightModeIcon />}
     </IconButton>
   );

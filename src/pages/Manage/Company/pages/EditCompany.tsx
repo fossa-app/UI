@@ -8,6 +8,7 @@ import {
   selectCompany,
   selectSystemCountries,
   resetCompanyFetchStatus,
+  resetBranchesFetchStatus,
 } from 'store/features';
 import { COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
 import { CompanyDTO, Module, SubModule } from 'shared/models';
@@ -41,9 +42,10 @@ const EditCompanyPage: React.FC = () => {
   // TODO: move this logic to FormLayout
   React.useEffect(() => {
     if (updateStatus === 'succeeded' && formSubmitted) {
+      dispatch(resetBranchesFetchStatus());
       navigateToViewCompany();
     }
-  }, [updateStatus, formSubmitted, navigateToViewCompany]);
+  }, [updateStatus, formSubmitted, navigateToViewCompany, dispatch]);
 
   React.useEffect(() => {
     return () => {
