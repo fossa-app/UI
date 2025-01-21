@@ -29,6 +29,11 @@ export const selectOption = (module: Module, subModule: SubModule, fieldName: st
   getTestSelectorByModule(module, subModule, `form-field-${fieldName}-option-${optionName}`).click();
 };
 
+export const openUserProfile = () => {
+  cy.get('[data-cy="user-avatar"]').click();
+  cy.get('[data-cy="user-name"]').should('exist').click();
+};
+
 export const uploadTestFile = (selector: string, fixtureName: string, fileType = 'application/octet-stream') => {
   cy.fixture(fixtureName, 'binary').then((fileContent) => {
     const blob = Cypress.Blob.binaryStringToBlob(fileContent, fileType);

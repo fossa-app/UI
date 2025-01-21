@@ -53,6 +53,7 @@ export const MESSAGES = {
     employee: {
       notFound: 'Employee not found 😞',
       createFailed: 'Failed to create an Employee 😞',
+      updateFailed: 'Failed to update Employee 😞',
     },
   },
 };

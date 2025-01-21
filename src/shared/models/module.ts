@@ -6,6 +6,7 @@ export enum Module {
   branchManagement = 'branchManagement',
   employeeManagement = 'employeeManagement',
   dashboard = 'dashboard',
+  profile = 'profile',
 }
 
 export enum SubModule {
@@ -17,4 +18,6 @@ export enum SubModule {
   branchViewDetails = 'branchViewDetails',
   companyViewDetails = 'companyViewDetails',
   dashboardDetails = 'dashboardDetails',
+  profileDetails = 'profileDetails',
+  profileViewDetails = 'profileViewDetails',
 }

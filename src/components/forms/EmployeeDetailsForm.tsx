@@ -1,5 +1,6 @@
 import * as React from 'react';
-import DoneIcon from '@mui/icons-material/Done';
+import Button from '@mui/material/Button';
+import SaveIcon from '@mui/icons-material/Save';
 import { EmployeeDTO, Module, SubModule } from 'shared/models';
 import Form, { FieldProps } from 'components/UI/Form';
 import LoadingButton from 'components/UI/LoadingButton';
@@ -11,21 +12,27 @@ interface EmployeeDetailsFormProps {
   actionLabel?: string;
   actionIcon?: React.ReactNode;
   actionLoading?: boolean;
+  withCancel?: boolean;
   formLoading?: boolean;
   data?: EmployeeDTO;
+  headerText?: string;
   onSubmit: (data: EmployeeDTO) => void;
+  onCancel?: () => void;
 }
 
 const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({
   module,
   subModule,
   data,
-  actionLabel = 'Finish',
-  actionIcon = <DoneIcon />,
+  actionLabel = 'Save',
+  actionIcon = <SaveIcon />,
   actionLoading = false,
+  withCancel = false,
+  headerText = 'Profile Details',
   fields,
   formLoading,
   onSubmit,
+  onCancel,
 }) => {
   const defaultValues: EmployeeDTO = {
     firstName: data?.firstName ?? '',
@@ -37,6 +44,12 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({
     onSubmit(formValue);
   };
 
+  const handleFormCancel = () => {
+    if (onCancel) {
+      onCancel();
+    }
+  };
+
   return (
     <Form<EmployeeDTO>
       module={module}
@@ -46,11 +59,22 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({
       loading={formLoading}
       onSubmit={handleFormSubmit}
     >
-      <Form.Header>Employee Details</Form.Header>
+      <Form.Header>{headerText}</Form.Header>
 
       <Form.Content fields={fields} />
 
       <Form.Actions>
+        {withCancel && (
+          <Button
+            data-cy={`${module}-${subModule}-form-cancel-button`}
+            aria-label="Cancel Employee"
+            variant="text"
+            color="secondary"
+            onClick={handleFormCancel}
+          >
+            Cancel
+          </Button>
+        )}
         <LoadingButton
           data-cy={`${module}-${subModule}-form-action-button`}
           aria-label="Save Employee"

@@ -34,6 +34,9 @@ const EditBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pag
   title: ROUTES.editBranch.name,
   isAdminRoute: true,
 });
+const ProfilePage = createLazyComponent(() => import('pages/Manage/Profile/Profile'), { title: ROUTES.profile.name });
+const EditProfilePage = createLazyComponent(() => import('pages/Manage/Profile/pages/EditProfile'), { title: ROUTES.editProfile.name });
+const ViewProfilePage = createLazyComponent(() => import('pages/Manage/Profile/pages/ViewProfile'), { title: ROUTES.viewProfile.name });
 
 const router = createBrowserRouter(
   [
@@ -138,6 +141,25 @@ const router = createBrowserRouter(
                     {
                       index: true,
                       element: EmployeeTablePage,
+                    },
+                  ],
+                },
+
+                {
+                  path: ROUTES.profile.path,
+                  element: ProfilePage,
+                  children: [
+                    {
+                      index: true,
+                      element: <Navigate to={ROUTES.viewProfile.path} replace />,
+                    },
+                    {
+                      path: ROUTES.viewProfile.path,
+                      element: ViewProfilePage,
+                    },
+                    {
+                      path: ROUTES.editProfile.path,
+                      element: EditProfilePage,
                     },
                   ],
                 },

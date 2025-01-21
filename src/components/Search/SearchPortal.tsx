@@ -49,7 +49,15 @@ const SearchPortal: React.FC<SearchPortalProps> = (searchPortalProps) => {
       slotProps={{
         input: {
           endAdornment: (
-            <IconButton aria-label="Clear Search" data-cy={`${props.testSelector}-clear`} size="small" onClick={handleClear}>
+            <IconButton
+              aria-label="Clear Search"
+              data-cy={`${props.testSelector}-clear`}
+              size="small"
+              sx={{
+                color: (theme) => theme.palette.primary.contrastText,
+              }}
+              onClick={handleClear}
+            >
               <ClearIcon />
             </IconButton>
           ),
