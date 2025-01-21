@@ -53,7 +53,6 @@ describe('Branch View Tests', () => {
       interceptEditBranchRequest('222222222222');
       interceptFetchBranchByIdRequest('222222222222');
       cy.visit('/manage/branches');
-      cy.setDarkTheme();
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').click();
@@ -80,7 +79,7 @@ describe('Branch View Tests', () => {
       getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-timeZoneName')
         .should('have.text', 'Eastern Standard Time')
         .find('p')
-        .should('have.css', 'color', 'rgb(255, 255, 255)');
+        .should('not.have.attr', 'data-invalid');
 
       cy.get('[data-cy="page-title-back-button"]').click();
 
@@ -136,14 +135,13 @@ describe('Branch View Tests', () => {
       interceptFetchCompanyRequest('fetchUpdatedCompanyRequest', 'company-updated');
       interceptFetchBranchByIdRequest('222222222222');
       cy.visit('/manage/branches/view/222222222222');
-      cy.setDarkTheme();
 
       cy.wait('@fetchUpdatedCompanyRequest');
       cy.wait('@fetchBranchByIdRequest');
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-timeZoneName')
         .find('p')
-        .should('have.css', 'color', 'rgb(255, 153, 153)');
+        .should('have.attr', 'data-invalid');
     });
 
     it('should render the Edit branch button', () => {

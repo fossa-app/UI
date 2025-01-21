@@ -54,7 +54,6 @@ describe('Branches Tests', () => {
     });
 
     it('should render branches table if there are fetched branches', () => {
-      cy.setDarkTheme();
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
@@ -68,7 +67,7 @@ describe('Branches Tests', () => {
       );
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Eastern Standard Time')
         .find('p')
-        .should('have.css', 'color', 'rgb(255, 255, 255)');
+        .should('not.have.attr', 'data-invalid');
       getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');
       getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.text', '1–1 of 1');
     });
@@ -169,11 +168,10 @@ describe('Branches Tests', () => {
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-timezones' }
       );
       cy.visit('/manage/branches');
-      cy.setDarkTheme();
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Central European Standard Time')
         .find('p')
-        .should('have.css', 'color', 'rgb(255, 153, 153)');
+        .should('have.attr', 'data-invalid');
     });
 
     it('should be able to navigate to the branch view page by clicking the branch name cell', () => {
@@ -220,7 +218,6 @@ describe('Branches Tests', () => {
     });
 
     it('should render branches table if there are fetched branches', () => {
-      cy.setDarkTheme();
       interceptFetchBranchesRequest();
 
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
@@ -234,7 +231,7 @@ describe('Branches Tests', () => {
       );
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Eastern Standard Time')
         .find('p')
-        .should('have.css', 'color', 'rgb(255, 255, 255)');
+        .should('not.have.attr', 'data-invalid');
       getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');
       getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.text', '1–1 of 1');
     });
@@ -447,11 +444,10 @@ describe('Branches Tests', () => {
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-timezones' }
       );
       cy.visit('/manage/branches');
-      cy.setDarkTheme();
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Central European Standard Time')
         .find('p')
-        .should('have.css', 'color', 'rgb(255, 153, 153)');
+        .should('have.attr', 'data-invalid');
     });
 
     it('should be able to navigate to the branch view page by clicking the branch name cell', () => {
