@@ -18,6 +18,9 @@ export enum RouteKey {
   newBranch = 'newBranch',
   editBranch = 'editBranch',
   viewBranch = 'viewBranch',
+  profile = 'profile',
+  viewProfile = 'viewProfile',
+  editProfile = 'editProfile',
 }
 
 export interface RouteItem {

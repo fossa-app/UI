@@ -32,7 +32,7 @@ const ViewCompanyPage: React.FC = () => {
         <ViewDetails.Actions>
           {isUserAdmin && (
             <Button
-              data-cy="edit-company-button"
+              data-cy={`${Module.companyManagement}-${SubModule.companyViewDetails}-view-action-button`}
               aria-label="Edit Company Button"
               variant="contained"
               color="primary"

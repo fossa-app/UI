@@ -39,7 +39,7 @@ const EditCompanyPage: React.FC = () => {
     navigateToViewCompany();
   };
 
-  // TODO: move this logic to FormLayout
+  // TODO: move this logic to PageLayout
   React.useEffect(() => {
     if (updateStatus === 'succeeded' && formSubmitted) {
       dispatch(resetBranchesFetchStatus());

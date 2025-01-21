@@ -58,7 +58,7 @@ const ManageBranchPage: React.FC = () => {
     navigateBack();
   };
 
-  // TODO: move this logic to FormLayout
+  // TODO: move this logic to PageLayout
   React.useEffect(() => {
     if (updateStatus === 'succeeded' && formSubmitted) {
       navigateBack();

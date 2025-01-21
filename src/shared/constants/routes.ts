@@ -66,4 +66,16 @@ export const ROUTES: AppRoute = {
     name: 'View Branch',
     path: '/manage/branches/view/:id',
   },
+  profile: {
+    name: 'Profile',
+    path: '/manage/profile',
+  },
+  viewProfile: {
+    name: 'View Profile',
+    path: '/manage/profile/view',
+  },
+  editProfile: {
+    name: 'Edit Profile',
+    path: '/manage/profile/edit',
+  },
 };

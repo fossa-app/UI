@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
-import { openSideBar, selectAppConfig, selectCompany, selectStep, selectUser, toggleAppTheme } from 'store/features';
+import { openSideBar, selectAppConfig, selectCompany, selectEmployee, selectStep, selectUser, toggleAppTheme } from 'store/features';
 import { getUserManager } from 'shared/helpers';
 import { ROUTES, SEARCH_PORTAL_ID } from 'shared/constants';
 import SearchPortal from 'components/Search';
@@ -20,6 +20,7 @@ const Header: React.FC = () => {
   const { isDarkTheme } = useAppSelector(selectAppConfig);
   const { data: user } = useAppSelector(selectUser);
   const { data: company } = useAppSelector(selectCompany);
+  const { data: employee } = useAppSelector(selectEmployee);
   const { status } = useAppSelector(selectStep);
   const userManager = getUserManager();
   const companyName = company?.name ?? '';
@@ -31,6 +32,10 @@ const Header: React.FC = () => {
 
   const handleLogout = async () => {
     await userManager.signoutRedirect();
+  };
+
+  const handleUserClick = () => {
+    navigate(ROUTES.viewProfile.path);
   };
 
   const handleCompanyClick = () => {
@@ -77,7 +82,14 @@ const Header: React.FC = () => {
           </Grid>
           <Grid size="auto">
             {user?.profile?.given_name && (
-              <UserMenu name={user.profile.given_name} picture={user.profile.picture} onLogoutClick={handleLogout} />
+              // TODO: set employee name instead of user
+              <UserMenu
+                employee={employee}
+                name={user.profile.given_name}
+                picture={user.profile.picture}
+                onLogoutClick={handleLogout}
+                onUserClick={handleUserClick}
+              />
             )}
           </Grid>
         </Grid>

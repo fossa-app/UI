@@ -4,7 +4,7 @@ import { useAppSelector } from 'store';
 import { selectIsUserAdmin, selectUser } from 'store/features';
 import { ROUTES } from 'shared/constants';
 
-const AdminRoute: React.FC<React.PropsWithChildren> = ({ children }) => {
+const AdminRouteGuard: React.FC<React.PropsWithChildren> = ({ children }) => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { status } = useAppSelector(selectUser);
 
@@ -15,4 +15,4 @@ const AdminRoute: React.FC<React.PropsWithChildren> = ({ children }) => {
   return <>{children}</>;
 };
 
-export default AdminRoute;
+export default AdminRouteGuard;

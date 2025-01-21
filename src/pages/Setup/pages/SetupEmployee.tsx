@@ -1,4 +1,5 @@
 import * as React from 'react';
+import DoneIcon from '@mui/icons-material/Done';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectEmployee, createEmployee, fetchEmployee, selectUser } from 'store/features';
 import { EmployeeDTO, Module, SubModule } from 'shared/models';
@@ -25,6 +26,9 @@ const SetupEmployeePage: React.FC = () => {
   return (
     <PageLayout module={Module.employeeSetup} subModule={SubModule.employeeDetails} pageTitle="Create Employee">
       <EmployeeDetailsForm
+        actionLabel="Finish"
+        headerText="Employee Details"
+        actionIcon={<DoneIcon />}
         module={Module.employeeSetup}
         subModule={SubModule.employeeDetails}
         actionLoading={updateStatus === 'loading'}

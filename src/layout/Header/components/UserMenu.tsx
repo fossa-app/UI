@@ -5,14 +5,17 @@ import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
+import { Employee } from 'shared/models';
 
 interface UserMenuProps {
   name: string;
   picture?: string;
+  employee?: Employee;
   onLogoutClick: () => void;
+  onUserClick: () => void;
 }
 
-const UserMenu: React.FC<UserMenuProps> = ({ name, picture, onLogoutClick }) => {
+const UserMenu: React.FC<UserMenuProps> = ({ name, employee, picture, onLogoutClick, onUserClick }) => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -21,6 +24,20 @@ const UserMenu: React.FC<UserMenuProps> = ({ name, picture, onLogoutClick }) => 
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleUserClick = () => {
+    if (!employee) {
+      return;
+    }
+
+    onUserClick();
+    handleCloseUserMenu();
+  };
+
+  const handleLogoutClick = () => {
+    onLogoutClick();
+    handleCloseUserMenu();
   };
 
   return (
@@ -44,12 +61,12 @@ const UserMenu: React.FC<UserMenuProps> = ({ name, picture, onLogoutClick }) => 
         }}
         onClose={handleCloseUserMenu}
       >
-        <MenuItem data-testid="user-name" data-cy="user-name">
+        <MenuItem data-testid="user-name" data-cy="user-name" aria-label="User Name" onClick={handleUserClick}>
           <Typography variant="body2" sx={{ textAlign: 'center' }}>
             Hi, {name}
           </Typography>
         </MenuItem>
-        <MenuItem data-testid="logout-button" data-cy="logout-button" aria-label="Logout" onClick={onLogoutClick}>
+        <MenuItem data-testid="logout-button" data-cy="logout-button" aria-label="Logout" onClick={handleLogoutClick}>
           <Typography variant="body2" sx={{ textAlign: 'center' }}>
             Logout
           </Typography>

@@ -162,9 +162,9 @@ export const interceptDeleteBranchFailedRequest = (id: string) => {
   cy.interceptWithAuth('DELETE', `${serverBaseUrl}/Branches/${id}`, null, 'deleteBranchFailedRequest', 404);
 };
 
-export const interceptFetchEmployeeRequest = () => {
-  cy.fixture('employee').then((employee) => {
-    cy.interceptWithAuth('GET', `${serverBaseUrl}/Employee`, employee, 'fetchEmployeeRequest');
+export const interceptFetchEmployeeRequest = (alias = 'fetchEmployeeRequest', fixture = 'employee') => {
+  cy.fixture(fixture).then((employee) => {
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Employee`, employee, alias);
   });
 };
 
@@ -178,6 +178,14 @@ export const interceptCreateEmployeeRequest = () => {
 
 export const interceptCreateEmployeeFailedRequest = () => {
   cy.interceptWithAuth('POST', `${serverBaseUrl}/Employee`, null, 'createEmployeeFailedRequest', 404);
+};
+
+export const interceptEditEmployeeRequest = () => {
+  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employee`, null, 'editEmployeeRequest');
+};
+
+export const interceptEditEmployeeFailedRequest = () => {
+  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employee`, null, 'editEmployeeFailedRequest', 404);
 };
 
 export const interceptFetchEmployeesRequest = (

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import AdminRoute from 'components/AdminRoute';
+import AdminRouteGuard from './guards/AdminRouteGuard';
 import RouteTitle from 'components/RouteTitle';
 import CircularLoader from 'components/UI/CircularLoader';
 
@@ -22,7 +22,7 @@ export const createLazyComponent = (importFunc: ImportFunc, { title, isAdminRout
   return (
     <React.Suspense fallback={<CircularLoader />}>
       {/* TODO: create error boundary component */}
-      {isAdminRoute ? <AdminRoute>{content}</AdminRoute> : content}
+      {isAdminRoute ? <AdminRouteGuard>{content}</AdminRouteGuard> : content}
     </React.Suspense>
   );
 };

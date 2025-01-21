@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import { ErrorResponse, SetupStep } from 'shared/models';
+import { APP_CONFIG } from 'shared/constants';
 import { fetchCompany } from './companySlice';
 import { fetchBranches } from './branchSlice';
 import { fetchEmployee } from './employeeSlice';
-import { APP_CONFIG } from 'shared/constants';
 
 interface SetupState {
   step: StateEntity<SetupStep>;
@@ -57,6 +57,8 @@ const setupSlice = createSlice({
       })
       .addCase(fetchEmployee.rejected, (state) => {
         state.step.status = 'failed';
+        // TODO: monitor this step
+        state.step.data = SetupStep.EMPLOYEE;
       })
       .addCase(fetchEmployee.fulfilled, (state) => {
         state.step.status = 'succeeded';

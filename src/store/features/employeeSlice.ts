@@ -81,6 +81,24 @@ export const createEmployee = createAsyncThunk<void, EmployeeDTO, { state: RootS
   }
 );
 
+export const editEmployee = createAsyncThunk<void, Omit<EmployeeDTO, 'id'>, { rejectValue: ErrorResponse }>(
+  'employee/editEmployee',
+  async (employee, { dispatch, rejectWithValue }) => {
+    try {
+      await axios.put<EmployeeDTO>(ENDPOINTS.employee, employee);
+    } catch (error) {
+      dispatch(
+        setError({
+          ...(error as ErrorResponse),
+          title: MESSAGES.error.employee.updateFailed,
+        })
+      );
+
+      return rejectWithValue(error as ErrorResponse);
+    }
+  }
+);
+
 const employeeSlice = createSlice({
   name: 'employee',
   initialState,
@@ -90,6 +108,9 @@ const employeeSlice = createSlice({
     },
     resetEmployeesFetchStatus(state) {
       state.employees.fetchStatus = initialState.employees.fetchStatus;
+    },
+    resetEmployeeFetchStatus(state) {
+      state.employee.fetchStatus = initialState.employee.fetchStatus;
     },
   },
   extraReducers: (builder) => {
@@ -116,6 +137,16 @@ const employeeSlice = createSlice({
       .addCase(createEmployee.fulfilled, (state) => {
         state.employee.updateStatus = 'succeeded';
       })
+      .addCase(editEmployee.pending, (state) => {
+        state.employee.updateStatus = 'loading';
+      })
+      .addCase(editEmployee.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+        state.employee.updateStatus = 'failed';
+        state.employee.error = action.payload;
+      })
+      .addCase(editEmployee.fulfilled, (state) => {
+        state.employee.updateStatus = 'succeeded';
+      })
       .addCase(fetchEmployees.pending, (state) => {
         state.employees.fetchStatus = 'loading';
       })
@@ -136,6 +167,6 @@ const employeeSlice = createSlice({
 export const selectEmployee = (state: RootState) => state.employee.employee;
 export const selectEmployees = (state: RootState) => state.employee.employees;
 
-export const { setEmployeesPagination, resetEmployeesFetchStatus } = employeeSlice.actions;
+export const { setEmployeesPagination, resetEmployeesFetchStatus, resetEmployeeFetchStatus } = employeeSlice.actions;
 
 export default employeeSlice.reducer;

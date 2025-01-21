@@ -1,6 +1,7 @@
 import { Employee, EmployeeFieldConfig, Module, SubModule } from 'shared/models';
 import { FieldProps, FieldType } from 'components/UI/Form';
 import { Column } from 'components/UI/Table';
+import { ViewItemProps } from 'components/UI/ViewDetails';
 
 export const EMPLOYEE_FIELDS: EmployeeFieldConfig = {
   id: {
@@ -72,3 +73,33 @@ export const EMPLOYEE_TABLE_SCHEMA: Column<Employee>[] = [
     width: 'auto',
   },
 ];
+
+export const PROFILE_VIEW_DETAILS_SCHEMA: ViewItemProps<Employee>[] = [
+  {
+    name: EMPLOYEE_FIELDS.firstName.field,
+    label: 'First Name',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.profile,
+    subModule: SubModule.profileDetails,
+  },
+  {
+    name: EMPLOYEE_FIELDS.lastName.field,
+    label: 'Last Name',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.profile,
+    subModule: SubModule.profileDetails,
+  },
+  {
+    name: EMPLOYEE_FIELDS.fullName.field,
+    label: 'Full Name',
+    grid: { size: { xs: 12, md: 12 } },
+    module: Module.profile,
+    subModule: SubModule.profileDetails,
+  },
+];
+
+export const PROFILE_DETAILS_FORM_SCHEMA = [...EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA].map((field) => ({
+  ...field,
+  module: Module.profile,
+  subModule: SubModule.profileDetails,
+}));

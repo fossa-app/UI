@@ -53,13 +53,13 @@ describe('Company Management Tests', () => {
         'have.text',
         'United States'
       );
-      cy.get('[data-cy="edit-company-button"]').should('not.exist');
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('not.exist');
     });
 
     it('should not be able to navigate to the edit company page', () => {
       cy.visit('/manage/company/view');
 
-      cy.get('[data-cy="edit-company-button"]').should('not.exist');
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('not.exist');
 
       cy.visit('/manage/company/edit');
 
@@ -100,13 +100,13 @@ describe('Company Management Tests', () => {
         'have.text',
         'United States'
       );
-      cy.get('[data-cy="edit-company-button"]').should('exist');
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('exist');
     });
 
     it('should reset the form and navigate to view company page if the cancel button is clicked', () => {
       cy.visit('/manage/company/view');
 
-      cy.get('[data-cy="edit-company-button"]').should('exist').click();
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('exist').click();
 
       cy.url().should('include', '/manage/company/edit');
 
@@ -119,7 +119,7 @@ describe('Company Management Tests', () => {
 
       cy.url().should('include', '/manage/company/view');
 
-      cy.get('[data-cy="edit-company-button"]').click();
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').click();
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name')
         .find('input')
@@ -131,10 +131,12 @@ describe('Company Management Tests', () => {
 
     // TODO: flaky test
     it('should not be able to edit the company if the form is invalid or company updating failed', () => {
+      interceptFetchCompanyRequest();
       interceptEditCompanyFailedRequest();
       cy.visit('/manage/company/view');
 
-      cy.get('[data-cy="edit-company-button"]').click();
+      cy.wait('@fetchCompanyRequest');
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').click();
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-action-button').should('not.have.attr', 'disabled');
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name').find('input').clear();
@@ -161,7 +163,7 @@ describe('Company Management Tests', () => {
       interceptEditCompanyRequest();
       cy.visit('/manage/company/view');
 
-      cy.get('[data-cy="edit-company-button"]').should('exist').click();
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('exist').click();
 
       cy.url().should('include', '/manage/company/edit');
 

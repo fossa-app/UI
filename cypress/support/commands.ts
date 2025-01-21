@@ -96,7 +96,7 @@ Cypress.Commands.add('interceptWithAuth', (method, url, response, alias = '', st
 });
 
 Cypress.Commands.add('setDarkTheme', () => {
-  // TODO: find better solution for setting and testing the theme
+  // TODO: find better solution for setting and testing the theme, there are flaky tests
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(100);
   cy.get('body').then(($body) => {
