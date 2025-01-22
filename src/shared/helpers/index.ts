@@ -11,3 +11,4 @@ export * from './utility.helpers';
 export * from './company.helpers';
 export * from './branch.helpers';
 export * from './employee.helpers';
+export * from './scrollbar-styles';

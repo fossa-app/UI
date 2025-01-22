@@ -6,6 +6,7 @@ import { Branch } from 'shared/models';
 export const renderBranchTimeZone = (branch: Branch) => (
   <Tooltip title={branch.isValidCompanyTimeZone ? '' : 'Invalid TimeZone'}>
     <Typography
+      {...(!branch.isValidCompanyTimeZone && { 'data-invalid': true })}
       sx={{
         color: branch.isValidCompanyTimeZone ? 'inherit' : (theme) => theme.palette.error.main,
         width: 'fit-content',
