@@ -33,7 +33,7 @@ const ViewBranchPage: React.FC = () => {
 
   React.useEffect(() => {
     return () => {
-      // TODO: this causes unnecessary fetch on branch edit
+      // TODO: this causes unnecessary fetch
       dispatch(resetBranch());
     };
   }, [dispatch]);

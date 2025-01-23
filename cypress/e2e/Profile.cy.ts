@@ -22,7 +22,7 @@ describe('Profile Tests', () => {
     cy.loginMock();
   });
 
-  it('should not be able to navigate to profile page if the employee does not exist', () => {
+  it('should not be able to navigate to profile page if the employee is in a draft status', () => {
     interceptFetchEmployeeFailedRequest();
     cy.visit('/setup/employee');
 
@@ -181,5 +181,8 @@ describe('Profile Tests', () => {
       'have.text',
       'Anthony User Crowley'
     );
+
+    cy.get('[data-cy="user-avatar"]').click();
+    cy.get('[data-cy="user-name"]').should('exist').and('have.text', 'Hi, Anthony');
   });
 });

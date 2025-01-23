@@ -7,7 +7,7 @@ import { MESSAGES, OIDC_INITIAL_CONFIG } from 'shared/constants';
 
 interface AuthState {
   settings: StateEntity<OidcClientSettings>;
-  user: StateEntity<AppUser | null>;
+  user: StateEntity<AppUser | undefined>;
 }
 
 const initialState: AuthState = {
@@ -16,12 +16,12 @@ const initialState: AuthState = {
     status: 'idle',
   },
   user: {
-    data: null,
+    data: undefined,
     status: 'idle',
   },
 };
 
-export const fetchUser = createAsyncThunk<AppUser | null, void, { rejectValue: ErrorResponse }>(
+export const fetchUser = createAsyncThunk<AppUser | undefined, void, { rejectValue: ErrorResponse }>(
   'auth/getchUser',
   async (_, { rejectWithValue }) => {
     try {
@@ -55,7 +55,7 @@ const authSlice = createSlice({
       updateUserManager(state.settings.data);
     },
     removeUser(state) {
-      state.user.data = null;
+      state.user.data = undefined;
       state.user.status = 'failed';
     },
   },
@@ -65,11 +65,11 @@ const authSlice = createSlice({
         state.user.status = 'loading';
       })
       .addCase(fetchUser.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
-        state.user.data = null;
+        state.user.data = undefined;
         state.user.status = 'failed';
         state.user.error = action.payload;
       })
-      .addCase(fetchUser.fulfilled, (state, action: PayloadAction<AppUser | null>) => {
+      .addCase(fetchUser.fulfilled, (state, action: PayloadAction<AppUser | undefined>) => {
         state.user.data = action.payload;
         state.user.status = 'succeeded';
 
