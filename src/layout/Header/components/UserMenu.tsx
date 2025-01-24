@@ -8,14 +8,12 @@ import Typography from '@mui/material/Typography';
 import { Employee } from 'shared/models';
 
 interface UserMenuProps {
-  name: string;
-  picture?: string;
-  employee?: Employee;
+  user?: Employee;
   onLogoutClick: () => void;
   onUserClick: () => void;
 }
 
-const UserMenu: React.FC<UserMenuProps> = ({ name, employee, picture, onLogoutClick, onUserClick }) => {
+const UserMenu: React.FC<UserMenuProps> = ({ user, onLogoutClick, onUserClick }) => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -27,7 +25,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ name, employee, picture, onLogoutCl
   };
 
   const handleUserClick = () => {
-    if (!employee) {
+    if (!user || user.isDraft) {
       return;
     }
 
@@ -43,7 +41,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ name, employee, picture, onLogoutCl
   return (
     <Box sx={{ flexGrow: 0 }}>
       <IconButton data-cy="user-avatar" aria-label="Avatar" onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-        <Avatar alt={name} src={picture} />
+        <Avatar alt={user?.firstName} src={user?.picture} />
       </IconButton>
       <Menu
         keepMounted
@@ -63,7 +61,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ name, employee, picture, onLogoutCl
       >
         <MenuItem data-testid="user-name" data-cy="user-name" aria-label="User Name" onClick={handleUserClick}>
           <Typography variant="body2" sx={{ textAlign: 'center' }}>
-            Hi, {name}
+            Hi, {user?.firstName}
           </Typography>
         </MenuItem>
         <MenuItem data-testid="logout-button" data-cy="logout-button" aria-label="Logout" onClick={handleLogoutClick}>

@@ -6,7 +6,10 @@ export interface EmployeeDTO {
   fullName: string;
 }
 
-export interface Employee extends EmployeeDTO {}
+export interface Employee extends EmployeeDTO {
+  picture?: string;
+  isDraft?: boolean;
+}
 
 export type EmployeeFieldConfig = {
   [K in keyof Employee]: { field: K; name: string };

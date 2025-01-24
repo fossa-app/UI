@@ -1,14 +1,15 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { EmployeeDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
+import { AppUser, Employee, EmployeeDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
+import { mapEmployee, mapEmployees, mapUserProfileToEmployee, prepareQueryParams } from 'shared/helpers';
 import { setError } from './errorSlice';
-import { prepareQueryParams } from 'shared/helpers';
+import { fetchUser } from './authSlice';
 
 interface SetupState {
-  employee: StateEntity<EmployeeDTO | undefined>;
-  employees: StateEntity<PaginatedResponse<EmployeeDTO> | undefined>;
+  employee: StateEntity<Employee | undefined>;
+  employees: StateEntity<PaginatedResponse<Employee> | undefined>;
 }
 
 const initialState: SetupState = {
@@ -24,14 +25,17 @@ const initialState: SetupState = {
   },
 };
 
-export const fetchEmployee = createAsyncThunk<EmployeeDTO | undefined, void, { rejectValue: ErrorResponse }>(
+export const fetchEmployee = createAsyncThunk<Employee | undefined, void, { rejectValue: ErrorResponse }>(
   'employee/getEmployee',
-  async (_, { rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
     try {
       const { data } = await axios.get<EmployeeDTO>(ENDPOINTS.employee);
 
       if (data) {
-        return data;
+        const state = getState() as RootState;
+        const user = state.auth.user.data;
+
+        return mapEmployee(data, user);
       }
     } catch (error) {
       return rejectWithValue({
@@ -52,7 +56,10 @@ export const fetchEmployees = createAsyncThunk<
     const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
 
     if (data) {
-      return data;
+      return {
+        ...data,
+        items: mapEmployees(data.items),
+      };
     }
   } catch (error) {
     return rejectWithValue({
@@ -119,12 +126,17 @@ const employeeSlice = createSlice({
         state.employee.fetchStatus = 'loading';
       })
       .addCase(fetchEmployee.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
-        state.employee.data = undefined;
         state.employee.fetchStatus = 'failed';
         state.employee.error = action.payload;
       })
-      .addCase(fetchEmployee.fulfilled, (state, action: PayloadAction<EmployeeDTO | undefined>) => {
+      .addCase(fetchEmployee.fulfilled, (state, action: PayloadAction<Employee | undefined>) => {
         state.employee.data = action.payload;
+        state.employee.data!.isDraft = false;
+        state.employee.fetchStatus = 'succeeded';
+      })
+      .addCase(fetchUser.fulfilled, (state, action: PayloadAction<AppUser | undefined>) => {
+        state.employee.data = mapUserProfileToEmployee(action.payload?.profile);
+        state.employee.data!.isDraft = true;
         state.employee.fetchStatus = 'succeeded';
       })
       .addCase(createEmployee.pending, (state) => {
@@ -155,7 +167,7 @@ const employeeSlice = createSlice({
         state.employees.fetchStatus = 'failed';
         state.employees.error = action.payload;
       })
-      .addCase(fetchEmployees.fulfilled, (state, action: PayloadAction<PaginatedResponse<EmployeeDTO> | undefined>) => {
+      .addCase(fetchEmployees.fulfilled, (state, action: PayloadAction<PaginatedResponse<Employee> | undefined>) => {
         state.employees.data = action.payload;
         state.employees.page!.totalItems = action.payload?.totalItems;
         state.employees.page!.totalPages = action.payload?.totalPages;

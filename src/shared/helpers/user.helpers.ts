@@ -1,5 +1,5 @@
 import { User } from 'oidc-client-ts';
-import { AppUser, EmployeeDTO, UserProfile } from 'shared/models';
+import { AppUser, Employee, UserProfile } from 'shared/models';
 
 export const mapUser = (user: User): AppUser => {
   const { toStorageString, ...rest } = user;
@@ -7,7 +7,7 @@ export const mapUser = (user: User): AppUser => {
   return rest;
 };
 
-export const mapUserProfileToEmployee = (userProfile?: UserProfile): EmployeeDTO | undefined => {
+export const mapUserProfileToEmployee = (userProfile?: UserProfile): Employee | undefined => {
   if (!userProfile) {
     return;
   }
@@ -16,5 +16,6 @@ export const mapUserProfileToEmployee = (userProfile?: UserProfile): EmployeeDTO
     firstName: userProfile.given_name!,
     lastName: userProfile.family_name!,
     fullName: userProfile.name!,
+    picture: userProfile.picture,
   };
 };
