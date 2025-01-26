@@ -80,6 +80,54 @@ describe('Branch View Tests', () => {
         .should('have.text', 'Eastern Standard Time')
         .find('p')
         .should('not.have.attr', 'data-invalid');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-address.line1').should(
+        'have.text',
+        'Address Line 1'
+      );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-address.line1').should(
+        'have.text',
+        '270 W'
+      );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-address.line2').should(
+        'have.text',
+        'Address Line 2'
+      );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-address.line2').should(
+        'have.text',
+        '11th Street'
+      );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-address.city').should(
+        'have.text',
+        'City'
+      );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-address.city').should(
+        'have.text',
+        'New York'
+      );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-address.subdivision').should(
+        'have.text',
+        'State'
+      );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-address.subdivision').should(
+        'have.text',
+        'NY'
+      );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-address.countryName').should(
+        'have.text',
+        'Country'
+      );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-address.countryName').should(
+        'have.text',
+        'United States'
+      );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-address.postalCode').should(
+        'have.text',
+        'Postal Code'
+      );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-address.postalCode').should(
+        'have.text',
+        '10014'
+      );
 
       cy.get('[data-cy="page-title-back-button"]').click();
 

@@ -11,10 +11,12 @@ import {
   selectIsUserAdmin,
   selectCompanyTimeZones,
   selectUserRoles,
+  selectCompany,
+  selectSystemCountries,
 } from 'store/features';
 import { BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
 import { BranchDTO, Module, SubModule } from 'shared/models';
-import { mapDisabledFields, mapTimeZonesToFieldSelectOptions } from 'shared/helpers';
+import { mapDisabledFields, mapOptionsToFieldSelectOptions } from 'shared/helpers';
 import BrachDetailsForm from 'components/forms/BranchDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
 
@@ -25,9 +27,12 @@ const ManageBranchPage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const userRoles = useAppSelector(selectUserRoles);
   const companyTimeZones = useAppSelector(selectCompanyTimeZones);
+  const { data: company } = useAppSelector(selectCompany);
+  const countries = useAppSelector(selectSystemCountries);
   const { data: branch, fetchStatus, updateStatus } = useAppSelector(selectBranch);
   const { id } = useParams();
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
+  const availableCountries = countries?.filter(({ code }) => code === company?.countryCode || code === branch?.address.countryCode) || [];
 
   const navigateBack = React.useCallback(() => {
     navigate(ROUTES.branches.path);
@@ -94,7 +99,11 @@ const ManageBranchPage: React.FC = () => {
         subModule={SubModule.branchDetails}
         isAdmin={isUserAdmin}
         data={branch}
-        fields={mapTimeZonesToFieldSelectOptions(mapDisabledFields(BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, userRoles), companyTimeZones)}
+        fields={mapOptionsToFieldSelectOptions(
+          mapDisabledFields(BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, userRoles),
+          companyTimeZones,
+          availableCountries
+        )}
         actionLoading={updateStatus === 'loading'}
         formLoading={fetchStatus === 'loading'}
         onSubmit={handleSubmit}

@@ -65,9 +65,18 @@ describe('Branches Tests', () => {
         'have.text',
         'TimeZone'
       );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-header-cell-fullAddress').should(
+        'have.text',
+        'Address'
+      );
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Eastern Standard Time')
         .find('p')
         .should('not.have.attr', 'data-invalid');
+      getTestSelectorByModule(
+        Module.branchManagement,
+        SubModule.branchTable,
+        'table-body-cell-270 W 11th Street New York, NY 10014, United States'
+      ).should('have.text', '270 W 11th Street New York, NY 10014, United States');
       getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');
       getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.text', '1–1 of 1');
     });
@@ -229,9 +238,18 @@ describe('Branches Tests', () => {
         'have.text',
         'TimeZone'
       );
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-header-cell-fullAddress').should(
+        'have.text',
+        'Address'
+      );
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Eastern Standard Time')
         .find('p')
         .should('not.have.attr', 'data-invalid');
+      getTestSelectorByModule(
+        Module.branchManagement,
+        SubModule.branchTable,
+        'table-body-cell-270 W 11th Street New York, NY 10014, United States'
+      ).should('have.text', '270 W 11th Street New York, NY 10014, United States');
       getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');
       getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.text', '1–1 of 1');
     });

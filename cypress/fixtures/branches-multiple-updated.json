@@ -6,13 +6,29 @@
       "id": 222222222222,
       "companyId": 111111111111,
       "name": "New York Branch",
-      "timeZoneId": "America/New_York"
+      "timeZoneId": "America/New_York",
+      "address": {
+        "line1": "270 W",
+        "line2": "11th Street",
+        "city": "New York",
+        "subdivision": "NY",
+        "postalCode": "10014",
+        "countryCode": "US"
+      }
     },
     {
       "id": 222222222223,
       "companyId": 111111111111,
       "name": "Anchorage Branch",
-      "timeZoneId": "America/Anchorage"
+      "timeZoneId": "America/Anchorage",
+      "address": {
+        "line1": "3801 Centerpoint",
+        "line2": "Dr #200",
+        "city": "Anchorage",
+        "subdivision": "AK",
+        "postalCode": "99503",
+        "countryCode": "US"
+      }
     }
   ],
   "totalItems": 2,

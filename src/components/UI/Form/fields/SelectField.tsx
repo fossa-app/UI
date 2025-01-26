@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { FieldError, useFormContext, useWatch } from 'react-hook-form';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
+import { getNestedValue } from 'shared/helpers';
 import { SelectFieldProps } from '../form.model';
 
 const SelectField: React.FC<SelectFieldProps> = ({ module, subModule, label, name, options, ...props }) => {
@@ -15,6 +16,7 @@ const SelectField: React.FC<SelectFieldProps> = ({ module, subModule, label, nam
   } = useFormContext();
 
   const value = useWatch({ control, name });
+  const error = getNestedValue(errors, name) as FieldError;
   const isValueAvailable = options.some((option) => option.value === value);
   const fieldValue = !!options?.length && isValueAvailable ? value : '';
 
@@ -29,7 +31,7 @@ const SelectField: React.FC<SelectFieldProps> = ({ module, subModule, label, nam
   };
 
   return (
-    <FormControl variant="filled" error={!!errors[name]} fullWidth>
+    <FormControl variant="filled" error={!!error} fullWidth>
       <InputLabel shrink={!!value}>{label}</InputLabel>
       <Select
         data-cy={`${module}-${subModule}-form-field-${name}`}
@@ -44,9 +46,9 @@ const SelectField: React.FC<SelectFieldProps> = ({ module, subModule, label, nam
           </MenuItem>
         ))}
       </Select>
-      {errors[name] && (
+      {error && (
         <FormHelperText error data-cy={`${module}-${subModule}-form-field-${name}-validation`}>
-          {errors[name]?.message as string}
+          {error?.message as string}
         </FormHelperText>
       )}
     </FormControl>

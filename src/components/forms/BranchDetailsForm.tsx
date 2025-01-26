@@ -38,6 +38,14 @@ const BranchDetailsForm: React.FC<BranchDetailsFormProps> = ({
   const defaultValues: BranchDTO = {
     name: '',
     timeZoneId: '',
+    address: {
+      line1: '',
+      line2: '',
+      city: '',
+      subdivision: '',
+      postalCode: '',
+      countryCode: '',
+    },
   };
 
   const handleFormSubmit = (formValue: BranchDTO) => {

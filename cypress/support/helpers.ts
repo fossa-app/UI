@@ -1,4 +1,4 @@
-import { Module, SubModule } from '../../src/shared/models';
+import { BranchDTO, Module, SubModule } from '../../src/shared/models';
 
 export const getTestSelectorByModule = (module: Module, subModule: SubModule, selector: string) => {
   return cy.get(`[data-cy="${module}-${subModule}-${selector}"]`);
@@ -32,6 +32,42 @@ export const selectOption = (module: Module, subModule: SubModule, fieldName: st
 export const openUserProfile = () => {
   cy.get('[data-cy="user-avatar"]').click();
   cy.get('[data-cy="user-name"]').should('exist').click();
+};
+
+export const fillBranchDetailsForm = (branch: BranchDTO) => {
+  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type(branch.name);
+  selectOption(Module.branchManagement, SubModule.branchDetails, 'timeZoneId', branch.timeZoneId);
+  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.line1').type(branch.address.line1!);
+  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.line2').type(branch.address.line2!);
+  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.city').type(branch.address.city!);
+  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.subdivision').type(
+    branch.address.subdivision!
+  );
+  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').type(
+    branch.address.postalCode!
+  );
+  selectOption(Module.branchManagement, SubModule.branchDetails, 'address.countryCode', branch.address.countryCode!);
+};
+
+export const clearBranchDetailsForm = () => {
+  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').clear();
+  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.line1').find('input').clear();
+  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.line2').find('input').clear();
+  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.city').find('input').clear();
+  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.subdivision').find('input').clear();
+  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').find('input').clear();
+};
+
+export const verifyBranchDetailsFormFieldValues = (fieldValues: { [key: string]: string }) => {
+  Object.entries(fieldValues).forEach(([field, value]) => {
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, field).find('input').should('have.value', value);
+  });
+};
+
+export const verifyBranchDetailsFormValidationMessages = (validations: { field: string; message: string }[]) => {
+  validations.forEach(({ field, message }) => {
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, field).should('exist').and('have.text', message);
+  });
 };
 
 export const uploadTestFile = (selector: string, fixtureName: string, fileType = 'application/octet-stream') => {

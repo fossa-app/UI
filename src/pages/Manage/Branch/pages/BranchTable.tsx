@@ -94,21 +94,15 @@ const BranchTablePage: React.FC = () => {
 
   // TODO: find better solution, e.g. like renderActionButtons
   const mappedCellActions = BRANCH_TABLE_SCHEMA.map((column) => {
-    if (column.field === BRANCH_FIELDS.name.field) {
-      return {
-        ...column,
+    return {
+      ...column,
+      ...(column.field === BRANCH_FIELDS.name.field && {
         renderBodyCell: (branch: Branch) => renderBranchName(branch, handleViewBranch),
-      };
-    }
-
-    if (column.field === BRANCH_FIELDS.timeZoneName?.field) {
-      return {
-        ...column,
+      }),
+      ...(column.field === BRANCH_FIELDS.timeZoneName?.field && {
         renderBodyCell: (branch: Branch) => renderBranchTimeZone(branch),
-      };
-    }
-
-    return column;
+      }),
+    };
   });
 
   const columns = mapTableActionsColumn(mappedCellActions, renderActionButtons);

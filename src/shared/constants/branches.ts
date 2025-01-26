@@ -22,6 +22,42 @@ export const BRANCH_FIELDS: BranchFieldConfig = {
     field: 'timeZoneName',
     name: 'TimeZone',
   },
+  address: {
+    field: 'address',
+    name: 'Address',
+    line1: {
+      field: 'line1',
+      name: 'Address Line 1',
+    },
+    line2: {
+      field: 'line2',
+      name: 'Address Line 2',
+    },
+    city: {
+      field: 'city',
+      name: 'City',
+    },
+    subdivision: {
+      field: 'subdivision',
+      name: 'Subdivision',
+    },
+    postalCode: {
+      field: 'postalCode',
+      name: 'Postal Code',
+    },
+    countryCode: {
+      field: 'countryCode',
+      name: 'Country Code',
+    },
+    countryName: {
+      field: 'countryName',
+      name: 'Country Name',
+    },
+  },
+  fullAddress: {
+    field: 'fullAddress',
+    name: 'Address',
+  },
 };
 
 export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
@@ -55,6 +91,91 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
     },
     roles: [UserRole.administrator],
   },
+  {
+    type: FieldType.text,
+    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
+    label: 'Enter Address Line 1',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchDetails,
+    rules: {
+      maxLength: {
+        value: 50,
+        message: 'Address Line 1 must not exceed 50 characters.',
+      },
+    },
+    roles: [UserRole.administrator],
+  },
+  {
+    type: FieldType.text,
+    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
+    label: 'Enter Address Line 2',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchDetails,
+    rules: {
+      maxLength: {
+        value: 50,
+        message: 'Address Line 2 must not exceed 50 characters.',
+      },
+    },
+    roles: [UserRole.administrator],
+  },
+  {
+    type: FieldType.text,
+    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.city!.field}`,
+    label: 'City',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchDetails,
+    rules: {
+      maxLength: {
+        value: 50,
+        message: 'City must not exceed 50 characters.',
+      },
+    },
+    roles: [UserRole.administrator],
+  },
+  {
+    type: FieldType.text,
+    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.subdivision!.field}`,
+    label: 'State',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchDetails,
+    rules: {
+      maxLength: {
+        value: 50,
+        message: 'State must not exceed 50 characters.',
+      },
+    },
+    roles: [UserRole.administrator],
+  },
+  {
+    type: FieldType.select,
+    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryCode!.field}`,
+    label: 'Country',
+    grid: { size: { xs: 12, md: 6 } },
+    options: [],
+    module: Module.branchManagement,
+    subModule: SubModule.branchDetails,
+    roles: [UserRole.administrator],
+  },
+  {
+    type: FieldType.text,
+    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
+    label: 'Postal Code',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchDetails,
+    rules: {
+      maxLength: {
+        value: 10,
+        message: 'Postal Code must not exceed 10 characters.',
+      },
+    },
+    roles: [UserRole.administrator],
+  },
 ];
 
 export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
@@ -72,6 +193,48 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
     module: Module.branchManagement,
     subModule: SubModule.branchDetails,
     renderDetailField: renderBranchTimeZone,
+  },
+  {
+    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
+    label: 'Address Line 1',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchDetails,
+  },
+  {
+    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
+    label: 'Address Line 2',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchDetails,
+  },
+  {
+    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.city!.field}`,
+    label: 'City',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchDetails,
+  },
+  {
+    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.subdivision!.field}`,
+    label: 'State',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchDetails,
+  },
+  {
+    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryName!.field}`,
+    label: 'Country',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchDetails,
+  },
+  {
+    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
+    label: 'Postal Code',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchDetails,
   },
 ];
 
@@ -91,6 +254,11 @@ export const BRANCH_TABLE_SCHEMA: Column<Branch>[] = [
     name: BRANCH_FIELDS.timeZoneName!.name,
     field: BRANCH_FIELDS.timeZoneName!.field,
     width: 240,
+  },
+  {
+    name: BRANCH_FIELDS.fullAddress!.name,
+    field: BRANCH_FIELDS.fullAddress!.field,
+    width: 'auto',
   },
   {
     name: ACTION_FIELD.name,

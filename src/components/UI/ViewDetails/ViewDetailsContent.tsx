@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import { getNestedValue } from 'shared/helpers';
 import { ViewItemProps } from './view-details.model';
 import { useViewDetailsContext } from './ViewDetailsContext';
 
@@ -28,7 +29,7 @@ const ViewDetailsContent = <T,>({ fields, values }: ViewDetailsContentProps<T>) 
             return null;
           }
 
-          const fieldValue = values[field.name as keyof T];
+          const fieldValue = getNestedValue(values, field.name);
 
           return (
             <Grid key={field.name} {...field.grid}>
