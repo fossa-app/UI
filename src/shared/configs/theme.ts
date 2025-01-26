@@ -1,4 +1,4 @@
-import { createTheme, PaletteOptions } from '@mui/material/styles';
+import { createTheme, PaletteOptions, Theme } from '@mui/material/styles';
 import { APP_COLORS } from 'shared/constants';
 
 const lightPalette: PaletteOptions = {
@@ -67,8 +67,39 @@ const darkPalette: PaletteOptions = {
 
 const spacing = 4;
 
+const components = {
+  // TODO: move all general styles
+  MuiAccordionSummary: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        paddingLeft: theme.spacing(6),
+        paddingRight: theme.spacing(6),
+        paddingTop: theme.spacing(1),
+        paddingBottom: theme.spacing(1),
+        borderBottom: '1px solid',
+        borderColor: theme.palette.divider,
+      }),
+    },
+  },
+  MuiAccordionDetails: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        padding: theme.spacing(6),
+      }),
+    },
+  },
+  MuiAccordionActions: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        padding: theme.spacing(6),
+      }),
+    },
+  },
+};
+
 export const lightTheme = createTheme({
   spacing,
+  components,
   palette: {
     ...lightPalette,
     mode: 'light',
@@ -77,6 +108,7 @@ export const lightTheme = createTheme({
 
 export const darkTheme = createTheme({
   spacing,
+  components,
   palette: {
     ...darkPalette,
     mode: 'dark',
