@@ -1,9 +1,15 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
+import AccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
+import Typography from '@mui/material/Typography';
+import { SxProps, Theme } from '@mui/material/styles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useViewDetailsContext } from './ViewDetailsContext';
 
-const ViewDetailsHeader: React.FC<React.PropsWithChildren> = ({ children }) => {
+type ViewDetailsHeaderProps = {
+  expandIconSxProps?: SxProps<Theme>;
+} & AccordionSummaryProps;
+
+const ViewDetailsHeader: React.FC<React.PropsWithChildren<ViewDetailsHeaderProps>> = ({ children, expandIconSxProps, ...props }) => {
   const context = useViewDetailsContext();
 
   if (!context) {
@@ -13,9 +19,15 @@ const ViewDetailsHeader: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { module, subModule } = useViewDetailsContext();
 
   return (
-    <AppBar position="static" component="header" color="primary" data-cy={`${module}-${subModule}-view-details-header`}>
-      <Toolbar>{children}</Toolbar>
-    </AppBar>
+    <AccordionSummary
+      data-cy={`${module}-${subModule}-view-details-header`}
+      id={`${module}-${subModule}-view-details-header`}
+      aria-controls={`${module}-${subModule}-view-details-content`}
+      expandIcon={<ExpandMoreIcon sx={expandIconSxProps} />}
+      {...props}
+    >
+      <Typography variant="h6">{children}</Typography>
+    </AccordionSummary>
   );
 };
 

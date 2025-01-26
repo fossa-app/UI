@@ -10,14 +10,15 @@ export enum Module {
 }
 
 export enum SubModule {
-  companyDetails = 'companyDetails',
-  branchDetails = 'branchDetails',
-  employeeDetails = 'employeeDetails',
-  branchTable = 'branchTable',
-  employeeTable = 'employeeTable',
-  branchViewDetails = 'branchViewDetails',
-  companyViewDetails = 'companyViewDetails',
   dashboardDetails = 'dashboardDetails',
+  companyDetails = 'companyDetails',
+  companyViewDetails = 'companyViewDetails',
+  branchTable = 'branchTable',
+  branchDetails = 'branchDetails',
+  branchViewDetails = 'branchViewDetails',
+  employeeTable = 'employeeTable',
+  employeeDetails = 'employeeDetails',
   profileDetails = 'profileDetails',
   profileViewDetails = 'profileViewDetails',
+  profileViewSettings = 'profileViewSettings',
 }

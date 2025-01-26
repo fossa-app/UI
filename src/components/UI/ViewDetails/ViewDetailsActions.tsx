@@ -1,15 +1,21 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
+import AccordionActions, { AccordionActionsProps } from '@mui/material/AccordionActions';
 import { useViewDetailsContext } from './ViewDetailsContext';
 
-const ViewDetailsActions: React.FC<React.PropsWithChildren> = ({ children }) => {
+type ViewDetailsActionsProps = AccordionActionsProps;
+
+const ViewDetailsActions: React.FC<React.PropsWithChildren<ViewDetailsActionsProps>> = ({ children, ...props }) => {
   const context = useViewDetailsContext();
 
   if (!context) {
     throw new Error('ViewDetailsActions must be used within a ViewDetails component using ViewDetailsContext.');
   }
 
-  return <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: 6 }}>{children}</Box>;
+  return (
+    <AccordionActions sx={{ display: 'flex', justifyContent: 'flex-end' }} {...props}>
+      {children}
+    </AccordionActions>
+  );
 };
 
 export default ViewDetailsActions;

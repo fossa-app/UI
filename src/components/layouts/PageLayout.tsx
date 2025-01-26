@@ -1,19 +1,19 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
+import Box, { BoxProps } from '@mui/material/Box';
 import { Module, SubModule } from 'shared/models';
 import Page, { PageTitle } from 'components/UI/Page';
 import { createLazyComponent } from 'routes/lazy-loaded-component';
 
 const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
 
-interface PageLayoutProps {
+type PageLayoutProps = {
   module: Module;
   subModule: SubModule;
   pageTitle: string;
   withBackButton?: boolean;
   displayNotFoundPage?: boolean;
   onBackButtonClick?: () => void;
-}
+} & BoxProps;
 
 const PageLayout: React.FC<React.PropsWithChildren<PageLayoutProps>> = ({
   module,
@@ -23,13 +23,14 @@ const PageLayout: React.FC<React.PropsWithChildren<PageLayoutProps>> = ({
   displayNotFoundPage,
   onBackButtonClick,
   children,
+  ...props
 }) => {
   if (displayNotFoundPage) {
     return NotFoundPage;
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, ...props.sx }} {...props}>
       <Page>
         <PageTitle
           data-cy={`${module}-${subModule}-page-layout-title`}

@@ -185,4 +185,27 @@ describe('Profile Tests', () => {
     cy.get('[data-cy="user-avatar"]').click();
     cy.get('[data-cy="user-name"]').should('exist').and('have.text', 'Hi, Anthony');
   });
+
+  it('should render the danger zone on the view profile page', () => {
+    interceptFetchEmployeeRequest();
+    cy.visit('/manage/profile/view');
+
+    cy.wait('@fetchEmployeeRequest');
+
+    getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-title').should('not.exist');
+    getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-subtitle').should('not.exist');
+    getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-button').should('not.exist');
+
+    getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-details-header')
+      .should('have.text', 'Danger Zone')
+      .click();
+
+    getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-title')
+      .should('exist')
+      .and('have.text', 'Delete profile');
+    getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-subtitle')
+      .should('exist')
+      .and('have.text', 'Once you delete your profile, there is no going back. Please be certain.');
+    getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-button').should('exist').click();
+  });
 });

@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
+import AccordionDetails from '@mui/material/AccordionDetails';
 import { ViewItemProps } from './view-details.model';
 import { useViewDetailsContext } from './ViewDetailsContext';
 
@@ -20,7 +21,7 @@ const ViewDetailsContent = <T,>({ fields, values }: ViewDetailsContentProps<T>) 
   const { module, subModule, loading } = context;
 
   return (
-    <Box sx={{ flexGrow: 1, padding: 6 }}>
+    <AccordionDetails sx={{ minHeight: 200, overflow: 'auto' }}>
       <Grid container spacing={5}>
         {fields.map((field) => {
           if (loading || !values) {
@@ -45,7 +46,7 @@ const ViewDetailsContent = <T,>({ fields, values }: ViewDetailsContentProps<T>) 
           );
         })}
       </Grid>
-    </Box>
+    </AccordionDetails>
   );
 };
 

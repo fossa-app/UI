@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Paper from '@mui/material/Paper';
+import Accordion, { AccordionProps } from '@mui/material/Accordion';
 import { Module, SubModule } from 'shared/models';
 import LinearLoader from '../LinearLoader';
 import ViewDetailsContext from './ViewDetailsContext';
@@ -7,23 +7,30 @@ import ViewDetailsHeader from './ViewDetailsHeader';
 import ViewDetailsContent from './ViewDetailsContent';
 import ViewDetailsActions from './ViewDetailsActions';
 
-type ViewDetailsProps = React.PropsWithChildren<{
-  module: Module;
-  subModule: SubModule;
-  loading?: boolean;
-}>;
+type ViewDetailsProps = React.PropsWithChildren<
+  {
+    module: Module;
+    subModule: SubModule;
+    loading?: boolean;
+    defaultExpanded?: boolean;
+  } & AccordionProps
+>;
 
-const ViewDetails = ({ module, subModule, loading = false, children }: ViewDetailsProps) => {
+const ViewDetails = ({ module, subModule, loading = false, defaultExpanded = true, children, ...props }: ViewDetailsProps) => {
   return (
     <ViewDetailsContext.Provider value={{ module, subModule, loading }}>
-      <Paper
+      <Accordion
+        square
+        disableGutters
         data-cy={`${module}-${subModule}-view-details`}
-        elevation={3}
-        sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, position: 'relative' }}
+        elevation={4}
+        defaultExpanded={defaultExpanded}
+        sx={{ position: 'relative' }}
+        {...props}
       >
         {children}
         <LinearLoader open={loading} />
-      </Paper>
+      </Accordion>
     </ViewDetailsContext.Provider>
   );
 };
