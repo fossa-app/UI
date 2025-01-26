@@ -43,11 +43,12 @@ export const fetchBranches = createAsyncThunk<
 
     const state = getState() as RootState;
     const timeZones = state.license.system.data?.entitlements.timeZones || [];
+    const countries = state.license.system.data?.entitlements.countries || [];
     const companyCountryCode = state.company.company.data!.countryCode;
 
     return {
       ...data,
-      items: mapBranches(data.items, timeZones, companyCountryCode),
+      items: mapBranches(data.items, timeZones, companyCountryCode, countries),
     };
   } catch (error) {
     return rejectWithValue({
@@ -64,9 +65,10 @@ export const fetchBranchById = createAsyncThunk<Branch, string, { rejectValue: E
       const { data } = await axios.get<BranchDTO>(`${ENDPOINTS.branches}/${id}`);
       const state = getState() as RootState;
       const timeZones = state.license.system.data?.entitlements.timeZones || [];
+      const countries = state.license.system.data?.entitlements.countries || [];
       const companyCountryCode = state.company.company.data!.countryCode;
 
-      return mapBranch(data, timeZones, companyCountryCode);
+      return mapBranch(data, timeZones, companyCountryCode, countries);
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);
     }
