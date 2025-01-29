@@ -40,7 +40,7 @@ const ViewDetailsContent = <T,>({ fields, values }: ViewDetailsContentProps<T>) 
                 {field.renderDetailField ? (
                   field.renderDetailField(values)
                 ) : (
-                  <Typography variant="body1">{fieldValue ? String(fieldValue) : 'N/A'}</Typography>
+                  <Typography variant="body1">{fieldValue ? String(fieldValue) : '-'}</Typography>
                 )}
               </Box>
             </Grid>

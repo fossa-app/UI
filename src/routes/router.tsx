@@ -14,7 +14,6 @@ const SetupCompanyPage = createLazyComponent(() => import('pages/Setup/pages/Set
 const SetupBranchPage = createLazyComponent(() => import('pages/Setup/pages/SetupBranch'), { title: ROUTES.setBranch.name });
 const SetupEmployeePage = createLazyComponent(() => import('pages/Setup/pages/SetupEmployee'), { title: ROUTES.setEmployee.name });
 const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
-const DashboardPage = createLazyComponent(() => import('pages/Dashboard'), { title: ROUTES.dashboard.name });
 const CompanyPage = createLazyComponent(() => import('pages/Manage/Company/Company'));
 const EditCompanyPage = createLazyComponent(() => import('pages/Manage/Company/pages/EditCompany'), {
   title: ROUTES.editCompany.name,
@@ -91,10 +90,6 @@ const router = createBrowserRouter(
                   element: <Navigate to={ROUTES.company.path} replace />,
                 },
                 {
-                  path: ROUTES.dashboard.path,
-                  element: DashboardPage,
-                },
-                {
                   path: ROUTES.company.path,
                   element: CompanyPage,
                   children: [
@@ -165,7 +160,7 @@ const router = createBrowserRouter(
                 },
                 {
                   path: '*',
-                  element: <Navigate to={ROUTES.dashboard.path} replace />,
+                  element: <Navigate to={ROUTES.company.path} replace />,
                 },
               ],
             },

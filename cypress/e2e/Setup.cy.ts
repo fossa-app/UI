@@ -92,7 +92,7 @@ describe('Setup Flow Tests', () => {
       });
     });
 
-    it('should not be able to navigate to dashboard if employee creation failed', () => {
+    it('should not be able to navigate to company if employee creation failed', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
       interceptFetchEmployeeFailedRequest();
@@ -438,7 +438,7 @@ describe('Setup Flow Tests', () => {
         .and('have.text', 'Last Name is required');
     });
 
-    it('should not be able to navigate to dashboard if employee creation failed', () => {
+    it('should not be able to navigate to company if employee creation failed', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
       interceptFetchEmployeeFailedRequest();

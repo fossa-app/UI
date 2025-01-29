@@ -38,7 +38,11 @@ export const fillBranchDetailsForm = (branch: BranchDTO) => {
   getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type(branch.name);
   selectOption(Module.branchManagement, SubModule.branchDetails, 'timeZoneId', branch.timeZoneId);
   getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.line1').type(branch.address.line1!);
-  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.line2').type(branch.address.line2!);
+
+  if (branch.address.line2) {
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.line2').type(branch.address.line2);
+  }
+
   getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.city').type(branch.address.city!);
   getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.subdivision').type(
     branch.address.subdivision!

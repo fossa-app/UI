@@ -23,7 +23,8 @@ describe('License Tests', () => {
 
       cy.wait('@fetchSystemLicenseRequest');
 
-      cy.get('[data-cy="system-license"]').should('exist').and('have.text', 'Test System Licensee');
+      cy.get('[data-cy="system-license"]').should('exist').and('have.text', 'TSL');
+      // TODO: check the tooltip on hover
       cy.get('[data-cy="company-license-button"]').should('not.exist');
       cy.get('[data-cy="company-license-text"]').should('not.exist');
     });
@@ -42,7 +43,7 @@ describe('License Tests', () => {
         interceptFetchCompanyLicenseFailedRequest();
         interceptUploadCompanyLicenseFailedRequest();
 
-        cy.visit('/manage/dashboard');
+        cy.visit('/manage/company');
 
         cy.get('[data-cy="company-license-text"]').should('exist').and('have.text', 'Unlicensed Company');
         cy.get('[data-cy="company-license-button"]').should('not.exist');
@@ -74,7 +75,7 @@ describe('License Tests', () => {
         interceptFetchCompanyLicenseFailedRequest();
         interceptUploadCompanyLicenseFailedRequest();
 
-        cy.visit('/manage/dashboard');
+        cy.visit('/manage/company');
 
         cy.get('[data-cy="company-license-button"]').should('exist').and('have.text', 'Unlicensed Company');
       });
@@ -85,7 +86,7 @@ describe('License Tests', () => {
         interceptFetchEmployeeRequest();
         interceptFetchCompanyLicenseFailedRequest();
         interceptUploadCompanyLicenseFailedRequest();
-        cy.visit('/manage/dashboard');
+        cy.visit('/manage/company');
 
         cy.get('[data-cy="company-license-dialog"]').should('not.exist');
         cy.get('[data-cy="company-license-button"]').click();
@@ -125,7 +126,7 @@ describe('License Tests', () => {
         interceptFetchEmployeeRequest();
         interceptFetchCompanyLicenseFailedRequest();
         interceptUploadCompanyLicenseFailedRequest();
-        cy.visit('/manage/dashboard');
+        cy.visit('/manage/company');
 
         cy.get('[data-cy="company-license-button"]').click();
         uploadTestFile('input#file-upload-input', 'valid-company-license.lic');
@@ -145,7 +146,7 @@ describe('License Tests', () => {
         cy.wait('@fetchCompanyLicenseRequest');
 
         cy.get('[data-cy="company-license-dialog"]').should('not.exist');
-        cy.get('[data-cy="company-license-text"]').should('exist').and('have.text', 'Test Company Licensee');
+        cy.get('[data-cy="company-license-text"]').should('exist').and('have.text', 'TCL');
       });
 
       it('should display correct company license', () => {
@@ -154,10 +155,11 @@ describe('License Tests', () => {
         interceptFetchEmployeeRequest();
         interceptFetchCompanyLicenseRequest();
 
-        cy.visit('/manage/dashboard');
+        cy.visit('/manage/company');
 
         cy.get('[data-cy="company-license-button"]').should('not.exist');
-        cy.get('[data-cy="company-license-text"]').should('exist').and('have.text', 'Test Company Licensee');
+        cy.get('[data-cy="company-license-text"]').should('exist').and('have.text', 'TCL');
+        // TODO: check the tooltip on hover
       });
     });
   });

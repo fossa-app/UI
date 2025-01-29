@@ -30,10 +30,6 @@ export const ROUTES: AppRoute = {
     name: 'Manage',
     path: '/manage',
   },
-  dashboard: {
-    name: 'Dashboard',
-    path: '/manage/dashboard',
-  },
   company: {
     name: 'Company',
     path: '/manage/company',

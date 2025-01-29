@@ -61,5 +61,8 @@ export const getFullAddress = (address?: Branch['address']): Branch['fullAddress
 
   const { line1, line2, city, subdivision, postalCode, countryName } = address;
 
-  return [line1, line2, city && `${city},`, subdivision, postalCode && `${postalCode},`, countryName].filter(Boolean).join(' ').trim();
+  return [line1 && `${line1},`, line2 && `${line2},`, city && `${city},`, subdivision, postalCode && `${postalCode},`, countryName]
+    .filter(Boolean)
+    .join(' ')
+    .trim();
 };

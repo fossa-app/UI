@@ -113,8 +113,14 @@ export const interceptFetchBranchesFailedRequest = () => {
   });
 };
 
-export const interceptFetchBranchByIdRequest = (id: string, alias = 'fetchBranchByIdRequest', statusCode = 200, delay = 300) => {
-  cy.fixture('branches').then((branches: PaginatedResponse<Branch>) => {
+export const interceptFetchBranchByIdRequest = (
+  id: string,
+  alias = 'fetchBranchByIdRequest',
+  fixture = 'branches',
+  statusCode = 200,
+  delay = 300
+) => {
+  cy.fixture(fixture).then((branches: PaginatedResponse<Branch>) => {
     cy.interceptWithAuth(
       'GET',
       `${serverBaseUrl}/Branches/${id}`,

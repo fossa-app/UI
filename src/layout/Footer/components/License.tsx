@@ -2,22 +2,32 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import { CompanyLicense, SystemLicense } from 'shared/models';
 
 interface LicenseProps {
   isAdmin: boolean;
   setupCompleted: boolean;
-  company?: string;
-  system?: string;
+  company?: CompanyLicense['terms']['licensee'];
+  system?: SystemLicense['terms']['licensee'];
   onCompanyLicenseClick: () => void;
 }
 
-const License: React.FC<LicenseProps> = ({ isAdmin, company, setupCompleted, system = 'Unlicensed System', onCompanyLicenseClick }) => {
+const License: React.FC<LicenseProps> = ({
+  isAdmin,
+  company,
+  setupCompleted,
+  system = { shortName: 'Unlicensed System', longName: '' },
+  onCompanyLicenseClick,
+}) => {
   const renderCompanyLicense = () => {
     if (company) {
       return (
-        <Typography data-cy="company-license-text" variant="caption" textAlign="right">
-          {company}
-        </Typography>
+        <Tooltip title={company.longName}>
+          <Typography data-cy="company-license-text" variant="caption" textAlign="right">
+            {company.shortName}
+          </Typography>
+        </Tooltip>
       );
     }
 
@@ -52,9 +62,11 @@ const License: React.FC<LicenseProps> = ({ isAdmin, company, setupCompleted, sys
       }}
     >
       {renderCompanyLicense()}
-      <Typography data-cy="system-license" variant="caption" textAlign="right">
-        {system}
-      </Typography>
+      <Tooltip title={system.longName}>
+        <Typography data-cy="system-license" variant="caption" textAlign="right">
+          {system.shortName}
+        </Typography>
+      </Tooltip>
     </Box>
   );
 };

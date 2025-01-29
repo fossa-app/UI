@@ -75,8 +75,8 @@ describe('Branches Tests', () => {
       getTestSelectorByModule(
         Module.branchManagement,
         SubModule.branchTable,
-        'table-body-cell-270 W 11th Street New York, NY 10014, United States'
-      ).should('have.text', '270 W 11th Street New York, NY 10014, United States');
+        'table-body-cell-270 W 11th Street, Apt 2E, New York, NY 10014, United States'
+      ).should('have.text', '270 W 11th Street, Apt 2E, New York, NY 10014, United States');
       getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');
       getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.text', '1–1 of 1');
     });
@@ -174,7 +174,7 @@ describe('Branches Tests', () => {
     it('should mark the timeZone as invalid if it is an invalid company timeZone', () => {
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 5, search: '' },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-timezones' }
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-countries' }
       );
       cy.visit('/manage/branches');
 
@@ -248,8 +248,8 @@ describe('Branches Tests', () => {
       getTestSelectorByModule(
         Module.branchManagement,
         SubModule.branchTable,
-        'table-body-cell-270 W 11th Street New York, NY 10014, United States'
-      ).should('have.text', '270 W 11th Street New York, NY 10014, United States');
+        'table-body-cell-270 W 11th Street, Apt 2E, New York, NY 10014, United States'
+      ).should('have.text', '270 W 11th Street, Apt 2E, New York, NY 10014, United States');
       getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');
       getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.text', '1–1 of 1');
     });
@@ -459,7 +459,7 @@ describe('Branches Tests', () => {
     it('should mark the timeZone as invalid if it is an invalid company timeZone', () => {
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 5, search: '' },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-timezones' }
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-countries' }
       );
       cy.visit('/manage/branches');
 

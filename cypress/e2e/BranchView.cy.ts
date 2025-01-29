@@ -86,7 +86,7 @@ describe('Branch View Tests', () => {
       );
       getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-address.line1').should(
         'have.text',
-        '270 W'
+        '270 W 11th Street'
       );
       getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-address.line2').should(
         'have.text',
@@ -94,7 +94,7 @@ describe('Branch View Tests', () => {
       );
       getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-address.line2').should(
         'have.text',
-        '11th Street'
+        'Apt 2E'
       );
       getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-address.city').should(
         'have.text',
@@ -136,7 +136,7 @@ describe('Branch View Tests', () => {
     });
 
     it('should reset the branch after viewing and navigating back', () => {
-      interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdRequest', 'branches');
       cy.visit('/manage/branches');
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
@@ -172,7 +172,7 @@ describe('Branch View Tests', () => {
     });
 
     it('should not display the loader if the request resolves quickly', () => {
-      interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdQuickRequest', 200, 50);
+      interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdQuickRequest', 'branches', 200, 50);
       cy.visit('/manage/branches/view/222222222222');
 
       getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('not.exist');

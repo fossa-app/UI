@@ -27,7 +27,7 @@ describe('Company Management Tests', () => {
     });
 
     it('should be able to navigate and view the company page', () => {
-      cy.visit('/manage/dashboard');
+      cy.visit('/manage/company');
 
       cy.get('[data-cy="menu-icon"]').click();
       cy.get('[data-cy="menu-item-Company"]').click();
@@ -74,7 +74,7 @@ describe('Company Management Tests', () => {
     });
 
     it('should be able to navigate and view the company page', () => {
-      cy.visit('/manage/dashboard');
+      cy.visit('/manage/company');
 
       cy.get('[data-cy="menu-icon"]').click();
       cy.get('[data-cy="menu-item-Company"]').click();

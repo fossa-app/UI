@@ -31,7 +31,6 @@ describe('Authentication Flow Tests', () => {
       '/setup/company',
       '/setup/branch',
       '/setup/employee',
-      '/manage/dashboard',
       '/manage/company',
       '/manage/branches',
       '/manage/branches/new',
