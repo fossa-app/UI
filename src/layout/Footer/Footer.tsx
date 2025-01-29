@@ -57,8 +57,8 @@ const Footer: React.FC = () => {
                 <Environment kind={system?.entitlements.environmentKind} name={system?.entitlements.environmentName} />
                 <License
                   isAdmin={isAdmin}
-                  system={system?.terms.licensee.longName}
-                  company={company?.terms.licensee.longName}
+                  system={system?.terms.licensee}
+                  company={company?.terms.licensee}
                   setupCompleted={setupCompleted}
                   onCompanyLicenseClick={handleCompanyLicenseClick}
                 />

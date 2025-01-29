@@ -111,8 +111,8 @@ describe('Branch Management Tests', () => {
       name: 'New York Branch',
       timeZoneId: 'America/New_York',
       address: {
-        line1: '270 W',
-        line2: '11th Street',
+        line1: '270 W 11th Street',
+        line2: 'Apt 2E',
         city: 'New York',
         subdivision: 'NY',
         postalCode: '10014',
@@ -157,7 +157,7 @@ describe('Branch Management Tests', () => {
       timeZoneId: 'Pacific/Honolulu',
       address: {
         line1: '3211 Dewert Ln',
-        line2: '11th Street',
+        line2: '',
         city: 'Honolulu',
         subdivision: 'HI',
         postalCode: '96818',
@@ -177,8 +177,8 @@ describe('Branch Management Tests', () => {
     verifyBranchDetailsFormFieldValues({
       'form-field-name': 'New York Branch',
       'form-field-timeZoneId': 'America/New_York',
-      'form-field-address.line1': '270 W',
-      'form-field-address.line2': '11th Street',
+      'form-field-address.line1': '270 W 11th Street',
+      'form-field-address.line2': 'Apt 2E',
       'form-field-address.city': 'New York',
       'form-field-address.subdivision': 'NY',
       'form-field-address.postalCode': '10014',
@@ -214,7 +214,7 @@ describe('Branch Management Tests', () => {
       timeZoneId: 'Pacific/Honolulu',
       address: {
         line1: '3211 Dewert Ln',
-        line2: '11th Street',
+        line2: '',
         city: 'Honolulu',
         subdivision: 'HI',
         postalCode: '96818',
@@ -248,8 +248,8 @@ describe('Branch Management Tests', () => {
       name: 'Anchorage Branch',
       timeZoneId: 'America/Anchorage',
       address: {
-        line1: '3801 Centerpoint',
-        line2: 'Dr #200',
+        line1: '3801 Centerpoint Dr #200',
+        line2: '',
         city: 'Anchorage',
         subdivision: 'AK',
         postalCode: '99503',
@@ -282,10 +282,10 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(
       Module.branchManagement,
       SubModule.branchTable,
-      'table-body-cell-3801 Centerpoint Dr #200 Anchorage, AK 99503, United States'
+      'table-body-cell-3801 Centerpoint Dr #200, Anchorage, AK 99503, United States'
     )
       .should('exist')
-      .and('have.text', '3801 Centerpoint Dr #200 Anchorage, AK 99503, United States');
+      .and('have.text', '3801 Centerpoint Dr #200, Anchorage, AK 99503, United States');
   });
 
   it('should be able to navigate back when the back button is clicked', () => {
@@ -321,8 +321,8 @@ describe('Branch Management Tests', () => {
     verifyBranchDetailsFormFieldValues({
       'form-field-name': 'New York Branch',
       'form-field-timeZoneId': 'America/New_York',
-      'form-field-address.line1': '270 W',
-      'form-field-address.line2': '11th Street',
+      'form-field-address.line1': '270 W 11th Street',
+      'form-field-address.line2': 'Apt 2E',
       'form-field-address.city': 'New York',
       'form-field-address.subdivision': 'NY',
       'form-field-address.postalCode': '10014',
@@ -358,8 +358,8 @@ describe('Branch Management Tests', () => {
     verifyBranchDetailsFormFieldValues({
       'form-field-name': 'New York Branch',
       'form-field-timeZoneId': 'America/New_York',
-      'form-field-address.line1': '270 W',
-      'form-field-address.line2': '11th Street',
+      'form-field-address.line1': '270 W 11th Street',
+      'form-field-address.line2': 'Apt 2E',
       'form-field-address.city': 'New York',
       'form-field-address.subdivision': 'NY',
       'form-field-address.postalCode': '10014',
@@ -368,10 +368,26 @@ describe('Branch Management Tests', () => {
   });
 
   it('should not display the loader if the request resolves quickly', () => {
-    interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdQuickRequest', 200, 50);
+    interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdQuickRequest', 'branches', 200, 50);
     cy.visit('/manage/branches/edit/222222222222');
 
     getLinearLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('not.exist');
     cy.wait('@fetchBranchByIdQuickRequest');
+  });
+
+  it('should display 2 countries if the company country is different than the branch address country', () => {
+    interceptFetchBranchByIdRequest('222222222224', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
+    cy.visit('/manage/branches/edit/222222222224');
+
+    cy.wait('@fetchBranchByIdRequest');
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.countryCode').click();
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.countryCode-option-PL')
+      .should('exist')
+      .and('have.text', 'Poland');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.countryCode-option-US')
+      .should('exist')
+      .and('have.text', 'United States');
   });
 });

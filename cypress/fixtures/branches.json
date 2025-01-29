@@ -8,8 +8,8 @@
       "name": "New York Branch",
       "timeZoneId": "America/New_York",
       "address": {
-        "line1": "270 W",
-        "line2": "11th Street",
+        "line1": "270 W 11th Street",
+        "line2": "Apt 2E",
         "city": "New York",
         "subdivision": "NY",
         "postalCode": "10014",
