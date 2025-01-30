@@ -27,6 +27,7 @@ type TableProps<T> = {
   onPageSizeChange: (pageSize: number) => void;
 } & PaperProps;
 
+// TODO: enhance cypress selectors e.g. use ids on table-row, table-cell
 const Table = <T extends Item>({
   module,
   subModule,

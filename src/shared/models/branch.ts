@@ -23,7 +23,7 @@ export interface BranchDTO {
 
 export interface Branch extends BranchDTO {
   timeZoneName?: TimeZone['name'];
-  isValidCompanyTimeZone?: boolean;
+  isValid?: boolean;
   address: Address;
   fullAddress: string;
 }

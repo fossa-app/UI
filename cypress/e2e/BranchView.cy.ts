@@ -179,7 +179,7 @@ describe('Branch View Tests', () => {
       cy.wait('@fetchBranchByIdQuickRequest');
     });
 
-    it('should mark the timeZone as invalid if it is an invalid company timeZone', () => {
+    it('should mark the fields as invalid if the company country is different than the branch address country', () => {
       interceptFetchCompanyRequest('fetchUpdatedCompanyRequest', 'company-updated');
       interceptFetchBranchByIdRequest('222222222222');
       cy.visit('/manage/branches/view/222222222222');
@@ -187,9 +187,43 @@ describe('Branch View Tests', () => {
       cy.wait('@fetchUpdatedCompanyRequest');
       cy.wait('@fetchBranchByIdRequest');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-timeZoneName')
-        .find('p')
-        .should('have.attr', 'data-invalid');
+      const invalidFields = [
+        'timeZoneName',
+        'address.line1',
+        'address.line2',
+        'address.city',
+        'address.subdivision',
+        'address.countryName',
+        'address.postalCode',
+      ];
+
+      invalidFields.forEach((field) => {
+        getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, `view-details-item-value-${field}`)
+          .find('p')
+          .should('have.attr', 'data-invalid');
+      });
+    });
+
+    it('should display default values if there is no address provided', () => {
+      interceptFetchBranchByIdRequest('222222222225', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
+      cy.visit('/manage/branches/view/222222222225');
+
+      cy.wait('@fetchBranchByIdRequest');
+
+      const emptyFields = [
+        'address.line1',
+        'address.line2',
+        'address.city',
+        'address.subdivision',
+        'address.countryName',
+        'address.postalCode',
+      ];
+
+      emptyFields.forEach((field) => {
+        getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, `view-details-item-value-${field}`)
+          .find('p')
+          .should('have.text', '-');
+      });
     });
 
     it('should render the Edit branch button', () => {
