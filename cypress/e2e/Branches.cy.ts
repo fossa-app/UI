@@ -181,6 +181,13 @@ describe('Branches Tests', () => {
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Central European Standard Time')
         .find('p')
         .should('have.attr', 'data-invalid');
+      getTestSelectorByModule(
+        Module.branchManagement,
+        SubModule.branchTable,
+        'table-body-cell-ul. Strumykowa, nr 6B, lok. 5, Warszawa, MAZOWIECKIE 03-138, Poland'
+      )
+        .find('p')
+        .should('have.attr', 'data-invalid');
     });
 
     it('should be able to navigate to the branch view page by clicking the branch name cell', () => {
@@ -456,7 +463,7 @@ describe('Branches Tests', () => {
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-New York').should('not.exist');
     });
 
-    it('should mark the timeZone as invalid if it is an invalid company timeZone', () => {
+    it('should mark the fields as invalid if the company country is different than the branch address country', () => {
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 5, search: '' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-countries' }
@@ -466,6 +473,26 @@ describe('Branches Tests', () => {
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Central European Standard Time')
         .find('p')
         .should('have.attr', 'data-invalid');
+      getTestSelectorByModule(
+        Module.branchManagement,
+        SubModule.branchTable,
+        'table-body-cell-ul. Strumykowa, nr 6B, lok. 5, Warszawa, MAZOWIECKIE 03-138, Poland'
+      )
+        .find('p')
+        .should('have.attr', 'data-invalid');
+    });
+
+    it('should display default values if there is no address provided', () => {
+      interceptFetchBranchesRequest(
+        { pageNumber: 1, pageSize: 5, search: '' },
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-countries' }
+      );
+      cy.visit('/manage/branches');
+
+      cy.wait('@fetchMultipleBranchesRequest');
+
+      // TODO: check the comment in Table component
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-').find('p').should('have.text', '-');
     });
 
     it('should be able to navigate to the branch view page by clicking the branch name cell', () => {

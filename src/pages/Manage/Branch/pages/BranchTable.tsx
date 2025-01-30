@@ -20,7 +20,6 @@ import ActionsMenu from 'components/UI/Table/ActionsMenu';
 import TableLayout from 'components/layouts/TableLayout';
 import { useSearch } from 'components/Search';
 import { renderBranchName } from '../components/BranchName';
-import { renderBranchTimeZone } from '../components/BranchTimeZone';
 
 const BranchTablePage: React.FC = () => {
   const navigate = useNavigate();
@@ -98,9 +97,6 @@ const BranchTablePage: React.FC = () => {
       ...column,
       ...(column.field === BRANCH_FIELDS.name.field && {
         renderBodyCell: (branch: Branch) => renderBranchName(branch, handleViewBranch),
-      }),
-      ...(column.field === BRANCH_FIELDS.timeZoneName?.field && {
-        renderBodyCell: (branch: Branch) => renderBranchTimeZone(branch),
       }),
     };
   });

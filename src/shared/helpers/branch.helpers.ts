@@ -11,11 +11,12 @@ export const mapBranch = (
 ): Branch => {
   const branchTimeZoneCountryCode = timeZones.find((timeZone) => timeZone.id === branch.timeZoneId)?.countryCode;
   const countryName = countries.find((country) => country.code === branch.address?.countryCode)?.name;
+  const isValid = branch.address ? branch.address.countryCode === companyCountryCode : branchTimeZoneCountryCode === companyCountryCode;
 
   return {
     ...branch,
+    isValid,
     timeZoneName: timeZones.find(({ id }) => id === branch.timeZoneId)?.name,
-    isValidCompanyTimeZone: branchTimeZoneCountryCode === companyCountryCode,
     address: {
       ...branch.address,
       countryName,
