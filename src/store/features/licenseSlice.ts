@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { CompanyLicense, ErrorResponse, SystemLicense } from 'shared/models';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
-import { RootState, StateEntity } from 'store';
-import { setError } from './errorSlice';
 import { mapCompanyLicense, parseResponseData } from 'shared/helpers';
+import { setError, setSuccess } from './messageSlice';
 
 interface LicenseState {
   system: StateEntity<SystemLicense | null>;
@@ -70,11 +70,12 @@ export const uploadCompanyLicense = createAsyncThunk<void, File, { rejectValue: 
 
       await axios.post<CompanyLicense>(ENDPOINTS.companyLicense, formData, config);
       dispatch(fetchCompanyLicense());
+      dispatch(setSuccess(MESSAGES.success.license.company.create));
     } catch (error) {
       dispatch(
         setError({
           ...(error as ErrorResponse),
-          title: MESSAGES.error.license.company.createFailed,
+          title: MESSAGES.error.license.company.create,
         })
       );
 

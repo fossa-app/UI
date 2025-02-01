@@ -131,6 +131,7 @@ describe('Branch Management Tests', () => {
 
     cy.url().should('include', '/manage/branches');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
+    cy.get('[data-cy="success-snackbar"]').should('exist').and('contain.text', 'Branch has been successfully created');
   });
 
   it('should display not found page if the branch was not found', () => {
@@ -225,7 +226,7 @@ describe('Branch Management Tests', () => {
 
     cy.wait('@editBranchFailedRequest');
 
-    cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to update Branch');
+    cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to update the Branch');
     cy.url().should('include', '/manage/branches/edit/222222222222');
   });
 
@@ -282,6 +283,7 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222223-fullAddress')
       .should('exist')
       .and('have.text', '3801 Centerpoint Dr #200, Anchorage, AK 99503, United States');
+    cy.get('[data-cy="success-snackbar"]').should('exist').and('contain.text', 'Branch has been successfully updated');
   });
 
   it('should be able to navigate back when the back button is clicked', () => {

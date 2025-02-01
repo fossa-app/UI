@@ -147,6 +147,7 @@ describe('License Tests', () => {
 
         cy.get('[data-cy="company-license-dialog"]').should('not.exist');
         cy.get('[data-cy="company-license-text"]').should('exist').and('have.text', 'TCL');
+        cy.get('[data-cy="success-snackbar"]').should('exist').and('contain.text', 'Company License has been successfully uploaded');
       });
 
       it('should display correct company license', () => {

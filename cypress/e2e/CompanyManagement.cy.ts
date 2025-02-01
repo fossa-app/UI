@@ -266,6 +266,7 @@ describe('Company Management Tests', () => {
         'have.text',
         'Canada'
       );
+      cy.get('[data-cy="success-snackbar"]').should('exist').and('contain.text', 'Company has been successfully updated');
     });
 
     it('should be able to view the company license details', () => {

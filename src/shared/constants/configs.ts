@@ -36,24 +36,45 @@ export const MESSAGES = {
       },
       company: {
         notFound: 'Company license not found 😞',
-        createFailed: 'Failed to upload Company license 😞',
+        create: 'Failed to upload Company license 😞',
       },
     },
     company: {
       notFound: 'Company not found 😞',
-      createFailed: 'Failed to create a Company 😞',
-      updateFailed: 'Failed to update Company 😞',
+      create: 'Failed to create a Company 😞',
+      update: 'Failed to update Company 😞',
     },
     branches: {
       notFound: 'Branch not found 😞',
-      createFailed: 'Failed to create a Branch 😞',
-      updateFailed: 'Failed to update Branch 😞',
-      deleteFailed: 'Failed to delete Branch 😞',
+      create: 'Failed to create a Branch 😞',
+      update: 'Failed to update the Branch 😞',
+      delete: 'Failed to delete the Branch 😞',
     },
     employee: {
       notFound: 'Employee not found 😞',
-      createFailed: 'Failed to create an Employee 😞',
-      updateFailed: 'Failed to update Employee 😞',
+      create: 'Failed to create an Employee 😞',
+      update: 'Failed to update the Profile 😞',
+    },
+  },
+  success: {
+    license: {
+      company: {
+        create: 'Company License has been successfully uploaded 😊',
+      },
+    },
+    company: {
+      create: 'Company has been successfully created 😊',
+      update: 'Company has been successfully updated 😊',
+      delete: 'Company has been successfully deleted 😊',
+    },
+    branches: {
+      create: 'Branch has been successfully created 😊',
+      update: 'Branch has been successfully updated 😊',
+      delete: 'Branch has been successfully deleted 😊',
+    },
+    employee: {
+      create: 'Employee has been successfully created 😊',
+      update: 'Profile has been successfully updated 😊',
     },
   },
 };

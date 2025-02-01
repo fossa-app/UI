@@ -3,8 +3,8 @@ import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { Branch, BranchDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
-import { setError } from './errorSlice';
 import { mapBranch, mapBranches, prepareQueryParams } from 'shared/helpers';
+import { setError, setSuccess } from './messageSlice';
 
 interface BranchState {
   branch: StateEntity<Branch | undefined>;
@@ -84,11 +84,13 @@ export const createBranch = createAsyncThunk<void, [BranchDTO, boolean?], { reje
       if (shouldFetchBranches) {
         await dispatch(fetchBranches([APP_CONFIG.table.defaultPagination])).unwrap();
       }
+
+      dispatch(setSuccess(MESSAGES.success.branches.create));
     } catch (error) {
       dispatch(
         setError({
           ...(error as ErrorResponse),
-          title: MESSAGES.error.branches.createFailed,
+          title: MESSAGES.error.branches.create,
         })
       );
 
@@ -102,11 +104,13 @@ export const editBranch = createAsyncThunk<void, [string, Omit<BranchDTO, 'id'>]
   async ([id, branch], { dispatch, rejectWithValue }) => {
     try {
       await axios.put<BranchDTO>(`${ENDPOINTS.branches}/${id}`, branch);
+
+      dispatch(setSuccess(MESSAGES.success.branches.update));
     } catch (error) {
       dispatch(
         setError({
           ...(error as ErrorResponse),
-          title: MESSAGES.error.branches.updateFailed,
+          title: MESSAGES.error.branches.update,
         })
       );
 
@@ -122,11 +126,12 @@ export const deleteBranch = createAsyncThunk<void, BranchDTO['id'], { state: Roo
       await axios.delete<void>(`${ENDPOINTS.branches}/${id}`);
 
       dispatch(resetBranchesFetchStatus());
+      dispatch(setSuccess(MESSAGES.success.branches.delete));
     } catch (error) {
       dispatch(
         setError({
           ...(error as ErrorResponse),
-          title: MESSAGES.error.branches.deleteFailed,
+          title: MESSAGES.error.branches.delete,
         })
       );
 
