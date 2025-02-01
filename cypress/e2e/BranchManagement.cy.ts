@@ -104,7 +104,7 @@ describe('Branch Management Tests', () => {
     interceptCreateBranchRequest();
     cy.visit('/manage/branches');
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
     fillBranchDetailsForm({
@@ -130,7 +130,7 @@ describe('Branch Management Tests', () => {
     cy.wait('@fetchMultipleBranchesRequest');
 
     cy.url().should('include', '/manage/branches');
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
   });
 
   it('should display not found page if the branch was not found', () => {
@@ -272,18 +272,14 @@ describe('Branch Management Tests', () => {
 
     cy.wait('@fetchMultipleUpdatedBranchesRequest');
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Anchorage Branch')
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222223-name')
       .should('exist')
       .and('have.text', 'Anchorage Branch');
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Alaskan Standard Time')
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222223-timeZoneName')
       .should('exist')
       .and('have.text', 'Alaskan Standard Time');
-    getTestSelectorByModule(
-      Module.branchManagement,
-      SubModule.branchTable,
-      'table-body-cell-3801 Centerpoint Dr #200, Anchorage, AK 99503, United States'
-    )
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222223-fullAddress')
       .should('exist')
       .and('have.text', '3801 Centerpoint Dr #200, Anchorage, AK 99503, United States');
   });

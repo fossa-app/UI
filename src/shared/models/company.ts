@@ -1,4 +1,5 @@
-import { Country } from './common';
+import { Country, FlattenField } from './common';
+import { CompanyLicense } from './license';
 
 export interface CompanyDTO {
   id?: number;
@@ -13,3 +14,5 @@ export interface Company extends CompanyDTO {
 export type CompanyFieldConfig = {
   [K in keyof Company]: { field: K; name: string };
 };
+
+export type CompanyLicenseFieldConfig = FlattenField<CompanyLicense>;

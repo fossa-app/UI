@@ -6,10 +6,103 @@ import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
   interceptFetchCompanyLicenseFailedRequest,
+  interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
   interceptFetchEmployeeRequest,
   interceptFetchSystemLicenseRequest,
 } from '../support/interceptors';
+
+const testCompanyFields = () => {
+  getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-header').should(
+    'have.text',
+    'Company Details'
+  );
+  getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-label-name').should(
+    'have.text',
+    'Name'
+  );
+  getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-value-name').should(
+    'have.text',
+    'Good Omens'
+  );
+  getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-label-countryName').should(
+    'have.text',
+    'Country'
+  );
+  getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-value-countryName').should(
+    'have.text',
+    'United States'
+  );
+};
+
+const testCompanyLicenseFields = () => {
+  getTestSelectorByModule(
+    Module.companyManagement,
+    SubModule.companyLicenseViewDetails,
+    'view-details-item-label-terms.licensee.longName'
+  ).should('have.text', 'Long Name');
+  getTestSelectorByModule(
+    Module.companyManagement,
+    SubModule.companyLicenseViewDetails,
+    'view-details-item-value-terms.licensee.longName'
+  ).should('have.text', 'Test Company Licensee');
+  getTestSelectorByModule(
+    Module.companyManagement,
+    SubModule.companyLicenseViewDetails,
+    'view-details-item-label-terms.licensee.shortName'
+  ).should('have.text', 'Short Name');
+  getTestSelectorByModule(
+    Module.companyManagement,
+    SubModule.companyLicenseViewDetails,
+    'view-details-item-value-terms.licensee.shortName'
+  ).should('have.text', 'TCL');
+  getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-details-item-label-terms.notBefore').should(
+    'have.text',
+    'Valid From'
+  );
+  getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-details-item-value-terms.notBefore').should(
+    'have.text',
+    '9/1/2024'
+  );
+  getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-details-item-label-terms.notAfter').should(
+    'have.text',
+    'Valid To'
+  );
+  getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-details-item-value-terms.notAfter').should(
+    'have.text',
+    '9/1/2025'
+  );
+  getTestSelectorByModule(
+    Module.companyManagement,
+    SubModule.companyLicenseViewDetails,
+    'view-details-item-label-entitlements.companyId'
+  ).should('have.text', 'Company ID');
+  getTestSelectorByModule(
+    Module.companyManagement,
+    SubModule.companyLicenseViewDetails,
+    'view-details-item-value-entitlements.companyId'
+  ).should('have.text', '111111111111');
+  getTestSelectorByModule(
+    Module.companyManagement,
+    SubModule.companyLicenseViewDetails,
+    'view-details-item-label-entitlements.maximumBranchCount'
+  ).should('have.text', 'Maximum Branch Count');
+  getTestSelectorByModule(
+    Module.companyManagement,
+    SubModule.companyLicenseViewDetails,
+    'view-details-item-value-entitlements.maximumBranchCount'
+  ).should('have.text', '10');
+  getTestSelectorByModule(
+    Module.companyManagement,
+    SubModule.companyLicenseViewDetails,
+    'view-details-item-label-entitlements.maximumEmployeeCount'
+  ).should('have.text', 'Maximum Employee Count');
+  getTestSelectorByModule(
+    Module.companyManagement,
+    SubModule.companyLicenseViewDetails,
+    'view-details-item-value-entitlements.maximumEmployeeCount'
+  ).should('have.text', '100');
+};
 
 describe('Company Management Tests', () => {
   beforeEach(() => {
@@ -33,26 +126,7 @@ describe('Company Management Tests', () => {
       cy.get('[data-cy="menu-item-Company"]').click();
 
       cy.url().should('include', '/manage/company/view');
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-header').should(
-        'have.text',
-        'Company Details'
-      );
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-label-name').should(
-        'have.text',
-        'Company Name'
-      );
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-value-name').should(
-        'have.text',
-        'Good Omens'
-      );
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-label-countryName').should(
-        'have.text',
-        'Country'
-      );
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-value-countryName').should(
-        'have.text',
-        'United States'
-      );
+      testCompanyFields();
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('not.exist');
     });
 
@@ -64,6 +138,17 @@ describe('Company Management Tests', () => {
       cy.visit('/manage/company/edit');
 
       cy.url().should('include', '/manage/company/view');
+    });
+
+    it('should be able to view the company license details', () => {
+      cy.visit('/manage/company/view');
+      interceptFetchCompanyLicenseRequest();
+
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-details-header').should(
+        'have.text',
+        'Company License Details'
+      );
+      testCompanyLicenseFields();
     });
   });
 
@@ -84,22 +169,7 @@ describe('Company Management Tests', () => {
         'have.text',
         'Company Details'
       );
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-label-name').should(
-        'have.text',
-        'Company Name'
-      );
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-value-name').should(
-        'have.text',
-        'Good Omens'
-      );
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-label-countryName').should(
-        'have.text',
-        'Country'
-      );
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-value-countryName').should(
-        'have.text',
-        'United States'
-      );
+      testCompanyFields();
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('exist');
     });
 
@@ -196,6 +266,17 @@ describe('Company Management Tests', () => {
         'have.text',
         'Canada'
       );
+    });
+
+    it('should be able to view the company license details', () => {
+      cy.visit('/manage/company/view');
+      interceptFetchCompanyLicenseRequest();
+
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-details-header').should(
+        'have.text',
+        'Company License Details'
+      );
+      testCompanyLicenseFields();
     });
   });
 });
