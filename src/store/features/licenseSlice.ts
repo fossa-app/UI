@@ -4,11 +4,11 @@ import { CompanyLicense, ErrorResponse, SystemLicense } from 'shared/models';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import { RootState, StateEntity } from 'store';
 import { setError } from './errorSlice';
-import { parseResponseData } from 'shared/helpers';
+import { mapCompanyLicense, parseResponseData } from 'shared/helpers';
 
 interface LicenseState {
   system: StateEntity<SystemLicense | null>;
-  company: StateEntity<CompanyLicense | null>;
+  company: StateEntity<CompanyLicense | undefined>;
 }
 
 const initialState: LicenseState = {
@@ -17,7 +17,7 @@ const initialState: LicenseState = {
     status: 'idle',
   },
   company: {
-    data: null,
+    data: undefined,
     fetchStatus: 'idle',
     updateStatus: 'idle',
   },
@@ -38,13 +38,13 @@ export const fetchSystemLicense = createAsyncThunk<SystemLicense | null, void, {
   }
 );
 
-export const fetchCompanyLicense = createAsyncThunk<CompanyLicense | null, void, { rejectValue: ErrorResponse }>(
+export const fetchCompanyLicense = createAsyncThunk<CompanyLicense | undefined, void, { rejectValue: ErrorResponse }>(
   'license/getCompanyLicense',
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await axios.get<CompanyLicense>(ENDPOINTS.companyLicense);
 
-      return data;
+      return mapCompanyLicense(data);
     } catch (error) {
       return rejectWithValue({
         ...(error as ErrorResponse),
@@ -105,11 +105,11 @@ const licenseSlice = createSlice({
         state.company.fetchStatus = 'loading';
       })
       .addCase(fetchCompanyLicense.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
-        state.company.data = null;
+        state.company.data = undefined;
         state.company.fetchStatus = 'failed';
         state.company.error = action.payload;
       })
-      .addCase(fetchCompanyLicense.fulfilled, (state, action: PayloadAction<CompanyLicense | null>) => {
+      .addCase(fetchCompanyLicense.fulfilled, (state, action: PayloadAction<CompanyLicense | undefined>) => {
         state.company.data = action.payload;
         state.company.fetchStatus = 'succeeded';
       })
@@ -117,7 +117,7 @@ const licenseSlice = createSlice({
         state.company.updateStatus = 'loading';
       })
       .addCase(uploadCompanyLicense.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
-        state.company.data = null;
+        state.company.data = undefined;
         state.company.updateStatus = 'failed';
         state.company.error = action.payload;
       })

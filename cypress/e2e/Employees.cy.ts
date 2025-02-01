@@ -62,7 +62,7 @@ describe('Employees Tests', () => {
     cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
     getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-no-employees').should('not.exist');
     getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.exist');
-    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 3);
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
     getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-header-cell-firstName').should(
       'have.text',
       'First Name'
@@ -108,7 +108,7 @@ describe('Employees Tests', () => {
 
     cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
 
-    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 3);
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
 
     cy.get('[data-cy="search-employees"]').find('input').clear();
     cy.get('[data-cy="search-employees"]').find('input').type('Anthony');
@@ -121,7 +121,7 @@ describe('Employees Tests', () => {
     getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
 
     cy.wait('@fetchSearchedEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5&search=Anthony');
-    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 1);
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 1);
 
     cy.get('[data-cy="search-employees"]').find('input').clear();
     cy.get('[data-cy="search-employees"]').find('input').type('Joe');
@@ -134,7 +134,7 @@ describe('Employees Tests', () => {
     getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
 
     cy.wait('@fetchSearchedNoEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5&search=Joe');
-    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 0);
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 0);
 
     cy.get('[data-cy="search-employees"]').find('input').clear();
 
@@ -146,7 +146,7 @@ describe('Employees Tests', () => {
     getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
     cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5');
 
-    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 3);
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
   });
 
   it('should reset the search state when the clear icon is clicked', () => {
@@ -161,7 +161,7 @@ describe('Employees Tests', () => {
 
     cy.get('[data-cy="search-employees"]').find('input').type('Anthony');
 
-    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 1);
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 1);
 
     cy.get('[data-cy="search-employees-clear"]').click();
 
@@ -169,7 +169,7 @@ describe('Employees Tests', () => {
 
     cy.wait('@fetchMultipleEmployeesRequest');
 
-    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row').should('have.length', 3);
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
   });
 
   it('should not display action column and actions', () => {

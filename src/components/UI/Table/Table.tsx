@@ -27,7 +27,6 @@ type TableProps<T> = {
   onPageSizeChange: (pageSize: number) => void;
 } & PaperProps;
 
-// TODO: enhance cypress selectors e.g. use ids on table-row, table-cell
 const Table = <T extends Item>({
   module,
   subModule,
@@ -65,10 +64,10 @@ const Table = <T extends Item>({
         </TableRow>
       ) : (
         items.map((row) => (
-          <TableRow hover data-cy={`${module}-${subModule}-table-body-row`} key={row.id}>
+          <TableRow hover data-cy={`${module}-${subModule}-table-body-row-${row.id}`} key={row.id}>
             {columns.map((column) => (
               <TableCell
-                data-cy={`${module}-${subModule}-table-body-cell-${row[column.field]}`}
+                data-cy={`${module}-${subModule}-table-body-cell-${row.id}-${column.field}`}
                 key={column.field}
                 align={column.align || 'left'}
                 sx={{ width: column.width || 'auto' }}

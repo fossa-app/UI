@@ -11,6 +11,7 @@ export enum Module {
 export enum SubModule {
   companyDetails = 'companyDetails',
   companyViewDetails = 'companyViewDetails',
+  companyLicenseViewDetails = 'companyLicenseViewDetails',
   branchTable = 'branchTable',
   branchDetails = 'branchDetails',
   branchViewDetails = 'branchViewDetails',

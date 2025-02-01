@@ -59,7 +59,7 @@ describe('Branches Tests', () => {
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-header-cell-name').should('have.text', 'Name');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-header-cell-timeZoneName').should(
         'have.text',
@@ -69,14 +69,13 @@ describe('Branches Tests', () => {
         'have.text',
         'Address'
       );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Eastern Standard Time')
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222222-timeZoneName')
         .find('p')
         .should('not.have.attr', 'data-invalid');
-      getTestSelectorByModule(
-        Module.branchManagement,
-        SubModule.branchTable,
-        'table-body-cell-270 W 11th Street, Apt 2E, New York, NY 10014, United States'
-      ).should('have.text', '270 W 11th Street, Apt 2E, New York, NY 10014, United States');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222222-fullAddress').should(
+        'have.text',
+        '270 W 11th Street, Apt 2E, New York, NY 10014, United States'
+      );
       getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');
       getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.text', '1–1 of 1');
     });
@@ -107,7 +106,7 @@ describe('Branches Tests', () => {
 
       cy.wait('@fetchMultipleBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
 
       cy.get('[data-cy="search-branches"]').find('input').clear();
       cy.get('[data-cy="search-branches"]').find('input').type('New');
@@ -119,7 +118,7 @@ describe('Branches Tests', () => {
 
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
       cy.wait('@fetchSearchedBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5&search=New');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
 
       cy.get('[data-cy="search-branches"]').find('input').clear();
       cy.get('[data-cy="search-branches"]').find('input').type('Old');
@@ -131,7 +130,7 @@ describe('Branches Tests', () => {
 
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
       cy.wait('@fetchSearchedNoBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5&search=Old');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 0);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 0);
 
       cy.get('[data-cy="search-branches"]').find('input').clear();
 
@@ -142,7 +141,7 @@ describe('Branches Tests', () => {
 
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
       cy.wait('@fetchMultipleBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
     });
 
     it('should not be able to manually navigate to branch management page', () => {
@@ -178,14 +177,10 @@ describe('Branches Tests', () => {
       );
       cy.visit('/manage/branches');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Central European Standard Time')
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222224-timeZoneName')
         .find('p')
         .should('have.attr', 'data-invalid');
-      getTestSelectorByModule(
-        Module.branchManagement,
-        SubModule.branchTable,
-        'table-body-cell-ul. Strumykowa, nr 6B, lok. 5, Warszawa, MAZOWIECKIE 03-138, Poland'
-      )
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222224-fullAddress')
         .find('p')
         .should('have.attr', 'data-invalid');
     });
@@ -195,7 +190,7 @@ describe('Branches Tests', () => {
       interceptFetchBranchByIdRequest('222222222222');
       cy.visit('/manage/branches');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-New York Branch').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222222-name').click();
 
       cy.url().should('include', '/manage/branches/view/222222222222');
     });
@@ -239,7 +234,7 @@ describe('Branches Tests', () => {
       cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-header-cell-name').should('have.text', 'Name');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-header-cell-timeZoneName').should(
         'have.text',
@@ -249,14 +244,13 @@ describe('Branches Tests', () => {
         'have.text',
         'Address'
       );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Eastern Standard Time')
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222222-timeZoneName')
         .find('p')
         .should('not.have.attr', 'data-invalid');
-      getTestSelectorByModule(
-        Module.branchManagement,
-        SubModule.branchTable,
-        'table-body-cell-270 W 11th Street, Apt 2E, New York, NY 10014, United States'
-      ).should('have.text', '270 W 11th Street, Apt 2E, New York, NY 10014, United States');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222222-fullAddress').should(
+        'have.text',
+        '270 W 11th Street, Apt 2E, New York, NY 10014, United States'
+      );
       getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');
       getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.text', '1–1 of 1');
     });
@@ -287,7 +281,7 @@ describe('Branches Tests', () => {
 
       cy.wait('@fetchMultipleBranchesRequest');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
 
       cy.get('[data-cy="search-branches"]').find('input').clear();
       cy.get('[data-cy="search-branches"]').find('input').type('New');
@@ -299,7 +293,7 @@ describe('Branches Tests', () => {
 
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
       cy.wait('@fetchSearchedBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5&search=New');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
 
       cy.get('[data-cy="search-branches"]').find('input').clear();
       cy.get('[data-cy="search-branches"]').find('input').type('Old');
@@ -311,7 +305,7 @@ describe('Branches Tests', () => {
 
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
       cy.wait('@fetchSearchedNoBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5&search=Old');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 0);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 0);
 
       cy.get('[data-cy="search-branches"]').find('input').clear();
 
@@ -322,7 +316,7 @@ describe('Branches Tests', () => {
 
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
       cy.wait('@fetchMultipleBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
     });
 
     it('should reset the search state after a new branch has been created', () => {
@@ -338,7 +332,7 @@ describe('Branches Tests', () => {
 
       cy.get('[data-cy="page-title-back-button"]').click();
       cy.get('[data-cy="search-branches"]').find('input').should('have.value', '');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
       getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').type('Anchorage Branch');
@@ -354,7 +348,7 @@ describe('Branches Tests', () => {
       cy.wait('@fetchMultipleUpdatedBranchesRequest');
 
       cy.get('[data-cy="search-branches"]').find('input').should('have.value', '');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
     });
 
     it('should reset the search state when the clear icon is clicked', () => {
@@ -369,7 +363,7 @@ describe('Branches Tests', () => {
 
       cy.get('[data-cy="search-branches"]').find('input').type('New');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
 
       cy.get('[data-cy="search-branches-clear"]').click();
 
@@ -377,7 +371,7 @@ describe('Branches Tests', () => {
 
       cy.wait('@fetchMultipleBranchesRequest');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
     });
 
     it('should display branch management buttons', () => {
@@ -440,8 +434,8 @@ describe('Branches Tests', () => {
       cy.wait('@deleteBranchFailedRequest');
 
       cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to delete Branch');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 2);
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-New York Branch').should('exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222222-name').should('exist');
     });
 
     it('should be able to delete a branch if the branch deletion succeeded', () => {
@@ -459,8 +453,8 @@ describe('Branches Tests', () => {
       cy.wait('@deleteBranchRequest');
       cy.wait('@fetchBranchesRequest');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row').should('have.length', 1);
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-New York').should('not.exist');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222223-name').should('not.exist');
     });
 
     it('should mark the fields as invalid if the company country is different than the branch address country', () => {
@@ -470,14 +464,10 @@ describe('Branches Tests', () => {
       );
       cy.visit('/manage/branches');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-Central European Standard Time')
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222224-timeZoneName')
         .find('p')
         .should('have.attr', 'data-invalid');
-      getTestSelectorByModule(
-        Module.branchManagement,
-        SubModule.branchTable,
-        'table-body-cell-ul. Strumykowa, nr 6B, lok. 5, Warszawa, MAZOWIECKIE 03-138, Poland'
-      )
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222224-fullAddress')
         .find('p')
         .should('have.attr', 'data-invalid');
     });
@@ -491,8 +481,9 @@ describe('Branches Tests', () => {
 
       cy.wait('@fetchMultipleBranchesRequest');
 
-      // TODO: check the comment in Table component
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-').find('p').should('have.text', '-');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222225-fullAddress')
+        .find('p')
+        .should('have.text', '-');
     });
 
     it('should be able to navigate to the branch view page by clicking the branch name cell', () => {
@@ -500,7 +491,7 @@ describe('Branches Tests', () => {
       interceptFetchBranchByIdRequest('222222222222');
       cy.visit('/manage/branches');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-New York Branch').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222222-name').click();
 
       cy.url().should('include', '/manage/branches/view/222222222222');
     });
