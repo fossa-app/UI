@@ -9,7 +9,7 @@ import setupReducer from './features/setupSlice';
 import companyReducer from './features/companySlice';
 import branchReducer from './features/branchSlice';
 import employeeReducer from './features/employeeSlice';
-import errorReducer from './features/errorSlice';
+import messageReducer from './features/messageSlice';
 import appLoadingReducer from './features/appLoadingSlice';
 
 const rootReducer = combineReducers({
@@ -21,7 +21,7 @@ const rootReducer = combineReducers({
   company: companyReducer,
   branch: branchReducer,
   employee: employeeReducer,
-  error: errorReducer,
+  message: messageReducer,
   appLoading: appLoadingReducer,
 });
 

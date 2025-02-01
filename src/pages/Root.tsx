@@ -6,10 +6,10 @@ import { useAppSelector } from 'store';
 import { selectAppConfig } from 'store/features';
 import { darkScrollbar, lightScrollbar } from 'shared/helpers';
 import { darkTheme, lightTheme } from 'shared/configs/theme';
+import MessageLayout from 'layout/MessageLayout';
+import LoaderLayout from 'layout/LoaderLayout';
 import AxiosInterceptor from '../AxiosInterceptor';
 import ClientLoader from '../ClientLoader';
-import ErrorLayout from 'layout/ErrorLayout';
-import LoaderLayout from 'layout/LoaderLayout';
 
 const RootPage: React.FC = () => {
   const { isDarkTheme } = useAppSelector(selectAppConfig);
@@ -21,8 +21,7 @@ const RootPage: React.FC = () => {
         <GlobalStyles styles={isDarkTheme ? darkScrollbar() : lightScrollbar()} />
         <CssBaseline />
         <ClientLoader />
-        <ErrorLayout />
-        {/* TODO: add SuccessLayout */}
+        <MessageLayout />
         <LoaderLayout />
       </ThemeProvider>
     </AxiosInterceptor>

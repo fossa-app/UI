@@ -4,7 +4,7 @@ import axios from 'shared/configs/axios';
 import { AppUser, Employee, EmployeeDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
 import { mapEmployee, mapEmployees, mapUserProfileToEmployee, prepareQueryParams } from 'shared/helpers';
-import { setError } from './errorSlice';
+import { setError, setSuccess } from './messageSlice';
 import { fetchUser } from './authSlice';
 
 interface SetupState {
@@ -75,11 +75,13 @@ export const createEmployee = createAsyncThunk<void, EmployeeDTO, { state: RootS
     try {
       await axios.post<void>(ENDPOINTS.employee, employee);
       await dispatch(fetchEmployee()).unwrap();
+
+      dispatch(setSuccess(MESSAGES.success.employee.create));
     } catch (error) {
       dispatch(
         setError({
           ...(error as ErrorResponse),
-          title: MESSAGES.error.employee.createFailed,
+          title: MESSAGES.error.employee.create,
         })
       );
 
@@ -93,11 +95,13 @@ export const editEmployee = createAsyncThunk<void, Omit<EmployeeDTO, 'id'>, { re
   async (employee, { dispatch, rejectWithValue }) => {
     try {
       await axios.put<EmployeeDTO>(ENDPOINTS.employee, employee);
+
+      dispatch(setSuccess(MESSAGES.success.employee.update));
     } catch (error) {
       dispatch(
         setError({
           ...(error as ErrorResponse),
-          title: MESSAGES.error.employee.updateFailed,
+          title: MESSAGES.error.employee.update,
         })
       );
 

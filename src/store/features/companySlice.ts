@@ -4,7 +4,7 @@ import axios from 'shared/configs/axios';
 import { Company, CompanyDTO, ErrorResponse } from 'shared/models';
 import { filterUniqueByField, mapCompany } from 'shared/helpers';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
-import { setError } from './errorSlice';
+import { setError, setSuccess } from './messageSlice';
 
 interface CompanyState {
   company: StateEntity<Company | undefined>;
@@ -45,11 +45,13 @@ export const createCompany = createAsyncThunk<void, CompanyDTO, { rejectValue: E
     try {
       await axios.post<CompanyDTO>(ENDPOINTS.company, company);
       await dispatch(fetchCompany(false)).unwrap();
+
+      dispatch(setSuccess(MESSAGES.success.company.create));
     } catch (error) {
       dispatch(
         setError({
           ...(error as ErrorResponse),
-          title: MESSAGES.error.company.createFailed,
+          title: MESSAGES.error.company.create,
         })
       );
 
@@ -63,11 +65,13 @@ export const editCompany = createAsyncThunk<void, Omit<CompanyDTO, 'id'>, { reje
   async (company, { dispatch, rejectWithValue }) => {
     try {
       await axios.put<CompanyDTO>(ENDPOINTS.company, company);
+
+      dispatch(setSuccess(MESSAGES.success.company.update));
     } catch (error) {
       dispatch(
         setError({
           ...(error as ErrorResponse),
-          title: MESSAGES.error.company.updateFailed,
+          title: MESSAGES.error.company.update,
         })
       );
 

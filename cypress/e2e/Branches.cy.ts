@@ -433,7 +433,7 @@ describe('Branches Tests', () => {
 
       cy.wait('@deleteBranchFailedRequest');
 
-      cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to delete Branch');
+      cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to delete the Branch');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222222-name').should('exist');
     });
@@ -453,6 +453,7 @@ describe('Branches Tests', () => {
       cy.wait('@deleteBranchRequest');
       cy.wait('@fetchBranchesRequest');
 
+      cy.get('[data-cy="success-snackbar"]').should('exist').and('contain.text', 'Branch has been successfully deleted');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222223-name').should('not.exist');
     });
