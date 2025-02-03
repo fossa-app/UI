@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
-import { BranchDTO, Module, SubModule } from 'shared/models';
+import { Branch, Module, SubModule } from 'shared/models';
 import { MESSAGES } from 'shared/constants';
 import Form, { FieldProps } from 'components/UI/Form';
 import LoadingButton from 'components/UI/LoadingButton';
@@ -16,8 +16,9 @@ interface BranchDetailsFormProps {
   actionLoading?: boolean;
   withCancel?: boolean;
   formLoading?: boolean;
-  data?: BranchDTO;
-  onSubmit: (data: BranchDTO) => void;
+  data?: Branch;
+  onSubmit: (data: Branch) => void;
+  onChange?: (data: Branch) => void;
   onCancel?: () => void;
 }
 
@@ -33,11 +34,13 @@ const BranchDetailsForm: React.FC<BranchDetailsFormProps> = ({
   fields,
   formLoading,
   onSubmit,
+  onChange,
   onCancel,
 }) => {
-  const defaultValues: BranchDTO = {
+  const defaultValues: Branch = {
     name: '',
     timeZoneId: '',
+    nonPhysicalAddress: false,
     address: {
       line1: '',
       line2: '',
@@ -48,7 +51,11 @@ const BranchDetailsForm: React.FC<BranchDetailsFormProps> = ({
     },
   };
 
-  const handleFormSubmit = (formValue: BranchDTO) => {
+  const handleFormChange = (formValue: Branch) => {
+    onChange?.(formValue);
+  };
+
+  const handleFormSubmit = (formValue: Branch) => {
     onSubmit(formValue);
   };
 
@@ -59,12 +66,13 @@ const BranchDetailsForm: React.FC<BranchDetailsFormProps> = ({
   };
 
   return (
-    <Form<BranchDTO>
+    <Form<Branch>
       module={module}
       subModule={subModule}
       defaultValues={defaultValues}
       values={data}
       loading={formLoading}
+      onChange={handleFormChange}
       onSubmit={handleFormSubmit}
     >
       <Form.Header>Branch Details</Form.Header>

@@ -5,9 +5,12 @@ import {
   getLinearLoader,
   getLoadingButtonLoadingIcon,
   getTestSelectorByModule,
+  clickCheckboxField,
   selectOption,
   verifyBranchDetailsFormFieldValues,
   verifyBranchDetailsFormValidationMessages,
+  clickActionButton,
+  verifyBranchDetailsFormAddressValidationsNotExist,
 } from '../support/helpers';
 import {
   interceptCreateBranchFailedRequest,
@@ -50,17 +53,19 @@ describe('Branch Management Tests', () => {
     cy.visit('/manage/branches');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
+    clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name-validation')
-      .should('exist')
-      .and('have.text', 'Branch Name is required');
+    verifyBranchDetailsFormValidationMessages(Module.branchManagement, SubModule.branchDetails, [
+      { field: 'form-field-name-validation', message: 'Branch Name is required' },
+      { field: 'form-field-timeZoneId-validation', message: 'TimeZone is required' },
+      { field: 'form-field-address.line1-validation', message: 'Address Line 1 is required' },
+      { field: 'form-field-address.city-validation', message: 'City is required' },
+      { field: 'form-field-address.countryCode-validation', message: 'Country is required' },
+      { field: 'form-field-address.subdivision-validation', message: 'State is required' },
+      { field: 'form-field-address.postalCode-validation', message: 'Postal Code is required' },
+    ]);
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-timeZoneId-validation')
-      .should('exist')
-      .and('have.text', 'TimeZone is required');
-
-    fillBranchDetailsForm({
+    fillBranchDetailsForm(Module.branchManagement, SubModule.branchDetails, {
       name: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long branch name',
       timeZoneId: 'America/Chicago',
       address: {
@@ -72,15 +77,35 @@ describe('Branch Management Tests', () => {
         countryCode: 'US',
       },
     });
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
+    clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
-    verifyBranchDetailsFormValidationMessages([
+    verifyBranchDetailsFormValidationMessages(Module.branchManagement, SubModule.branchDetails, [
       { field: 'form-field-name-validation', message: 'The Branch Name must not exceed 50 characters.' },
       { field: 'form-field-address.line1-validation', message: 'Address Line 1 must not exceed 50 characters.' },
       { field: 'form-field-address.line2-validation', message: 'Address Line 2 must not exceed 50 characters.' },
       { field: 'form-field-address.city-validation', message: 'City must not exceed 50 characters.' },
       { field: 'form-field-address.subdivision-validation', message: 'State must not exceed 50 characters.' },
       { field: 'form-field-address.postalCode-validation', message: 'Postal Code must not exceed 10 characters.' },
+    ]);
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').find('input').clear();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').find('input').type('12');
+
+    clickActionButton(Module.branchManagement, SubModule.branchDetails);
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode-validation')
+      .should('exist')
+      .and('have.text', 'Postal Code must be at least 4 characters long.');
+
+    clickCheckboxField(Module.branchManagement, SubModule.branchDetails, 'form-field-nonPhysicalAddress');
+    clickActionButton(Module.branchManagement, SubModule.branchDetails);
+
+    verifyBranchDetailsFormAddressValidationsNotExist(Module.branchManagement, SubModule.branchDetails, [
+      'form-field-address.line1-validation',
+      'form-field-address.line2-validation',
+      'form-field-address.city-validation',
+      'form-field-address.subdivision-validation',
+      'form-field-address.postalCode-validation',
     ]);
   });
 
@@ -93,7 +118,8 @@ describe('Branch Management Tests', () => {
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type('New Test Branch');
     selectOption(Module.branchManagement, SubModule.branchDetails, 'timeZoneId', 'America/Chicago');
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
+    clickCheckboxField(Module.branchManagement, SubModule.branchDetails, 'form-field-nonPhysicalAddress');
+    clickActionButton(Module.branchManagement, SubModule.branchDetails);
     cy.wait('@createBranchFailedRequest');
 
     cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to create a Branch');
@@ -107,7 +133,7 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
-    fillBranchDetailsForm({
+    fillBranchDetailsForm(Module.branchManagement, SubModule.branchDetails, {
       name: 'New York Branch',
       timeZoneId: 'America/New_York',
       address: {
@@ -120,7 +146,7 @@ describe('Branch Management Tests', () => {
       },
     });
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('contain.text', 'Save');
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
+    clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
     interceptFetchBranchesRequest(
       { pageNumber: 1, pageSize: 5, search: '' },
@@ -152,8 +178,8 @@ describe('Branch Management Tests', () => {
 
     cy.wait('@fetchBranchByIdRequest');
 
-    clearBranchDetailsForm();
-    fillBranchDetailsForm({
+    clearBranchDetailsForm(Module.branchManagement, SubModule.branchDetails);
+    fillBranchDetailsForm(Module.branchManagement, SubModule.branchDetails, {
       name: 'Hawaii Branch',
       timeZoneId: 'Pacific/Honolulu',
       address: {
@@ -203,14 +229,14 @@ describe('Branch Management Tests', () => {
       .should('have.value', 'New York Branch');
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').clear();
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
+    clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name-validation')
       .should('exist')
       .and('have.text', 'Branch Name is required');
 
-    clearBranchDetailsForm();
-    fillBranchDetailsForm({
+    clearBranchDetailsForm(Module.branchManagement, SubModule.branchDetails);
+    fillBranchDetailsForm(Module.branchManagement, SubModule.branchDetails, {
       name: 'Hawaii Branch',
       timeZoneId: 'Pacific/Honolulu',
       address: {
@@ -222,7 +248,7 @@ describe('Branch Management Tests', () => {
         countryCode: 'US',
       },
     });
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
+    clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
     cy.wait('@editBranchFailedRequest');
 
@@ -244,8 +270,8 @@ describe('Branch Management Tests', () => {
 
     cy.wait('@fetchBranchByIdRequest');
 
-    clearBranchDetailsForm();
-    fillBranchDetailsForm({
+    clearBranchDetailsForm(Module.branchManagement, SubModule.branchDetails);
+    fillBranchDetailsForm(Module.branchManagement, SubModule.branchDetails, {
       name: 'Anchorage Branch',
       timeZoneId: 'America/Anchorage',
       address: {
@@ -257,7 +283,7 @@ describe('Branch Management Tests', () => {
         countryCode: 'US',
       },
     });
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
+    clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('have.attr', 'disabled');
     getLoadingButtonLoadingIcon(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('be.visible');

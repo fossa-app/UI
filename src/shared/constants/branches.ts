@@ -22,6 +22,10 @@ export const BRANCH_FIELDS: BranchFieldConfig = {
     field: 'timeZoneName',
     name: 'TimeZone',
   },
+  nonPhysicalAddress: {
+    field: 'nonPhysicalAddress',
+    name: 'Non-Physical Address',
+  },
   address: {
     field: 'address',
     name: 'Address',
@@ -92,6 +96,15 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
     roles: [UserRole.administrator],
   },
   {
+    type: FieldType.checkbox,
+    name: BRANCH_FIELDS.nonPhysicalAddress!.field,
+    label: 'Non-Physical Address',
+    grid: { size: { xs: 12 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchDetails,
+    roles: [UserRole.administrator],
+  },
+  {
     type: FieldType.text,
     name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
     label: 'Enter Address Line 1',
@@ -99,6 +112,7 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
     module: Module.branchManagement,
     subModule: SubModule.branchDetails,
     rules: {
+      required: { value: true, message: 'Address Line 1 is required' },
       maxLength: {
         value: 50,
         message: 'Address Line 1 must not exceed 50 characters.',
@@ -129,6 +143,7 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
     module: Module.branchManagement,
     subModule: SubModule.branchDetails,
     rules: {
+      required: { value: true, message: 'City is required' },
       maxLength: {
         value: 50,
         message: 'City must not exceed 50 characters.',
@@ -144,6 +159,7 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
     module: Module.branchManagement,
     subModule: SubModule.branchDetails,
     rules: {
+      required: { value: true, message: 'State is required' },
       maxLength: {
         value: 50,
         message: 'State must not exceed 50 characters.',
@@ -159,6 +175,9 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
     options: [],
     module: Module.branchManagement,
     subModule: SubModule.branchDetails,
+    rules: {
+      required: { value: true, message: 'Country is required' },
+    },
     roles: [UserRole.administrator],
   },
   {
@@ -169,6 +188,11 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
     module: Module.branchManagement,
     subModule: SubModule.branchDetails,
     rules: {
+      required: { value: true, message: 'Postal Code is required' },
+      minLength: {
+        value: 4,
+        message: 'Postal Code must be at least 4 characters long.',
+      },
       maxLength: {
         value: 10,
         message: 'Postal Code must not exceed 10 characters.',

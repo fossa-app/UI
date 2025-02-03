@@ -15,15 +15,33 @@ type FormProps<T> = React.PropsWithChildren<{
   values?: T;
   loading?: boolean;
   onSubmit: (formValue: T) => void;
+  onChange?: (formValue: T) => void;
 }>;
 
-const Form = <T extends Item>({ module, subModule, defaultValues, values, loading = false, onSubmit, children }: FormProps<T>) => {
+const Form = <T extends Item>({
+  module,
+  subModule,
+  defaultValues,
+  values,
+  loading = false,
+  onSubmit,
+  onChange,
+  children,
+}: FormProps<T>) => {
   const methods = useForm<T>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
     defaultValues,
     values,
   });
+
+  const watchedValues = methods.watch();
+
+  React.useEffect(() => {
+    if (onChange) {
+      onChange(watchedValues);
+    }
+  }, [watchedValues, onChange]);
 
   return (
     <FormContext.Provider value={{ module, subModule }}>

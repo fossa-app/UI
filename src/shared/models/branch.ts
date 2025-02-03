@@ -1,5 +1,6 @@
 import { Country, FlattenField, TimeZone } from './common';
 
+// TODO: check Address fields
 export interface AddressDTO {
   line1?: string;
   line2?: string;
@@ -18,14 +19,15 @@ export interface BranchDTO {
   companyId?: number;
   name: string;
   timeZoneId: TimeZone['id'];
-  address: AddressDTO;
+  address: AddressDTO | null;
 }
 
 export interface Branch extends BranchDTO {
   timeZoneName?: TimeZone['name'];
   isValid?: boolean;
+  nonPhysicalAddress?: boolean;
   address: Address;
-  fullAddress: string;
+  fullAddress?: string;
 }
 
 export type BranchFieldConfig = FlattenField<Branch>;

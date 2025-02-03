@@ -1,5 +1,5 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getLinearLoader, getLoadingButtonLoadingIcon, getTestSelectorByModule, selectOption } from '../support/helpers';
+import { clickActionButton, getLinearLoader, getLoadingButtonLoadingIcon, getTestSelectorByModule, selectOption } from '../support/helpers';
 import {
   interceptEditCompanyFailedRequest,
   interceptEditCompanyRequest,
@@ -211,7 +211,7 @@ describe('Company Management Tests', () => {
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-action-button').should('not.have.attr', 'disabled');
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name').find('input').clear();
 
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-action-button').click();
+      clickActionButton(Module.companyManagement, SubModule.companyDetails);
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name-validation')
         .should('exist')
@@ -222,7 +222,7 @@ describe('Company Management Tests', () => {
         .type('Fail Company Name');
       selectOption(Module.companyManagement, SubModule.companyDetails, 'countryCode', 'PL');
 
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-action-button').click();
+      clickActionButton(Module.companyManagement, SubModule.companyDetails);
 
       cy.wait('@editCompanyFailedRequest');
 
@@ -248,7 +248,7 @@ describe('Company Management Tests', () => {
 
       interceptFetchCompanyRequest('fetchUpdatedCompanyRequest', 'company-updated');
 
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-action-button').click();
+      clickActionButton(Module.companyManagement, SubModule.companyDetails);
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-action-button').should('have.attr', 'disabled');
       getLoadingButtonLoadingIcon(Module.companyManagement, SubModule.companyDetails, 'form-action-button').should('be.visible');

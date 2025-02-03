@@ -1,5 +1,7 @@
 import { Module, SubModule } from '../../src/shared/models';
 import {
+  clickActionButton,
+  clickCheckboxField,
   getLinearLoader,
   getTablePaginationDisplayedRows,
   getTablePaginationSizeInput,
@@ -337,7 +339,8 @@ describe('Branches Tests', () => {
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
       getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').type('Anchorage Branch');
       selectOption(Module.branchManagement, SubModule.branchDetails, 'timeZoneId', 'America/Anchorage');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').click();
+      clickCheckboxField(Module.branchManagement, SubModule.branchDetails, 'form-field-nonPhysicalAddress');
+      clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 5, search: '' },
