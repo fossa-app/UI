@@ -1,5 +1,11 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getLinearLoader, getLoadingButtonLoadingIcon, getTestSelectorByModule, openUserProfile } from '../support/helpers';
+import {
+  clickActionButton,
+  getLinearLoader,
+  getLoadingButtonLoadingIcon,
+  getTestSelectorByModule,
+  openUserProfile,
+} from '../support/helpers';
 import {
   interceptEditEmployeeFailedRequest,
   interceptEditEmployeeRequest,
@@ -117,7 +123,7 @@ describe('Profile Tests', () => {
     getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-lastName').find('input').clear();
     getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').clear();
 
-    getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-action-button').click();
+    clickActionButton(Module.profile, SubModule.profileDetails);
 
     getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName-validation')
       .should('exist')
@@ -132,7 +138,7 @@ describe('Profile Tests', () => {
     getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-lastName').find('input').type('Fail Employee Last Name');
     getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').type('Fail Employee Full Name');
 
-    getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-action-button').click();
+    clickActionButton(Module.profile, SubModule.profileDetails);
 
     cy.wait('@editEmployeeFailedRequest');
 
@@ -159,7 +165,7 @@ describe('Profile Tests', () => {
 
     interceptFetchEmployeeRequest('fetchUpdatedEmployeeRequest', 'employee-updated');
 
-    getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-action-button').click();
+    clickActionButton(Module.profile, SubModule.profileDetails);
 
     getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-action-button').should('have.attr', 'disabled');
     getLoadingButtonLoadingIcon(Module.profile, SubModule.profileDetails, 'form-action-button').should('be.visible');

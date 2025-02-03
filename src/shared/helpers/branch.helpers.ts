@@ -21,7 +21,41 @@ export const mapBranch = (
       ...branch.address,
       countryName,
     },
+    nonPhysicalAddress: !branch.address,
     fullAddress: getFullAddress({ ...branch.address, countryName }),
+  };
+};
+
+export const mapBranchDTO = (branch: Branch): BranchDTO => {
+  if (branch.nonPhysicalAddress) {
+    return {
+      name: branch.name,
+      timeZoneId: branch.timeZoneId,
+      address: null,
+    };
+  }
+
+  const address =
+    branch.address &&
+    branch.address.line1 &&
+    branch.address.city &&
+    branch.address.countryCode &&
+    branch.address.subdivision &&
+    branch.address.postalCode
+      ? {
+          line1: branch.address.line1,
+          line2: branch.address.line2,
+          city: branch.address.city,
+          subdivision: branch.address.subdivision,
+          postalCode: branch.address.postalCode,
+          countryCode: branch.address.countryCode,
+        }
+      : null;
+
+  return {
+    name: branch.name,
+    timeZoneId: branch.timeZoneId,
+    address: address,
   };
 };
 
@@ -66,4 +100,12 @@ export const getFullAddress = (address?: Branch['address']): Branch['fullAddress
     .filter(Boolean)
     .join(' ')
     .trim();
+};
+
+export const getBranchManagementDetailsFormSchema = (schema: FieldProps[], nonPhysicalAddress: boolean): FieldProps[] => {
+  if (nonPhysicalAddress) {
+    return schema.filter((field) => !field.name.includes(BRANCH_FIELDS.address.field));
+  }
+
+  return schema;
 };

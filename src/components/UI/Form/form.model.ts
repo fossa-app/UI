@@ -1,6 +1,7 @@
 import { FieldValues, RegisterOptions } from 'react-hook-form';
 import { TextFieldProps } from '@mui/material/TextField';
 import { SelectProps } from '@mui/material/Select';
+import { CheckboxProps } from '@mui/material/Checkbox';
 import { GridBaseProps } from '@mui/material/Grid2';
 import { Module, SubModule, UserRole } from 'shared/models';
 
@@ -16,6 +17,7 @@ export type FormControlRules =
 export enum FieldType {
   text = 'text',
   select = 'select',
+  checkbox = 'checkbox',
 }
 
 interface BaseFieldProps {
@@ -43,4 +45,9 @@ export type SelectFieldProps = BaseFieldProps & {
   options: SelectOption[];
 } & SelectProps;
 
-export type FieldProps = InputFieldProps | SelectFieldProps;
+export type CheckboxFieldProps = BaseFieldProps & {
+  type: FieldType.checkbox;
+  label: string;
+} & CheckboxProps;
+
+export type FieldProps = InputFieldProps | SelectFieldProps | CheckboxFieldProps;

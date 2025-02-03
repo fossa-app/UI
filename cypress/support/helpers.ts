@@ -1,4 +1,4 @@
-import { BranchDTO, Module, SubModule } from '../../src/shared/models';
+import { Branch, Module, SubModule } from '../../src/shared/models';
 
 export const getTestSelectorByModule = (module: Module, subModule: SubModule, selector: string, isPartial = false) => {
   return isPartial ? cy.get(`[data-cy*="${module}-${subModule}-${selector}"]`) : cy.get(`[data-cy="${module}-${subModule}-${selector}"]`);
@@ -29,37 +29,41 @@ export const selectOption = (module: Module, subModule: SubModule, fieldName: st
   getTestSelectorByModule(module, subModule, `form-field-${fieldName}-option-${optionName}`).click();
 };
 
+export const clickCheckboxField = (module: Module, subModule: SubModule, selector: string) => {
+  getTestSelectorByModule(module, subModule, selector).click();
+};
+
+export const clickActionButton = (module: Module, subModule: SubModule) => {
+  getTestSelectorByModule(module, subModule, 'form-action-button').click();
+};
+
 export const openUserProfile = () => {
   cy.get('[data-cy="user-avatar"]').click();
   cy.get('[data-cy="user-name"]').should('exist').click();
 };
 
-export const fillBranchDetailsForm = (branch: BranchDTO) => {
-  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type(branch.name);
-  selectOption(Module.branchManagement, SubModule.branchDetails, 'timeZoneId', branch.timeZoneId);
-  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.line1').type(branch.address.line1!);
+export const fillBranchDetailsForm = (module: Module, subModule: SubModule, branch: Branch) => {
+  getTestSelectorByModule(module, subModule, 'form-field-name').type(branch.name);
+  selectOption(module, subModule, 'timeZoneId', branch.timeZoneId);
+  getTestSelectorByModule(module, subModule, 'form-field-address.line1').type(branch.address.line1!);
 
   if (branch.address.line2) {
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.line2').type(branch.address.line2);
+    getTestSelectorByModule(module, subModule, 'form-field-address.line2').type(branch.address.line2);
   }
 
-  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.city').type(branch.address.city!);
-  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.subdivision').type(
-    branch.address.subdivision!
-  );
-  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').type(
-    branch.address.postalCode!
-  );
-  selectOption(Module.branchManagement, SubModule.branchDetails, 'address.countryCode', branch.address.countryCode!);
+  getTestSelectorByModule(module, subModule, 'form-field-address.city').type(branch.address.city!);
+  getTestSelectorByModule(module, subModule, 'form-field-address.subdivision').type(branch.address.subdivision!);
+  getTestSelectorByModule(module, subModule, 'form-field-address.postalCode').type(branch.address.postalCode!);
+  selectOption(module, subModule, 'address.countryCode', branch.address.countryCode!);
 };
 
-export const clearBranchDetailsForm = () => {
-  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').clear();
-  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.line1').find('input').clear();
-  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.line2').find('input').clear();
-  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.city').find('input').clear();
-  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.subdivision').find('input').clear();
-  getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').find('input').clear();
+export const clearBranchDetailsForm = (module: Module, subModule: SubModule) => {
+  getTestSelectorByModule(module, subModule, 'form-field-name').find('input').clear();
+  getTestSelectorByModule(module, subModule, 'form-field-address.line1').find('input').clear();
+  getTestSelectorByModule(module, subModule, 'form-field-address.line2').find('input').clear();
+  getTestSelectorByModule(module, subModule, 'form-field-address.city').find('input').clear();
+  getTestSelectorByModule(module, subModule, 'form-field-address.subdivision').find('input').clear();
+  getTestSelectorByModule(module, subModule, 'form-field-address.postalCode').find('input').clear();
 };
 
 export const verifyBranchDetailsFormFieldValues = (fieldValues: { [key: string]: string }) => {
@@ -68,9 +72,19 @@ export const verifyBranchDetailsFormFieldValues = (fieldValues: { [key: string]:
   });
 };
 
-export const verifyBranchDetailsFormValidationMessages = (validations: { field: string; message: string }[]) => {
+export const verifyBranchDetailsFormValidationMessages = (
+  module: Module,
+  subModule: SubModule,
+  validations: { field: string; message: string }[]
+) => {
   validations.forEach(({ field, message }) => {
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, field).should('exist').and('have.text', message);
+    getTestSelectorByModule(module, subModule, field).should('exist').and('have.text', message);
+  });
+};
+
+export const verifyBranchDetailsFormAddressValidationsNotExist = (module: Module, subModule: SubModule, fields: string[]) => {
+  fields.forEach((field) => {
+    getTestSelectorByModule(module, subModule, field).should('not.exist');
   });
 };
 

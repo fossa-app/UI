@@ -1,5 +1,13 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getTestSelectorByModule, selectOption } from '../support/helpers';
+import {
+  clickActionButton,
+  clickCheckboxField,
+  fillBranchDetailsForm,
+  getTestSelectorByModule,
+  selectOption,
+  verifyBranchDetailsFormAddressValidationsNotExist,
+  verifyBranchDetailsFormValidationMessages,
+} from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -103,7 +111,7 @@ describe('Setup Flow Tests', () => {
 
       cy.url().should('include', '/setup/employee');
 
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').click();
+      clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
 
       cy.wait('@createEmployeeFailedRequest');
 
@@ -131,7 +139,7 @@ describe('Setup Flow Tests', () => {
         .type('Anthony User Crowley');
 
       interceptFetchEmployeeRequest();
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').click();
+      clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
 
       cy.wait('@createEmployeeRequest');
       cy.wait('@fetchEmployeeRequest');
@@ -237,7 +245,7 @@ describe('Setup Flow Tests', () => {
 
       cy.wait('@fetchCompanyFailedRequest');
 
-      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').click();
+      clickActionButton(Module.companySetup, SubModule.companyDetails);
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name-validation')
         .should('exist')
@@ -251,7 +259,7 @@ describe('Setup Flow Tests', () => {
         'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long company name'
       );
 
-      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').click();
+      clickActionButton(Module.companySetup, SubModule.companyDetails);
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name-validation')
         .should('exist')
@@ -269,7 +277,7 @@ describe('Setup Flow Tests', () => {
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('Test Company');
       selectOption(Module.companySetup, SubModule.companyDetails, 'countryCode', 'UA');
-      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').click();
+      clickActionButton(Module.companySetup, SubModule.companyDetails);
 
       cy.wait('@createCompanyFailedRequest');
 
@@ -293,7 +301,7 @@ describe('Setup Flow Tests', () => {
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('Good Omens');
       selectOption(Module.companySetup, SubModule.companyDetails, 'countryCode', 'US');
-      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').click();
+      clickActionButton(Module.companySetup, SubModule.companyDetails);
 
       cy.wait('@createCompanyRequest');
       cy.wait('@fetchCompanyRequest');
@@ -311,7 +319,7 @@ describe('Setup Flow Tests', () => {
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('US Company');
       selectOption(Module.companySetup, SubModule.companyDetails, 'countryCode', 'US');
-      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').click();
+      clickActionButton(Module.companySetup, SubModule.companyDetails);
 
       interceptFetchCompanyRequest();
 
@@ -340,25 +348,61 @@ describe('Setup Flow Tests', () => {
 
       cy.wait('@fetchBranchesFailedRequest');
 
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').click();
+      clickActionButton(Module.branchSetup, SubModule.branchDetails);
 
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name-validation')
+      verifyBranchDetailsFormValidationMessages(Module.branchSetup, SubModule.branchDetails, [
+        { field: 'form-field-name-validation', message: 'Branch Name is required' },
+        { field: 'form-field-timeZoneId-validation', message: 'TimeZone is required' },
+        { field: 'form-field-address.line1-validation', message: 'Address Line 1 is required' },
+        { field: 'form-field-address.city-validation', message: 'City is required' },
+        { field: 'form-field-address.countryCode-validation', message: 'Country is required' },
+        { field: 'form-field-address.subdivision-validation', message: 'State is required' },
+        { field: 'form-field-address.postalCode-validation', message: 'Postal Code is required' },
+      ]);
+
+      fillBranchDetailsForm(Module.branchSetup, SubModule.branchDetails, {
+        name: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long branch name',
+        timeZoneId: 'America/Chicago',
+        address: {
+          line1: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long address line 1',
+          line2: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long address line 2',
+          city: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long city',
+          subdivision: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long state',
+          postalCode: 'long postal code',
+          countryCode: 'US',
+        },
+      });
+
+      clickActionButton(Module.branchSetup, SubModule.branchDetails);
+
+      verifyBranchDetailsFormValidationMessages(Module.branchSetup, SubModule.branchDetails, [
+        { field: 'form-field-name-validation', message: 'The Branch Name must not exceed 50 characters.' },
+        { field: 'form-field-address.line1-validation', message: 'Address Line 1 must not exceed 50 characters.' },
+        { field: 'form-field-address.line2-validation', message: 'Address Line 2 must not exceed 50 characters.' },
+        { field: 'form-field-address.city-validation', message: 'City must not exceed 50 characters.' },
+        { field: 'form-field-address.subdivision-validation', message: 'State must not exceed 50 characters.' },
+        { field: 'form-field-address.postalCode-validation', message: 'Postal Code must not exceed 10 characters.' },
+      ]);
+
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-address.postalCode').find('input').clear();
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-address.postalCode').find('input').type('12');
+
+      clickActionButton(Module.branchSetup, SubModule.branchDetails);
+
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-address.postalCode-validation')
         .should('exist')
-        .and('have.text', 'Branch Name is required');
+        .and('have.text', 'Postal Code must be at least 4 characters long.');
 
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-timeZoneId-validation')
-        .should('exist')
-        .and('have.text', 'TimeZone is required');
+      clickCheckboxField(Module.branchSetup, SubModule.branchDetails, 'form-field-nonPhysicalAddress');
+      clickActionButton(Module.branchSetup, SubModule.branchDetails);
 
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type(
-        'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long branch name'
-      );
-
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').click();
-
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name-validation')
-        .should('exist')
-        .and('have.text', 'The Branch Name must not exceed 50 characters.');
+      verifyBranchDetailsFormAddressValidationsNotExist(Module.branchSetup, SubModule.branchDetails, [
+        'form-field-address.line1-validation',
+        'form-field-address.line2-validation',
+        'form-field-address.city-validation',
+        'form-field-address.subdivision-validation',
+        'form-field-address.postalCode-validation',
+      ]);
     });
 
     it('should not be able to navigate to employee setup step if branch creation failed', () => {
@@ -373,7 +417,8 @@ describe('Setup Flow Tests', () => {
 
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type('Test Branch');
       selectOption(Module.branchSetup, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').click();
+      clickCheckboxField(Module.branchSetup, SubModule.branchDetails, 'form-field-nonPhysicalAddress');
+      clickActionButton(Module.branchSetup, SubModule.branchDetails);
 
       cy.wait('@createBranchFailedRequest');
 
@@ -396,7 +441,8 @@ describe('Setup Flow Tests', () => {
 
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type('America/New_York');
       selectOption(Module.branchSetup, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').click();
+      clickCheckboxField(Module.branchSetup, SubModule.branchDetails, 'form-field-nonPhysicalAddress');
+      clickActionButton(Module.branchSetup, SubModule.branchDetails);
 
       cy.wait('@createBranchRequest');
       cy.wait('@fetchBranchesRequest');
@@ -427,7 +473,7 @@ describe('Setup Flow Tests', () => {
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName').find('input').clear();
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-fullName').find('input').clear();
 
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').click();
+      clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
 
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName-validation')
         .should('exist')
@@ -449,7 +495,7 @@ describe('Setup Flow Tests', () => {
 
       cy.url().should('include', '/setup/employee');
 
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').click();
+      clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
 
       cy.wait('@createEmployeeFailedRequest');
 
@@ -479,7 +525,7 @@ describe('Setup Flow Tests', () => {
         .type('Gabriel Admin Archangel');
 
       interceptFetchEmployeeRequest();
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').click();
+      clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
 
       cy.wait('@createEmployeeRequest');
       cy.wait('@fetchEmployeeRequest');
