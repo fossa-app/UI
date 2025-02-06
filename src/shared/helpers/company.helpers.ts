@@ -8,7 +8,7 @@ export const mapCompany = (company: CompanyDTO, countries: Country[]): Company =
   };
 };
 
-export const mapCountriesToFieldSelectOptions = (fields: FieldProps[], countries?: Country[]): FieldProps[] => {
+export const mapCountriesToFieldSelectOptions = (fields: FieldProps<Company>[], countries?: Country[]): FieldProps<Company>[] => {
   return fields.map((field) => ({
     ...field,
     ...(field.type === FieldType.select &&

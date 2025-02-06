@@ -238,5 +238,7 @@ describe('Branch View Tests', () => {
 
       cy.url().should('include', '/manage/branches');
     });
+
+    // TODO: test sections
   });
 });

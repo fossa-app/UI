@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
-import { CompanyDTO, Module, SubModule } from 'shared/models';
+import { Company, CompanyDTO, Module, SubModule } from 'shared/models';
 import { MESSAGES } from 'shared/constants';
 import Form, { FieldProps } from 'components/UI/Form';
 import LoadingButton from 'components/UI/LoadingButton';
@@ -10,7 +10,7 @@ interface CompanyDetailsFormProps {
   module: Module;
   subModule: SubModule;
   isAdmin: boolean;
-  fields: FieldProps[];
+  fields: FieldProps<Company>[];
   actionLabel?: string;
   actionIcon?: React.ReactNode;
   actionLoading?: boolean;

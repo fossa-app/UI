@@ -10,7 +10,7 @@ interface BranchDetailsFormProps {
   module: Module;
   subModule: SubModule;
   isAdmin: boolean;
-  fields: FieldProps[];
+  fields: FieldProps<Branch>[];
   actionLabel?: string;
   actionIcon?: React.ReactNode;
   actionLoading?: boolean;
@@ -40,7 +40,6 @@ const BranchDetailsForm: React.FC<BranchDetailsFormProps> = ({
   const defaultValues: Branch = {
     name: '',
     timeZoneId: '',
-    nonPhysicalAddress: false,
     address: {
       line1: '',
       line2: '',
@@ -77,7 +76,7 @@ const BranchDetailsForm: React.FC<BranchDetailsFormProps> = ({
     >
       <Form.Header>Branch Details</Form.Header>
 
-      <Form.Content fields={fields} />
+      <Form.Content<Branch> fields={fields} values={data} />
 
       <Form.Actions generalValidationMessage={isAdmin ? undefined : MESSAGES.error.general.permission}>
         {withCancel && (

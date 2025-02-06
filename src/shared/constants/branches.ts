@@ -1,7 +1,7 @@
 import { Branch, BranchFieldConfig, Module, SubModule, UserRole } from 'shared/models';
 import { FieldProps, FieldType } from 'components/UI/Form';
 import { Action, Column } from 'components/UI/Table';
-import { ViewItemProps } from 'components/UI/ViewDetails';
+import { ViewItemProps, ViewItemType } from 'components/UI/ViewDetails';
 import { renderBranchField } from 'pages/Manage/Branch/components/BranchField';
 import { ACTION_FIELD, ACTION_FIELDS } from './common';
 
@@ -28,7 +28,7 @@ export const BRANCH_FIELDS: BranchFieldConfig = {
   },
   address: {
     field: 'address',
-    name: 'Address',
+    name: 'Address Information',
     line1: {
       field: 'line1',
       name: 'Address Line 1',
@@ -64,7 +64,16 @@ export const BRANCH_FIELDS: BranchFieldConfig = {
   },
 };
 
-export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
+export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps<Branch>[] = [
+  {
+    type: FieldType.section,
+    name: 'basicInfo',
+    label: 'Basic Information',
+    grid: { size: { xs: 12 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchDetails,
+    roles: [UserRole.administrator],
+  },
   {
     type: FieldType.text,
     name: BRANCH_FIELDS.name.field,
@@ -93,6 +102,15 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
     rules: {
       required: { value: true, message: 'TimeZone is required' },
     },
+    roles: [UserRole.administrator],
+  },
+  {
+    type: FieldType.section,
+    name: BRANCH_FIELDS.address.field,
+    label: BRANCH_FIELDS.address.name,
+    grid: { size: { xs: 12 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchDetails,
     roles: [UserRole.administrator],
   },
   {
@@ -204,26 +222,45 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
 
 export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
   {
+    name: 'basicInfo',
+    label: 'Basic Information',
+    type: ViewItemType.section,
+    grid: { size: { xs: 12 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchViewDetails,
+  },
+  {
     name: BRANCH_FIELDS.name.field,
     label: 'Branch Name',
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
+    subModule: SubModule.branchViewDetails,
   },
   {
     name: BRANCH_FIELDS.timeZoneName!.field,
     label: 'TimeZone',
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
+    subModule: SubModule.branchViewDetails,
     renderDetailField: (branch) => renderBranchField({ branch, field: BRANCH_FIELDS.timeZoneName!.field, tooltip: 'Invalid TimeZone' }),
+  },
+  {
+    name: BRANCH_FIELDS.address.field,
+    label: 'Address Information',
+    type: ViewItemType.section,
+    grid: { size: { xs: 12 } },
+    module: Module.branchManagement,
+    subModule: SubModule.branchViewDetails,
   },
   {
     name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
     label: 'Address Line 1',
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
+    subModule: SubModule.branchViewDetails,
     renderDetailField: (branch) =>
       renderBranchField({
         branch,
@@ -234,9 +271,10 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
   {
     name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
     label: 'Address Line 2',
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
+    subModule: SubModule.branchViewDetails,
     renderDetailField: (branch) =>
       renderBranchField({
         branch,
@@ -247,9 +285,10 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
   {
     name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.city!.field}`,
     label: 'City',
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
+    subModule: SubModule.branchViewDetails,
     renderDetailField: (branch) =>
       renderBranchField({
         branch,
@@ -260,9 +299,10 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
   {
     name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.subdivision!.field}`,
     label: 'State',
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
+    subModule: SubModule.branchViewDetails,
     renderDetailField: (branch) =>
       renderBranchField({
         branch,
@@ -273,9 +313,10 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
   {
     name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryName!.field}`,
     label: 'Country',
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
+    subModule: SubModule.branchViewDetails,
     renderDetailField: (branch) =>
       renderBranchField({
         branch,
@@ -286,9 +327,10 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
   {
     name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
     label: 'Postal Code',
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
+    subModule: SubModule.branchViewDetails,
     renderDetailField: (branch) =>
       renderBranchField({
         branch,

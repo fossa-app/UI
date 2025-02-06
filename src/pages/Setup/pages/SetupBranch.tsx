@@ -13,8 +13,13 @@ import {
   selectSystemCountries,
 } from 'store/features';
 import { Branch, Module, SubModule } from 'shared/models';
+import {
+  getBranchManagementDetailsByAddressFormSchema,
+  mapBranchDTO,
+  mapDisabledFields,
+  mapBranchFieldOptionsToFieldSelectOptions,
+} from 'shared/helpers';
 import { BRANCH_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
-import { getBranchManagementDetailsFormSchema, mapBranchDTO, mapDisabledFields, mapOptionsToFieldSelectOptions } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
 import BrachDetailsForm from 'components/forms/BranchDetailsForm';
 
@@ -36,8 +41,8 @@ const SetupBranchPage: React.FC = () => {
 
   const fields = React.useMemo(
     () =>
-      mapOptionsToFieldSelectOptions(
-        mapDisabledFields(getBranchManagementDetailsFormSchema(BRANCH_SETUP_DETAILS_FORM_SCHEMA, nonPhysicalAddress), userRoles),
+      mapBranchFieldOptionsToFieldSelectOptions(
+        mapDisabledFields(getBranchManagementDetailsByAddressFormSchema(BRANCH_SETUP_DETAILS_FORM_SCHEMA, nonPhysicalAddress), userRoles),
         companyTimeZones,
         availableCountries
       ),

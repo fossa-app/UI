@@ -109,6 +109,7 @@ describe('Profile Tests', () => {
       .should('have.value', 'Gabriel Admin Archangel');
   });
 
+  // TODO: flaky test
   it('should not be able to edit the profile if the form is invalid or employee updating failed', () => {
     interceptFetchEmployeeRequest();
     interceptEditEmployeeFailedRequest();
@@ -215,4 +216,6 @@ describe('Profile Tests', () => {
       .and('have.text', 'Once you delete your profile, there is no going back. Please be certain.');
     getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-button').should('exist').click();
   });
+
+  // TODO: test sections
 });

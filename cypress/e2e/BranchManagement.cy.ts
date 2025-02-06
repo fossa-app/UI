@@ -11,6 +11,9 @@ import {
   verifyBranchDetailsFormValidationMessages,
   clickActionButton,
   verifyBranchDetailsFormAddressValidationsNotExist,
+  verifyBranchDetailsFormTimeZoneOptions,
+  verifyBranchDetailsFormFieldsExist,
+  verifyBranchDetailsFormFieldsNotExist,
 } from '../support/helpers';
 import {
   interceptCreateBranchFailedRequest,
@@ -414,4 +417,77 @@ describe('Branch Management Tests', () => {
       .should('exist')
       .and('have.text', 'United States');
   });
+
+  it('should display only available timezones for selected company country', () => {
+    interceptFetchBranchByIdRequest('222222222222');
+    cy.visit('/manage/branches/edit/222222222222');
+
+    cy.wait('@fetchBranchByIdRequest');
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-timeZoneId').click();
+
+    verifyBranchDetailsFormTimeZoneOptions(Module.branchManagement, SubModule.branchDetails, [
+      'Pacific/Honolulu',
+      'America/Anchorage',
+      'America/New_York',
+      'America/Chicago',
+    ]);
+  });
+
+  it('should show and hide address fields correctly', () => {
+    interceptFetchBranchByIdRequest('222222222222');
+    cy.visit('/manage/branches/edit/222222222222');
+
+    cy.wait('@fetchBranchByIdRequest');
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-nonPhysicalAddress').should(
+      'not.have.class',
+      'Mui-checked'
+    );
+    verifyBranchDetailsFormFieldsExist([
+      'form-field-name',
+      'form-field-timeZoneId',
+      'form-field-address.line1',
+      'form-field-address.line2',
+      'form-field-address.city',
+      'form-field-address.subdivision',
+      'form-field-address.postalCode',
+      'form-field-address.countryCode',
+    ]);
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-nonPhysicalAddress').click();
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-nonPhysicalAddress').should(
+      'have.class',
+      'Mui-checked'
+    );
+    verifyBranchDetailsFormFieldsExist(['form-field-name', 'form-field-timeZoneId']);
+    verifyBranchDetailsFormFieldsNotExist([
+      'form-field-address.line1',
+      'form-field-address.line2',
+      'form-field-address.city',
+      'form-field-address.subdivision',
+      'form-field-address.postalCode',
+      'form-field-address.countryCode',
+    ]);
+
+    interceptFetchBranchByIdRequest('222222222225', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
+    cy.visit('/manage/branches/edit/222222222225');
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-nonPhysicalAddress').should(
+      'have.class',
+      'Mui-checked'
+    );
+    verifyBranchDetailsFormFieldsExist(['form-field-name', 'form-field-timeZoneId']);
+    verifyBranchDetailsFormFieldsNotExist([
+      'form-field-address.line1',
+      'form-field-address.line2',
+      'form-field-address.city',
+      'form-field-address.subdivision',
+      'form-field-address.postalCode',
+      'form-field-address.countryCode',
+    ]);
+  });
+
+  // TODO: test sections
 });

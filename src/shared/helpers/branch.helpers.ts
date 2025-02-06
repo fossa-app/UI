@@ -10,19 +10,23 @@ export const mapBranch = (
   countries: Country[]
 ): Branch => {
   const branchTimeZoneCountryCode = timeZones.find((timeZone) => timeZone.id === branch.timeZoneId)?.countryCode;
-  const countryName = countries.find((country) => country.code === branch.address?.countryCode)?.name;
-  const isValid = branch.address ? branch.address.countryCode === companyCountryCode : branchTimeZoneCountryCode === companyCountryCode;
+  const { address } = branch;
+  const countryName = countries.find((country) => country.code === address?.countryCode)?.name;
+  const isValid = address ? address.countryCode === companyCountryCode : branchTimeZoneCountryCode === companyCountryCode;
 
   return {
     ...branch,
     isValid,
     timeZoneName: timeZones.find(({ id }) => id === branch.timeZoneId)?.name,
-    address: {
-      ...branch.address,
-      countryName,
-    },
-    nonPhysicalAddress: !branch.address,
-    fullAddress: getFullAddress({ ...branch.address, countryName }),
+    address: address
+      ? {
+          ...address,
+          countryName,
+        }
+      : // TODO: set null instead of empty object
+        {},
+    nonPhysicalAddress: !address,
+    fullAddress: address ? getFullAddress({ ...address, countryName }) : '',
   };
 };
 
@@ -68,7 +72,11 @@ export const mapBranches = (
   return branches.map((branch) => mapBranch(branch, timeZones, companyCountryCode, countries));
 };
 
-export const mapOptionsToFieldSelectOptions = (fields: FieldProps[], timeZones?: TimeZone[], countries?: Country[]): FieldProps[] => {
+export const mapBranchFieldOptionsToFieldSelectOptions = (
+  fields: FieldProps<Branch>[],
+  timeZones?: TimeZone[],
+  countries?: Country[]
+): FieldProps<Branch>[] => {
   return fields.map((field) => ({
     ...field,
     ...(field.name === BRANCH_FIELDS.timeZoneId.field &&
@@ -102,9 +110,20 @@ export const getFullAddress = (address?: Branch['address']): Branch['fullAddress
     .trim();
 };
 
-export const getBranchManagementDetailsFormSchema = (schema: FieldProps[], nonPhysicalAddress: boolean): FieldProps[] => {
+export const getBranchManagementDetailsByAddressFormSchema = (
+  schema: FieldProps<Branch>[],
+  nonPhysicalAddress: boolean
+): FieldProps<Branch>[] => {
   if (nonPhysicalAddress) {
-    return schema.filter((field) => !field.name.includes(BRANCH_FIELDS.address.field));
+    const addressFields = [
+      `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
+      `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
+      `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.city!.field}`,
+      `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.subdivision!.field}`,
+      `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryCode!.field}`,
+      `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
+    ];
+    return schema.filter((field) => !addressFields.includes(field.name));
   }
 
   return schema;

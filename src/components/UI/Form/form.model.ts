@@ -1,8 +1,10 @@
+import * as React from 'react';
 import { FieldValues, RegisterOptions } from 'react-hook-form';
 import { TextFieldProps } from '@mui/material/TextField';
 import { SelectProps } from '@mui/material/Select';
 import { CheckboxProps } from '@mui/material/Checkbox';
 import { GridBaseProps } from '@mui/material/Grid2';
+import { TypographyProps } from '@mui/material/Typography';
 import { Module, SubModule, UserRole } from 'shared/models';
 
 type Validate<T> = {
@@ -15,6 +17,7 @@ export type FormControlRules =
   | undefined;
 
 export enum FieldType {
+  section = 'section',
   text = 'text',
   select = 'select',
   checkbox = 'checkbox',
@@ -36,6 +39,10 @@ export interface SelectOption {
   value: string;
 }
 
+export type SectionFieldProps = BaseFieldProps & {
+  type: FieldType.section;
+} & TypographyProps;
+
 export type InputFieldProps = BaseFieldProps & {
   type: FieldType.text;
 } & TextFieldProps;
@@ -50,4 +57,9 @@ export type CheckboxFieldProps = BaseFieldProps & {
   label: string;
 } & CheckboxProps;
 
-export type FieldProps = InputFieldProps | SelectFieldProps | CheckboxFieldProps;
+export type FieldProps<T> = { renderField?: (item?: T) => React.ReactNode } & (
+  | SectionFieldProps
+  | InputFieldProps
+  | SelectFieldProps
+  | CheckboxFieldProps
+);

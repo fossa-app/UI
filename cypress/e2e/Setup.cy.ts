@@ -6,6 +6,7 @@ import {
   getTestSelectorByModule,
   selectOption,
   verifyBranchDetailsFormAddressValidationsNotExist,
+  verifyBranchDetailsFormTimeZoneOptions,
   verifyBranchDetailsFormValidationMessages,
 } from '../support/helpers';
 import {
@@ -327,17 +328,14 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchCompanyRequest');
 
       cy.url().should('include', '/setup/branch');
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, `form-field-timeZoneId`).click();
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-timeZoneId').click();
 
-      cy.get(`[data-cy^="${Module.branchSetup}-${SubModule.branchDetails}-form-field-timeZoneId-option"]`)
-        .should('have.length', 4)
-        .then((items) => {
-          const expectedValues = ['Pacific/Honolulu', 'America/Anchorage', 'America/New_York', 'America/Chicago'];
-
-          cy.wrap(items).each((item, index) => {
-            cy.wrap(item).invoke('attr', 'data-cy').should('include', expectedValues[index]);
-          });
-        });
+      verifyBranchDetailsFormTimeZoneOptions(Module.branchSetup, SubModule.branchDetails, [
+        'Pacific/Honolulu',
+        'America/Anchorage',
+        'America/New_York',
+        'America/Chicago',
+      ]);
     });
 
     it('should display validation messages if the branch creation form is invalid', () => {
@@ -534,4 +532,6 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', '/manage/company');
     });
   });
+
+  // TODO: test sections
 });

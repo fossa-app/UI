@@ -19,7 +19,7 @@ export const renderBranchField = ({ branch, field, tooltip, onAction }: RenderBr
   return (
     <Tooltip title={!isValid && tooltip ? tooltip : ''}>
       <Typography
-        variant="body2"
+        variant="body1"
         {...(!isValid && { 'data-invalid': true })}
         sx={{
           color: isValid ? 'inherit' : (theme) => theme.palette.error.main,
