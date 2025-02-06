@@ -1,7 +1,7 @@
 import { Employee, EmployeeFieldConfig, Module, SubModule } from 'shared/models';
 import { FieldProps, FieldType } from 'components/UI/Form';
 import { Column } from 'components/UI/Table';
-import { ViewItemProps } from 'components/UI/ViewDetails';
+import { ViewItemProps, ViewItemType } from 'components/UI/ViewDetails';
 
 export const EMPLOYEE_FIELDS: EmployeeFieldConfig = {
   id: {
@@ -22,7 +22,7 @@ export const EMPLOYEE_FIELDS: EmployeeFieldConfig = {
   },
 };
 
-export const EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA: FieldProps[] = [
+export const EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA: FieldProps<Employee>[] = [
   {
     type: FieldType.text,
     name: EMPLOYEE_FIELDS.firstName.field,
@@ -74,27 +74,31 @@ export const EMPLOYEE_TABLE_SCHEMA: Column<Employee>[] = [
   },
 ];
 
+// TODO: add sections
 export const PROFILE_VIEW_DETAILS_SCHEMA: ViewItemProps<Employee>[] = [
   {
     name: EMPLOYEE_FIELDS.firstName.field,
     label: 'First Name',
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.profile,
-    subModule: SubModule.profileDetails,
+    subModule: SubModule.profileViewDetails,
   },
   {
     name: EMPLOYEE_FIELDS.lastName.field,
     label: 'Last Name',
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.profile,
-    subModule: SubModule.profileDetails,
+    subModule: SubModule.profileViewDetails,
   },
   {
     name: EMPLOYEE_FIELDS.fullName.field,
     label: 'Full Name',
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 12 } },
     module: Module.profile,
-    subModule: SubModule.profileDetails,
+    subModule: SubModule.profileViewDetails,
   },
 ];
 

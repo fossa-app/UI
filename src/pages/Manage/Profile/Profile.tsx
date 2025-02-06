@@ -6,7 +6,7 @@ import ProfileRouteGuard from 'routes/guards/ProfileRouteGuard';
 const ProfilePage: React.FC = () => {
   return (
     <ProfileRouteGuard>
-      <Box sx={{ width: { lg: 1176, xs: '100%' }, margin: '0 auto', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
         <Outlet />
       </Box>
     </ProfileRouteGuard>

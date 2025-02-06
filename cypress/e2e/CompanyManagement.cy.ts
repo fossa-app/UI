@@ -279,5 +279,7 @@ describe('Company Management Tests', () => {
       );
       testCompanyLicenseFields();
     });
+
+    // TODO: test sections
   });
 });

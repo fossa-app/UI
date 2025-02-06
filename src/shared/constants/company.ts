@@ -1,6 +1,6 @@
 import { Company, CompanyFieldConfig, CompanyLicense, CompanyLicenseFieldConfig, Module, SubModule, UserRole } from 'shared/models';
 import { FieldProps, FieldType } from 'components/UI/Form';
-import { ViewItemProps } from 'components/UI/ViewDetails';
+import { ViewItemProps, ViewItemType } from 'components/UI/ViewDetails';
 import { renderCompanyLicenseIdField } from 'pages/Manage/Company/components/CompanyLicenseIdField';
 
 export const COMPANY_FIELDS: CompanyFieldConfig = {
@@ -77,7 +77,7 @@ export const COMPANY_LICENSE_FIELDS: CompanyLicenseFieldConfig = {
   },
 };
 
-export const COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps[] = [
+export const COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps<Company>[] = [
   {
     type: FieldType.text,
     name: COMPANY_FIELDS.name.field,
@@ -116,10 +116,12 @@ export const COMPANY_SETUP_DETAILS_FORM_SCHEMA = [...COMPANY_MANAGEMENT_DETAILS_
   subModule: SubModule.companyDetails,
 }));
 
+// TODO: add sections
 export const COMPANY_VIEW_DETAILS_SCHEMA: ViewItemProps<Company>[] = [
   {
     name: COMPANY_FIELDS.name.field,
     label: COMPANY_FIELDS.name.name,
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.companyManagement,
     subModule: SubModule.companyViewDetails,
@@ -127,16 +129,19 @@ export const COMPANY_VIEW_DETAILS_SCHEMA: ViewItemProps<Company>[] = [
   {
     name: COMPANY_FIELDS.countryName!.field,
     label: COMPANY_FIELDS.countryName!.name,
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.companyManagement,
     subModule: SubModule.companyViewDetails,
   },
 ];
 
+// TODO: add sections
 export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewItemProps<CompanyLicense>[] = [
   {
     name: `${COMPANY_LICENSE_FIELDS.terms.field}.${COMPANY_LICENSE_FIELDS.terms.licensee.field}.${COMPANY_LICENSE_FIELDS.terms.licensee.longName.field}`,
     label: COMPANY_LICENSE_FIELDS.terms.licensee.longName.name,
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.companyManagement,
     subModule: SubModule.companyLicenseViewDetails,
@@ -144,6 +149,7 @@ export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewItemProps<CompanyLicense>[
   {
     name: `${COMPANY_LICENSE_FIELDS.terms.field}.${COMPANY_LICENSE_FIELDS.terms.licensee.field}.${COMPANY_LICENSE_FIELDS.terms.licensee.shortName.field}`,
     label: COMPANY_LICENSE_FIELDS.terms.licensee.shortName.name,
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.companyManagement,
     subModule: SubModule.companyLicenseViewDetails,
@@ -151,6 +157,7 @@ export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewItemProps<CompanyLicense>[
   {
     name: `${COMPANY_LICENSE_FIELDS.terms.field}.${COMPANY_LICENSE_FIELDS.terms.notBefore.field}`,
     label: COMPANY_LICENSE_FIELDS.terms.notBefore.name,
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.companyManagement,
     subModule: SubModule.companyLicenseViewDetails,
@@ -158,6 +165,7 @@ export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewItemProps<CompanyLicense>[
   {
     name: `${COMPANY_LICENSE_FIELDS.terms.field}.${COMPANY_LICENSE_FIELDS.terms.notAfter.field}`,
     label: COMPANY_LICENSE_FIELDS.terms.notAfter.name,
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.companyManagement,
     subModule: SubModule.companyLicenseViewDetails,
@@ -165,6 +173,7 @@ export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewItemProps<CompanyLicense>[
   {
     name: `${COMPANY_LICENSE_FIELDS.entitlements.field}.${COMPANY_LICENSE_FIELDS.entitlements.companyId.field}`,
     label: COMPANY_LICENSE_FIELDS.entitlements.companyId.name,
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.companyManagement,
     subModule: SubModule.companyLicenseViewDetails,
@@ -173,6 +182,7 @@ export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewItemProps<CompanyLicense>[
   {
     name: `${COMPANY_LICENSE_FIELDS.entitlements.field}.${COMPANY_LICENSE_FIELDS.entitlements.maximumBranchCount.field}`,
     label: COMPANY_LICENSE_FIELDS.entitlements.maximumBranchCount.name,
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.companyManagement,
     subModule: SubModule.companyLicenseViewDetails,
@@ -180,6 +190,7 @@ export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewItemProps<CompanyLicense>[
   {
     name: `${COMPANY_LICENSE_FIELDS.entitlements.field}.${COMPANY_LICENSE_FIELDS.entitlements.maximumEmployeeCount.field}`,
     label: COMPANY_LICENSE_FIELDS.entitlements.maximumEmployeeCount.name,
+    type: ViewItemType.text,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.companyManagement,
     subModule: SubModule.companyLicenseViewDetails,

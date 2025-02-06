@@ -1,14 +1,14 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
-import { EmployeeDTO, Module, SubModule } from 'shared/models';
+import { Employee, EmployeeDTO, Module, SubModule } from 'shared/models';
 import Form, { FieldProps } from 'components/UI/Form';
 import LoadingButton from 'components/UI/LoadingButton';
 
 interface EmployeeDetailsFormProps {
   module: Module;
   subModule: SubModule;
-  fields: FieldProps[];
+  fields: FieldProps<Employee>[];
   actionLabel?: string;
   actionIcon?: React.ReactNode;
   actionLoading?: boolean;

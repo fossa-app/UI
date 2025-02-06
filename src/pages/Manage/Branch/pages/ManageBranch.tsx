@@ -16,9 +16,15 @@ import {
 } from 'store/features';
 import { BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
 import { Branch, Module, SubModule } from 'shared/models';
-import { getBranchManagementDetailsFormSchema, mapBranchDTO, mapDisabledFields, mapOptionsToFieldSelectOptions } from 'shared/helpers';
+import {
+  getBranchManagementDetailsByAddressFormSchema,
+  mapBranchDTO,
+  mapDisabledFields,
+  mapBranchFieldOptionsToFieldSelectOptions,
+} from 'shared/helpers';
 import BrachDetailsForm from 'components/forms/BranchDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
+import { FieldProps } from 'components/UI/Form';
 
 const ManageBranchPage: React.FC = () => {
   const navigate = useNavigate();
@@ -31,21 +37,13 @@ const ManageBranchPage: React.FC = () => {
   const countries = useAppSelector(selectSystemCountries);
   const { data: branch, fetchStatus, updateStatus } = useAppSelector(selectBranch);
   const [formSubmitted, setFormSubmitted] = React.useState(false);
-  const [nonPhysicalAddress, setNonPhysicalAddress] = React.useState(branch?.nonPhysicalAddress ?? false);
+  const [nonPhysicalAddress, setNonPhysicalAddress] = React.useState(branch?.nonPhysicalAddress);
+  const [fields, setFields] = React.useState<FieldProps<Branch>[]>([]);
+  const [formLoading, setFormLoading] = React.useState(true);
 
   const availableCountries = React.useMemo(
-    () => countries?.filter(({ code }) => code === company?.countryCode || code === branch?.address.countryCode) || [],
+    () => countries?.filter(({ code }) => code === company?.countryCode || code === branch?.address?.countryCode) || [],
     [countries, company, branch]
-  );
-
-  const fields = React.useMemo(
-    () =>
-      mapOptionsToFieldSelectOptions(
-        mapDisabledFields(getBranchManagementDetailsFormSchema(BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, nonPhysicalAddress), userRoles),
-        companyTimeZones,
-        availableCountries
-      ),
-    [nonPhysicalAddress, userRoles, companyTimeZones, availableCountries]
   );
 
   React.useEffect(() => {
@@ -61,6 +59,23 @@ const ManageBranchPage: React.FC = () => {
       dispatch(resetBranch());
     }
   }, [updateStatus, formSubmitted, navigate, dispatch]);
+
+  React.useEffect(() => {
+    // TODO: it shows nonPhysicalAddress as false initially, blinking the view
+    if (!id || (id && branch && fetchStatus === 'succeeded')) {
+      const mappedFields = mapBranchFieldOptionsToFieldSelectOptions(
+        mapDisabledFields(
+          getBranchManagementDetailsByAddressFormSchema(BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, !!nonPhysicalAddress),
+          userRoles
+        ),
+        companyTimeZones,
+        availableCountries
+      );
+
+      setFields(mappedFields);
+      setFormLoading(!mappedFields.length);
+    }
+  }, [id, branch, fetchStatus, nonPhysicalAddress, userRoles, companyTimeZones, availableCountries]);
 
   React.useEffect(() => {
     return () => {
@@ -108,7 +123,7 @@ const ManageBranchPage: React.FC = () => {
         data={branch}
         fields={fields}
         actionLoading={updateStatus === 'loading'}
-        formLoading={fetchStatus === 'loading'}
+        formLoading={formLoading}
         onSubmit={handleSubmit}
         onChange={handleChange}
         onCancel={handleCancel}

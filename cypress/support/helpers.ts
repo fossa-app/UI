@@ -72,6 +72,18 @@ export const verifyBranchDetailsFormFieldValues = (fieldValues: { [key: string]:
   });
 };
 
+export const verifyBranchDetailsFormFieldsExist = (fieldKeys: string[]) => {
+  fieldKeys.forEach((field) => {
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, field).should('exist');
+  });
+};
+
+export const verifyBranchDetailsFormFieldsNotExist = (fieldKeys: string[]) => {
+  fieldKeys.forEach((field) => {
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, field).should('not.exist');
+  });
+};
+
 export const verifyBranchDetailsFormValidationMessages = (
   module: Module,
   subModule: SubModule,
@@ -86,6 +98,16 @@ export const verifyBranchDetailsFormAddressValidationsNotExist = (module: Module
   fields.forEach((field) => {
     getTestSelectorByModule(module, subModule, field).should('not.exist');
   });
+};
+
+export const verifyBranchDetailsFormTimeZoneOptions = (module: Module, subModule: SubModule, expectedValues: string[]) => {
+  cy.get(`[data-cy^="${module}-${subModule}-form-field-timeZoneId-option"]`)
+    .should('have.length', expectedValues.length)
+    .then((items) => {
+      cy.wrap(items).each((item, index) => {
+        cy.wrap(item).invoke('attr', 'data-cy').should('include', expectedValues[index]);
+      });
+    });
 };
 
 export const uploadTestFile = (selector: string, fixtureName: string, fileType = 'application/octet-stream') => {

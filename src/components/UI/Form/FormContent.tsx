@@ -5,7 +5,12 @@ import { FieldProps } from './form.model';
 import Field from './fields';
 import { useFormContext } from './FormContext';
 
-const FormContent: React.FC<{ fields: FieldProps[] }> = ({ fields }) => {
+type FormContentProps<T> = {
+  fields: FieldProps<T>[];
+  values?: T;
+};
+
+const FormContent = <T,>({ fields, values }: FormContentProps<T>) => {
   const context = useFormContext();
 
   if (!context) {
@@ -14,10 +19,10 @@ const FormContent: React.FC<{ fields: FieldProps[] }> = ({ fields }) => {
 
   return (
     <Box sx={{ flexGrow: 1, padding: 6 }}>
-      <Grid container spacing={5}>
+      <Grid container spacing={4}>
         {fields.map((field) => (
           <Grid key={field.name} {...field.grid}>
-            <Field key={field.name} {...field} />
+            {field.renderField ? field.renderField(values) : <Field<T> key={field.name} {...field} />}
           </Grid>
         ))}
       </Grid>
