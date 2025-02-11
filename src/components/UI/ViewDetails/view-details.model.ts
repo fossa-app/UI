@@ -2,15 +2,15 @@ import * as React from 'react';
 import { GridBaseProps } from '@mui/material/Grid2';
 import { Module, SubModule } from 'shared/models';
 
-export enum ViewItemType {
+export enum ViewDetailType {
   section = 'section',
-  text = 'text',
+  labelValue = 'labelValue',
 }
 
-export interface ViewItemProps<T> {
+export interface ViewDetailProps<T> {
   label: string;
   name: string;
-  type: ViewItemType;
+  type: ViewDetailType;
   module: Module;
   subModule: SubModule;
   grid?: GridBaseProps;

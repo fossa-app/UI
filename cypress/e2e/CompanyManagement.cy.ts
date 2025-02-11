@@ -1,5 +1,12 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { clickActionButton, getLinearLoader, getLoadingButtonLoadingIcon, getTestSelectorByModule, selectOption } from '../support/helpers';
+import {
+  clickActionButton,
+  getLinearLoader,
+  getLoadingButtonLoadingIcon,
+  getTestSelectorByModule,
+  selectOption,
+  verifyTextFields,
+} from '../support/helpers';
 import {
   interceptEditCompanyFailedRequest,
   interceptEditCompanyRequest,
@@ -11,98 +18,6 @@ import {
   interceptFetchEmployeeRequest,
   interceptFetchSystemLicenseRequest,
 } from '../support/interceptors';
-
-const testCompanyFields = () => {
-  getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-header').should(
-    'have.text',
-    'Company Details'
-  );
-  getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-label-name').should(
-    'have.text',
-    'Name'
-  );
-  getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-value-name').should(
-    'have.text',
-    'Good Omens'
-  );
-  getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-label-countryName').should(
-    'have.text',
-    'Country'
-  );
-  getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-value-countryName').should(
-    'have.text',
-    'United States'
-  );
-};
-
-const testCompanyLicenseFields = () => {
-  getTestSelectorByModule(
-    Module.companyManagement,
-    SubModule.companyLicenseViewDetails,
-    'view-details-item-label-terms.licensee.longName'
-  ).should('have.text', 'Long Name');
-  getTestSelectorByModule(
-    Module.companyManagement,
-    SubModule.companyLicenseViewDetails,
-    'view-details-item-value-terms.licensee.longName'
-  ).should('have.text', 'Test Company Licensee');
-  getTestSelectorByModule(
-    Module.companyManagement,
-    SubModule.companyLicenseViewDetails,
-    'view-details-item-label-terms.licensee.shortName'
-  ).should('have.text', 'Short Name');
-  getTestSelectorByModule(
-    Module.companyManagement,
-    SubModule.companyLicenseViewDetails,
-    'view-details-item-value-terms.licensee.shortName'
-  ).should('have.text', 'TCL');
-  getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-details-item-label-terms.notBefore').should(
-    'have.text',
-    'Valid From'
-  );
-  getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-details-item-value-terms.notBefore').should(
-    'have.text',
-    '9/1/2024'
-  );
-  getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-details-item-label-terms.notAfter').should(
-    'have.text',
-    'Valid To'
-  );
-  getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-details-item-value-terms.notAfter').should(
-    'have.text',
-    '9/1/2025'
-  );
-  getTestSelectorByModule(
-    Module.companyManagement,
-    SubModule.companyLicenseViewDetails,
-    'view-details-item-label-entitlements.companyId'
-  ).should('have.text', 'Company ID');
-  getTestSelectorByModule(
-    Module.companyManagement,
-    SubModule.companyLicenseViewDetails,
-    'view-details-item-value-entitlements.companyId'
-  ).should('have.text', '111111111111');
-  getTestSelectorByModule(
-    Module.companyManagement,
-    SubModule.companyLicenseViewDetails,
-    'view-details-item-label-entitlements.maximumBranchCount'
-  ).should('have.text', 'Maximum Branch Count');
-  getTestSelectorByModule(
-    Module.companyManagement,
-    SubModule.companyLicenseViewDetails,
-    'view-details-item-value-entitlements.maximumBranchCount'
-  ).should('have.text', '10');
-  getTestSelectorByModule(
-    Module.companyManagement,
-    SubModule.companyLicenseViewDetails,
-    'view-details-item-label-entitlements.maximumEmployeeCount'
-  ).should('have.text', 'Maximum Employee Count');
-  getTestSelectorByModule(
-    Module.companyManagement,
-    SubModule.companyLicenseViewDetails,
-    'view-details-item-value-entitlements.maximumEmployeeCount'
-  ).should('have.text', '100');
-};
 
 describe('Company Management Tests', () => {
   beforeEach(() => {
@@ -126,7 +41,12 @@ describe('Company Management Tests', () => {
       cy.get('[data-cy="menu-item-Company"]').click();
 
       cy.url().should('include', '/manage/company/view');
-      testCompanyFields();
+      verifyTextFields(Module.companyManagement, SubModule.companyViewDetails, {
+        'view-details-label-name': 'Name',
+        'view-details-value-name': 'Good Omens',
+        'view-details-label-countryName': 'Country',
+        'view-details-value-countryName': 'United States',
+      });
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('not.exist');
     });
 
@@ -144,11 +64,25 @@ describe('Company Management Tests', () => {
       cy.visit('/manage/company/view');
       interceptFetchCompanyLicenseRequest();
 
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-details-header').should(
-        'have.text',
-        'Company License Details'
-      );
-      testCompanyLicenseFields();
+      verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
+        'view-details-header': 'Company License Details',
+        'view-details-section-terms': 'Terms',
+        'view-details-section-entitlements': 'Entitlements',
+        'view-details-label-terms.licensee.longName': 'Long Name',
+        'view-details-value-terms.licensee.longName': 'Test Company Licensee',
+        'view-details-label-terms.licensee.shortName': 'Short Name',
+        'view-details-value-terms.licensee.shortName': 'TCL',
+        'view-details-label-terms.notBefore': 'Valid From',
+        'view-details-value-terms.notBefore': '9/1/2024',
+        'view-details-label-terms.notAfter': 'Valid To',
+        'view-details-value-terms.notAfter': '9/1/2025',
+        'view-details-label-entitlements.companyId': 'Company ID',
+        'view-details-value-entitlements.companyId': '111111111111',
+        'view-details-label-entitlements.maximumBranchCount': 'Maximum Branch Count',
+        'view-details-value-entitlements.maximumBranchCount': '10',
+        'view-details-label-entitlements.maximumEmployeeCount': 'Maximum Employee Count',
+        'view-details-value-entitlements.maximumEmployeeCount': '100',
+      });
     });
   });
 
@@ -165,11 +99,14 @@ describe('Company Management Tests', () => {
       cy.get('[data-cy="menu-item-Company"]').click();
 
       cy.url().should('include', '/manage/company/view');
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-header').should(
-        'have.text',
-        'Company Details'
-      );
-      testCompanyFields();
+      verifyTextFields(Module.companyManagement, SubModule.companyViewDetails, {
+        'view-details-header': 'Company Details',
+        'view-details-section-basicInfo': 'Basic Information',
+        'view-details-label-name': 'Name',
+        'view-details-value-name': 'Good Omens',
+        'view-details-label-countryName': 'Country',
+        'view-details-value-countryName': 'United States',
+      });
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('exist');
     });
 
@@ -201,7 +138,6 @@ describe('Company Management Tests', () => {
 
     // TODO: flaky test
     it('should not be able to edit the company if the form is invalid or company updating failed', () => {
-      interceptFetchCompanyRequest();
       interceptEditCompanyFailedRequest();
       cy.visit('/manage/company/view');
 
@@ -258,11 +194,11 @@ describe('Company Management Tests', () => {
       cy.wait('@fetchUpdatedCompanyRequest');
 
       cy.url().should('include', '/manage/company/view');
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-value-name').should(
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-value-name').should(
         'have.text',
         'Good Omens Updated'
       );
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-item-value-countryName').should(
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-value-countryName').should(
         'have.text',
         'Canada'
       );
@@ -273,13 +209,25 @@ describe('Company Management Tests', () => {
       cy.visit('/manage/company/view');
       interceptFetchCompanyLicenseRequest();
 
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-details-header').should(
-        'have.text',
-        'Company License Details'
-      );
-      testCompanyLicenseFields();
+      verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
+        'view-details-header': 'Company License Details',
+        'view-details-section-terms': 'Terms',
+        'view-details-section-entitlements': 'Entitlements',
+        'view-details-label-terms.licensee.longName': 'Long Name',
+        'view-details-value-terms.licensee.longName': 'Test Company Licensee',
+        'view-details-label-terms.licensee.shortName': 'Short Name',
+        'view-details-value-terms.licensee.shortName': 'TCL',
+        'view-details-label-terms.notBefore': 'Valid From',
+        'view-details-value-terms.notBefore': '9/1/2024',
+        'view-details-label-terms.notAfter': 'Valid To',
+        'view-details-value-terms.notAfter': '9/1/2025',
+        'view-details-label-entitlements.companyId': 'Company ID',
+        'view-details-value-entitlements.companyId': '111111111111',
+        'view-details-label-entitlements.maximumBranchCount': 'Maximum Branch Count',
+        'view-details-value-entitlements.maximumBranchCount': '10',
+        'view-details-label-entitlements.maximumEmployeeCount': 'Maximum Employee Count',
+        'view-details-value-entitlements.maximumEmployeeCount': '100',
+      });
     });
-
-    // TODO: test sections
   });
 });

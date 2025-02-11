@@ -5,6 +5,7 @@ import {
   getLoadingButtonLoadingIcon,
   getTestSelectorByModule,
   openUserProfile,
+  verifyTextFields,
 } from '../support/helpers';
 import {
   interceptEditEmployeeFailedRequest,
@@ -50,31 +51,16 @@ describe('Profile Tests', () => {
     openUserProfile();
 
     cy.url().should('include', '/manage/profile/view');
-    getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-header').should('have.text', 'Profile Details');
-    getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-item-label-firstName').should(
-      'have.text',
-      'First Name'
-    );
-    getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-item-value-firstName').should(
-      'have.text',
-      'Gabriel'
-    );
-    getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-item-label-lastName').should(
-      'have.text',
-      'Last Name'
-    );
-    getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-item-value-lastName').should(
-      'have.text',
-      'Archangel'
-    );
-    getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-item-label-fullName').should(
-      'have.text',
-      'Full Name'
-    );
-    getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-item-value-fullName').should(
-      'have.text',
-      'Gabriel Admin Archangel'
-    );
+    verifyTextFields(Module.profile, SubModule.profileViewDetails, {
+      'view-details-header': 'Profile Details',
+      'view-details-section-basicInfo': 'Basic Information',
+      'view-details-label-firstName': 'First Name',
+      'view-details-value-firstName': 'Gabriel',
+      'view-details-label-lastName': 'Last Name',
+      'view-details-value-lastName': 'Archangel',
+      'view-details-label-fullName': 'Full Name',
+      'view-details-value-fullName': 'Gabriel Admin Archangel',
+    });
     getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-action-button').should('exist');
   });
 
@@ -176,15 +162,9 @@ describe('Profile Tests', () => {
     cy.wait('@fetchUpdatedEmployeeRequest');
 
     cy.url().should('include', '/manage/profile/view');
-    getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-item-value-firstName').should(
-      'have.text',
-      'Anthony'
-    );
-    getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-item-value-lastName').should(
-      'have.text',
-      'Crowley'
-    );
-    getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-item-value-fullName').should(
+    getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-value-firstName').should('have.text', 'Anthony');
+    getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-value-lastName').should('have.text', 'Crowley');
+    getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-value-fullName').should(
       'have.text',
       'Anthony User Crowley'
     );
@@ -216,6 +196,4 @@ describe('Profile Tests', () => {
       .and('have.text', 'Once you delete your profile, there is no going back. Please be certain.');
     getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-button').should('exist').click();
   });
-
-  // TODO: test sections
 });
