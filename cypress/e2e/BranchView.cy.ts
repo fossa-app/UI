@@ -1,5 +1,5 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getLinearLoader, getTestSelectorByModule } from '../support/helpers';
+import { getLinearLoader, getTestSelectorByModule, verifyTextFields } from '../support/helpers';
 import {
   interceptEditBranchRequest,
   interceptFetchBranchByIdFailedRequest,
@@ -11,6 +11,30 @@ import {
   interceptFetchEmployeeRequest,
   interceptFetchSystemLicenseRequest,
 } from '../support/interceptors';
+
+const testBranchFields = () => {
+  verifyTextFields(Module.branchManagement, SubModule.branchViewDetails, {
+    'view-details-header': 'Branch Details',
+    'view-details-section-basicInfo': 'Basic Information',
+    'view-details-section-address': 'Address Information',
+    'view-details-label-name': 'Branch Name',
+    'view-details-value-name': 'New York Branch',
+    'view-details-label-timeZoneName': 'TimeZone',
+    'view-details-value-timeZoneName': 'Eastern Standard Time',
+    'view-details-label-address.line1': 'Address Line 1',
+    'view-details-value-address.line1': '270 W 11th Street',
+    'view-details-label-address.line2': 'Address Line 2',
+    'view-details-value-address.line2': 'Apt 2E',
+    'view-details-label-address.city': 'City',
+    'view-details-value-address.city': 'New York',
+    'view-details-label-address.subdivision': 'State',
+    'view-details-value-address.subdivision': 'NY',
+    'view-details-label-address.countryName': 'Country',
+    'view-details-value-address.countryName': 'United States',
+    'view-details-label-address.postalCode': 'Postal Code',
+    'view-details-value-address.postalCode': '10014',
+  });
+};
 
 describe('Branch View Tests', () => {
   beforeEach(() => {
@@ -32,6 +56,29 @@ describe('Branch View Tests', () => {
       cy.visit('/manage/branches/view/222222222222');
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-action-button').should('not.exist');
+    });
+
+    it('should be able to view the branch and navigate back', () => {
+      interceptEditBranchRequest('222222222222');
+      interceptFetchBranchByIdRequest('222222222222');
+      cy.visit('/manage/branches');
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').click();
+
+      getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
+
+      cy.wait('@fetchBranchByIdRequest');
+
+      testBranchFields();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-value-timeZoneName')
+        .find('p')
+        .should('not.have.attr', 'data-invalid');
+
+      cy.get('[data-cy="page-title-back-button"]').click();
+
+      cy.url().should('include', '/manage/branches');
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
     });
   });
 
@@ -58,76 +105,13 @@ describe('Branch View Tests', () => {
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').click();
 
       getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-header').should(
-        'have.text',
-        'Branch Details'
-      );
+
       cy.wait('@fetchBranchByIdRequest');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-name').should(
-        'have.text',
-        'Branch Name'
-      );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-name').should(
-        'have.text',
-        'New York Branch'
-      );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-timeZoneName').should(
-        'have.text',
-        'TimeZone'
-      );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-timeZoneName')
-        .should('have.text', 'Eastern Standard Time')
+      testBranchFields();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-value-timeZoneName')
         .find('p')
         .should('not.have.attr', 'data-invalid');
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-address.line1').should(
-        'have.text',
-        'Address Line 1'
-      );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-address.line1').should(
-        'have.text',
-        '270 W 11th Street'
-      );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-address.line2').should(
-        'have.text',
-        'Address Line 2'
-      );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-address.line2').should(
-        'have.text',
-        'Apt 2E'
-      );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-address.city').should(
-        'have.text',
-        'City'
-      );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-address.city').should(
-        'have.text',
-        'New York'
-      );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-address.subdivision').should(
-        'have.text',
-        'State'
-      );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-address.subdivision').should(
-        'have.text',
-        'NY'
-      );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-address.countryName').should(
-        'have.text',
-        'Country'
-      );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-address.countryName').should(
-        'have.text',
-        'United States'
-      );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-label-address.postalCode').should(
-        'have.text',
-        'Postal Code'
-      );
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-address.postalCode').should(
-        'have.text',
-        '10014'
-      );
 
       cy.get('[data-cy="page-title-back-button"]').click();
 
@@ -143,7 +127,7 @@ describe('Branch View Tests', () => {
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').click();
       cy.wait('@fetchBranchByIdRequest');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-name').should(
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-value-name').should(
         'have.text',
         'New York Branch'
       );
@@ -165,7 +149,7 @@ describe('Branch View Tests', () => {
       getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
       cy.wait('@fetchBranchByIdRequest');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-item-value-name').should(
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-value-name').should(
         'have.text',
         'New York Branch'
       );
@@ -198,7 +182,7 @@ describe('Branch View Tests', () => {
       ];
 
       invalidFields.forEach((field) => {
-        getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, `view-details-item-value-${field}`)
+        getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, `view-details-value-${field}`)
           .find('p')
           .should('have.attr', 'data-invalid');
       });
@@ -220,7 +204,7 @@ describe('Branch View Tests', () => {
       ];
 
       emptyFields.forEach((field) => {
-        getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, `view-details-item-value-${field}`)
+        getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, `view-details-value-${field}`)
           .find('p')
           .should('have.text', '-');
       });
@@ -238,7 +222,5 @@ describe('Branch View Tests', () => {
 
       cy.url().should('include', '/manage/branches');
     });
-
-    // TODO: test sections
   });
 });

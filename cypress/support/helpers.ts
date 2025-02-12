@@ -66,9 +66,21 @@ export const clearBranchDetailsForm = (module: Module, subModule: SubModule) => 
   getTestSelectorByModule(module, subModule, 'form-field-address.postalCode').find('input').clear();
 };
 
-export const verifyBranchDetailsFormFieldValues = (fieldValues: { [key: string]: string }) => {
+export const verifyTextFields = (module: Module, subModule: SubModule, fieldValues: { [key: string]: string }) => {
   Object.entries(fieldValues).forEach(([field, value]) => {
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, field).find('input').should('have.value', value);
+    getTestSelectorByModule(module, subModule, field).should('have.text', value);
+  });
+};
+
+export const verifyInputFields = (module: Module, subModule: SubModule, fieldValues: { [key: string]: string }) => {
+  Object.entries(fieldValues).forEach(([field, value]) => {
+    getTestSelectorByModule(module, subModule, field).find('input').should('have.value', value);
+  });
+};
+
+export const verifyNotExist = (module: Module, subModule: SubModule, fields: string[]) => {
+  fields.forEach((field) => {
+    getTestSelectorByModule(module, subModule, field).should('not.exist');
   });
 };
 
@@ -91,12 +103,6 @@ export const verifyBranchDetailsFormValidationMessages = (
 ) => {
   validations.forEach(({ field, message }) => {
     getTestSelectorByModule(module, subModule, field).should('exist').and('have.text', message);
-  });
-};
-
-export const verifyBranchDetailsFormAddressValidationsNotExist = (module: Module, subModule: SubModule, fields: string[]) => {
-  fields.forEach((field) => {
-    getTestSelectorByModule(module, subModule, field).should('not.exist');
   });
 };
 

@@ -1,7 +1,7 @@
 import { Branch, BranchFieldConfig, Module, SubModule, UserRole } from 'shared/models';
 import { FieldProps, FieldType } from 'components/UI/Form';
 import { Action, Column } from 'components/UI/Table';
-import { ViewItemProps, ViewItemType } from 'components/UI/ViewDetails';
+import { ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
 import { renderBranchField } from 'pages/Manage/Branch/components/BranchField';
 import { ACTION_FIELD, ACTION_FIELDS } from './common';
 
@@ -220,11 +220,11 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps<Branch>[] = [
   },
 ];
 
-export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
+export const BRANCH_VIEW_DETAILS_SCHEMA: ViewDetailProps<Branch>[] = [
   {
     name: 'basicInfo',
     label: 'Basic Information',
-    type: ViewItemType.section,
+    type: ViewDetailType.section,
     grid: { size: { xs: 12 } },
     module: Module.branchManagement,
     subModule: SubModule.branchViewDetails,
@@ -232,7 +232,7 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
   {
     name: BRANCH_FIELDS.name.field,
     label: 'Branch Name',
-    type: ViewItemType.text,
+    type: ViewDetailType.labelValue,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
     subModule: SubModule.branchViewDetails,
@@ -240,7 +240,7 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
   {
     name: BRANCH_FIELDS.timeZoneName!.field,
     label: 'TimeZone',
-    type: ViewItemType.text,
+    type: ViewDetailType.labelValue,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
     subModule: SubModule.branchViewDetails,
@@ -249,7 +249,7 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
   {
     name: BRANCH_FIELDS.address.field,
     label: 'Address Information',
-    type: ViewItemType.section,
+    type: ViewDetailType.section,
     grid: { size: { xs: 12 } },
     module: Module.branchManagement,
     subModule: SubModule.branchViewDetails,
@@ -257,7 +257,7 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
   {
     name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
     label: 'Address Line 1',
-    type: ViewItemType.text,
+    type: ViewDetailType.labelValue,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
     subModule: SubModule.branchViewDetails,
@@ -271,7 +271,7 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
   {
     name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
     label: 'Address Line 2',
-    type: ViewItemType.text,
+    type: ViewDetailType.labelValue,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
     subModule: SubModule.branchViewDetails,
@@ -285,7 +285,7 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
   {
     name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.city!.field}`,
     label: 'City',
-    type: ViewItemType.text,
+    type: ViewDetailType.labelValue,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
     subModule: SubModule.branchViewDetails,
@@ -299,7 +299,7 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
   {
     name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.subdivision!.field}`,
     label: 'State',
-    type: ViewItemType.text,
+    type: ViewDetailType.labelValue,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
     subModule: SubModule.branchViewDetails,
@@ -313,7 +313,7 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
   {
     name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryName!.field}`,
     label: 'Country',
-    type: ViewItemType.text,
+    type: ViewDetailType.labelValue,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
     subModule: SubModule.branchViewDetails,
@@ -327,7 +327,7 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewItemProps<Branch>[] = [
   {
     name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
     label: 'Postal Code',
-    type: ViewItemType.text,
+    type: ViewDetailType.labelValue,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.branchManagement,
     subModule: SubModule.branchViewDetails,

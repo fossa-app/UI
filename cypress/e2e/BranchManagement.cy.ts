@@ -7,13 +7,14 @@ import {
   getTestSelectorByModule,
   clickCheckboxField,
   selectOption,
-  verifyBranchDetailsFormFieldValues,
+  verifyInputFields,
   verifyBranchDetailsFormValidationMessages,
   clickActionButton,
-  verifyBranchDetailsFormAddressValidationsNotExist,
+  verifyNotExist,
   verifyBranchDetailsFormTimeZoneOptions,
   verifyBranchDetailsFormFieldsExist,
   verifyBranchDetailsFormFieldsNotExist,
+  verifyTextFields,
 } from '../support/helpers';
 import {
   interceptCreateBranchFailedRequest,
@@ -103,7 +104,7 @@ describe('Branch Management Tests', () => {
     clickCheckboxField(Module.branchManagement, SubModule.branchDetails, 'form-field-nonPhysicalAddress');
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
-    verifyBranchDetailsFormAddressValidationsNotExist(Module.branchManagement, SubModule.branchDetails, [
+    verifyNotExist(Module.branchManagement, SubModule.branchDetails, [
       'form-field-address.line1-validation',
       'form-field-address.line2-validation',
       'form-field-address.city-validation',
@@ -204,7 +205,7 @@ describe('Branch Management Tests', () => {
 
     cy.wait('@fetchBranchByIdRequest');
 
-    verifyBranchDetailsFormFieldValues({
+    verifyInputFields(Module.branchManagement, SubModule.branchDetails, {
       'form-field-name': 'New York Branch',
       'form-field-timeZoneId': 'America/New_York',
       'form-field-address.line1': '270 W 11th Street',
@@ -269,7 +270,11 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-edit-222222222222').click();
 
     getLinearLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('exist');
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-header').should('have.text', 'Branch Details');
+    verifyTextFields(Module.branchManagement, SubModule.branchDetails, {
+      'form-header': 'Branch Details',
+      'form-section-field-basicInfo': 'Basic Information',
+      'form-section-field-address': 'Address Information',
+    });
 
     cy.wait('@fetchBranchByIdRequest');
 
@@ -345,7 +350,7 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-edit-222222222222').click();
     cy.wait('@fetchBranchByIdRequest');
 
-    verifyBranchDetailsFormFieldValues({
+    verifyInputFields(Module.branchManagement, SubModule.branchDetails, {
       'form-field-name': 'New York Branch',
       'form-field-timeZoneId': 'America/New_York',
       'form-field-address.line1': '270 W 11th Street',
@@ -361,7 +366,7 @@ describe('Branch Management Tests', () => {
 
     cy.url().should('include', '/manage/branches/new');
     // TODO: flaky part
-    verifyBranchDetailsFormFieldValues({
+    verifyInputFields(Module.branchManagement, SubModule.branchDetails, {
       'form-field-name': '',
       'form-field-timeZoneId': '',
       'form-field-address.line1': '',
@@ -382,7 +387,7 @@ describe('Branch Management Tests', () => {
     getLinearLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('exist');
     cy.wait('@fetchBranchByIdRequest');
 
-    verifyBranchDetailsFormFieldValues({
+    verifyInputFields(Module.branchManagement, SubModule.branchDetails, {
       'form-field-name': 'New York Branch',
       'form-field-timeZoneId': 'America/New_York',
       'form-field-address.line1': '270 W 11th Street',
@@ -488,6 +493,4 @@ describe('Branch Management Tests', () => {
       'form-field-address.countryCode',
     ]);
   });
-
-  // TODO: test sections
 });

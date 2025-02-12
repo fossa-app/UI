@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid2';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import { ViewItemProps } from './view-details.model';
+import { ViewDetailProps } from './view-details.model';
 import { useViewDetailsContext } from './ViewDetailsContext';
-import Item from './items';
+import Detail from './details';
 
 type ViewDetailsContentProps<T> = {
-  fields: ViewItemProps<T>[];
+  fields: ViewDetailProps<T>[];
   values?: T;
 };
 
@@ -29,7 +29,7 @@ const ViewDetailsContent = <T,>({ fields, values }: ViewDetailsContentProps<T>) 
 
           return (
             <Grid key={field.name} {...field.grid}>
-              <Item values={values} {...field} />
+              <Detail values={values} {...field} />
             </Grid>
           );
         })}

@@ -5,9 +5,10 @@ import {
   fillBranchDetailsForm,
   getTestSelectorByModule,
   selectOption,
-  verifyBranchDetailsFormAddressValidationsNotExist,
+  verifyNotExist,
   verifyBranchDetailsFormTimeZoneOptions,
   verifyBranchDetailsFormValidationMessages,
+  verifyTextFields,
 } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
@@ -295,6 +296,10 @@ describe('Setup Flow Tests', () => {
 
       cy.url().should('include', '/setup/company');
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-header').should('have.text', 'Company Details');
+      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-section-field-basicInfo').should(
+        'have.text',
+        'Basic Information'
+      );
       cy.get('[data-cy="company-logo"]').should('not.exist');
       cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
 
@@ -394,7 +399,7 @@ describe('Setup Flow Tests', () => {
       clickCheckboxField(Module.branchSetup, SubModule.branchDetails, 'form-field-nonPhysicalAddress');
       clickActionButton(Module.branchSetup, SubModule.branchDetails);
 
-      verifyBranchDetailsFormAddressValidationsNotExist(Module.branchSetup, SubModule.branchDetails, [
+      verifyNotExist(Module.branchSetup, SubModule.branchDetails, [
         'form-field-address.line1-validation',
         'form-field-address.line2-validation',
         'form-field-address.city-validation',
@@ -433,7 +438,11 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchBranchesFailedRequest');
 
       cy.url().should('include', '/setup/branch');
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-header').should('have.text', 'Branch Details');
+      verifyTextFields(Module.branchSetup, SubModule.branchDetails, {
+        'form-header': 'Branch Details',
+        'form-section-field-basicInfo': 'Basic Information',
+        'form-section-field-address': 'Address Information',
+      });
 
       interceptFetchBranchesRequest();
 
@@ -512,6 +521,10 @@ describe('Setup Flow Tests', () => {
 
       cy.url().should('include', '/setup/employee');
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-header').should('have.text', 'Employee Details');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-section-field-basicInfo').should(
+        'have.text',
+        'Basic Information'
+      );
 
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').clear();
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').type('Gabriel');
@@ -532,6 +545,4 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', '/manage/company');
     });
   });
-
-  // TODO: test sections
 });

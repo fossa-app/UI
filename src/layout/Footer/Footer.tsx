@@ -30,7 +30,6 @@ const Footer: React.FC = () => {
 
   const handleUpload = (file: File) => {
     dispatch(uploadCompanyLicense(file));
-    // TODO: display a success message on upload
   };
 
   React.useEffect(() => {

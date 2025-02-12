@@ -1,7 +1,7 @@
 import { Employee, EmployeeFieldConfig, Module, SubModule } from 'shared/models';
 import { FieldProps, FieldType } from 'components/UI/Form';
 import { Column } from 'components/UI/Table';
-import { ViewItemProps, ViewItemType } from 'components/UI/ViewDetails';
+import { ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
 
 export const EMPLOYEE_FIELDS: EmployeeFieldConfig = {
   id: {
@@ -23,6 +23,14 @@ export const EMPLOYEE_FIELDS: EmployeeFieldConfig = {
 };
 
 export const EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA: FieldProps<Employee>[] = [
+  {
+    type: FieldType.section,
+    name: 'basicInfo',
+    label: 'Basic Information',
+    grid: { size: { xs: 12 } },
+    module: Module.employeeSetup,
+    subModule: SubModule.employeeDetails,
+  },
   {
     type: FieldType.text,
     name: EMPLOYEE_FIELDS.firstName.field,
@@ -74,12 +82,19 @@ export const EMPLOYEE_TABLE_SCHEMA: Column<Employee>[] = [
   },
 ];
 
-// TODO: add sections
-export const PROFILE_VIEW_DETAILS_SCHEMA: ViewItemProps<Employee>[] = [
+export const PROFILE_VIEW_DETAILS_SCHEMA: ViewDetailProps<Employee>[] = [
+  {
+    name: 'basicInfo',
+    label: 'Basic Information',
+    type: ViewDetailType.section,
+    grid: { size: { xs: 12 } },
+    module: Module.profile,
+    subModule: SubModule.profileViewDetails,
+  },
   {
     name: EMPLOYEE_FIELDS.firstName.field,
     label: 'First Name',
-    type: ViewItemType.text,
+    type: ViewDetailType.labelValue,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.profile,
     subModule: SubModule.profileViewDetails,
@@ -87,7 +102,7 @@ export const PROFILE_VIEW_DETAILS_SCHEMA: ViewItemProps<Employee>[] = [
   {
     name: EMPLOYEE_FIELDS.lastName.field,
     label: 'Last Name',
-    type: ViewItemType.text,
+    type: ViewDetailType.labelValue,
     grid: { size: { xs: 12, md: 6 } },
     module: Module.profile,
     subModule: SubModule.profileViewDetails,
@@ -95,7 +110,7 @@ export const PROFILE_VIEW_DETAILS_SCHEMA: ViewItemProps<Employee>[] = [
   {
     name: EMPLOYEE_FIELDS.fullName.field,
     label: 'Full Name',
-    type: ViewItemType.text,
+    type: ViewDetailType.labelValue,
     grid: { size: { xs: 12, md: 12 } },
     module: Module.profile,
     subModule: SubModule.profileViewDetails,
