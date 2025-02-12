@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid2';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import Page, { PageSubtitle } from '../Page';
 import { ViewDetailProps } from './view-details.model';
 import { useViewDetailsContext } from './ViewDetailsContext';
 import Detail from './details';
@@ -8,9 +9,10 @@ import Detail from './details';
 type ViewDetailsContentProps<T> = {
   fields: ViewDetailProps<T>[];
   values?: T;
+  noValuesTemplate?: React.ReactElement;
 };
 
-const ViewDetailsContent = <T,>({ fields, values }: ViewDetailsContentProps<T>) => {
+const ViewDetailsContent = <T,>({ fields, values, noValuesTemplate }: ViewDetailsContentProps<T>) => {
   const context = useViewDetailsContext();
 
   if (!context) {
@@ -20,7 +22,14 @@ const ViewDetailsContent = <T,>({ fields, values }: ViewDetailsContentProps<T>) 
   const { loading } = context;
 
   return (
-    <AccordionDetails sx={{ minHeight: 200, overflow: 'auto' }}>
+    <AccordionDetails sx={{ minHeight: 150, overflow: 'auto' }}>
+      {!loading &&
+        !values &&
+        (noValuesTemplate ?? (
+          <Page sx={{ margin: 0 }}>
+            <PageSubtitle>No Detail Found</PageSubtitle>
+          </Page>
+        ))}
       <Grid container spacing={4}>
         {fields.map((field) => {
           if (loading || !values) {
