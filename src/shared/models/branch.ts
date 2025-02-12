@@ -1,6 +1,5 @@
-import { Country, FlattenField, TimeZone } from './common';
+import { Country, FlattenField, NonNullableFields, TimeZone } from './common';
 
-// TODO: check Address fields
 export interface AddressDTO {
   line1?: string;
   line2?: string;
@@ -26,8 +25,8 @@ export interface Branch extends BranchDTO {
   timeZoneName?: TimeZone['name'];
   isValid?: boolean;
   nonPhysicalAddress?: boolean;
-  address: Address;
+  address: Address | null;
   fullAddress?: string;
 }
 
-export type BranchFieldConfig = FlattenField<Branch>;
+export type BranchFieldConfig = FlattenField<NonNullableFields<Branch>>;

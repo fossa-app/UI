@@ -7,6 +7,7 @@ import { getUserFromLocalStorage, getUserManager, parseResponseData } from 'shar
 import { MESSAGES, ROUTES } from 'shared/constants';
 import { ErrorResponse } from 'shared/models';
 
+// TODO: debug, a weird issue takes place when authenticated, the token is not being set and receiving 401, fixes after refresh
 const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
   const navigate = useNavigate();
   const userManager = getUserManager();

@@ -62,6 +62,14 @@ export const BRANCH_FIELDS: BranchFieldConfig = {
     field: 'fullAddress',
     name: 'Address',
   },
+  isValid: {
+    field: 'isValid',
+    name: 'Is Valid',
+  },
+  companyId: {
+    field: 'companyId',
+    name: 'Company ID',
+  },
 };
 
 export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps<Branch>[] = [
@@ -115,7 +123,7 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps<Branch>[] = [
   },
   {
     type: FieldType.checkbox,
-    name: BRANCH_FIELDS.nonPhysicalAddress!.field,
+    name: BRANCH_FIELDS.nonPhysicalAddress.field,
     label: 'Non-Physical Address',
     grid: { size: { xs: 12 } },
     module: Module.branchManagement,

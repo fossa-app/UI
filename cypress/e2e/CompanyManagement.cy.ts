@@ -5,6 +5,7 @@ import {
   getLoadingButtonLoadingIcon,
   getTestSelectorByModule,
   selectOption,
+  verifyNotExist,
   verifyTextFields,
 } from '../support/helpers';
 import {
@@ -18,6 +19,49 @@ import {
   interceptFetchEmployeeRequest,
   interceptFetchSystemLicenseRequest,
 } from '../support/interceptors';
+
+const testCompaLicenseFields = () => {
+  verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
+    'view-details-header': 'Company License Details',
+    'view-details-section-terms': 'Terms',
+    'view-details-section-entitlements': 'Entitlements',
+    'view-details-label-terms.licensee.longName': 'Long Name',
+    'view-details-value-terms.licensee.longName': 'Test Company Licensee',
+    'view-details-label-terms.licensee.shortName': 'Short Name',
+    'view-details-value-terms.licensee.shortName': 'TCL',
+    'view-details-label-terms.notBefore': 'Valid From',
+    'view-details-value-terms.notBefore': '9/1/2024',
+    'view-details-label-terms.notAfter': 'Valid To',
+    'view-details-value-terms.notAfter': '9/1/2025',
+    'view-details-label-entitlements.companyId': 'Company ID',
+    'view-details-value-entitlements.companyId': '111111111111',
+    'view-details-label-entitlements.maximumBranchCount': 'Maximum Branch Count',
+    'view-details-value-entitlements.maximumBranchCount': '10',
+    'view-details-label-entitlements.maximumEmployeeCount': 'Maximum Employee Count',
+    'view-details-value-entitlements.maximumEmployeeCount': '100',
+  });
+};
+
+const testCompaLicenseFieldsNotExist = () => {
+  verifyNotExist(Module.companyManagement, SubModule.companyLicenseViewDetails, [
+    'view-details-section-terms',
+    'view-details-section-entitlements',
+    'view-details-label-terms.licensee.longName',
+    'view-details-value-terms.licensee.longName',
+    'view-details-label-terms.licensee.shortName',
+    'view-details-value-terms.licensee.shortName',
+    'view-details-label-terms.notBefore',
+    'view-details-value-terms.notBefore',
+    'view-details-label-terms.notAfter',
+    'view-details-value-terms.notAfter',
+    'view-details-label-entitlements.companyId',
+    'view-details-value-entitlements.companyId',
+    'view-details-label-entitlements.maximumBranchCount',
+    'view-details-value-entitlements.maximumBranchCount',
+    'view-details-label-entitlements.maximumEmployeeCount',
+    'view-details-value-entitlements.maximumEmployeeCount',
+  ]);
+};
 
 describe('Company Management Tests', () => {
   beforeEach(() => {
@@ -64,25 +108,20 @@ describe('Company Management Tests', () => {
       cy.visit('/manage/company/view');
       interceptFetchCompanyLicenseRequest();
 
+      testCompaLicenseFields();
+    });
+
+    it('should display a default template if the company license has not been uploaded', () => {
+      cy.visit('/manage/company/view');
+      interceptFetchCompanyLicenseFailedRequest();
+
       verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
         'view-details-header': 'Company License Details',
-        'view-details-section-terms': 'Terms',
-        'view-details-section-entitlements': 'Entitlements',
-        'view-details-label-terms.licensee.longName': 'Long Name',
-        'view-details-value-terms.licensee.longName': 'Test Company Licensee',
-        'view-details-label-terms.licensee.shortName': 'Short Name',
-        'view-details-value-terms.licensee.shortName': 'TCL',
-        'view-details-label-terms.notBefore': 'Valid From',
-        'view-details-value-terms.notBefore': '9/1/2024',
-        'view-details-label-terms.notAfter': 'Valid To',
-        'view-details-value-terms.notAfter': '9/1/2025',
-        'view-details-label-entitlements.companyId': 'Company ID',
-        'view-details-value-entitlements.companyId': '111111111111',
-        'view-details-label-entitlements.maximumBranchCount': 'Maximum Branch Count',
-        'view-details-value-entitlements.maximumBranchCount': '10',
-        'view-details-label-entitlements.maximumEmployeeCount': 'Maximum Employee Count',
-        'view-details-value-entitlements.maximumEmployeeCount': '100',
       });
+      testCompaLicenseFieldsNotExist();
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-company-license-details-no-details')
+        .should('exist')
+        .and('have.text', 'Company License has not been uploaded.');
     });
   });
 
@@ -209,25 +248,20 @@ describe('Company Management Tests', () => {
       cy.visit('/manage/company/view');
       interceptFetchCompanyLicenseRequest();
 
+      testCompaLicenseFields();
+    });
+
+    it('should display a default template if the company license has not been uploaded', () => {
+      cy.visit('/manage/company/view');
+      interceptFetchCompanyLicenseFailedRequest();
+
       verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
         'view-details-header': 'Company License Details',
-        'view-details-section-terms': 'Terms',
-        'view-details-section-entitlements': 'Entitlements',
-        'view-details-label-terms.licensee.longName': 'Long Name',
-        'view-details-value-terms.licensee.longName': 'Test Company Licensee',
-        'view-details-label-terms.licensee.shortName': 'Short Name',
-        'view-details-value-terms.licensee.shortName': 'TCL',
-        'view-details-label-terms.notBefore': 'Valid From',
-        'view-details-value-terms.notBefore': '9/1/2024',
-        'view-details-label-terms.notAfter': 'Valid To',
-        'view-details-value-terms.notAfter': '9/1/2025',
-        'view-details-label-entitlements.companyId': 'Company ID',
-        'view-details-value-entitlements.companyId': '111111111111',
-        'view-details-label-entitlements.maximumBranchCount': 'Maximum Branch Count',
-        'view-details-value-entitlements.maximumBranchCount': '10',
-        'view-details-label-entitlements.maximumEmployeeCount': 'Maximum Employee Count',
-        'view-details-value-entitlements.maximumEmployeeCount': '100',
       });
+      testCompaLicenseFieldsNotExist();
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-company-license-details-no-details')
+        .should('exist')
+        .and('have.text', 'Company License has not been uploaded.');
     });
   });
 });

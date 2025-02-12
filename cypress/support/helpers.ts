@@ -45,16 +45,16 @@ export const openUserProfile = () => {
 export const fillBranchDetailsForm = (module: Module, subModule: SubModule, branch: Branch) => {
   getTestSelectorByModule(module, subModule, 'form-field-name').type(branch.name);
   selectOption(module, subModule, 'timeZoneId', branch.timeZoneId);
-  getTestSelectorByModule(module, subModule, 'form-field-address.line1').type(branch.address.line1!);
+  getTestSelectorByModule(module, subModule, 'form-field-address.line1').type(branch!.address!.line1!);
 
-  if (branch.address.line2) {
-    getTestSelectorByModule(module, subModule, 'form-field-address.line2').type(branch.address.line2);
+  if (branch!.address!.line2) {
+    getTestSelectorByModule(module, subModule, 'form-field-address.line2').type(branch!.address!.line2);
   }
 
-  getTestSelectorByModule(module, subModule, 'form-field-address.city').type(branch.address.city!);
-  getTestSelectorByModule(module, subModule, 'form-field-address.subdivision').type(branch.address.subdivision!);
-  getTestSelectorByModule(module, subModule, 'form-field-address.postalCode').type(branch.address.postalCode!);
-  selectOption(module, subModule, 'address.countryCode', branch.address.countryCode!);
+  getTestSelectorByModule(module, subModule, 'form-field-address.city').type(branch!.address!.city!);
+  getTestSelectorByModule(module, subModule, 'form-field-address.subdivision').type(branch!.address!.subdivision!);
+  getTestSelectorByModule(module, subModule, 'form-field-address.postalCode').type(branch!.address!.postalCode!);
+  selectOption(module, subModule, 'address.countryCode', branch!.address!.countryCode!);
 };
 
 export const clearBranchDetailsForm = (module: Module, subModule: SubModule) => {

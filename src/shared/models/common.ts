@@ -6,6 +6,10 @@ export type FlattenField<T> = {
   [P in keyof T]: T[P] extends object ? FlattenField<T[P]> & { field: P; name: string } : { field: P; name: string };
 };
 
+export type NonNullableFields<T> = {
+  [K in keyof T]-?: NonNullable<T[K]>;
+};
+
 export type Item = Record<string, any>;
 
 export interface Country {

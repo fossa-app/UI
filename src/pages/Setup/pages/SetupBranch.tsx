@@ -32,7 +32,7 @@ const SetupBranchPage: React.FC = () => {
   const { status: companyLicenseStatus } = useAppSelector(selectCompanyLicense);
   const companyTimeZones = useAppSelector(selectCompanyTimeZones);
   const countries = useAppSelector(selectSystemCountries);
-  const [nonPhysicalAddress, setNonPhysicalAddress] = React.useState(false);
+  const [nonPhysicalAddress, setNonPhysicalAddress] = React.useState<boolean | undefined>(undefined);
 
   const availableCountries = React.useMemo(
     () => countries?.filter(({ code }) => code === company?.countryCode) || [],
@@ -42,7 +42,7 @@ const SetupBranchPage: React.FC = () => {
   const fields = React.useMemo(
     () =>
       mapBranchFieldOptionsToFieldSelectOptions(
-        mapDisabledFields(getBranchManagementDetailsByAddressFormSchema(BRANCH_SETUP_DETAILS_FORM_SCHEMA, nonPhysicalAddress), userRoles),
+        mapDisabledFields(getBranchManagementDetailsByAddressFormSchema(BRANCH_SETUP_DETAILS_FORM_SCHEMA, !!nonPhysicalAddress), userRoles),
         companyTimeZones,
         availableCountries
       ),
@@ -62,7 +62,7 @@ const SetupBranchPage: React.FC = () => {
   };
 
   const handleChange = (formValue: Branch) => {
-    setNonPhysicalAddress(!!formValue.nonPhysicalAddress);
+    setNonPhysicalAddress(formValue.nonPhysicalAddress);
   };
 
   return (

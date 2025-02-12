@@ -1,7 +1,8 @@
 import * as React from 'react';
-import Paper from '@mui/material/Paper';
 import { FormProvider as ReactHookFormProvider, useForm, DefaultValues } from 'react-hook-form';
+import Paper from '@mui/material/Paper';
 import { Item, Module, SubModule } from 'shared/models';
+import { deepEqual } from 'shared/helpers';
 import LinearLoader from '../LinearLoader';
 import FormContext from './FormContext';
 import FormHeader from './FormHeader';
@@ -36,10 +37,12 @@ const Form = <T extends Item>({
   });
 
   const watchedValues = methods.watch();
+  const prevValuesRef = React.useRef<T>();
 
   React.useEffect(() => {
-    if (onChange) {
+    if (onChange && !deepEqual(watchedValues, prevValuesRef.current!)) {
       onChange(watchedValues);
+      prevValuesRef.current = watchedValues;
     }
   }, [watchedValues, onChange]);
 

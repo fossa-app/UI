@@ -23,8 +23,7 @@ export const mapBranch = (
           ...address,
           countryName,
         }
-      : // TODO: set null instead of empty object
-        {},
+      : null,
     nonPhysicalAddress: !address,
     fullAddress: address ? getFullAddress({ ...address, countryName }) : '',
   };
@@ -57,9 +56,9 @@ export const mapBranchDTO = (branch: Branch): BranchDTO => {
       : null;
 
   return {
+    address,
     name: branch.name,
     timeZoneId: branch.timeZoneId,
-    address: address,
   };
 };
 
