@@ -29,6 +29,11 @@ export const selectOption = (module: Module, subModule: SubModule, fieldName: st
   getTestSelectorByModule(module, subModule, `form-field-${fieldName}-option-${optionName}`).click();
 };
 
+export const selectAction = (module: Module, subModule: SubModule, action: string) => {
+  getTestSelectorByModule(module, subModule, 'actions-menu-icon-333333333335').click();
+  getTestSelectorByModule(module, subModule, action).click();
+};
+
 export const clickCheckboxField = (module: Module, subModule: SubModule, selector: string) => {
   getTestSelectorByModule(module, subModule, selector).click();
 };

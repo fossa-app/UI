@@ -34,10 +34,11 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({
   onSubmit,
   onCancel,
 }) => {
-  const defaultValues: EmployeeDTO = {
+  const defaultValues: Employee = {
     firstName: data?.firstName ?? '',
     lastName: data?.lastName ?? '',
     fullName: data?.fullName ?? '',
+    assignedBranchId: data?.assignedBranchId || null,
   };
 
   const handleFormSubmit = (formValue: EmployeeDTO) => {

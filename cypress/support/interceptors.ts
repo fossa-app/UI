@@ -1,4 +1,4 @@
-import { Branch, PaginatedResponse } from 'shared/models';
+import { Branch, Employee, PaginatedResponse } from 'shared/models';
 
 const baseUrl = Cypress.config('baseUrl');
 const serverBaseUrl = Cypress.env('serverBaseUrl');
@@ -192,6 +192,37 @@ export const interceptEditEmployeeRequest = () => {
 
 export const interceptEditEmployeeFailedRequest = () => {
   cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employee`, null, 'editEmployeeFailedRequest', 404);
+};
+
+export const interceptFetchEmployeeByIdRequest = (
+  id: string,
+  alias = 'fetchEmployeeByIdRequest',
+  fixture = 'employees',
+  statusCode = 200,
+  delay = 300
+) => {
+  cy.fixture(fixture).then((employees: PaginatedResponse<Employee>) => {
+    cy.interceptWithAuth(
+      'GET',
+      `${serverBaseUrl}/Employees/${id}`,
+      employees.items.find((employee) => String(employee.id) === id),
+      alias,
+      statusCode,
+      delay
+    );
+  });
+};
+
+export const interceptFetchEmployeeByIdFailedRequest = (id: string) => {
+  cy.fixture('employees').then((employees: PaginatedResponse<Employee>) => {
+    cy.interceptWithAuth(
+      'GET',
+      `${serverBaseUrl}/Employees/${id}`,
+      employees.items.find((employee) => String(employee.id) === id),
+      'fetchEmployeeByIdFailedRequest',
+      404
+    );
+  });
 };
 
 export const interceptFetchEmployeesRequest = (

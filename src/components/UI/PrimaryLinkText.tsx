@@ -1,8 +1,13 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import { Branch } from 'shared/models';
 
-export const renderBranchName = (branch: Branch, onClick: (branch: Branch) => void) => (
+type RenderPrimaryLinkTextProps<T> = {
+  item: T;
+  getText: (item: T) => string;
+  onClick: (item: T) => void;
+};
+
+export const renderPrimaryLinkText = <T,>({ item, getText, onClick }: RenderPrimaryLinkTextProps<T>) => (
   <Typography
     variant="body1"
     color="primary"
@@ -13,8 +18,8 @@ export const renderBranchName = (branch: Branch, onClick: (branch: Branch) => vo
         textDecoration: 'underline',
       },
     }}
-    onClick={() => onClick(branch)}
+    onClick={() => onClick(item)}
   >
-    {branch.name}
+    {getText(item)}
   </Typography>
 );

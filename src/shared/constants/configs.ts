@@ -53,7 +53,8 @@ export const MESSAGES = {
     employee: {
       notFound: 'Employee not found 😞',
       create: 'Failed to create an Employee 😞',
-      update: 'Failed to update the Profile 😞',
+      updateEmployee: 'Failed to update the Employee 😞',
+      updateProfile: 'Failed to update the Profile 😞',
     },
   },
   success: {
@@ -74,7 +75,8 @@ export const MESSAGES = {
     },
     employee: {
       create: 'Employee has been successfully created 😊',
-      update: 'Profile has been successfully updated 😊',
+      updateEmployee: 'Employee has been successfully updated 😊',
+      updateProfile: 'Profile has been successfully updated 😊',
     },
   },
 };

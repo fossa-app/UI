@@ -492,5 +492,7 @@ describe('Branch Management Tests', () => {
       'form-field-address.postalCode',
       'form-field-address.countryCode',
     ]);
+
+    // TODO: add test cases when navigating between different branches, check if the branch is being reset correctly
   });
 });

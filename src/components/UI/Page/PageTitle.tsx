@@ -25,6 +25,7 @@ export const PageTitle: React.FC<React.PropsWithChildren<PageTitleProps>> = ({
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} {...props}>
       {withBackButton && (
+        // TODO: make the page-title-back-button module based
         <IconButton aria-label="Navigate Back" data-cy="page-title-back-button" size="large" onClick={onBackButtonClick}>
           <ArrowBackIcon />
         </IconButton>

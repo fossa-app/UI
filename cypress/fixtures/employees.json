@@ -7,7 +7,8 @@
       "companyId": 111111111111,
       "firstName": "Anthony",
       "lastName": "Crowley",
-      "fullName": "Anthony User Crowley"
+      "fullName": "Anthony User Crowley",
+      "assignedBranchId": 222222222222
     }
   ],
   "totalItems": 1,
