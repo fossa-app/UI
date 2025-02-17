@@ -72,7 +72,8 @@ const Table = <T extends Item>({
                 align={column.align || 'left'}
                 sx={{ width: column.width || 'auto' }}
               >
-                {column.renderBodyCell ? column.renderBodyCell(row) : (row[column.field] ?? 'N/A')}
+                {/* TODO: move '-' symbol to a constant */}
+                {column.renderBodyCell ? column.renderBodyCell(row) : (row[column.field] ?? '-')}
               </TableCell>
             ))}
           </TableRow>

@@ -16,6 +16,7 @@ export const mapUserProfileToEmployee = (userProfile?: UserProfile): Employee | 
     firstName: userProfile.given_name!,
     lastName: userProfile.family_name!,
     fullName: userProfile.name!,
+    assignedBranchId: null,
     picture: userProfile.picture,
   };
 };

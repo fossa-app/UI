@@ -74,4 +74,12 @@ export const ROUTES: AppRoute = {
     name: 'Edit Profile',
     path: '/manage/profile/edit',
   },
+  viewEmployee: {
+    name: 'View Employee',
+    path: '/manage/employees/view/:id',
+  },
+  editEmployee: {
+    name: 'Edit Employee',
+    path: '/manage/employees/edit/:id',
+  },
 };

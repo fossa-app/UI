@@ -1,7 +1,8 @@
-import { Employee, EmployeeFieldConfig, Module, SubModule } from 'shared/models';
+import { Employee, EmployeeFieldConfig, Module, SubModule, UserRole } from 'shared/models';
 import { FieldProps, FieldType } from 'components/UI/Form';
-import { Column } from 'components/UI/Table';
+import { Action, Column } from 'components/UI/Table';
 import { ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
+import { ACTION_FIELD, ACTION_FIELDS } from './common';
 
 export const EMPLOYEE_FIELDS: EmployeeFieldConfig = {
   id: {
@@ -19,6 +20,14 @@ export const EMPLOYEE_FIELDS: EmployeeFieldConfig = {
   fullName: {
     field: 'fullName',
     name: 'Full Name',
+  },
+  assignedBranchId: {
+    field: 'assignedBranchId',
+    name: 'Assigned Branch ID',
+  },
+  assignedBranchName: {
+    field: 'assignedBranchName',
+    name: 'Assigned Branch',
   },
 };
 
@@ -80,6 +89,29 @@ export const EMPLOYEE_TABLE_SCHEMA: Column<Employee>[] = [
     field: EMPLOYEE_FIELDS.fullName.field,
     width: 'auto',
   },
+  {
+    name: EMPLOYEE_FIELDS.assignedBranchName!.name,
+    field: EMPLOYEE_FIELDS.assignedBranchName!.field,
+    width: 240,
+  },
+  {
+    name: ACTION_FIELD.name,
+    field: ACTION_FIELD.field,
+    align: 'right',
+    width: 'auto',
+  },
+];
+
+export const EMPLOYEE_TABLE_ACTIONS_SCHEMA: Action<Employee>[] = [
+  {
+    name: ACTION_FIELDS.view.name,
+    field: ACTION_FIELDS.view.field,
+  },
+  {
+    name: ACTION_FIELDS.edit.name,
+    field: ACTION_FIELDS.edit.field,
+    roles: [UserRole.administrator],
+  },
 ];
 
 export const PROFILE_VIEW_DETAILS_SCHEMA: ViewDetailProps<Employee>[] = [
@@ -114,6 +146,104 @@ export const PROFILE_VIEW_DETAILS_SCHEMA: ViewDetailProps<Employee>[] = [
     grid: { size: { xs: 12, md: 12 } },
     module: Module.profile,
     subModule: SubModule.profileViewDetails,
+  },
+];
+
+export const EMPLOYEE_VIEW_DETAILS_SCHEMA: ViewDetailProps<Employee>[] = [
+  {
+    name: 'basicInfo',
+    label: 'Basic Information',
+    type: ViewDetailType.section,
+    grid: { size: { xs: 12 } },
+    module: Module.employeeManagement,
+    subModule: SubModule.employeeViewDetails,
+  },
+  {
+    name: EMPLOYEE_FIELDS.firstName.field,
+    label: 'Employee First Name',
+    type: ViewDetailType.labelValue,
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.employeeManagement,
+    subModule: SubModule.employeeViewDetails,
+  },
+  {
+    name: EMPLOYEE_FIELDS.lastName.field,
+    label: 'Employee Last Name',
+    type: ViewDetailType.labelValue,
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.employeeManagement,
+    subModule: SubModule.employeeViewDetails,
+  },
+  {
+    name: EMPLOYEE_FIELDS.fullName.field,
+    label: 'Employee Full Name',
+    type: ViewDetailType.labelValue,
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.employeeManagement,
+    subModule: SubModule.employeeViewDetails,
+  },
+  {
+    name: EMPLOYEE_FIELDS.assignedBranchName!.field,
+    label: 'Employee Assigned Branch',
+    type: ViewDetailType.labelValue,
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.employeeManagement,
+    subModule: SubModule.employeeViewDetails,
+  },
+];
+
+export const OTHER_EMPLOYEE_DETAILS_FORM_SCHEMA: FieldProps<Employee>[] = [
+  {
+    type: FieldType.section,
+    name: 'basicInfo',
+    label: 'Basic Information',
+    grid: { size: { xs: 12 } },
+    module: Module.employeeSetup,
+    subModule: SubModule.employeeDetails,
+  },
+  {
+    type: FieldType.text,
+    name: EMPLOYEE_FIELDS.firstName.field,
+    label: 'Enter First Name',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.employeeSetup,
+    subModule: SubModule.employeeDetails,
+    autoFocus: true,
+    disabled: true,
+    rules: {
+      required: { value: true, message: 'First Name is required' },
+    },
+  },
+  {
+    type: FieldType.text,
+    name: EMPLOYEE_FIELDS.lastName.field,
+    label: 'Enter Last Name',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.employeeSetup,
+    subModule: SubModule.employeeDetails,
+    disabled: true,
+    rules: {
+      required: { value: true, message: 'Last Name is required' },
+    },
+  },
+  {
+    type: FieldType.text,
+    name: EMPLOYEE_FIELDS.fullName.field,
+    label: 'Enter Full Name',
+    grid: { size: { xs: 12, md: 6 } },
+    module: Module.employeeSetup,
+    subModule: SubModule.employeeDetails,
+    disabled: true,
+  },
+  {
+    type: FieldType.select,
+    name: EMPLOYEE_FIELDS.assignedBranchId!.field,
+    label: 'Select Branch',
+    grid: { size: { xs: 12, md: 6 } },
+    options: [],
+    module: Module.employeeManagement,
+    subModule: SubModule.employeeDetails,
+    roles: [UserRole.administrator],
   },
 ];
 

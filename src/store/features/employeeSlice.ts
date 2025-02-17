@@ -10,9 +10,11 @@ import { fetchUser } from './authSlice';
 interface SetupState {
   employee: StateEntity<Employee | undefined>;
   employees: StateEntity<PaginatedResponse<Employee> | undefined>;
+  otherEmployee: StateEntity<Employee | undefined>;
 }
 
 const initialState: SetupState = {
+  // TODO: rename to profile maybe, it's confusing
   employee: {
     data: undefined,
     fetchStatus: 'idle',
@@ -22,6 +24,11 @@ const initialState: SetupState = {
     data: undefined,
     page: APP_CONFIG.table.defaultPagination,
     fetchStatus: 'idle',
+  },
+  otherEmployee: {
+    data: undefined,
+    fetchStatus: 'idle',
+    updateStatus: 'idle',
   },
 };
 
@@ -50,15 +57,17 @@ export const fetchEmployees = createAsyncThunk<
   PaginatedResponse<EmployeeDTO> | undefined,
   Partial<PaginationParams>,
   { rejectValue: ErrorResponse }
->('employee/getEmployees', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
+>('employee/getEmployees', async ({ pageNumber, pageSize, search }, { getState, rejectWithValue }) => {
   try {
     const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
     const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
+    const state = getState() as RootState;
+    const branches = state.branch.branches.data?.items;
 
     if (data) {
       return {
         ...data,
-        items: mapEmployees(data.items),
+        items: mapEmployees(data.items, branches),
       };
     }
   } catch (error) {
@@ -68,6 +77,21 @@ export const fetchEmployees = createAsyncThunk<
     });
   }
 });
+
+export const fetchEmployeeById = createAsyncThunk<Employee, string, { rejectValue: ErrorResponse }>(
+  'employee/getEmployeeById',
+  async (id, { getState, rejectWithValue }) => {
+    try {
+      const { data } = await axios.get<EmployeeDTO>(`${ENDPOINTS.employees}/${id}`);
+      const state = getState() as RootState;
+      const branches = state.branch.branches.data?.items;
+
+      return mapEmployee(data, undefined, branches);
+    } catch (error) {
+      return rejectWithValue(error as ErrorResponse);
+    }
+  }
+);
 
 export const createEmployee = createAsyncThunk<void, EmployeeDTO, { state: RootState; rejectValue: ErrorResponse }>(
   'employee/setEmployee',
@@ -90,18 +114,39 @@ export const createEmployee = createAsyncThunk<void, EmployeeDTO, { state: RootS
   }
 );
 
+// TODO: rename to editProfile
 export const editEmployee = createAsyncThunk<void, Omit<EmployeeDTO, 'id'>, { rejectValue: ErrorResponse }>(
   'employee/editEmployee',
   async (employee, { dispatch, rejectWithValue }) => {
     try {
-      await axios.put<EmployeeDTO>(ENDPOINTS.employee, employee);
+      await axios.put<void>(ENDPOINTS.employee, employee);
 
-      dispatch(setSuccess(MESSAGES.success.employee.update));
+      dispatch(setSuccess(MESSAGES.success.employee.updateProfile));
     } catch (error) {
       dispatch(
         setError({
           ...(error as ErrorResponse),
-          title: MESSAGES.error.employee.update,
+          title: MESSAGES.error.employee.updateProfile,
+        })
+      );
+
+      return rejectWithValue(error as ErrorResponse);
+    }
+  }
+);
+
+export const editOtherEmployee = createAsyncThunk<void, [string, Pick<EmployeeDTO, 'assignedBranchId'>], { rejectValue: ErrorResponse }>(
+  'employee/editOtherEmployee',
+  async ([id, employee], { dispatch, rejectWithValue }) => {
+    try {
+      await axios.put<void>(`${ENDPOINTS.employees}/${id}`, employee);
+
+      dispatch(setSuccess(MESSAGES.success.employee.updateEmployee));
+    } catch (error) {
+      dispatch(
+        setError({
+          ...(error as ErrorResponse),
+          title: MESSAGES.error.employee.updateEmployee,
         })
       );
 
@@ -122,6 +167,9 @@ const employeeSlice = createSlice({
     },
     resetEmployeeFetchStatus(state) {
       state.employee.fetchStatus = initialState.employee.fetchStatus;
+    },
+    resetOtherEmployee(state) {
+      state.otherEmployee = initialState.otherEmployee;
     },
   },
   extraReducers: (builder) => {
@@ -176,13 +224,35 @@ const employeeSlice = createSlice({
         state.employees.page!.totalItems = action.payload?.totalItems;
         state.employees.page!.totalPages = action.payload?.totalPages;
         state.employees.fetchStatus = 'succeeded';
+      })
+      .addCase(fetchEmployeeById.pending, (state) => {
+        state.otherEmployee.fetchStatus = 'loading';
+      })
+      .addCase(fetchEmployeeById.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+        state.otherEmployee.fetchStatus = 'failed';
+        state.otherEmployee.error = action.payload;
+      })
+      .addCase(fetchEmployeeById.fulfilled, (state, action: PayloadAction<Employee | undefined>) => {
+        state.otherEmployee.data = action.payload;
+        state.otherEmployee.fetchStatus = 'succeeded';
+      })
+      .addCase(editOtherEmployee.pending, (state) => {
+        state.otherEmployee.updateStatus = 'loading';
+      })
+      .addCase(editOtherEmployee.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+        state.otherEmployee.updateStatus = 'failed';
+        state.otherEmployee.error = action.payload;
+      })
+      .addCase(editOtherEmployee.fulfilled, (state) => {
+        state.otherEmployee.updateStatus = 'succeeded';
       });
   },
 });
 
 export const selectEmployee = (state: RootState) => state.employee.employee;
 export const selectEmployees = (state: RootState) => state.employee.employees;
+export const selectOtherEmployee = (state: RootState) => state.employee.otherEmployee;
 
-export const { setEmployeesPagination, resetEmployeesFetchStatus, resetEmployeeFetchStatus } = employeeSlice.actions;
+export const { setEmployeesPagination, resetEmployeesFetchStatus, resetEmployeeFetchStatus, resetOtherEmployee } = employeeSlice.actions;
 
 export default employeeSlice.reducer;

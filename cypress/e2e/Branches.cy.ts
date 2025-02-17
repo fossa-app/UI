@@ -406,6 +406,7 @@ describe('Branches Tests', () => {
 
       cy.visit('/manage/branches');
 
+      // TODO: use selectAction method
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-edit-222222222222').click();
       cy.url().should('include', branchAdminRoutes[1]);

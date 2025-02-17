@@ -103,7 +103,7 @@ export const editBranch = createAsyncThunk<void, [string, Omit<BranchDTO, 'id'>]
   'branch/editBranch',
   async ([id, branch], { dispatch, rejectWithValue }) => {
     try {
-      await axios.put<BranchDTO>(`${ENDPOINTS.branches}/${id}`, branch);
+      await axios.put<void>(`${ENDPOINTS.branches}/${id}`, branch);
 
       dispatch(setSuccess(MESSAGES.success.branches.update));
     } catch (error) {

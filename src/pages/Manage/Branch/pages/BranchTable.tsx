@@ -19,7 +19,7 @@ import Table from 'components/UI/Table';
 import ActionsMenu from 'components/UI/Table/ActionsMenu';
 import TableLayout from 'components/layouts/TableLayout';
 import { useSearch } from 'components/Search';
-import { renderBranchName } from '../components/BranchName';
+import { renderPrimaryLinkText } from 'components/UI/PrimaryLinkText';
 
 const BranchTablePage: React.FC = () => {
   const navigate = useNavigate();
@@ -96,7 +96,12 @@ const BranchTablePage: React.FC = () => {
     return {
       ...column,
       ...(column.field === BRANCH_FIELDS.name.field && {
-        renderBodyCell: (branch: Branch) => renderBranchName(branch, handleViewBranch),
+        renderBodyCell: (branch: Branch) =>
+          renderPrimaryLinkText({
+            item: branch,
+            getText: ({ name }) => name,
+            onClick: handleViewBranch,
+          }),
       }),
     };
   });

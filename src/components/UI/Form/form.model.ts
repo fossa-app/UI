@@ -49,6 +49,7 @@ export type InputFieldProps = BaseFieldProps & {
 
 export type SelectFieldProps = BaseFieldProps & {
   type: FieldType.select;
+  // TODO: add renderOptions to map to the select field options
   options: SelectOption[];
 } & SelectProps;
 
