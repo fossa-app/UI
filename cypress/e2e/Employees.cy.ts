@@ -80,6 +80,20 @@ describe('Employees Tests', () => {
         'have.text',
         'Full Name'
       );
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-firstName')
+        .find('p')
+        .should('exist')
+        .and('have.text', 'Anthony');
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-lastName')
+        .should('exist')
+        .and('have.text', 'Crowley');
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-fullName')
+        .should('exist')
+        .and('have.text', 'Anthony User Crowley');
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-assignedBranchName')
+        .should('exist')
+        .and('have.text', 'New York Branch');
       getTablePaginationSizeInput(Module.employeeManagement, SubModule.employeeTable, 'table').should('have.value', '5');
       getTablePaginationDisplayedRows(Module.employeeManagement, SubModule.employeeTable, 'table-pagination').should(
         'have.text',
@@ -272,6 +286,20 @@ describe('Employees Tests', () => {
         'have.text',
         'Full Name'
       );
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-firstName')
+        .find('p')
+        .should('exist')
+        .and('have.text', 'Anthony');
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-lastName')
+        .should('exist')
+        .and('have.text', 'Crowley');
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-fullName')
+        .should('exist')
+        .and('have.text', 'Anthony User Crowley');
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-assignedBranchName')
+        .should('exist')
+        .and('have.text', 'New York Branch');
       getTablePaginationSizeInput(Module.employeeManagement, SubModule.employeeTable, 'table').should('have.value', '5');
       getTablePaginationDisplayedRows(Module.employeeManagement, SubModule.employeeTable, 'table-pagination').should(
         'have.text',

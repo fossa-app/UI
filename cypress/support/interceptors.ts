@@ -121,14 +121,9 @@ export const interceptFetchBranchByIdRequest = (
   delay = 300
 ) => {
   cy.fixture(fixture).then((branches: PaginatedResponse<Branch>) => {
-    cy.interceptWithAuth(
-      'GET',
-      `${serverBaseUrl}/Branches/${id}`,
-      branches.items.find((branch) => String(branch.id) === id),
-      alias,
-      statusCode,
-      delay
-    );
+    const response = branches.items.find((branch) => String(branch.id) === id);
+
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Branches/${id}`, response, alias, statusCode, delay);
   });
 };
 
@@ -186,10 +181,12 @@ export const interceptCreateEmployeeFailedRequest = () => {
   cy.interceptWithAuth('POST', `${serverBaseUrl}/Employee`, null, 'createEmployeeFailedRequest', 404);
 };
 
+// TODO: rename to interceptEditProfileRequest
 export const interceptEditEmployeeRequest = () => {
   cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employee`, null, 'editEmployeeRequest');
 };
 
+// TODO: rename to interceptEditProfileFailedRequest
 export const interceptEditEmployeeFailedRequest = () => {
   cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employee`, null, 'editEmployeeFailedRequest', 404);
 };
@@ -202,14 +199,9 @@ export const interceptFetchEmployeeByIdRequest = (
   delay = 300
 ) => {
   cy.fixture(fixture).then((employees: PaginatedResponse<Employee>) => {
-    cy.interceptWithAuth(
-      'GET',
-      `${serverBaseUrl}/Employees/${id}`,
-      employees.items.find((employee) => String(employee.id) === id),
-      alias,
-      statusCode,
-      delay
-    );
+    const response = employees.items.find((employee) => String(employee.id) === id);
+
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Employees/${id}`, response, alias, statusCode, delay);
   });
 };
 
@@ -223,6 +215,16 @@ export const interceptFetchEmployeeByIdFailedRequest = (id: string) => {
       404
     );
   });
+};
+
+// TODO: rename to interceptEditEmployeeRequest
+export const interceptEditOtherEmployeeRequest = (id: string) => {
+  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employees/${id}`, null, 'editOtherEmployeeRequest');
+};
+
+// TODO: rename to interceptEditEmployeeFailedRequest
+export const interceptEditOtherEmployeeFailedRequest = (id: string) => {
+  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employees/${id}`, null, 'editOtherEmployeeFailedRequest', 404);
 };
 
 export const interceptFetchEmployeesRequest = (

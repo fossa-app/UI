@@ -378,7 +378,7 @@ describe('Branch Management Tests', () => {
     });
   });
 
-  it('should fetch and display the branch by id when refreshing the page', () => {
+  it('should fetch and display the branch form details by id when refreshing the page', () => {
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit('/manage/branches/edit/222222222222');
 

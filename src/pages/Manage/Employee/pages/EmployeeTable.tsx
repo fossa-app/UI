@@ -104,6 +104,7 @@ const EmployeeTablePage: React.FC = () => {
 
   return (
     <TableLayout module={Module.employeeManagement} subModule={SubModule.employeeTable} pageTitle="Employees">
+      {/* TODO: when the assigned branch is not in the paginated response, it displays the default cell value */}
       <Table<Employee>
         module={Module.employeeManagement}
         subModule={SubModule.employeeTable}
