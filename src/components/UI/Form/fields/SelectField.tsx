@@ -17,7 +17,7 @@ const SelectField: React.FC<SelectFieldProps> = ({ module, subModule, label, nam
 
   const value = useWatch({ control, name });
   const error = getNestedValue(errors, name) as FieldError;
-  const isValueAvailable = options.some((option) => option.value === value);
+  const isValueAvailable = options.some((option) => option.value === String(value));
   const fieldValue = !!options?.length && isValueAvailable ? value : '';
 
   const menuProps = {

@@ -21,6 +21,7 @@ export enum FieldType {
   text = 'text',
   select = 'select',
   checkbox = 'checkbox',
+  labelValue = 'labelValue',
 }
 
 interface BaseFieldProps {
@@ -43,6 +44,10 @@ export type SectionFieldProps = BaseFieldProps & {
   type: FieldType.section;
 } & TypographyProps;
 
+export type LabelValueFieldProps = BaseFieldProps & {
+  type: FieldType.labelValue;
+} & TypographyProps;
+
 export type InputFieldProps = BaseFieldProps & {
   type: FieldType.text;
 } & TextFieldProps;
@@ -60,6 +65,7 @@ export type CheckboxFieldProps = BaseFieldProps & {
 
 export type FieldProps<T> = { renderField?: (item?: T) => React.ReactNode } & (
   | SectionFieldProps
+  | LabelValueFieldProps
   | InputFieldProps
   | SelectFieldProps
   | CheckboxFieldProps
