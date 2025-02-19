@@ -17,15 +17,15 @@ import {
   interceptFetchCompanyFailedRequest,
   interceptFetchCompanyRequest,
   interceptFetchBranchesFailedRequest,
-  interceptFetchEmployeeFailedRequest,
+  interceptFetchProfileFailedRequest,
   interceptFetchSystemLicenseRequest,
-  interceptFetchEmployeeRequest,
+  interceptFetchProfileRequest,
   interceptCreateCompanyFailedRequest,
   interceptCreateCompanyRequest,
   interceptCreateBranchFailedRequest,
   interceptCreateBranchRequest,
-  interceptCreateEmployeeFailedRequest,
-  interceptCreateEmployeeRequest,
+  interceptCreateProfileFailedRequest,
+  interceptCreateProfileRequest,
 } from '../support/interceptors';
 
 const setupRoutes = ['/setup/company', '/setup/branch', '/setup/employee'];
@@ -64,7 +64,7 @@ describe('Setup Flow Tests', () => {
     it('should navigate to branch setup page and no other setup page if company exists', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
-      interceptFetchEmployeeFailedRequest();
+      interceptFetchProfileFailedRequest();
 
       cy.visit('/setup/branch');
 
@@ -84,12 +84,12 @@ describe('Setup Flow Tests', () => {
     it('should navigate to employee setup page and no other setup page if company and branch exist', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
-      interceptFetchEmployeeFailedRequest();
+      interceptFetchProfileFailedRequest();
 
       cy.visit('/setup/employee');
       cy.wait('@fetchCompanyRequest');
       cy.wait('@fetchBranchesRequest');
-      cy.wait('@fetchEmployeeFailedRequest');
+      cy.wait('@fetchProfileFailedRequest');
 
       cy.url().should('include', '/setup/employee');
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('not.have.attr', 'disabled');
@@ -105,17 +105,17 @@ describe('Setup Flow Tests', () => {
     it('should not be able to navigate to company if employee creation failed', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
-      interceptFetchEmployeeFailedRequest();
-      interceptCreateEmployeeFailedRequest();
+      interceptFetchProfileFailedRequest();
+      interceptCreateProfileFailedRequest();
       cy.visit('/setup');
 
-      cy.wait('@fetchEmployeeFailedRequest');
+      cy.wait('@fetchProfileFailedRequest');
 
       cy.url().should('include', '/setup/employee');
 
       clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
 
-      cy.wait('@createEmployeeFailedRequest');
+      cy.wait('@createProfileFailedRequest');
 
       cy.url().should('include', '/setup/employee');
     });
@@ -123,11 +123,11 @@ describe('Setup Flow Tests', () => {
     it('should be able to navigate to company page if employee creation succeeded', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
-      interceptFetchEmployeeFailedRequest();
-      interceptCreateEmployeeRequest();
+      interceptFetchProfileFailedRequest();
+      interceptCreateProfileRequest();
       cy.visit('/setup');
 
-      cy.wait('@fetchEmployeeFailedRequest');
+      cy.wait('@fetchProfileFailedRequest');
 
       cy.url().should('include', '/setup/employee');
 
@@ -140,11 +140,11 @@ describe('Setup Flow Tests', () => {
         .find('input')
         .type('Anthony User Crowley');
 
-      interceptFetchEmployeeRequest();
+      interceptFetchProfileRequest();
       clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
 
-      cy.wait('@createEmployeeRequest');
-      cy.wait('@fetchEmployeeRequest');
+      cy.wait('@createProfileRequest');
+      cy.wait('@fetchProfileRequest');
 
       cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
       cy.url().should('include', '/manage/company');
@@ -153,12 +153,12 @@ describe('Setup Flow Tests', () => {
     it('should navigate to company page if company, branch and employee data exist', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
-      interceptFetchEmployeeRequest();
+      interceptFetchProfileRequest();
 
       cy.visit('/setup');
       cy.wait('@fetchCompanyRequest');
       cy.wait('@fetchBranchesRequest');
-      cy.wait('@fetchEmployeeRequest');
+      cy.wait('@fetchProfileRequest');
 
       cy.url().should('include', '/manage/company');
     });
@@ -189,7 +189,7 @@ describe('Setup Flow Tests', () => {
     it('should navigate to branch setup page and no other setup page if company exists', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
-      interceptFetchEmployeeFailedRequest();
+      interceptFetchProfileFailedRequest();
 
       cy.visit('/setup/branch');
 
@@ -208,12 +208,12 @@ describe('Setup Flow Tests', () => {
     it('should navigate to employee setup page and no other setup page if company and branch exist', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
-      interceptFetchEmployeeFailedRequest();
+      interceptFetchProfileFailedRequest();
 
       cy.visit('/setup/employee');
       cy.wait('@fetchCompanyRequest');
       cy.wait('@fetchBranchesRequest');
-      cy.wait('@fetchEmployeeFailedRequest');
+      cy.wait('@fetchProfileFailedRequest');
 
       cy.url().should('include', '/setup/employee');
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('not.have.attr', 'disabled');
@@ -229,12 +229,12 @@ describe('Setup Flow Tests', () => {
     it('should navigate to company page if company, branch and employee data exist', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
-      interceptFetchEmployeeRequest();
+      interceptFetchProfileRequest();
 
       cy.visit('/setup');
       cy.wait('@fetchCompanyRequest');
       cy.wait('@fetchBranchesRequest');
-      cy.wait('@fetchEmployeeRequest');
+      cy.wait('@fetchProfileRequest');
 
       cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
       cy.url().should('include', '/manage/company');
@@ -432,7 +432,7 @@ describe('Setup Flow Tests', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
       interceptCreateBranchRequest();
-      interceptFetchEmployeeFailedRequest();
+      interceptFetchProfileFailedRequest();
       cy.visit('/setup');
 
       cy.wait('@fetchBranchesFailedRequest');
@@ -470,11 +470,11 @@ describe('Setup Flow Tests', () => {
     it('should display validation messages if the employee creation form is invalid', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
-      interceptFetchEmployeeFailedRequest();
-      interceptCreateEmployeeFailedRequest();
+      interceptFetchProfileFailedRequest();
+      interceptCreateProfileFailedRequest();
       cy.visit('/setup');
 
-      cy.wait('@fetchEmployeeFailedRequest');
+      cy.wait('@fetchProfileFailedRequest');
 
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').clear();
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName').find('input').clear();
@@ -494,17 +494,17 @@ describe('Setup Flow Tests', () => {
     it('should not be able to navigate to company if employee creation failed', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
-      interceptFetchEmployeeFailedRequest();
-      interceptCreateEmployeeFailedRequest();
+      interceptFetchProfileFailedRequest();
+      interceptCreateProfileFailedRequest();
       cy.visit('/setup');
 
-      cy.wait('@fetchEmployeeFailedRequest');
+      cy.wait('@fetchProfileFailedRequest');
 
       cy.url().should('include', '/setup/employee');
 
       clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
 
-      cy.wait('@createEmployeeFailedRequest');
+      cy.wait('@createProfileFailedRequest');
 
       cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
       cy.url().should('include', '/setup/employee');
@@ -513,11 +513,11 @@ describe('Setup Flow Tests', () => {
     it('should be able to navigate to company page if employee creation succeeded', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
-      interceptFetchEmployeeFailedRequest();
-      interceptCreateEmployeeRequest();
+      interceptFetchProfileFailedRequest();
+      interceptCreateProfileRequest();
       cy.visit('/setup');
 
-      cy.wait('@fetchEmployeeFailedRequest');
+      cy.wait('@fetchProfileFailedRequest');
 
       cy.url().should('include', '/setup/employee');
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-header').should('have.text', 'Employee Details');
@@ -535,11 +535,11 @@ describe('Setup Flow Tests', () => {
         .find('input')
         .type('Gabriel Admin Archangel');
 
-      interceptFetchEmployeeRequest();
+      interceptFetchProfileRequest();
       clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
 
-      cy.wait('@createEmployeeRequest');
-      cy.wait('@fetchEmployeeRequest');
+      cy.wait('@createProfileRequest');
+      cy.wait('@fetchProfileRequest');
 
       cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
       cy.url().should('include', '/manage/company');

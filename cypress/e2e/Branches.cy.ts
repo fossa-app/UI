@@ -18,7 +18,7 @@ import {
   interceptFetchClientRequest,
   interceptFetchCompanyLicenseFailedRequest,
   interceptFetchCompanyRequest,
-  interceptFetchEmployeeRequest,
+  interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
 } from '../support/interceptors';
 
@@ -30,7 +30,7 @@ describe('Branches Tests', () => {
     interceptFetchSystemLicenseRequest();
     interceptFetchCompanyLicenseFailedRequest();
     interceptFetchCompanyRequest();
-    interceptFetchEmployeeRequest();
+    interceptFetchProfileRequest();
     cy.visit('/manage/branches');
   });
 

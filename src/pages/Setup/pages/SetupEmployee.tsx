@@ -1,7 +1,7 @@
 import * as React from 'react';
 import DoneIcon from '@mui/icons-material/Done';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectEmployee, createEmployee, fetchEmployee, selectUser } from 'store/features';
+import { createProfile, fetchProfile, selectUser, selectProfile } from 'store/features';
 import { EmployeeDTO, Module, SubModule } from 'shared/models';
 import { EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import { mapUserProfileToEmployee } from 'shared/helpers';
@@ -11,17 +11,17 @@ import PageLayout from 'components/layouts/PageLayout';
 const SetupEmployeePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { data: user } = useAppSelector(selectUser);
-  const { data: employee, fetchStatus, updateStatus } = useAppSelector(selectEmployee);
+  const { data: profile, fetchStatus, updateStatus } = useAppSelector(selectProfile);
 
   const handleSubmit = (data: EmployeeDTO) => {
-    dispatch(createEmployee(data));
+    dispatch(createProfile(data));
   };
 
   React.useEffect(() => {
-    if (!employee && fetchStatus === 'idle') {
-      dispatch(fetchEmployee());
+    if (!profile && fetchStatus === 'idle') {
+      dispatch(fetchProfile());
     }
-  }, [employee, fetchStatus, dispatch]);
+  }, [profile, fetchStatus, dispatch]);
 
   return (
     <PageLayout module={Module.employeeSetup} subModule={SubModule.employeeDetails} pageTitle="Create Employee">

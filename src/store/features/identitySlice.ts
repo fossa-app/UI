@@ -18,7 +18,7 @@ const initialState: IdentityState = {
 };
 
 export const fetchClient = createAsyncThunk<Client | null, void, { rejectValue: ErrorResponse }>(
-  'identity/getClient',
+  'identity/fetchClient',
   async (_, { dispatch, rejectWithValue }) => {
     try {
       const { data } = await axios.get<Client>(`${ENDPOINTS.client}?origin=${window.location.origin}`);

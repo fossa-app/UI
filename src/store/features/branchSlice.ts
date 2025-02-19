@@ -29,7 +29,7 @@ export const fetchBranches = createAsyncThunk<
   PaginatedResponse<Branch> | undefined,
   [Partial<PaginationParams>, boolean?],
   { rejectValue: ErrorResponse }
->('branch/getBranches', async ([{ pageNumber, pageSize, search }, shouldRejectEmptyResponse = false], { getState, rejectWithValue }) => {
+>('branch/fetchBranches', async ([{ pageNumber, pageSize, search }, shouldRejectEmptyResponse = false], { getState, rejectWithValue }) => {
   try {
     const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
     const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?${queryParams}`);
@@ -59,7 +59,7 @@ export const fetchBranches = createAsyncThunk<
 });
 
 export const fetchBranchById = createAsyncThunk<Branch, string, { rejectValue: ErrorResponse }>(
-  'branch/getBranchById',
+  'branch/fetchBranchById',
   async (id, { getState, rejectWithValue }) => {
     try {
       const { data } = await axios.get<BranchDTO>(`${ENDPOINTS.branches}/${id}`);
@@ -76,7 +76,7 @@ export const fetchBranchById = createAsyncThunk<Branch, string, { rejectValue: E
 );
 
 export const createBranch = createAsyncThunk<void, [BranchDTO, boolean?], { rejectValue: ErrorResponse }>(
-  'branch/setBranch',
+  'branch/createBranch',
   async ([branch, shouldFetchBranches = true], { dispatch, rejectWithValue }) => {
     try {
       await axios.post<void>(ENDPOINTS.branches, branch);

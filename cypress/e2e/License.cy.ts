@@ -3,7 +3,7 @@ import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
   interceptFetchCompanyRequest,
-  interceptFetchEmployeeRequest,
+  interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
   interceptFetchCompanyLicenseRequest,
   interceptUploadCompanyLicenseFailedRequest,
@@ -39,7 +39,7 @@ describe('License Tests', () => {
       it('should display a text with no action if setup has completed and no company license is uploaded', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
-        interceptFetchEmployeeRequest();
+        interceptFetchProfileRequest();
         interceptFetchCompanyLicenseFailedRequest();
         interceptUploadCompanyLicenseFailedRequest();
 
@@ -71,7 +71,7 @@ describe('License Tests', () => {
       it('should display default company license if setup has completed', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
-        interceptFetchEmployeeRequest();
+        interceptFetchProfileRequest();
         interceptFetchCompanyLicenseFailedRequest();
         interceptUploadCompanyLicenseFailedRequest();
 
@@ -83,7 +83,7 @@ describe('License Tests', () => {
       it('should not be able to upload a company license if a file is not selected or the uploading failed', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
-        interceptFetchEmployeeRequest();
+        interceptFetchProfileRequest();
         interceptFetchCompanyLicenseFailedRequest();
         interceptUploadCompanyLicenseFailedRequest();
         cy.visit('/manage/company');
@@ -123,7 +123,7 @@ describe('License Tests', () => {
       it('should be able to upload a company license if the selected file is valid and the uploading succeeded', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
-        interceptFetchEmployeeRequest();
+        interceptFetchProfileRequest();
         interceptFetchCompanyLicenseFailedRequest();
         interceptUploadCompanyLicenseFailedRequest();
         cy.visit('/manage/company');
@@ -153,7 +153,7 @@ describe('License Tests', () => {
       it('should display correct company license', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
-        interceptFetchEmployeeRequest();
+        interceptFetchProfileRequest();
         interceptFetchCompanyLicenseRequest();
 
         cy.visit('/manage/company');

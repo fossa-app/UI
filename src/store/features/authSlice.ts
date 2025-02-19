@@ -22,7 +22,7 @@ const initialState: AuthState = {
 };
 
 export const fetchUser = createAsyncThunk<AppUser | undefined, void, { rejectValue: ErrorResponse }>(
-  'auth/getchUser',
+  'auth/fetchUser',
   async (_, { rejectWithValue }) => {
     try {
       const user = await getUserManager().getUser();

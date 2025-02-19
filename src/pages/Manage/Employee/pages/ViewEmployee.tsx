@@ -2,7 +2,7 @@ import * as React from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchEmployeeById, selectOtherEmployee, selectIsUserAdmin, resetOtherEmployee } from 'store/features';
+import { fetchEmployeeById, selectEmployee, selectIsUserAdmin, resetEmployee } from 'store/features';
 import { Module, SubModule } from 'shared/models';
 import { EMPLOYEE_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
@@ -12,7 +12,7 @@ const ViewEmployeePage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  const { data: employee, fetchStatus } = useAppSelector(selectOtherEmployee);
+  const { data: employee, fetchStatus } = useAppSelector(selectEmployee);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
 
   const handleEditClick = () => {
@@ -33,7 +33,7 @@ const ViewEmployeePage: React.FC = () => {
 
   React.useEffect(() => {
     return () => {
-      dispatch(resetOtherEmployee());
+      dispatch(resetEmployee());
     };
   }, [dispatch]);
 

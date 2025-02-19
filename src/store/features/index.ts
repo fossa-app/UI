@@ -6,5 +6,6 @@ export * from './setupSlice';
 export * from './companySlice';
 export * from './branchSlice';
 export * from './employeeSlice';
+export * from './profileSlice';
 export * from './messageSlice';
 export * from './appLoadingSlice';

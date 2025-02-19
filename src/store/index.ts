@@ -9,6 +9,7 @@ import setupReducer from './features/setupSlice';
 import companyReducer from './features/companySlice';
 import branchReducer from './features/branchSlice';
 import employeeReducer from './features/employeeSlice';
+import profileReducer from './features/profileSlice';
 import messageReducer from './features/messageSlice';
 import appLoadingReducer from './features/appLoadingSlice';
 
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   company: companyReducer,
   branch: branchReducer,
   employee: employeeReducer,
+  profile: profileReducer,
   message: messageReducer,
   appLoading: appLoadingReducer,
 });

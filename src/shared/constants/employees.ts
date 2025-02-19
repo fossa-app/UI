@@ -31,6 +31,47 @@ export const EMPLOYEE_FIELDS: EmployeeFieldConfig = {
   },
 };
 
+export const EMPLOYEE_TABLE_SCHEMA: Column<Employee>[] = [
+  {
+    name: EMPLOYEE_FIELDS.firstName.name,
+    field: EMPLOYEE_FIELDS.firstName.field,
+    width: 240,
+  },
+  {
+    name: EMPLOYEE_FIELDS.lastName.name,
+    field: EMPLOYEE_FIELDS.lastName.field,
+    width: 240,
+  },
+  {
+    name: EMPLOYEE_FIELDS.fullName.name,
+    field: EMPLOYEE_FIELDS.fullName.field,
+    width: 'auto',
+  },
+  {
+    name: EMPLOYEE_FIELDS.assignedBranchName!.name,
+    field: EMPLOYEE_FIELDS.assignedBranchName!.field,
+    width: 240,
+  },
+  {
+    name: ACTION_FIELD.name,
+    field: ACTION_FIELD.field,
+    align: 'right',
+    width: 'auto',
+  },
+];
+
+export const EMPLOYEE_TABLE_ACTIONS_SCHEMA: Action<Employee>[] = [
+  {
+    name: ACTION_FIELDS.view.name,
+    field: ACTION_FIELDS.view.field,
+  },
+  {
+    name: ACTION_FIELDS.edit.name,
+    field: ACTION_FIELDS.edit.field,
+    roles: [UserRole.administrator],
+  },
+];
+
 export const EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA: FieldProps<Employee>[] = [
   {
     type: FieldType.section,
@@ -70,47 +111,6 @@ export const EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA: FieldProps<Employee>[] = [
     grid: { size: { xs: 12 } },
     module: Module.employeeSetup,
     subModule: SubModule.employeeDetails,
-  },
-];
-
-export const EMPLOYEE_TABLE_SCHEMA: Column<Employee>[] = [
-  {
-    name: EMPLOYEE_FIELDS.firstName.name,
-    field: EMPLOYEE_FIELDS.firstName.field,
-    width: 240,
-  },
-  {
-    name: EMPLOYEE_FIELDS.lastName.name,
-    field: EMPLOYEE_FIELDS.lastName.field,
-    width: 240,
-  },
-  {
-    name: EMPLOYEE_FIELDS.fullName.name,
-    field: EMPLOYEE_FIELDS.fullName.field,
-    width: 'auto',
-  },
-  {
-    name: EMPLOYEE_FIELDS.assignedBranchName!.name,
-    field: EMPLOYEE_FIELDS.assignedBranchName!.field,
-    width: 240,
-  },
-  {
-    name: ACTION_FIELD.name,
-    field: ACTION_FIELD.field,
-    align: 'right',
-    width: 'auto',
-  },
-];
-
-export const EMPLOYEE_TABLE_ACTIONS_SCHEMA: Action<Employee>[] = [
-  {
-    name: ACTION_FIELDS.view.name,
-    field: ACTION_FIELDS.view.field,
-  },
-  {
-    name: ACTION_FIELDS.edit.name,
-    field: ACTION_FIELDS.edit.field,
-    roles: [UserRole.administrator],
   },
 ];
 
@@ -200,7 +200,7 @@ export const EMPLOYEE_VIEW_DETAILS_SCHEMA: ViewDetailProps<Employee>[] = [
   },
 ];
 
-export const OTHER_EMPLOYEE_DETAILS_FORM_SCHEMA: FieldProps<Employee>[] = [
+export const EMPLOYEE_DETAILS_FORM_SCHEMA: FieldProps<Employee>[] = [
   {
     type: FieldType.section,
     name: 'basicInfo',
