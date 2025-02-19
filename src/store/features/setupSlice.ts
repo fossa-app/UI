@@ -4,7 +4,7 @@ import { ErrorResponse, SetupStep } from 'shared/models';
 import { APP_CONFIG } from 'shared/constants';
 import { fetchCompany } from './companySlice';
 import { fetchBranches } from './branchSlice';
-import { fetchEmployee } from './employeeSlice';
+import { fetchProfile } from './profileSlice';
 
 interface SetupState {
   step: StateEntity<SetupStep>;
@@ -18,7 +18,7 @@ const initialState: SetupState = {
 };
 
 export const fetchSetupData = createAsyncThunk<void, void, { rejectValue: ErrorResponse }>(
-  'setup/getSetupData',
+  'setup/fetchSetupData',
   async (_, { dispatch }) => {
     const companyResponse = await dispatch(fetchCompany(true)).unwrap();
 
@@ -26,7 +26,7 @@ export const fetchSetupData = createAsyncThunk<void, void, { rejectValue: ErrorR
       const branchesResponse = await dispatch(fetchBranches([APP_CONFIG.table.defaultPagination, true])).unwrap();
 
       if (branchesResponse?.items.length) {
-        await dispatch(fetchEmployee()).unwrap();
+        await dispatch(fetchProfile()).unwrap();
       }
     }
   }
@@ -55,12 +55,12 @@ const setupSlice = createSlice({
       .addCase(fetchBranches.fulfilled, (state) => {
         state.step.data = SetupStep.EMPLOYEE;
       })
-      .addCase(fetchEmployee.rejected, (state) => {
+      .addCase(fetchProfile.rejected, (state) => {
         state.step.status = 'failed';
         // TODO: monitor this step
         state.step.data = SetupStep.EMPLOYEE;
       })
-      .addCase(fetchEmployee.fulfilled, (state) => {
+      .addCase(fetchProfile.fulfilled, (state) => {
         state.step.status = 'succeeded';
         state.step.data = SetupStep.COMPLETED;
       });

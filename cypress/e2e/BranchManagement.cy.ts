@@ -27,7 +27,7 @@ import {
   interceptFetchClientRequest,
   interceptFetchCompanyLicenseFailedRequest,
   interceptFetchCompanyRequest,
-  interceptFetchEmployeeRequest,
+  interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
 } from '../support/interceptors';
 
@@ -38,7 +38,7 @@ describe('Branch Management Tests', () => {
     interceptFetchCompanyLicenseFailedRequest();
     interceptFetchCompanyRequest();
     interceptFetchBranchesRequest();
-    interceptFetchEmployeeRequest();
+    interceptFetchProfileRequest();
     cy.loginMock(true);
   });
 

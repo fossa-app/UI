@@ -24,7 +24,7 @@ const initialState: LicenseState = {
 };
 
 export const fetchSystemLicense = createAsyncThunk<SystemLicense | null, void, { rejectValue: ErrorResponse }>(
-  'license/getSystemLicense',
+  'license/fetchSystemLicense',
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await axios.get<SystemLicense>(ENDPOINTS.systemLicense);
@@ -39,7 +39,7 @@ export const fetchSystemLicense = createAsyncThunk<SystemLicense | null, void, {
 );
 
 export const fetchCompanyLicense = createAsyncThunk<CompanyLicense | undefined, void, { rejectValue: ErrorResponse }>(
-  'license/getCompanyLicense',
+  'license/fetchCompanyLicense',
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await axios.get<CompanyLicense>(ENDPOINTS.companyLicense);

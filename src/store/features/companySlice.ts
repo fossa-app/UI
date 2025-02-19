@@ -19,7 +19,7 @@ const initialState: CompanyState = {
 };
 
 export const fetchCompany = createAsyncThunk<Company | undefined, boolean | undefined, { rejectValue: ErrorResponse }>(
-  'company/getCompany',
+  'company/fetchCompany',
   async (_, { getState, rejectWithValue }) => {
     try {
       const { data } = await axios.get<CompanyDTO>(ENDPOINTS.company);
@@ -40,7 +40,7 @@ export const fetchCompany = createAsyncThunk<Company | undefined, boolean | unde
 );
 
 export const createCompany = createAsyncThunk<void, CompanyDTO, { rejectValue: ErrorResponse }>(
-  'company/setCompany',
+  'company/createCompany',
   async (company, { dispatch, rejectWithValue }) => {
     try {
       await axios.post<CompanyDTO>(ENDPOINTS.company, company);

@@ -8,14 +8,14 @@ import {
   verifyTextFields,
 } from '../support/helpers';
 import {
-  interceptEditEmployeeFailedRequest,
-  interceptEditEmployeeRequest,
+  interceptEditProfileFailedRequest,
+  interceptEditProfileRequest,
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
   interceptFetchCompanyLicenseFailedRequest,
   interceptFetchCompanyRequest,
-  interceptFetchEmployeeFailedRequest,
-  interceptFetchEmployeeRequest,
+  interceptFetchProfileFailedRequest,
+  interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
 } from '../support/interceptors';
 
@@ -30,10 +30,10 @@ describe('Profile Tests', () => {
   });
 
   it('should not be able to navigate to profile page if the employee is in a draft status', () => {
-    interceptFetchEmployeeFailedRequest();
+    interceptFetchProfileFailedRequest();
     cy.visit('/setup/employee');
 
-    cy.wait('@fetchEmployeeFailedRequest');
+    cy.wait('@fetchProfileFailedRequest');
     openUserProfile();
 
     cy.url().should('include', '/setup/employee');
@@ -44,10 +44,10 @@ describe('Profile Tests', () => {
   });
 
   it('should navigate to view profile page if the employee exists when clicking the user menu item', () => {
-    interceptFetchEmployeeRequest();
+    interceptFetchProfileRequest();
     cy.visit('/manage/company/view');
 
-    cy.wait('@fetchEmployeeRequest');
+    cy.wait('@fetchProfileRequest');
     openUserProfile();
 
     cy.url().should('include', '/manage/profile/view');
@@ -65,7 +65,7 @@ describe('Profile Tests', () => {
   });
 
   it('should reset the form and navigate to view profile page if the cancel button is clicked', () => {
-    interceptFetchEmployeeRequest();
+    interceptFetchProfileRequest();
     cy.visit('/manage/profile/view');
 
     getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-action-button').click();
@@ -97,11 +97,11 @@ describe('Profile Tests', () => {
 
   // TODO: flaky test
   it('should not be able to edit the profile if the form is invalid or employee updating failed', () => {
-    interceptFetchEmployeeRequest();
-    interceptEditEmployeeFailedRequest();
+    interceptFetchProfileRequest();
+    interceptEditProfileFailedRequest();
     cy.visit('/manage/profile/view');
 
-    cy.wait('@fetchEmployeeRequest');
+    cy.wait('@fetchProfileRequest');
 
     getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-action-button').click();
 
@@ -127,21 +127,21 @@ describe('Profile Tests', () => {
 
     clickActionButton(Module.profile, SubModule.profileDetails);
 
-    cy.wait('@editEmployeeFailedRequest');
+    cy.wait('@editProfileFailedRequest');
 
     cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to update the Profile');
   });
 
   it('should be able to edit the profile and be navigated to view profile page if the form is valid and employee updating succeeded', () => {
-    interceptFetchEmployeeRequest();
-    interceptEditEmployeeRequest();
+    interceptFetchProfileRequest();
+    interceptEditProfileRequest();
     cy.visit('/manage/profile/view');
 
     getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-action-button').click();
 
     cy.url().should('include', '/manage/profile/edit');
 
-    cy.wait('@fetchEmployeeRequest');
+    cy.wait('@fetchProfileRequest');
 
     getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName').find('input').clear();
     getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName').find('input').type('Anthony');
@@ -150,7 +150,7 @@ describe('Profile Tests', () => {
     getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').clear();
     getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').type('Anthony User Crowley');
 
-    interceptFetchEmployeeRequest('fetchUpdatedEmployeeRequest', 'employee-updated');
+    interceptFetchProfileRequest('fetchUpdatedProfileRequest', 'employee-updated');
 
     clickActionButton(Module.profile, SubModule.profileDetails);
 
@@ -158,8 +158,8 @@ describe('Profile Tests', () => {
     getLoadingButtonLoadingIcon(Module.profile, SubModule.profileDetails, 'form-action-button').should('be.visible');
     getLinearLoader(Module.profile, SubModule.profileViewDetails, 'view-details').should('exist');
 
-    cy.wait('@editEmployeeRequest');
-    cy.wait('@fetchUpdatedEmployeeRequest');
+    cy.wait('@editProfileRequest');
+    cy.wait('@fetchUpdatedProfileRequest');
 
     cy.url().should('include', '/manage/profile/view');
     getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-value-firstName').should('have.text', 'Anthony');
@@ -175,10 +175,10 @@ describe('Profile Tests', () => {
   });
 
   it('should render the danger zone on the view profile page', () => {
-    interceptFetchEmployeeRequest();
+    interceptFetchProfileRequest();
     cy.visit('/manage/profile/view');
 
-    cy.wait('@fetchEmployeeRequest');
+    cy.wait('@fetchProfileRequest');
 
     getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-title').should('not.exist');
     getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-subtitle').should('not.exist');

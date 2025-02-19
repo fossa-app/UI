@@ -163,32 +163,46 @@ export const interceptDeleteBranchFailedRequest = (id: string) => {
   cy.interceptWithAuth('DELETE', `${serverBaseUrl}/Branches/${id}`, null, 'deleteBranchFailedRequest', 404);
 };
 
-export const interceptFetchEmployeeRequest = (alias = 'fetchEmployeeRequest', fixture = 'employee') => {
+export const interceptFetchProfileRequest = (alias = 'fetchProfileRequest', fixture = 'employee') => {
   cy.fixture(fixture).then((employee) => {
     cy.interceptWithAuth('GET', `${serverBaseUrl}/Employee`, employee, alias);
   });
 };
 
-export const interceptFetchEmployeeFailedRequest = () => {
-  cy.interceptWithAuth('GET', `${serverBaseUrl}/Employee`, null, 'fetchEmployeeFailedRequest', 404);
+export const interceptFetchProfileFailedRequest = () => {
+  cy.interceptWithAuth('GET', `${serverBaseUrl}/Employee`, null, 'fetchProfileFailedRequest', 404);
 };
 
-export const interceptCreateEmployeeRequest = () => {
-  cy.interceptWithAuth('POST', `${serverBaseUrl}/Employee`, null, 'createEmployeeRequest');
+export const interceptCreateProfileRequest = () => {
+  cy.interceptWithAuth('POST', `${serverBaseUrl}/Employee`, null, 'createProfileRequest');
 };
 
-export const interceptCreateEmployeeFailedRequest = () => {
-  cy.interceptWithAuth('POST', `${serverBaseUrl}/Employee`, null, 'createEmployeeFailedRequest', 404);
+export const interceptCreateProfileFailedRequest = () => {
+  cy.interceptWithAuth('POST', `${serverBaseUrl}/Employee`, null, 'createProfileFailedRequest', 404);
 };
 
-// TODO: rename to interceptEditProfileRequest
-export const interceptEditEmployeeRequest = () => {
-  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employee`, null, 'editEmployeeRequest');
+export const interceptEditProfileRequest = () => {
+  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employee`, null, 'editProfileRequest');
 };
 
-// TODO: rename to interceptEditProfileFailedRequest
-export const interceptEditEmployeeFailedRequest = () => {
-  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employee`, null, 'editEmployeeFailedRequest', 404);
+export const interceptEditProfileFailedRequest = () => {
+  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employee`, null, 'editProfileFailedRequest', 404);
+};
+
+export const interceptFetchEmployeesRequest = (
+  { pageNumber = 1, pageSize = 5, search = '' } = {},
+  { alias = 'fetchEmployeesRequest', fixture = 'employees', statusCode = 200, delay = 300 } = {}
+) => {
+  cy.fixture(fixture).then((employees) => {
+    const searchParam = search ? `&search=${search}` : '';
+    const url = `${serverBaseUrl}/Employees?pageNumber=${pageNumber}&pageSize=${pageSize}${searchParam}`;
+
+    cy.interceptWithAuth('GET', url, employees, alias, statusCode, delay);
+  });
+};
+
+export const interceptFetchEmployeesFailedRequest = () => {
+  cy.interceptWithAuth('GET', `${serverBaseUrl}/Employees*`, null, 'fetchEmployeesFailedRequest', 404);
 };
 
 export const interceptFetchEmployeeByIdRequest = (
@@ -217,28 +231,10 @@ export const interceptFetchEmployeeByIdFailedRequest = (id: string) => {
   });
 };
 
-// TODO: rename to interceptEditEmployeeRequest
-export const interceptEditOtherEmployeeRequest = (id: string) => {
-  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employees/${id}`, null, 'editOtherEmployeeRequest');
+export const interceptEditEmployeeRequest = (id: string) => {
+  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employees/${id}`, null, 'editEmployeeRequest');
 };
 
-// TODO: rename to interceptEditEmployeeFailedRequest
-export const interceptEditOtherEmployeeFailedRequest = (id: string) => {
-  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employees/${id}`, null, 'editOtherEmployeeFailedRequest', 404);
-};
-
-export const interceptFetchEmployeesRequest = (
-  { pageNumber = 1, pageSize = 5, search = '' } = {},
-  { alias = 'fetchEmployeesRequest', fixture = 'employees', statusCode = 200, delay = 300 } = {}
-) => {
-  cy.fixture(fixture).then((employees) => {
-    const searchParam = search ? `&search=${search}` : '';
-    const url = `${serverBaseUrl}/Employees?pageNumber=${pageNumber}&pageSize=${pageSize}${searchParam}`;
-
-    cy.interceptWithAuth('GET', url, employees, alias, statusCode, delay);
-  });
-};
-
-export const interceptFetchEmployeesFailedRequest = () => {
-  cy.interceptWithAuth('GET', `${serverBaseUrl}/Employees*`, null, 'fetchEmployeesFailedRequest', 404);
+export const interceptEditEmployeeFailedRequest = (id: string) => {
+  cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employees/${id}`, null, 'editEmployeeFailedRequest', 404);
 };

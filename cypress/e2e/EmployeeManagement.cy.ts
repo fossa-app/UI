@@ -9,14 +9,14 @@ import {
   verifyTextFields,
 } from '../support/helpers';
 import {
-  interceptEditOtherEmployeeFailedRequest,
-  interceptEditOtherEmployeeRequest,
+  interceptEditEmployeeFailedRequest,
+  interceptEditEmployeeRequest,
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
   interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
   interceptFetchEmployeeByIdRequest,
-  interceptFetchEmployeeRequest,
+  interceptFetchProfileRequest,
   interceptFetchEmployeesRequest,
   interceptFetchSystemLicenseRequest,
 } from '../support/interceptors';
@@ -58,7 +58,7 @@ describe('Employee Management Tests', () => {
     interceptFetchCompanyLicenseRequest();
     interceptFetchCompanyRequest();
     interceptFetchBranchesRequest();
-    interceptFetchEmployeeRequest();
+    interceptFetchProfileRequest();
     interceptFetchEmployeesRequest(
       { pageNumber: 1, pageSize: 5 },
       { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
@@ -165,7 +165,7 @@ describe('Employee Management Tests', () => {
 
     it('should not be able to edit the employee if the employee updating failed', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
-      interceptEditOtherEmployeeFailedRequest('333333333335');
+      interceptEditEmployeeFailedRequest('333333333335');
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100 },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
@@ -176,14 +176,14 @@ describe('Employee Management Tests', () => {
 
       clickActionButton(Module.employeeManagement, SubModule.employeeDetails);
 
-      cy.wait('@editOtherEmployeeFailedRequest');
+      cy.wait('@editEmployeeFailedRequest');
 
       cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to update the Employee');
     });
 
     it('should be able to edit the employee and be navigated to employee table page if the employee updating succeeded', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
-      interceptEditOtherEmployeeRequest('333333333335');
+      interceptEditEmployeeRequest('333333333335');
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100 },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
@@ -211,7 +211,7 @@ describe('Employee Management Tests', () => {
 
       selectOption(Module.employeeManagement, SubModule.employeeDetails, 'assignedBranchId', '222222222223');
       clickActionButton(Module.employeeManagement, SubModule.employeeDetails);
-      cy.wait('@editOtherEmployeeRequest');
+      cy.wait('@editEmployeeRequest');
 
       interceptFetchEmployeesRequest(
         { pageNumber: 1, pageSize: 5 },

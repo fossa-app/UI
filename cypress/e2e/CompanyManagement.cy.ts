@@ -16,7 +16,7 @@ import {
   interceptFetchCompanyLicenseFailedRequest,
   interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
-  interceptFetchEmployeeRequest,
+  interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
 } from '../support/interceptors';
 
@@ -69,7 +69,7 @@ describe('Company Management Tests', () => {
     interceptFetchSystemLicenseRequest();
     interceptFetchCompanyLicenseFailedRequest();
     interceptFetchBranchesRequest();
-    interceptFetchEmployeeRequest();
+    interceptFetchProfileRequest();
   });
 
   describe('User Role', () => {

@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchEmployee, selectEmployee } from 'store/features';
+import { fetchProfile, selectProfile } from 'store/features';
 import { Module, SubModule } from 'shared/models';
 import { PROFILE_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
@@ -14,7 +14,7 @@ import ViewDetails from 'components/UI/ViewDetails';
 const ViewProfilePage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: employee, fetchStatus } = useAppSelector(selectEmployee);
+  const { data: profile, fetchStatus } = useAppSelector(selectProfile);
 
   const handleEditClick = () => {
     navigate(ROUTES.editProfile.path);
@@ -26,7 +26,7 @@ const ViewProfilePage: React.FC = () => {
 
   React.useEffect(() => {
     if (fetchStatus === 'idle') {
-      dispatch(fetchEmployee());
+      dispatch(fetchProfile());
     }
   }, [fetchStatus, dispatch]);
 
@@ -36,7 +36,7 @@ const ViewProfilePage: React.FC = () => {
         <Grid size={12}>
           <ViewDetails module={Module.profile} subModule={SubModule.profileViewDetails} loading={fetchStatus === 'loading'}>
             <ViewDetails.Header>Profile Details</ViewDetails.Header>
-            <ViewDetails.Content fields={PROFILE_VIEW_DETAILS_SCHEMA} values={employee} />
+            <ViewDetails.Content fields={PROFILE_VIEW_DETAILS_SCHEMA} values={profile} />
             <ViewDetails.Actions>
               <Button
                 data-cy={`${Module.profile}-${SubModule.profileViewDetails}-view-action-button`}

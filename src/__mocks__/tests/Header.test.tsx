@@ -11,8 +11,8 @@ describe('Header Component', () => {
   beforeEach(() => {
     resetMockState();
     setMockState({
-      employee: {
-        employee: {
+      profile: {
+        profile: {
           data: undefined,
         },
       },
@@ -70,7 +70,7 @@ describe('Header Component', () => {
 
   it('should display the user name and logout button after login', async () => {
     setMockState({
-      employee: { employee: { data: { firstName: 'Test' } } } as any,
+      profile: { profile: { data: { firstName: 'Test' } } } as any,
     });
 
     render(
@@ -90,7 +90,7 @@ describe('Header Component', () => {
     const mockUserManager = getUserManager();
 
     setMockState({
-      employee: { employee: { data: { firstName: 'Test' } } } as any,
+      profile: { profile: { data: { firstName: 'Test' } } } as any,
     });
 
     render(

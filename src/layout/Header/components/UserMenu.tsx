@@ -13,6 +13,7 @@ interface UserMenuProps {
   onUserClick: () => void;
 }
 
+// TODO: rename to ProfileMenu
 const UserMenu: React.FC<UserMenuProps> = ({ user, onLogoutClick, onUserClick }) => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 

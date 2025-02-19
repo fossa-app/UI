@@ -6,7 +6,7 @@ import {
   interceptFetchCompanyLicenseFailedRequest,
   interceptFetchCompanyRequest,
   interceptFetchEmployeeByIdRequest,
-  interceptFetchEmployeeRequest,
+  interceptFetchProfileRequest,
   interceptFetchEmployeesFailedRequest,
   interceptFetchEmployeesRequest,
   interceptFetchSystemLicenseRequest,
@@ -19,7 +19,7 @@ describe('Employees Tests', () => {
     interceptFetchCompanyLicenseFailedRequest();
     interceptFetchCompanyRequest();
     interceptFetchBranchesRequest();
-    interceptFetchEmployeeRequest();
+    interceptFetchProfileRequest();
     cy.visit('/manage/employees');
   });
 
@@ -171,6 +171,7 @@ describe('Employees Tests', () => {
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
     });
 
+    // TODO: flaky test
     it('should reset the search state when the clear icon is clicked', () => {
       interceptFetchEmployeesRequest(
         { pageNumber: 1, pageSize: 5 },
