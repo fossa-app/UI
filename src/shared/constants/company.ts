@@ -1,7 +1,7 @@
 import { Company, CompanyFieldConfig, CompanyLicense, CompanyLicenseFieldConfig, Module, SubModule, UserRole } from 'shared/models';
 import { FieldProps, FieldType } from 'components/UI/Form';
 import { ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
-import { renderCompanyLicenseIdField } from 'pages/Manage/Company/components/CompanyLicenseIdField';
+import { renderCompanyIdField } from 'pages/Manage/Company/components/CompanyIdField';
 
 export const COMPANY_FIELDS: CompanyFieldConfig = {
   id: {
@@ -150,6 +150,15 @@ export const COMPANY_VIEW_DETAILS_SCHEMA: ViewDetailProps<Company>[] = [
     module: Module.companyManagement,
     subModule: SubModule.companyViewDetails,
   },
+  {
+    name: COMPANY_FIELDS.id!.field,
+    label: COMPANY_FIELDS.id!.name,
+    type: ViewDetailType.labelValue,
+    grid: { size: { xs: 12 } },
+    module: Module.companyManagement,
+    subModule: SubModule.companyViewDetails,
+    renderDetailField: (company) => renderCompanyIdField(company),
+  },
 ];
 
 export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewDetailProps<CompanyLicense>[] = [
@@ -200,15 +209,6 @@ export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewDetailProps<CompanyLicense
     grid: { size: { xs: 12 } },
     module: Module.companyManagement,
     subModule: SubModule.companyLicenseViewDetails,
-  },
-  {
-    name: `${COMPANY_LICENSE_FIELDS.entitlements.field}.${COMPANY_LICENSE_FIELDS.entitlements.companyId.field}`,
-    label: COMPANY_LICENSE_FIELDS.entitlements.companyId.name,
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyLicenseViewDetails,
-    renderDetailField: (company) => renderCompanyLicenseIdField(company),
   },
   {
     name: `${COMPANY_LICENSE_FIELDS.entitlements.field}.${COMPANY_LICENSE_FIELDS.entitlements.maximumBranchCount.field}`,

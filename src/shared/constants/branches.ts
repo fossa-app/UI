@@ -22,9 +22,9 @@ export const BRANCH_FIELDS: BranchFieldConfig = {
     field: 'timeZoneName',
     name: 'TimeZone',
   },
-  nonPhysicalAddress: {
-    field: 'nonPhysicalAddress',
-    name: 'Non-Physical Address',
+  noPhysicalAddress: {
+    field: 'noPhysicalAddress',
+    name: 'No Physical Address',
   },
   address: {
     field: 'address',
@@ -122,9 +122,10 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps<Branch>[] = [
     roles: [UserRole.administrator],
   },
   {
+    // TODO: setting this to FieldType.switch causes a bug in ManageBranch state update
     type: FieldType.checkbox,
-    name: BRANCH_FIELDS.nonPhysicalAddress.field,
-    label: 'Non-Physical Address',
+    name: BRANCH_FIELDS.noPhysicalAddress.field,
+    label: BRANCH_FIELDS.noPhysicalAddress.name,
     grid: { size: { xs: 12 } },
     module: Module.branchManagement,
     subModule: SubModule.branchDetails,

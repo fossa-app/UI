@@ -3,6 +3,7 @@ import { FieldValues, RegisterOptions } from 'react-hook-form';
 import { TextFieldProps } from '@mui/material/TextField';
 import { SelectProps } from '@mui/material/Select';
 import { CheckboxProps } from '@mui/material/Checkbox';
+import { SwitchProps } from '@mui/material/Switch';
 import { GridBaseProps } from '@mui/material/Grid2';
 import { TypographyProps } from '@mui/material/Typography';
 import { Module, SubModule, UserRole } from 'shared/models';
@@ -21,6 +22,7 @@ export enum FieldType {
   text = 'text',
   select = 'select',
   checkbox = 'checkbox',
+  switch = 'switch',
   labelValue = 'labelValue',
 }
 
@@ -63,10 +65,16 @@ export type CheckboxFieldProps = BaseFieldProps & {
   label: string;
 } & CheckboxProps;
 
+export type SwitchFieldProps = BaseFieldProps & {
+  type: FieldType.switch;
+  label: string;
+} & SwitchProps;
+
 export type FieldProps<T> = { renderField?: (item?: T) => React.ReactNode } & (
   | SectionFieldProps
   | LabelValueFieldProps
   | InputFieldProps
   | SelectFieldProps
   | CheckboxFieldProps
+  | SwitchFieldProps
 );

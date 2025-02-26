@@ -2,14 +2,15 @@ import * as React from 'react';
 import { FieldError, useFormContext, useWatch } from 'react-hook-form';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import Switch from '@mui/material/Switch';
 import FormHelperText from '@mui/material/FormHelperText';
 import { getNestedValue } from 'shared/helpers';
-import { CheckboxFieldProps } from '../form.model';
+import { SwitchFieldProps } from '../form.model';
 
-const CheckboxField: React.FC<CheckboxFieldProps> = ({ module, subModule, name, label, ...props }) => {
+const SwitchField: React.FC<SwitchFieldProps> = ({ module, subModule, name, label, ...props }) => {
   const {
     register,
+    setValue,
     formState: { errors },
     control,
   } = useFormContext();
@@ -17,15 +18,20 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({ module, subModule, name, 
   const error = getNestedValue(errors, name) as FieldError;
   const checked = useWatch({ control, name });
 
+  const handleClick = () => {
+    setValue(name, !checked);
+  };
+
   return (
     <FormControl>
       <FormControlLabel
         control={
-          <Checkbox
+          <Switch
             data-cy={`${module}-${subModule}-form-field-${name}`}
             checked={!!checked}
             {...register(name, { ...props.rules })}
             {...props}
+            onClick={handleClick}
           />
         }
         label={label}
@@ -39,4 +45,4 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({ module, subModule, name, 
   );
 };
 
-export default CheckboxField;
+export default SwitchField;

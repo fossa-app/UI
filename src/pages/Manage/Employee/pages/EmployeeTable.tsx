@@ -1,10 +1,18 @@
 import * as React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchEmployees, resetEmployeesFetchStatus, selectEmployees, selectUserRoles, setEmployeesPagination } from 'store/features';
+import {
+  fetchEmployees,
+  resetEmployeesFetchStatus,
+  resetEmployeesPagination,
+  selectEmployees,
+  selectUserRoles,
+  setEmployeesPagination,
+} from 'store/features';
 import { Employee, Module, PaginationParams, SubModule } from 'shared/models';
 import { ACTION_FIELDS, APP_CONFIG, EMPLOYEE_FIELDS, EMPLOYEE_TABLE_ACTIONS_SCHEMA, EMPLOYEE_TABLE_SCHEMA, ROUTES } from 'shared/constants';
 import { filterTableActionsByRoles, getTestSelectorByModule, mapTableActionsColumn } from 'shared/helpers';
+import { useUnmount } from 'shared/hooks';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import Table from 'components/UI/Table';
 import TableLayout from 'components/layouts/TableLayout';
@@ -19,70 +27,66 @@ const EmployeeTablePage: React.FC = () => {
   const userRoles = useAppSelector(selectUserRoles);
   const { search, searchChanged, setSearchChanged, setProps } = useSearch();
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
+  const handleNavigate = React.useCallback((path: string) => navigate(path), [navigate]);
 
-  const noRecordsTemplate = (
-    <Page sx={{ my: 0 }}>
-      <PageSubtitle
-        data-cy={getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-no-employees')}
-        fontSize={20}
-      >
-        No Employees Found
-      </PageSubtitle>
-    </Page>
+  const handleEmployeeAction = React.useCallback(
+    (employee: Employee, action: keyof typeof ACTION_FIELDS) => {
+      switch (action) {
+        case 'view':
+          handleNavigate(generatePath(ROUTES.viewEmployee.path, { id: employee.id }));
+          break;
+        case 'edit':
+          handleNavigate(generatePath(ROUTES.editEmployee.path, { id: employee.id }));
+          break;
+      }
+    },
+    [handleNavigate]
   );
 
-  const handlePageNumberChange = (pageNumber: number) => {
-    dispatch(resetEmployeesFetchStatus());
-    dispatch(setEmployeesPagination({ pageNumber }));
-  };
-
-  const handlePageSizeChange = (pageSize: number) => {
-    dispatch(resetEmployeesFetchStatus());
-    dispatch(setEmployeesPagination({ pageSize, pageNumber: 1 }));
-  };
-
-  const handleViewEmployee = ({ id }: Employee) => {
-    const viewPath = generatePath(ROUTES.viewEmployee.path, { id });
-
-    navigate(viewPath);
-  };
-
-  const handleEditEmployee = ({ id }: Employee) => {
-    const editPath = generatePath(ROUTES.editEmployee.path, { id });
-
-    navigate(editPath);
-  };
-
-  const actionHandlers = {
-    [ACTION_FIELDS.view.field]: handleViewEmployee,
-    [ACTION_FIELDS.edit.field]: handleEditEmployee,
-  };
-
-  const actions = filterTableActionsByRoles<Employee>(EMPLOYEE_TABLE_ACTIONS_SCHEMA, userRoles).map((action) => ({
-    ...action,
-    onClick: actionHandlers[action.field],
-  }));
-
-  const renderActionButtons = (employee: Employee) => (
-    <ActionsMenu<Employee> module={Module.employeeManagement} subModule={SubModule.employeeTable} actions={actions} context={employee} />
+  const handlePageChange = React.useCallback(
+    (pagination: Partial<PaginationParams>) => {
+      dispatch(resetEmployeesFetchStatus());
+      dispatch(setEmployeesPagination(pagination));
+    },
+    [dispatch]
   );
 
-  // TODO: find better solution, e.g. like renderActionButtons
-  const mappedCellActions = EMPLOYEE_TABLE_SCHEMA.map((column) => {
-    return {
-      ...column,
-      ...(column.field === EMPLOYEE_FIELDS.firstName.field && {
-        renderBodyCell: (employee: Employee) =>
-          renderPrimaryLinkText({
-            item: employee,
-            getText: ({ firstName }) => firstName,
-            onClick: handleViewEmployee,
-          }),
-      }),
-    };
-  });
+  const actions = React.useMemo(
+    () =>
+      filterTableActionsByRoles<Employee>(EMPLOYEE_TABLE_ACTIONS_SCHEMA, userRoles).map((action) => ({
+        ...action,
+        onClick: (employee: Employee) => handleEmployeeAction(employee, action.field as keyof typeof ACTION_FIELDS),
+      })),
+    [userRoles, handleEmployeeAction]
+  );
 
-  const columns = mapTableActionsColumn(mappedCellActions, renderActionButtons);
+  const columns = React.useMemo(
+    () =>
+      mapTableActionsColumn(
+        EMPLOYEE_TABLE_SCHEMA.map((column) =>
+          column.field === EMPLOYEE_FIELDS.firstName.field
+            ? {
+                ...column,
+                renderBodyCell: (employee: Employee) =>
+                  renderPrimaryLinkText({
+                    item: employee,
+                    getText: ({ firstName }) => firstName,
+                    onClick: () => handleEmployeeAction(employee, 'view'),
+                  }),
+              }
+            : column
+        ),
+        (employee) => (
+          <ActionsMenu<Employee>
+            module={Module.employeeManagement}
+            subModule={SubModule.employeeTable}
+            actions={actions}
+            context={employee}
+          />
+        )
+      ),
+    [actions, handleEmployeeAction]
+  );
 
   React.useEffect(() => {
     if (fetchStatus === 'idle') {
@@ -96,11 +100,19 @@ const EmployeeTablePage: React.FC = () => {
 
   React.useEffect(() => {
     if (searchChanged) {
-      dispatch(resetEmployeesFetchStatus());
-      dispatch(setEmployeesPagination({ search }));
+      handlePageChange({ search, pageNumber: 1 });
       setSearchChanged(false);
     }
-  }, [search, searchChanged, dispatch, setSearchChanged]);
+  }, [search, searchChanged, handlePageChange, setSearchChanged]);
+
+  useUnmount(() => {
+    // TODO: search is not being reset correctly which causes multiple fetching
+    if (search) {
+      setSearchChanged(false);
+      dispatch(resetEmployeesFetchStatus());
+      dispatch(resetEmployeesPagination());
+    }
+  });
 
   return (
     <TableLayout module={Module.employeeManagement} subModule={SubModule.employeeTable} pageTitle="Employees">
@@ -115,9 +127,18 @@ const EmployeeTablePage: React.FC = () => {
         pageSize={page.pageSize!}
         totalItems={page.totalItems}
         pageSizeOptions={pageSizeOptions}
-        noRecordsTemplate={noRecordsTemplate}
-        onPageNumberChange={handlePageNumberChange}
-        onPageSizeChange={handlePageSizeChange}
+        noRecordsTemplate={
+          <Page sx={{ my: 0 }}>
+            <PageSubtitle
+              data-cy={getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-no-employees')}
+              variant="h6"
+            >
+              No Employees Found
+            </PageSubtitle>
+          </Page>
+        }
+        onPageNumberChange={(pageNumber) => handlePageChange({ pageNumber })}
+        onPageSizeChange={(pageSize) => handlePageChange({ pageSize, pageNumber: 1 })}
       />
     </TableLayout>
   );

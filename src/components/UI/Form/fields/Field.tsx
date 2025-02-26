@@ -5,6 +5,7 @@ import SelectField from './SelectField';
 import CheckboxField from './CheckboxField';
 import SectionField from './SectionField';
 import LabelValueField from './LabelValueField';
+import SwitchField from './SwitchField';
 
 const Field = <T,>(props: FieldProps<T>) => {
   switch (props.type) {
@@ -14,6 +15,8 @@ const Field = <T,>(props: FieldProps<T>) => {
       return <SelectField {...props} />;
     case FieldType.checkbox:
       return <CheckboxField {...props} />;
+    case FieldType.switch:
+      return <SwitchField {...props} />;
     case FieldType.section:
       return <SectionField {...props} />;
     case FieldType.labelValue:

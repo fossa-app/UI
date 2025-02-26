@@ -24,7 +24,7 @@ describe('Header Component', () => {
     });
   });
 
-  it('should display dark theme switch as checked when dark theme is enabled', async () => {
+  it('should display dark icon when dark theme is enabled', async () => {
     render(
       <MockRouterWrapper>
         <Header />
@@ -37,7 +37,7 @@ describe('Header Component', () => {
     expect(darkModeIcon).toBeInTheDocument();
   });
 
-  it('should display dark theme switch as unchecked when dark theme is disabled', async () => {
+  it('should display light icon when dark theme is disabled', async () => {
     setMockState({ appConfig: { isDarkTheme: false } });
 
     render(
@@ -52,7 +52,7 @@ describe('Header Component', () => {
     expect(lightModeIcon).toBeInTheDocument();
   });
 
-  it('should dispatch action to update theme when switch is toggled', async () => {
+  it('should dispatch action to update theme when the theme button is toggled', async () => {
     setMockState({ appConfig: { isDarkTheme: false } });
 
     render(

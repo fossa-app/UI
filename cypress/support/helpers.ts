@@ -29,17 +29,22 @@ export const selectOption = (module: Module, subModule: SubModule, fieldName: st
   getTestSelectorByModule(module, subModule, `form-field-${fieldName}-option-${optionName}`).click();
 };
 
-export const selectAction = (module: Module, subModule: SubModule, action: string) => {
-  getTestSelectorByModule(module, subModule, 'actions-menu-icon-333333333335').click();
-  getTestSelectorByModule(module, subModule, action).click();
+export const selectAction = (module: Module, subModule: SubModule, actionType: 'edit' | 'view' | 'delete', actionId: string) => {
+  getTestSelectorByModule(module, subModule, `actions-menu-icon-${actionId}`).click();
+  getTestSelectorByModule(module, subModule, `action-${actionType}-${actionId}`).click();
 };
 
-export const clickCheckboxField = (module: Module, subModule: SubModule, selector: string) => {
+export const clickField = (module: Module, subModule: SubModule, selector: string) => {
   getTestSelectorByModule(module, subModule, selector).click();
 };
 
 export const clickActionButton = (module: Module, subModule: SubModule) => {
   getTestSelectorByModule(module, subModule, 'form-action-button').click();
+};
+
+export const search = (selector: string, text: string) => {
+  cy.get(`[data-cy=${selector}]`).find('input').clear();
+  cy.get(`[data-cy=${selector}]`).find('input').type(text);
 };
 
 export const openUserProfile = () => {

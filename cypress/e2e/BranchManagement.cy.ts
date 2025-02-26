@@ -5,7 +5,7 @@ import {
   getLinearLoader,
   getLoadingButtonLoadingIcon,
   getTestSelectorByModule,
-  clickCheckboxField,
+  clickField,
   selectOption,
   verifyInputFields,
   verifyBranchDetailsFormValidationMessages,
@@ -70,13 +70,13 @@ describe('Branch Management Tests', () => {
     ]);
 
     fillBranchDetailsForm(Module.branchManagement, SubModule.branchDetails, {
-      name: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long branch name',
+      name: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long branch name',
       timeZoneId: 'America/Chicago',
       address: {
-        line1: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long address line 1',
-        line2: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long address line 2',
-        city: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long city',
-        subdivision: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long state',
+        line1: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long address line 1',
+        line2: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long address line 2',
+        city: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long city',
+        subdivision: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long state',
         postalCode: 'long postal code',
         countryCode: 'US',
       },
@@ -101,7 +101,7 @@ describe('Branch Management Tests', () => {
       .should('exist')
       .and('have.text', 'Postal Code must be at least 4 characters long.');
 
-    clickCheckboxField(Module.branchManagement, SubModule.branchDetails, 'form-field-nonPhysicalAddress');
+    clickField(Module.branchManagement, SubModule.branchDetails, 'form-field-noPhysicalAddress');
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
     verifyNotExist(Module.branchManagement, SubModule.branchDetails, [
@@ -122,7 +122,7 @@ describe('Branch Management Tests', () => {
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type('New Test Branch');
     selectOption(Module.branchManagement, SubModule.branchDetails, 'timeZoneId', 'America/Chicago');
-    clickCheckboxField(Module.branchManagement, SubModule.branchDetails, 'form-field-nonPhysicalAddress');
+    clickField(Module.branchManagement, SubModule.branchDetails, 'form-field-noPhysicalAddress');
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
     cy.wait('@createBranchFailedRequest');
 
@@ -445,7 +445,7 @@ describe('Branch Management Tests', () => {
 
     cy.wait('@fetchBranchByIdRequest');
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-nonPhysicalAddress').should(
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-noPhysicalAddress').should(
       'not.have.class',
       'Mui-checked'
     );
@@ -460,9 +460,9 @@ describe('Branch Management Tests', () => {
       'form-field-address.countryCode',
     ]);
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-nonPhysicalAddress').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-noPhysicalAddress').click();
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-nonPhysicalAddress').should(
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-noPhysicalAddress').should(
       'have.class',
       'Mui-checked'
     );
@@ -479,7 +479,7 @@ describe('Branch Management Tests', () => {
     interceptFetchBranchByIdRequest('222222222225', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
     cy.visit('/manage/branches/edit/222222222225');
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-nonPhysicalAddress').should(
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-noPhysicalAddress').should(
       'have.class',
       'Mui-checked'
     );

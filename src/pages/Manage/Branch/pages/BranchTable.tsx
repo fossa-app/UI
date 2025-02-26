@@ -5,6 +5,7 @@ import {
   deleteBranch,
   fetchBranches,
   resetBranchesFetchStatus,
+  resetBranchesPagination,
   selectBranch,
   selectBranches,
   selectIsUserAdmin,
@@ -14,6 +15,7 @@ import {
 import { Branch, Module, PaginationParams, SubModule } from 'shared/models';
 import { ACTION_FIELDS, APP_CONFIG, BRANCH_FIELDS, BRANCH_TABLE_ACTIONS_SCHEMA, BRANCH_TABLE_SCHEMA, ROUTES } from 'shared/constants';
 import { filterTableActionsByRoles, getTestSelectorByModule, mapTableActionsColumn } from 'shared/helpers';
+import { useUnmount } from 'shared/hooks';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import Table from 'components/UI/Table';
 import ActionsMenu from 'components/UI/Table/ActionsMenu';
@@ -31,82 +33,67 @@ const BranchTablePage: React.FC = () => {
   const { search, searchChanged, setSearchChanged, setProps } = useSearch();
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
   const loading = fetchStatus === 'loading' || deleteStatus === 'loading';
+  const handleNavigate = React.useCallback((path: string) => navigate(path), [navigate]);
 
-  const noRecordsTemplate = (
-    <Page sx={{ margin: 0 }}>
-      <PageSubtitle data-cy={getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches')} fontSize={20}>
-        No Branches Found
-      </PageSubtitle>
-    </Page>
+  const handleBranchAction = React.useCallback(
+    (branch: Branch, action: keyof typeof ACTION_FIELDS) => {
+      switch (action) {
+        case 'view':
+          handleNavigate(generatePath(ROUTES.viewBranch.path, { id: branch.id }));
+          break;
+        case 'edit':
+          handleNavigate(generatePath(ROUTES.editBranch.path, { id: branch.id }));
+          break;
+        case 'delete':
+          if (page.pageNumber! > 1 && branches?.items.length === 1) {
+            dispatch(setBranchesPagination({ pageNumber: page.pageNumber! - 1 }));
+          }
+          dispatch(deleteBranch(branch.id));
+          break;
+      }
+    },
+    [handleNavigate, dispatch, page.pageNumber, branches?.items.length]
   );
 
-  const handlePageNumberChange = (pageNumber: number) => {
-    dispatch(resetBranchesFetchStatus());
-    dispatch(setBranchesPagination({ pageNumber }));
-  };
-
-  const handlePageSizeChange = (pageSize: number) => {
-    dispatch(resetBranchesFetchStatus());
-    dispatch(setBranchesPagination({ pageSize, pageNumber: 1 }));
-  };
-
-  const handleTableLayoutActionClick = () => {
-    navigate(ROUTES.newBranch.path);
-  };
-
-  const handleViewBranch = ({ id }: Branch) => {
-    const viewPath = generatePath(ROUTES.viewBranch.path, { id });
-
-    navigate(viewPath);
-  };
-
-  const handleEditBranch = ({ id }: Branch) => {
-    const editPath = generatePath(ROUTES.editBranch.path, { id });
-
-    navigate(editPath);
-  };
-
-  const handleDeleteBranch = ({ id }: Branch) => {
-    const itemsLength = branches?.items.length || 0;
-
-    if (page.pageNumber! > 1 && itemsLength <= 1) {
-      dispatch(setBranchesPagination({ pageNumber: page.pageNumber! - 1 }));
-    }
-
-    dispatch(deleteBranch(id));
-  };
-
-  const actionHandlers = {
-    [ACTION_FIELDS.view.field]: handleViewBranch,
-    [ACTION_FIELDS.edit.field]: handleEditBranch,
-    [ACTION_FIELDS.delete.field]: handleDeleteBranch,
-  };
-
-  const actions = filterTableActionsByRoles<Branch>(BRANCH_TABLE_ACTIONS_SCHEMA, userRoles).map((action) => ({
-    ...action,
-    onClick: actionHandlers[action.field],
-  }));
-
-  const renderActionButtons = (branch: Branch) => (
-    <ActionsMenu<Branch> module={Module.branchManagement} subModule={SubModule.branchTable} actions={actions} context={branch} />
+  const handlePageChange = React.useCallback(
+    (pagination: Partial<PaginationParams>) => {
+      dispatch(resetBranchesFetchStatus());
+      dispatch(setBranchesPagination(pagination));
+    },
+    [dispatch]
   );
 
-  // TODO: find better solution, e.g. like renderActionButtons
-  const mappedCellActions = BRANCH_TABLE_SCHEMA.map((column) => {
-    return {
-      ...column,
-      ...(column.field === BRANCH_FIELDS.name.field && {
-        renderBodyCell: (branch: Branch) =>
-          renderPrimaryLinkText({
-            item: branch,
-            getText: ({ name }) => name,
-            onClick: handleViewBranch,
-          }),
-      }),
-    };
-  });
+  const actions = React.useMemo(
+    () =>
+      filterTableActionsByRoles<Branch>(BRANCH_TABLE_ACTIONS_SCHEMA, userRoles).map((action) => ({
+        ...action,
+        onClick: (branch: Branch) => handleBranchAction(branch, action.field as keyof typeof ACTION_FIELDS),
+      })),
+    [userRoles, handleBranchAction]
+  );
 
-  const columns = mapTableActionsColumn(mappedCellActions, renderActionButtons);
+  const columns = React.useMemo(
+    () =>
+      mapTableActionsColumn(
+        BRANCH_TABLE_SCHEMA.map((column) =>
+          column.field === BRANCH_FIELDS.name.field
+            ? {
+                ...column,
+                renderBodyCell: (branch: Branch) =>
+                  renderPrimaryLinkText({
+                    item: branch,
+                    getText: ({ name }) => name,
+                    onClick: () => handleBranchAction(branch, 'view'),
+                  }),
+              }
+            : column
+        ),
+        (branch) => (
+          <ActionsMenu<Branch> module={Module.branchManagement} subModule={SubModule.branchTable} actions={actions} context={branch} />
+        )
+      ),
+    [actions, handleBranchAction]
+  );
 
   React.useEffect(() => {
     if (fetchStatus === 'idle') {
@@ -120,11 +107,19 @@ const BranchTablePage: React.FC = () => {
 
   React.useEffect(() => {
     if (searchChanged) {
-      dispatch(resetBranchesFetchStatus());
-      dispatch(setBranchesPagination({ search, pageNumber: 1 }));
+      handlePageChange({ search, pageNumber: 1 });
       setSearchChanged(false);
     }
-  }, [search, searchChanged, dispatch, setSearchChanged]);
+  }, [search, searchChanged, handlePageChange, setSearchChanged]);
+
+  useUnmount(() => {
+    // TODO: search is not being reset correctly which causes multiple fetching
+    if (search) {
+      setSearchChanged(false);
+      dispatch(resetBranchesFetchStatus());
+      dispatch(resetBranchesPagination());
+    }
+  });
 
   return (
     <TableLayout
@@ -133,7 +128,7 @@ const BranchTablePage: React.FC = () => {
       withActionButton={isUserAdmin}
       pageTitle="Branches"
       actionButtonLabel="New Branch"
-      onActionClick={handleTableLayoutActionClick}
+      onActionClick={() => handleNavigate(ROUTES.newBranch.path)}
     >
       <Table<Branch>
         module={Module.branchManagement}
@@ -145,9 +140,18 @@ const BranchTablePage: React.FC = () => {
         pageSize={page.pageSize!}
         totalItems={page.totalItems}
         pageSizeOptions={pageSizeOptions}
-        noRecordsTemplate={noRecordsTemplate}
-        onPageNumberChange={handlePageNumberChange}
-        onPageSizeChange={handlePageSizeChange}
+        noRecordsTemplate={
+          <Page sx={{ margin: 0 }}>
+            <PageSubtitle
+              data-cy={getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches')}
+              variant="h6"
+            >
+              No Branches Found
+            </PageSubtitle>
+          </Page>
+        }
+        onPageNumberChange={(pageNumber) => handlePageChange({ pageNumber })}
+        onPageSizeChange={(pageSize) => handlePageChange({ pageSize, pageNumber: 1 })}
       />
     </TableLayout>
   );

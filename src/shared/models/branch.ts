@@ -24,7 +24,7 @@ export interface BranchDTO {
 export interface Branch extends BranchDTO {
   timeZoneName?: TimeZone['name'];
   isValid?: boolean;
-  nonPhysicalAddress?: boolean;
+  noPhysicalAddress?: boolean;
   address: Address | null;
   fullAddress?: string;
 }
