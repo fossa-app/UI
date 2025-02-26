@@ -1,4 +1,5 @@
-import { getCompanyLicenseDialogElement, uploadTestFile } from '../support/helpers';
+import { Module, SubModule } from 'shared/models';
+import { getCompanyLicenseDialogElement, getLinearLoader, uploadTestFile, verifyTextFields } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -120,7 +121,7 @@ describe('License Tests', () => {
         cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to upload Company license');
       });
 
-      it('should be able to upload a company license if the selected file is valid and the uploading succeeded', () => {
+      it('should be able to upload and display the company license if the selected file is valid and the uploading succeeded', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileRequest();
@@ -143,14 +144,34 @@ describe('License Tests', () => {
           cy.wrap(request.headers['content-type']).should('contain', 'multipart/form-data');
         });
 
+        getLinearLoader(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-details').should('exist');
+
         cy.wait('@fetchCompanyLicenseRequest');
 
         cy.get('[data-cy="company-license-dialog"]').should('not.exist');
         cy.get('[data-cy="company-license-text"]').should('exist').and('have.text', 'TCL');
         cy.get('[data-cy="success-snackbar"]').should('exist').and('contain.text', 'Company License has been successfully uploaded');
+
+        verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
+          'view-details-header': 'Company License Details',
+          'view-details-section-terms': 'Terms',
+          'view-details-section-entitlements': 'Entitlements',
+          'view-details-label-terms.licensee.longName': 'Long Name',
+          'view-details-value-terms.licensee.longName': 'Test Company Licensee',
+          'view-details-label-terms.licensee.shortName': 'Short Name',
+          'view-details-value-terms.licensee.shortName': 'TCL',
+          'view-details-label-terms.notBefore': 'Valid From',
+          'view-details-value-terms.notBefore': '9/1/2024',
+          'view-details-label-terms.notAfter': 'Valid To',
+          'view-details-value-terms.notAfter': '9/1/2025',
+          'view-details-label-entitlements.maximumBranchCount': 'Maximum Branch Count',
+          'view-details-value-entitlements.maximumBranchCount': '10',
+          'view-details-label-entitlements.maximumEmployeeCount': 'Maximum Employee Count',
+          'view-details-value-entitlements.maximumEmployeeCount': '100',
+        });
       });
 
-      it('should display correct company license', () => {
+      it('should display correct company license in the footer', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileRequest();

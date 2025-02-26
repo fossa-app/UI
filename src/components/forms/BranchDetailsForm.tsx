@@ -40,7 +40,7 @@ const BranchDetailsForm: React.FC<BranchDetailsFormProps> = ({
   const defaultValues: Branch = {
     name: '',
     timeZoneId: '',
-    address: {},
+    address: null,
   };
 
   const handleFormChange = (formValue: Branch) => {

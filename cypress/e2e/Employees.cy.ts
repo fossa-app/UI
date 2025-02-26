@@ -1,5 +1,11 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getLinearLoader, getTablePaginationDisplayedRows, getTablePaginationSizeInput, getTestSelectorByModule } from '../support/helpers';
+import {
+  getLinearLoader,
+  getTablePaginationDisplayedRows,
+  getTablePaginationSizeInput,
+  getTestSelectorByModule,
+  search,
+} from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -132,8 +138,7 @@ describe('Employees Tests', () => {
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
 
-      cy.get('[data-cy="search-employees"]').find('input').clear();
-      cy.get('[data-cy="search-employees"]').find('input').type('Anthony');
+      search('search-employees', 'Anthony');
 
       interceptFetchEmployeesRequest(
         { pageNumber: 1, pageSize: 5, search: 'Anthony' },
@@ -145,8 +150,7 @@ describe('Employees Tests', () => {
       cy.wait('@fetchSearchedEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5&search=Anthony');
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 1);
 
-      cy.get('[data-cy="search-employees"]').find('input').clear();
-      cy.get('[data-cy="search-employees"]').find('input').type('Joe');
+      search('search-employees', 'Joe');
 
       interceptFetchEmployeesRequest(
         { pageNumber: 1, pageSize: 5, search: 'Joe' },
@@ -191,6 +195,63 @@ describe('Employees Tests', () => {
       cy.get('[data-cy="search-employees"]').find('input').should('have.value', '');
 
       cy.wait('@fetchMultipleEmployeesRequest');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
+    });
+
+    it('should display correct employees and branches when searching employees and navigating to branches', () => {
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 5 },
+        { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+      );
+
+      getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
+      cy.wait('@fetchMultipleEmployeesRequest');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
+
+      search('search-employees', 'Test');
+
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 5, search: 'Test' },
+        { alias: 'fetchSearchedNoEmployeesRequest', fixture: 'employees-empty' }
+      );
+
+      getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
+
+      cy.wait('@fetchSearchedNoEmployeesRequest');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 0);
+
+      cy.get('[data-cy="menu-icon"]').click();
+      cy.get('[data-cy="menu-item-Branches"]').click();
+
+      interceptFetchBranchesRequest(
+        { pageNumber: 1, pageSize: 5 },
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+      );
+
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
+
+      cy.wait('@fetchMultipleBranchesRequest');
+
+      cy.get('[data-cy="search-branches"]').find('input').should('have.value', '');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
+
+      cy.get('[data-cy="menu-icon"]').click();
+      cy.get('[data-cy="menu-item-Employees"]').click();
+
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 5 },
+        { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+      );
+
+      getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
+
+      cy.wait('@fetchMultipleEmployeesRequest')
+        .its('request.url')
+        .should('include', 'Employees?pageNumber=1&pageSize=5')
+        .and('not.include', 'search');
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
     });
@@ -339,8 +400,7 @@ describe('Employees Tests', () => {
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
 
-      cy.get('[data-cy="search-employees"]').find('input').clear();
-      cy.get('[data-cy="search-employees"]').find('input').type('Anthony');
+      search('search-employees', 'Anthony');
 
       interceptFetchEmployeesRequest(
         { pageNumber: 1, pageSize: 5, search: 'Anthony' },
@@ -352,8 +412,7 @@ describe('Employees Tests', () => {
       cy.wait('@fetchSearchedEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=5&search=Anthony');
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 1);
 
-      cy.get('[data-cy="search-employees"]').find('input').clear();
-      cy.get('[data-cy="search-employees"]').find('input').type('Joe');
+      search('search-employees', 'Joe');
 
       interceptFetchEmployeesRequest(
         { pageNumber: 1, pageSize: 5, search: 'Joe' },
@@ -397,6 +456,63 @@ describe('Employees Tests', () => {
       cy.get('[data-cy="search-employees"]').find('input').should('have.value', '');
 
       cy.wait('@fetchMultipleEmployeesRequest');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
+    });
+
+    it('should display correct employees and branches when searching employees and navigating to branches', () => {
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 5 },
+        { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+      );
+
+      getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
+      cy.wait('@fetchMultipleEmployeesRequest');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
+
+      search('search-employees', 'Test');
+
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 5, search: 'Test' },
+        { alias: 'fetchSearchedNoEmployeesRequest', fixture: 'employees-empty' }
+      );
+
+      getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
+
+      cy.wait('@fetchSearchedNoEmployeesRequest');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 0);
+
+      cy.get('[data-cy="menu-icon"]').click();
+      cy.get('[data-cy="menu-item-Branches"]').click();
+
+      interceptFetchBranchesRequest(
+        { pageNumber: 1, pageSize: 5 },
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+      );
+
+      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
+
+      cy.wait('@fetchMultipleBranchesRequest');
+
+      cy.get('[data-cy="search-branches"]').find('input').should('have.value', '');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
+
+      cy.get('[data-cy="menu-icon"]').click();
+      cy.get('[data-cy="menu-item-Employees"]').click();
+
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 5 },
+        { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+      );
+
+      getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
+
+      cy.wait('@fetchMultipleEmployeesRequest')
+        .its('request.url')
+        .should('include', 'Employees?pageNumber=1&pageSize=5')
+        .and('not.include', 'search');
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
     });

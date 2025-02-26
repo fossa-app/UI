@@ -33,8 +33,6 @@ const testCompaLicenseFields = () => {
     'view-details-value-terms.notBefore': '9/1/2024',
     'view-details-label-terms.notAfter': 'Valid To',
     'view-details-value-terms.notAfter': '9/1/2025',
-    'view-details-label-entitlements.companyId': 'Company ID',
-    'view-details-value-entitlements.companyId': '111111111111',
     'view-details-label-entitlements.maximumBranchCount': 'Maximum Branch Count',
     'view-details-value-entitlements.maximumBranchCount': '10',
     'view-details-label-entitlements.maximumEmployeeCount': 'Maximum Employee Count',
@@ -54,8 +52,6 @@ const testCompaLicenseFieldsNotExist = () => {
     'view-details-value-terms.notBefore',
     'view-details-label-terms.notAfter',
     'view-details-value-terms.notAfter',
-    'view-details-label-entitlements.companyId',
-    'view-details-value-entitlements.companyId',
     'view-details-label-entitlements.maximumBranchCount',
     'view-details-value-entitlements.maximumBranchCount',
     'view-details-label-entitlements.maximumEmployeeCount',
@@ -90,6 +86,8 @@ describe('Company Management Tests', () => {
         'view-details-value-name': 'Good Omens',
         'view-details-label-countryName': 'Country',
         'view-details-value-countryName': 'United States',
+        'view-details-label-id': 'ID',
+        'view-details-value-id': '111111111111',
       });
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('not.exist');
     });

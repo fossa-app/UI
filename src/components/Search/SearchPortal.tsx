@@ -33,7 +33,7 @@ const SearchPortal: React.FC<SearchPortalProps> = (searchPortalProps) => {
     setSearch('');
     setSearchChanged(false);
     setProps({});
-  }, [location, setSearch, setSearchChanged, setProps]);
+  }, [location.pathname, setSearch, setSearchChanged, setProps]);
 
   if (!searchContainer || !Object.keys(props).length) {
     return null;

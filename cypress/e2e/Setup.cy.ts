@@ -1,7 +1,7 @@
 import { Module, SubModule } from '../../src/shared/models';
 import {
   clickActionButton,
-  clickCheckboxField,
+  clickField,
   fillBranchDetailsForm,
   getTestSelectorByModule,
   selectOption,
@@ -258,7 +258,7 @@ describe('Setup Flow Tests', () => {
         .and('have.text', 'Country is required');
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type(
-        'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long company name'
+        'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long company name'
       );
 
       clickActionButton(Module.companySetup, SubModule.companyDetails);
@@ -364,13 +364,13 @@ describe('Setup Flow Tests', () => {
       ]);
 
       fillBranchDetailsForm(Module.branchSetup, SubModule.branchDetails, {
-        name: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long branch name',
+        name: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long branch name',
         timeZoneId: 'America/Chicago',
         address: {
-          line1: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long address line 1',
-          line2: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long address line 2',
-          city: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long city',
-          subdivision: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long state',
+          line1: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long address line 1',
+          line2: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long address line 2',
+          city: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long city',
+          subdivision: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long state',
           postalCode: 'long postal code',
           countryCode: 'US',
         },
@@ -396,7 +396,7 @@ describe('Setup Flow Tests', () => {
         .should('exist')
         .and('have.text', 'Postal Code must be at least 4 characters long.');
 
-      clickCheckboxField(Module.branchSetup, SubModule.branchDetails, 'form-field-nonPhysicalAddress');
+      clickField(Module.branchSetup, SubModule.branchDetails, 'form-field-noPhysicalAddress');
       clickActionButton(Module.branchSetup, SubModule.branchDetails);
 
       verifyNotExist(Module.branchSetup, SubModule.branchDetails, [
@@ -420,7 +420,7 @@ describe('Setup Flow Tests', () => {
 
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type('Test Branch');
       selectOption(Module.branchSetup, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
-      clickCheckboxField(Module.branchSetup, SubModule.branchDetails, 'form-field-nonPhysicalAddress');
+      clickField(Module.branchSetup, SubModule.branchDetails, 'form-field-noPhysicalAddress');
       clickActionButton(Module.branchSetup, SubModule.branchDetails);
 
       cy.wait('@createBranchFailedRequest');
@@ -448,7 +448,7 @@ describe('Setup Flow Tests', () => {
 
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type('America/New_York');
       selectOption(Module.branchSetup, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
-      clickCheckboxField(Module.branchSetup, SubModule.branchDetails, 'form-field-nonPhysicalAddress');
+      clickField(Module.branchSetup, SubModule.branchDetails, 'form-field-noPhysicalAddress');
       clickActionButton(Module.branchSetup, SubModule.branchDetails);
 
       cy.wait('@createBranchRequest');

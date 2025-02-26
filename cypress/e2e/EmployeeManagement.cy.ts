@@ -74,7 +74,7 @@ describe('Employee Management Tests', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       cy.visit('/manage/employees');
 
-      selectAction(Module.employeeManagement, SubModule.employeeTable, 'action-view-333333333335');
+      selectAction(Module.employeeManagement, SubModule.employeeTable, 'view', '333333333335');
 
       cy.url().should('include', '/manage/employees/view/333333333335');
       getLinearLoader(Module.employeeManagement, SubModule.employeeViewDetails, 'view-details').should('exist');
@@ -96,7 +96,7 @@ describe('Employee Management Tests', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       cy.visit('/manage/employees');
 
-      selectAction(Module.employeeManagement, SubModule.employeeTable, 'action-view-333333333335');
+      selectAction(Module.employeeManagement, SubModule.employeeTable, 'view', '333333333335');
 
       cy.url().should('include', '/manage/employees/view/333333333335');
 
@@ -128,7 +128,7 @@ describe('Employee Management Tests', () => {
 
       cy.url().should('include', '/manage/employees');
 
-      selectAction(Module.employeeManagement, SubModule.employeeTable, 'action-edit-333333333335');
+      selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
       cy.get('[data-cy="page-title-back-button"]').click();
 
       cy.url().should('include', '/manage/employees');
@@ -138,7 +138,7 @@ describe('Employee Management Tests', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       cy.visit('/manage/employees');
 
-      selectAction(Module.employeeManagement, SubModule.employeeTable, 'action-edit-333333333335');
+      selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
 
       cy.url().should('include', '/manage/employees/edit/333333333335');
 
@@ -147,6 +147,7 @@ describe('Employee Management Tests', () => {
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
 
+      cy.wait('@fetchMultipleBranchesRequest');
       cy.wait('@fetchEmployeeByIdRequest');
 
       testEmployeeFormFields();
@@ -156,7 +157,7 @@ describe('Employee Management Tests', () => {
 
       cy.url().should('include', '/manage/employees');
 
-      selectAction(Module.employeeManagement, SubModule.employeeTable, 'action-edit-333333333335');
+      selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
 
       verifyInputFields(Module.employeeManagement, SubModule.employeeDetails, {
         'form-field-assignedBranchId': '222222222222',
@@ -205,7 +206,7 @@ describe('Employee Management Tests', () => {
         .should('exist')
         .and('have.text', 'New York Branch');
 
-      selectAction(Module.employeeManagement, SubModule.employeeTable, 'action-edit-333333333335');
+      selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
 
       cy.wait('@fetchEmployeeByIdRequest');
 

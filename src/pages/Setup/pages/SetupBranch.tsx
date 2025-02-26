@@ -21,7 +21,7 @@ import {
 } from 'shared/helpers';
 import { BRANCH_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
-import BrachDetailsForm from 'components/forms/BranchDetailsForm';
+import BranchDetailsForm from 'components/forms/BranchDetailsForm';
 
 const SetupBranchPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -32,7 +32,7 @@ const SetupBranchPage: React.FC = () => {
   const { status: companyLicenseStatus } = useAppSelector(selectCompanyLicense);
   const companyTimeZones = useAppSelector(selectCompanyTimeZones);
   const countries = useAppSelector(selectSystemCountries);
-  const [nonPhysicalAddress, setNonPhysicalAddress] = React.useState<boolean | undefined>(undefined);
+  const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
 
   const availableCountries = React.useMemo(
     () => countries?.filter(({ code }) => code === company?.countryCode) || [],
@@ -42,11 +42,11 @@ const SetupBranchPage: React.FC = () => {
   const fields = React.useMemo(
     () =>
       mapBranchFieldOptionsToFieldSelectOptions(
-        mapDisabledFields(getBranchManagementDetailsByAddressFormSchema(BRANCH_SETUP_DETAILS_FORM_SCHEMA, !!nonPhysicalAddress), userRoles),
+        mapDisabledFields(getBranchManagementDetailsByAddressFormSchema(BRANCH_SETUP_DETAILS_FORM_SCHEMA, !!noPhysicalAddress), userRoles),
         companyTimeZones,
         availableCountries
       ),
-    [nonPhysicalAddress, userRoles, companyTimeZones, availableCountries]
+    [noPhysicalAddress, userRoles, companyTimeZones, availableCountries]
   );
 
   React.useEffect(() => {
@@ -62,12 +62,12 @@ const SetupBranchPage: React.FC = () => {
   };
 
   const handleChange = (formValue: Branch) => {
-    setNonPhysicalAddress(formValue.nonPhysicalAddress);
+    setNoPhysicalAddress(formValue.noPhysicalAddress);
   };
 
   return (
     <PageLayout module={Module.branchSetup} subModule={SubModule.branchDetails} pageTitle="Create Branch">
-      <BrachDetailsForm
+      <BranchDetailsForm
         module={Module.branchSetup}
         subModule={SubModule.branchDetails}
         isAdmin={isUserAdmin}

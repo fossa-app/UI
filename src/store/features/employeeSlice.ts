@@ -91,6 +91,9 @@ const employeeSlice = createSlice({
     setEmployeesPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
       state.employees.page = { ...state.employees.page, ...action.payload };
     },
+    resetEmployeesPagination(state) {
+      state.employees.page = initialState.employees.page;
+    },
     resetEmployeesFetchStatus(state) {
       state.employees.fetchStatus = initialState.employees.fetchStatus;
     },
@@ -141,6 +144,6 @@ const employeeSlice = createSlice({
 export const selectEmployees = (state: RootState) => state.employee.employees;
 export const selectEmployee = (state: RootState) => state.employee.employee;
 
-export const { setEmployeesPagination, resetEmployeesFetchStatus, resetEmployee } = employeeSlice.actions;
+export const { setEmployeesPagination, resetEmployeesPagination, resetEmployeesFetchStatus, resetEmployee } = employeeSlice.actions;
 
 export default employeeSlice.reducer;

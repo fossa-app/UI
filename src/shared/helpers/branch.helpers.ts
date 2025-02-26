@@ -24,13 +24,13 @@ export const mapBranch = (
           countryName,
         }
       : null,
-    nonPhysicalAddress: !address,
+    noPhysicalAddress: !address,
     fullAddress: address ? getFullAddress({ ...address, countryName }) : '',
   };
 };
 
 export const mapBranchDTO = (branch: Branch): BranchDTO => {
-  if (branch.nonPhysicalAddress) {
+  if (branch.noPhysicalAddress) {
     return {
       name: branch.name,
       timeZoneId: branch.timeZoneId,
@@ -111,9 +111,9 @@ export const getFullAddress = (address?: Branch['address']): Branch['fullAddress
 
 export const getBranchManagementDetailsByAddressFormSchema = (
   schema: FieldProps<Branch>[],
-  nonPhysicalAddress: boolean
+  noPhysicalAddress: boolean
 ): FieldProps<Branch>[] => {
-  if (nonPhysicalAddress) {
+  if (noPhysicalAddress) {
     const addressFields = [
       `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
       `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
