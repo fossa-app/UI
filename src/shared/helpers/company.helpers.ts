@@ -1,5 +1,5 @@
 import { Company, CompanyDTO, Country } from 'shared/models';
-import { FieldProps, FieldType, SelectOption } from 'components/UI/Form';
+import { FieldProps, FieldType, FieldOption } from 'components/UI/Form';
 
 export const mapCompany = (company: CompanyDTO, countries: Country[]): Company => {
   return {
@@ -18,7 +18,7 @@ export const mapCountriesToFieldSelectOptions = (fields: FieldProps<Company>[], 
   }));
 };
 
-export const mapCountryToFieldSelectOption = (country: Country): SelectOption => {
+export const mapCountryToFieldSelectOption = (country: Country): FieldOption => {
   return {
     label: country.name,
     value: country.code,

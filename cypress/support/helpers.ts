@@ -1,7 +1,7 @@
 import { Branch, Module, SubModule } from '../../src/shared/models';
 
-export const getTestSelectorByModule = (module: Module, subModule: SubModule, selector: string, isPartial = false) => {
-  return isPartial ? cy.get(`[data-cy*="${module}-${subModule}-${selector}"]`) : cy.get(`[data-cy="${module}-${subModule}-${selector}"]`);
+export const getTestSelectorByModule = (module: Module, subModule: SubModule, selector: string, isPattern = false) => {
+  return isPattern ? cy.get(`[data-cy*="${module}-${subModule}-${selector}"]`) : cy.get(`[data-cy="${module}-${subModule}-${selector}"]`);
 };
 
 export const getLinearLoader = (module: Module, subModule: SubModule, selector: string) => {

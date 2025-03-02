@@ -242,9 +242,9 @@ export const EMPLOYEE_DETAILS_FORM_SCHEMA: FieldProps<Employee>[] = [
     subModule: SubModule.employeeDetails,
   },
   {
-    type: FieldType.select,
+    type: FieldType.autocomplete,
     name: EMPLOYEE_FIELDS.assignedBranchId!.field,
-    label: 'Select Branch',
+    label: 'Search Branch',
     grid: { size: { xs: 12, md: 6 } },
     options: [],
     module: Module.employeeManagement,

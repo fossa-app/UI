@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Employee, EmployeeDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
+import { Branch, Employee, EmployeeDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
 import { mapEmployee, mapEmployees, prepareQueryParams } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
+import { fetchBranchById } from './branchSlice';
 
 interface EmployeeState {
   employees: StateEntity<PaginatedResponse<Employee> | undefined>;
@@ -25,20 +26,18 @@ const initialState: EmployeeState = {
 };
 
 export const fetchEmployees = createAsyncThunk<
-  PaginatedResponse<EmployeeDTO> | undefined,
+  PaginatedResponse<Employee> | undefined,
   Partial<PaginationParams>,
   { rejectValue: ErrorResponse }
->('employee/fetchEmployees', async ({ pageNumber, pageSize, search }, { getState, rejectWithValue }) => {
+>('employee/fetchEmployees', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
   try {
     const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
     const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
-    const state = getState() as RootState;
-    const branches = state.branch.branches.data?.items;
 
     if (data) {
       return {
         ...data,
-        items: mapEmployees(data.items, branches),
+        items: mapEmployees(data.items),
       };
     }
   } catch (error) {
@@ -51,13 +50,16 @@ export const fetchEmployees = createAsyncThunk<
 
 export const fetchEmployeeById = createAsyncThunk<Employee, string, { rejectValue: ErrorResponse }>(
   'employee/fetchEmployeeById',
-  async (id, { getState, rejectWithValue }) => {
+  async (id, { dispatch, rejectWithValue }) => {
     try {
       const { data } = await axios.get<EmployeeDTO>(`${ENDPOINTS.employees}/${id}`);
-      const state = getState() as RootState;
-      const branches = state.branch.branches.data?.items;
+      let branch: Branch | undefined;
 
-      return mapEmployee(data, undefined, branches);
+      if (data.assignedBranchId) {
+        branch = await dispatch(fetchBranchById(String(data.assignedBranchId))).unwrap();
+      }
+
+      return mapEmployee(data, undefined, branch);
     } catch (error) {
       return rejectWithValue(error as ErrorResponse);
     }

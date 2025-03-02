@@ -17,8 +17,8 @@ interface BranchDetailsFormProps {
   withCancel?: boolean;
   formLoading?: boolean;
   data?: Branch;
-  onSubmit: (data: Branch) => void;
-  onChange?: (data: Branch) => void;
+  onSubmit: (formValue: Branch) => void;
+  onChange?: (formValue: Branch) => void;
   onCancel?: () => void;
 }
 

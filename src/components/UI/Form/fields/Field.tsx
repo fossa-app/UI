@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { FieldProps, FieldType } from '../form.model';
 import InputField from './InputField';
+import AutocompleteField from './AutocompleteField';
 import SelectField from './SelectField';
 import CheckboxField from './CheckboxField';
 import SectionField from './SectionField';
@@ -11,6 +12,8 @@ const Field = <T,>(props: FieldProps<T>) => {
   switch (props.type) {
     case FieldType.text:
       return <InputField {...props} />;
+    case FieldType.autocomplete:
+      return <AutocompleteField {...props} />;
     case FieldType.select:
       return <SelectField {...props} />;
     case FieldType.checkbox:
