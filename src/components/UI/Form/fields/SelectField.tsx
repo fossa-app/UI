@@ -48,7 +48,7 @@ const SelectField: React.FC<SelectFieldProps> = ({ module, subModule, label, nam
       </Select>
       {error && (
         <FormHelperText error data-cy={`${module}-${subModule}-form-field-${name}-validation`}>
-          {error?.message as string}
+          {error?.message}
         </FormHelperText>
       )}
     </FormControl>

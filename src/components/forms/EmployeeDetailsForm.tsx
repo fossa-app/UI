@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
-import { Employee, EmployeeDTO, Module, SubModule } from 'shared/models';
+import { Employee, Module, SubModule } from 'shared/models';
 import Form, { FieldProps } from 'components/UI/Form';
 import LoadingButton from 'components/UI/LoadingButton';
 
@@ -14,9 +14,9 @@ interface EmployeeDetailsFormProps {
   actionLoading?: boolean;
   withCancel?: boolean;
   formLoading?: boolean;
-  data?: EmployeeDTO;
+  data?: Employee;
   headerText?: string;
-  onSubmit: (data: EmployeeDTO) => void;
+  onSubmit: (formValue: Employee) => void;
   onCancel?: () => void;
 }
 
@@ -38,10 +38,10 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({
     firstName: data?.firstName ?? '',
     lastName: data?.lastName ?? '',
     fullName: data?.fullName ?? '',
-    assignedBranchId: data?.assignedBranchId || null,
+    assignedBranchId: data?.assignedBranchId ?? null,
   };
 
-  const handleFormSubmit = (formValue: EmployeeDTO) => {
+  const handleFormSubmit = (formValue: Employee) => {
     onSubmit(formValue);
   };
 
@@ -52,7 +52,7 @@ const EmployeeDetailsForm: React.FC<EmployeeDetailsFormProps> = ({
   };
 
   return (
-    <Form<EmployeeDTO>
+    <Form<Employee>
       module={module}
       subModule={subModule}
       defaultValues={defaultValues}

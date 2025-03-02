@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { FieldValues, RegisterOptions } from 'react-hook-form';
 import { TextFieldProps } from '@mui/material/TextField';
+import { AutocompleteProps } from '@mui/material/Autocomplete';
 import { SelectProps } from '@mui/material/Select';
 import { CheckboxProps } from '@mui/material/Checkbox';
 import { SwitchProps } from '@mui/material/Switch';
@@ -21,6 +22,7 @@ export enum FieldType {
   section = 'section',
   text = 'text',
   select = 'select',
+  autocomplete = 'autocomplete',
   checkbox = 'checkbox',
   switch = 'switch',
   labelValue = 'labelValue',
@@ -37,7 +39,7 @@ interface BaseFieldProps {
   rules?: FormControlRules;
 }
 
-export interface SelectOption {
+export interface FieldOption {
   label: string;
   value: string;
 }
@@ -54,10 +56,16 @@ export type InputFieldProps = BaseFieldProps & {
   type: FieldType.text;
 } & TextFieldProps;
 
+export type AutocompleteFieldProps = BaseFieldProps & {
+  type: FieldType.autocomplete;
+  // TODO: add renderOptions to map to the field options
+  options: FieldOption[];
+} & Omit<AutocompleteProps<FieldOption, boolean | undefined, boolean | undefined, boolean | undefined>, 'renderInput'>;
+
 export type SelectFieldProps = BaseFieldProps & {
   type: FieldType.select;
-  // TODO: add renderOptions to map to the select field options
-  options: SelectOption[];
+  // TODO: add renderOptions to map to the field options
+  options: FieldOption[];
 } & SelectProps;
 
 export type CheckboxFieldProps = BaseFieldProps & {
@@ -74,6 +82,7 @@ export type FieldProps<T> = { renderField?: (item?: T) => React.ReactNode } & (
   | SectionFieldProps
   | LabelValueFieldProps
   | InputFieldProps
+  | AutocompleteFieldProps
   | SelectFieldProps
   | CheckboxFieldProps
   | SwitchFieldProps

@@ -1,10 +1,10 @@
 import { AppUser, Branch, Employee, EmployeeDTO } from 'shared/models';
-import { mapUserProfileToEmployee } from './user.helpers';
-import { FieldProps, SelectOption } from 'components/UI/Form';
 import { EMPLOYEE_FIELDS } from 'shared/constants';
+import { FieldProps, FieldOption } from 'components/UI/Form';
+import { mapUserProfileToEmployee } from './user.helpers';
 
-export const mapEmployee = (employee: EmployeeDTO, user?: AppUser, branches?: Branch[]): Employee => {
-  const assignedBranchName = branches?.find(({ id }) => id === employee.assignedBranchId)?.name;
+export const mapEmployee = (employee: EmployeeDTO, user?: AppUser, branch?: Branch): Employee => {
+  const assignedBranchName = branch?.name;
 
   return {
     ...(user ? mapUserProfileToEmployee(user.profile) : {}),
@@ -13,12 +13,21 @@ export const mapEmployee = (employee: EmployeeDTO, user?: AppUser, branches?: Br
   };
 };
 
-export const mapEmployees = (employees: EmployeeDTO[], branches?: Branch[]): Employee[] => {
-  return employees.map((employee) => mapEmployee(employee, undefined, branches));
+export const mapEmployees = (employees: EmployeeDTO[]): Employee[] => {
+  return employees.map((employee) => mapEmployee(employee, undefined));
 };
 
 export const mapEmployeeDTO = (employee: Employee): Pick<EmployeeDTO, 'assignedBranchId'> => {
   return {
+    assignedBranchId: employee.assignedBranchId || null,
+  };
+};
+
+export const mapProfileDTO = (employee: Employee): EmployeeDTO => {
+  return {
+    firstName: employee.firstName,
+    lastName: employee.lastName,
+    fullName: employee.fullName,
     assignedBranchId: employee.assignedBranchId || null,
   };
 };
@@ -33,9 +42,9 @@ export const mapEmployeeBranchesToFieldSelectOptions = (fields: FieldProps<Emplo
   }));
 };
 
-export const mapBranchesToFieldSelectOption = (branch: Branch): SelectOption => {
+export const mapBranchesToFieldSelectOption = (branch: Branch): FieldOption => {
   return {
     label: branch.name,
-    value: `${branch?.id}`,
+    value: String(branch?.id),
   };
 };

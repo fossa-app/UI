@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
-import { Company, CompanyDTO, Module, SubModule } from 'shared/models';
+import { Company, Module, SubModule } from 'shared/models';
 import { MESSAGES } from 'shared/constants';
 import Form, { FieldProps } from 'components/UI/Form';
 import LoadingButton from 'components/UI/LoadingButton';
@@ -16,8 +16,8 @@ interface CompanyDetailsFormProps {
   actionLoading?: boolean;
   withCancel?: boolean;
   formLoading?: boolean;
-  data?: CompanyDTO;
-  onSubmit: (data: CompanyDTO) => void;
+  data?: Company;
+  onSubmit: (formValue: Company) => void;
   onCancel?: () => void;
 }
 
@@ -35,12 +35,12 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({
   onSubmit,
   onCancel,
 }) => {
-  const defaultValues: CompanyDTO = {
+  const defaultValues: Company = {
     name: '',
     countryCode: '',
   };
 
-  const handleFormSubmit = (formValue: CompanyDTO) => {
+  const handleFormSubmit = (formValue: Company) => {
     onSubmit(formValue);
   };
 
@@ -51,7 +51,7 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({
   };
 
   return (
-    <Form<CompanyDTO>
+    <Form<Company>
       module={module}
       subModule={subModule}
       defaultValues={defaultValues}

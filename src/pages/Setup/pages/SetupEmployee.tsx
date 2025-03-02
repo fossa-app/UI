@@ -2,9 +2,9 @@ import * as React from 'react';
 import DoneIcon from '@mui/icons-material/Done';
 import { useAppDispatch, useAppSelector } from 'store';
 import { createProfile, fetchProfile, selectUser, selectProfile } from 'store/features';
-import { EmployeeDTO, Module, SubModule } from 'shared/models';
+import { Employee, Module, SubModule } from 'shared/models';
 import { EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
-import { mapUserProfileToEmployee } from 'shared/helpers';
+import { mapProfileDTO, mapUserProfileToEmployee } from 'shared/helpers';
 import EmployeeDetailsForm from 'components/forms/EmployeeDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
 
@@ -13,8 +13,10 @@ const SetupEmployeePage: React.FC = () => {
   const { data: user } = useAppSelector(selectUser);
   const { data: profile, fetchStatus, updateStatus } = useAppSelector(selectProfile);
 
-  const handleSubmit = (data: EmployeeDTO) => {
-    dispatch(createProfile(data));
+  const handleSubmit = (formValue: Employee) => {
+    const submitData = mapProfileDTO(formValue);
+
+    dispatch(createProfile(submitData));
   };
 
   React.useEffect(() => {
