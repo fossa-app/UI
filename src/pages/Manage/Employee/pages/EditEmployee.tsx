@@ -6,8 +6,8 @@ import {
   editEmployee,
   fetchEmployeeById,
   resetEmployeesFetchStatus,
-  selectBranches,
-  fetchBranches,
+  selectSearchedBranches,
+  fetchSearchedBranches,
   resetEmployee,
 } from 'store/features';
 import { EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
@@ -21,7 +21,7 @@ const EditEmployeePage: React.FC = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { data: employee, fetchStatus, updateStatus } = useAppSelector(selectEmployee);
-  const { data: branches } = useAppSelector(selectBranches);
+  const { data: branches, fetchStatus: searchedBranchesStatus } = useAppSelector(selectSearchedBranches);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
 
   const branchItems = React.useMemo(() => {
@@ -42,7 +42,7 @@ const EditEmployeePage: React.FC = () => {
 
       if (search && !isBranchOptionAvailable) {
         // TODO: load lazy and paginated
-        dispatch(fetchBranches([{ search, pageNumber: 1, pageSize: 100 }]));
+        dispatch(fetchSearchedBranches({ search, pageNumber: 1, pageSize: 100 }));
       }
     },
     [branchItems, employee?.assignedBranchId, dispatch]
@@ -51,11 +51,13 @@ const EditEmployeePage: React.FC = () => {
   const fields = React.useMemo(() => {
     return mapEmployeeBranchesToFieldSelectOptions(
       EMPLOYEE_DETAILS_FORM_SCHEMA.map((field) =>
-        field.name === EMPLOYEE_FIELDS.assignedBranchId?.field ? { ...field, onInputChange: handleBranchSearch } : field
+        field.name === EMPLOYEE_FIELDS.assignedBranchId?.field
+          ? { ...field, loading: searchedBranchesStatus === 'loading', onInputChange: handleBranchSearch }
+          : field
       ),
       branchItems
     );
-  }, [branchItems, handleBranchSearch]);
+  }, [branchItems, searchedBranchesStatus, handleBranchSearch]);
 
   const handleSubmit = (formValue: Employee) => {
     const submitData = mapEmployeeDTO(formValue);

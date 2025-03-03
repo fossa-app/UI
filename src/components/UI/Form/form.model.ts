@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FieldValues, RegisterOptions } from 'react-hook-form';
 import { TextFieldProps } from '@mui/material/TextField';
-import { AutocompleteProps } from '@mui/material/Autocomplete';
+import { AutocompleteInputChangeReason, AutocompleteProps } from '@mui/material/Autocomplete';
 import { SelectProps } from '@mui/material/Select';
 import { CheckboxProps } from '@mui/material/Checkbox';
 import { SwitchProps } from '@mui/material/Switch';
@@ -60,6 +60,8 @@ export type AutocompleteFieldProps = BaseFieldProps & {
   type: FieldType.autocomplete;
   // TODO: add renderOptions to map to the field options
   options: FieldOption[];
+  loading?: boolean;
+  onInputChange?: (event: React.SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => void;
 } & Omit<AutocompleteProps<FieldOption, boolean | undefined, boolean | undefined, boolean | undefined>, 'renderInput'>;
 
 export type SelectFieldProps = BaseFieldProps & {

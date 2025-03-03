@@ -96,7 +96,7 @@ export const interceptCreateCompanyFailedRequest = () => {
 };
 
 export const interceptFetchBranchesRequest = (
-  { pageNumber = 1, pageSize = 5, search = '' } = {},
+  { pageNumber = 1, pageSize = 10, search = '' } = {},
   { alias = 'fetchBranchesRequest', fixture = 'branches', statusCode = 200, delay = 300 } = {}
 ) => {
   cy.fixture(fixture).then((branches) => {
@@ -190,7 +190,7 @@ export const interceptEditProfileFailedRequest = () => {
 };
 
 export const interceptFetchEmployeesRequest = (
-  { pageNumber = 1, pageSize = 5, search = '' } = {},
+  { pageNumber = 1, pageSize = 10, search = '' } = {},
   { alias = 'fetchEmployeesRequest', fixture = 'employees', statusCode = 200, delay = 300 } = {}
 ) => {
   cy.fixture(fixture).then((employees) => {

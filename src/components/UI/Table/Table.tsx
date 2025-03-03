@@ -96,11 +96,11 @@ const Table = <T extends Item>({
         pb: 1,
         pl: 3,
         position: 'relative',
+        height: 'calc(100vh - 250px)',
       }}
       {...props}
     >
-      {/* TODO: make maxHeight configurable */}
-      <TableContainer sx={{ flexGrow: 1, maxHeight: '50vh' }}>
+      <TableContainer sx={{ flexGrow: 1, maxHeight: 'calc(100% - 70px)' }}>
         <StyledTable stickyHeader>
           <TableHead>
             <TableRow data-cy={`${module}-${subModule}-table-head-row`}>

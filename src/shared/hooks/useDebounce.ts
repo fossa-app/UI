@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { APP_CONFIG } from 'shared/constants';
 
-export const useDebounce = <T>(value: T, delay: number = 300): T => {
+export const useDebounce = <T>(value: T, delay = APP_CONFIG.searchDebounceTime): T => {
   const [debouncedValue, setDebouncedValue] = React.useState(value);
 
   React.useEffect(() => {

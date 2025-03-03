@@ -153,7 +153,7 @@ describe('Branch Management Tests', () => {
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
     interceptFetchBranchesRequest(
-      { pageNumber: 1, pageSize: 5, search: '' },
+      { pageNumber: 1, pageSize: 10, search: '' },
       { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
     );
     cy.wait('@createBranchRequest');
@@ -298,7 +298,7 @@ describe('Branch Management Tests', () => {
 
     cy.wait('@editBranchRequest');
     interceptFetchBranchesRequest(
-      { pageNumber: 1, pageSize: 5, search: '' },
+      { pageNumber: 1, pageSize: 10, search: '' },
       { alias: 'fetchMultipleUpdatedBranchesRequest', fixture: 'branches-multiple-updated' }
     );
 
@@ -322,7 +322,7 @@ describe('Branch Management Tests', () => {
 
   it('should be able to navigate back when the back button is clicked', () => {
     interceptFetchBranchesRequest(
-      { pageNumber: 1, pageSize: 5, search: '' },
+      { pageNumber: 1, pageSize: 10, search: '' },
       { alias: 'fetchMultipleBranchesRequest', fixture: 'branches' }
     );
     interceptFetchBranchByIdRequest('222222222222');
