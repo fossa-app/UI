@@ -9,6 +9,7 @@ import { setError, setSuccess } from './messageSlice';
 interface BranchState {
   branch: StateEntity<Branch | undefined>;
   branches: StateEntity<PaginatedResponse<Branch> | undefined>;
+  searchedBranches: StateEntity<PaginatedResponse<Branch> | undefined>;
 }
 
 const initialState: BranchState = {
@@ -19,6 +20,11 @@ const initialState: BranchState = {
     deleteStatus: 'idle',
   },
   branches: {
+    data: undefined,
+    page: APP_CONFIG.table.defaultPagination,
+    fetchStatus: 'idle',
+  },
+  searchedBranches: {
     data: undefined,
     page: APP_CONFIG.table.defaultPagination,
     fetchStatus: 'idle',
@@ -50,6 +56,24 @@ export const fetchBranches = createAsyncThunk<
       ...data,
       items: mapBranches(data.items, timeZones, companyCountryCode, countries),
     };
+  } catch (error) {
+    return rejectWithValue({
+      ...(error as ErrorResponse),
+      title: MESSAGES.error.branches.notFound,
+    });
+  }
+});
+
+export const fetchSearchedBranches = createAsyncThunk<
+  PaginatedResponse<Branch> | undefined,
+  Partial<PaginationParams>,
+  { rejectValue: ErrorResponse }
+>('branch/fetchSearchedBranches', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
+  try {
+    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
+    const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?${queryParams}`);
+
+    return data;
   } catch (error) {
     return rejectWithValue({
       ...(error as ErrorResponse),
@@ -174,6 +198,21 @@ const branchSlice = createSlice({
         state.branches.fetchStatus = 'succeeded';
         state.branches.error = undefined;
       })
+      .addCase(fetchSearchedBranches.pending, (state) => {
+        state.searchedBranches.fetchStatus = 'loading';
+      })
+      .addCase(fetchSearchedBranches.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+        state.searchedBranches.data = undefined;
+        state.searchedBranches.fetchStatus = 'failed';
+        state.searchedBranches.error = action.payload;
+      })
+      .addCase(fetchSearchedBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<Branch> | undefined>) => {
+        state.searchedBranches.data = action.payload;
+        state.searchedBranches.page!.totalItems = action.payload?.totalItems;
+        state.searchedBranches.page!.totalPages = action.payload?.totalPages;
+        state.searchedBranches.fetchStatus = 'succeeded';
+        state.searchedBranches.error = undefined;
+      })
       .addCase(fetchBranchById.pending, (state) => {
         state.branch.fetchStatus = 'loading';
       })
@@ -225,6 +264,7 @@ const branchSlice = createSlice({
 
 export const selectBranch = (state: RootState) => state.branch.branch;
 export const selectBranches = (state: RootState) => state.branch.branches;
+export const selectSearchedBranches = (state: RootState) => state.branch.searchedBranches;
 
 export const { setBranchesPagination, resetBranchesPagination, resetBranch, resetBranchesFetchStatus } = branchSlice.actions;
 

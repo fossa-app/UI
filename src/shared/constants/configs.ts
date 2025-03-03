@@ -14,9 +14,10 @@ export const APP_CONFIG = {
   snackbarAutoHideDuration: 10000,
   httpTimeout: 15000,
   table: {
-    defaultPagination: { pageNumber: 1, pageSize: 5, search: '', totalItems: undefined } as PaginationParams,
-    defaultPageSizeOptions: [5, 10],
+    defaultPagination: { pageNumber: 1, pageSize: 10, search: '', totalItems: undefined } as PaginationParams,
+    defaultPageSizeOptions: [10, 20, 50],
   },
+  searchDebounceTime: 300,
 };
 
 export const MESSAGES = {

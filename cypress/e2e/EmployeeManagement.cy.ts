@@ -60,7 +60,7 @@ describe('Employee Management Tests', () => {
     interceptFetchBranchesRequest();
     interceptFetchProfileRequest();
     interceptFetchEmployeesRequest(
-      { pageNumber: 1, pageSize: 5 },
+      { pageNumber: 1, pageSize: 10 },
       { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
     );
   });
@@ -244,7 +244,7 @@ describe('Employee Management Tests', () => {
       cy.wait('@editEmployeeRequest');
 
       interceptFetchEmployeesRequest(
-        { pageNumber: 1, pageSize: 5 },
+        { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchMultipleEmployeesUpdatedRequest', fixture: 'employees-multiple-updated' }
       );
 

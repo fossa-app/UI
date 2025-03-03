@@ -50,7 +50,7 @@ describe('Branches Tests', () => {
     it('should not display the linear loader if fetching branches is in progress, it is a part of fetchSetupData', () => {
       interceptFetchBranchesRequest();
 
-      cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
+      cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
@@ -60,7 +60,7 @@ describe('Branches Tests', () => {
     it('should render branches table if there are fetched branches', () => {
       interceptFetchBranchesRequest();
 
-      cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
+      cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
@@ -80,7 +80,7 @@ describe('Branches Tests', () => {
         'have.text',
         '270 W 11th Street, Apt 2E, New York, NY 10014, United States'
       );
-      getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');
+      getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '10');
       getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.text', '1–1 of 1');
     });
 
@@ -90,65 +90,66 @@ describe('Branches Tests', () => {
       cy.wait('@fetchBranchesRequest');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-pagination').find('.MuiTablePagination-input').click();
 
-      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').should('have.length', 2);
-      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(0).should('have.text', '5');
-      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(1).should('have.text', '10');
+      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').should('have.length', 3);
+      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(0).should('have.text', '10');
+      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(1).should('have.text', '20');
+      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(2).should('have.text', '50');
 
-      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 10, search: '' }, { alias: 'fetch10BranchesRequest' });
-      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="10"]').click();
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 20, search: '' }, { alias: 'fetch20BranchesRequest' });
+      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="20"]').click();
 
-      cy.wait('@fetch10BranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
+      cy.wait('@fetch20BranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=20');
 
-      getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '10');
+      getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '20');
     });
 
     it('should send correct request when search changes', () => {
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: '' },
+        { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
 
-      cy.wait('@fetchMultipleBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
+      cy.wait('@fetchMultipleBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
 
       search('search-branches', 'New');
 
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: 'New' },
+        { pageNumber: 1, pageSize: 10, search: 'New' },
         { alias: 'fetchSearchedBranchesRequest', fixture: 'branches' }
       );
 
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
-      cy.wait('@fetchSearchedBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5&search=New');
+      cy.wait('@fetchSearchedBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10&search=New');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
 
       search('search-branches', 'Old');
 
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: 'Old' },
+        { pageNumber: 1, pageSize: 10, search: 'Old' },
         { alias: 'fetchSearchedNoBranchesRequest', fixture: 'branches-empty' }
       );
 
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
-      cy.wait('@fetchSearchedNoBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5&search=Old');
+      cy.wait('@fetchSearchedNoBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10&search=Old');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 0);
 
       cy.get('[data-cy="search-branches"]').find('input').clear();
 
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: '' },
+        { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
 
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
-      cy.wait('@fetchMultipleBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
+      cy.wait('@fetchMultipleBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
     });
 
     it('should display correct branches and employees when searching branches and navigating to employees', () => {
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5 },
+        { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
 
@@ -160,7 +161,7 @@ describe('Branches Tests', () => {
       search('search-branches', 'Test');
 
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: 'Test' },
+        { pageNumber: 1, pageSize: 10, search: 'Test' },
         { alias: 'fetchSearchedNoBranchesRequest', fixture: 'branches-empty' }
       );
 
@@ -174,7 +175,7 @@ describe('Branches Tests', () => {
       cy.get('[data-cy="menu-item-Employees"]').click();
 
       interceptFetchEmployeesRequest(
-        { pageNumber: 1, pageSize: 5 },
+        { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
       );
 
@@ -189,7 +190,7 @@ describe('Branches Tests', () => {
       cy.get('[data-cy="menu-item-Branches"]').click();
 
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5 },
+        { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
 
@@ -197,7 +198,7 @@ describe('Branches Tests', () => {
 
       cy.wait('@fetchMultipleBranchesRequest')
         .its('request.url')
-        .should('include', 'Branches?pageNumber=1&pageSize=5')
+        .should('include', 'Branches?pageNumber=1&pageSize=10')
         .and('not.include', 'search');
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
@@ -231,7 +232,7 @@ describe('Branches Tests', () => {
 
     it('should mark the timeZone as invalid if it is an invalid company timeZone', () => {
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: '' },
+        { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-countries' }
       );
       cy.visit('/manage/branches');
@@ -269,7 +270,7 @@ describe('Branches Tests', () => {
     it('should not display the linear loader if fetching branches is in progress, it is a part of fetchSetupData', () => {
       interceptFetchBranchesRequest();
 
-      cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
+      cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
 
@@ -280,7 +281,7 @@ describe('Branches Tests', () => {
 
     it('should not display the loader if the request resolves quickly', () => {
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: '' },
+        { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchBranchesQuickRequest', fixture: 'branches', statusCode: 200, delay: 50 }
       );
 
@@ -290,7 +291,7 @@ describe('Branches Tests', () => {
     it('should render branches table if there are fetched branches', () => {
       interceptFetchBranchesRequest();
 
-      cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
+      cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
@@ -310,7 +311,7 @@ describe('Branches Tests', () => {
         'have.text',
         '270 W 11th Street, Apt 2E, New York, NY 10014, United States'
       );
-      getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '5');
+      getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '10');
       getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.text', '1–1 of 1');
     });
 
@@ -320,21 +321,22 @@ describe('Branches Tests', () => {
       cy.wait('@fetchBranchesRequest');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-pagination').find('.MuiTablePagination-input').click();
 
-      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').should('have.length', 2);
-      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(0).should('have.text', '5');
-      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(1).should('have.text', '10');
+      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').should('have.length', 3);
+      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(0).should('have.text', '10');
+      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(1).should('have.text', '20');
+      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(2).should('have.text', '50');
 
-      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 10, search: '' }, { alias: 'fetch10BranchesRequest' });
-      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="10"]').click();
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 20, search: '' }, { alias: 'fetch20BranchesRequest' });
+      cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="20"]').click();
 
-      cy.wait('@fetch10BranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
+      cy.wait('@fetch20BranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=20');
 
-      getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '10');
+      getTablePaginationSizeInput(Module.branchManagement, SubModule.branchTable, 'table-pagination').should('have.value', '20');
     });
 
     it('should send correct request when search changes', () => {
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: '' },
+        { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
 
@@ -345,34 +347,34 @@ describe('Branches Tests', () => {
       search('search-branches', 'New');
 
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: 'New' },
+        { pageNumber: 1, pageSize: 10, search: 'New' },
         { alias: 'fetchSearchedBranchesRequest', fixture: 'branches' }
       );
 
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
-      cy.wait('@fetchSearchedBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5&search=New');
+      cy.wait('@fetchSearchedBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10&search=New');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
 
       search('search-branches', 'Old');
 
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: 'Old' },
+        { pageNumber: 1, pageSize: 10, search: 'Old' },
         { alias: 'fetchSearchedNoBranchesRequest', fixture: 'branches-empty' }
       );
 
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
-      cy.wait('@fetchSearchedNoBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5&search=Old');
+      cy.wait('@fetchSearchedNoBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10&search=Old');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 0);
 
       cy.get('[data-cy="search-branches"]').find('input').clear();
 
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: '' },
+        { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
 
       getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
-      cy.wait('@fetchMultipleBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=5');
+      cy.wait('@fetchMultipleBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
     });
 
@@ -380,7 +382,7 @@ describe('Branches Tests', () => {
       interceptCreateBranchRequest();
       interceptFetchBranchesRequest();
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: 'New' },
+        { pageNumber: 1, pageSize: 10, search: 'New' },
         { alias: 'fetchSearchedBranchesRequest', fixture: 'branches' }
       );
 
@@ -398,7 +400,7 @@ describe('Branches Tests', () => {
       clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: '' },
+        { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchMultipleUpdatedBranchesRequest', fixture: 'branches-multiple-updated' }
       );
 
@@ -411,11 +413,11 @@ describe('Branches Tests', () => {
 
     it('should reset the search state when the clear icon is clicked', () => {
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: '' },
+        { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: 'New' },
+        { pageNumber: 1, pageSize: 10, search: 'New' },
         { alias: 'fetchSearchedBranchesRequest', fixture: 'branches' }
       );
 
@@ -434,7 +436,7 @@ describe('Branches Tests', () => {
 
     it('should display correct branches and employees when searching branches and navigating to employees', () => {
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5 },
+        { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
 
@@ -446,7 +448,7 @@ describe('Branches Tests', () => {
       search('search-branches', 'Test');
 
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: 'Test' },
+        { pageNumber: 1, pageSize: 10, search: 'Test' },
         { alias: 'fetchSearchedNoBranchesRequest', fixture: 'branches-empty' }
       );
 
@@ -460,7 +462,7 @@ describe('Branches Tests', () => {
       cy.get('[data-cy="menu-item-Employees"]').click();
 
       interceptFetchEmployeesRequest(
-        { pageNumber: 1, pageSize: 5 },
+        { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
       );
 
@@ -475,7 +477,7 @@ describe('Branches Tests', () => {
       cy.get('[data-cy="menu-item-Branches"]').click();
 
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5 },
+        { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
 
@@ -483,7 +485,7 @@ describe('Branches Tests', () => {
 
       cy.wait('@fetchMultipleBranchesRequest')
         .its('request.url')
-        .should('include', 'Branches?pageNumber=1&pageSize=5')
+        .should('include', 'Branches?pageNumber=1&pageSize=10')
         .and('not.include', 'search');
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
@@ -538,7 +540,7 @@ describe('Branches Tests', () => {
 
     it('should not be able to delete a branch if the branch deletion failed', () => {
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: '' },
+        { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
       cy.visit('/manage/branches');
@@ -556,7 +558,7 @@ describe('Branches Tests', () => {
 
     it('should be able to delete a branch if the branch deletion succeeded', () => {
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: '' },
+        { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
       cy.visit('/manage/branches');
@@ -576,7 +578,7 @@ describe('Branches Tests', () => {
 
     it('should mark the fields as invalid if the company country is different than the branch address country', () => {
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: '' },
+        { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-countries' }
       );
       cy.visit('/manage/branches');
@@ -591,7 +593,7 @@ describe('Branches Tests', () => {
 
     it('should display default values if there is no address provided', () => {
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 5, search: '' },
+        { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-countries' }
       );
       cy.visit('/manage/branches');

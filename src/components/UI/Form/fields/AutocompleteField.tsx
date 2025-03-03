@@ -1,14 +1,25 @@
 import * as React from 'react';
 import { FieldError, useFormContext, Controller, ControllerRenderProps, FieldValues } from 'react-hook-form';
-import Autocomplete from '@mui/material/Autocomplete';
+import { debounce } from '@mui/material/utils';
+import Autocomplete, { AutocompleteInputChangeReason } from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Typography from '@mui/material/Typography';
+import { APP_CONFIG } from 'shared/constants';
 import { getNestedValue } from 'shared/helpers';
 import { AutocompleteFieldProps, FieldOption } from '../form.model';
 
-const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ module, subModule, label, name, options, ...props }) => {
+const AutocompleteField: React.FC<AutocompleteFieldProps> = ({
+  module,
+  subModule,
+  label,
+  name,
+  options,
+  loading,
+  onInputChange,
+  ...props
+}) => {
   const {
     formState: { errors },
     control,
@@ -20,6 +31,14 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ module, subModule
     return options.find((option) => option.value === String(field.value)) || null;
   };
 
+  const debouncedOnInputChange = React.useMemo(
+    () =>
+      debounce((event: React.SyntheticEvent<Element, Event>, newValue: string, reason: AutocompleteInputChangeReason) => {
+        onInputChange?.(event, newValue, reason);
+      }, APP_CONFIG.searchDebounceTime),
+    [onInputChange]
+  );
+
   return (
     <FormControl fullWidth variant="filled" error={!!error}>
       <Controller
@@ -30,6 +49,7 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ module, subModule
             {...field}
             autoComplete
             data-cy={`${module}-${subModule}-form-field-${name}`}
+            loading={loading}
             options={options}
             // TODO: add render/getOptionLabel prop method
             value={getValue(field)}
@@ -39,7 +59,9 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ module, subModule
               // First fires the field change in the component
               field.onChange(newValue ? (newValue as FieldOption).value : '');
             }}
-            // TODO: add debounce time
+            onInputChange={(event, newValue, reason) => {
+              debouncedOnInputChange(event, newValue, reason);
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}
