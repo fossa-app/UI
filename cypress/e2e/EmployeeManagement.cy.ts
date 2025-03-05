@@ -65,50 +65,41 @@ describe('Employee Management Tests', () => {
     );
   });
 
-  describe('User Role', () => {
-    beforeEach(() => {
-      cy.loginMock();
-    });
+  const roles = [
+    { role: 'User', loginMock: () => cy.loginMock(), viewActionButtonExists: false },
+    { role: 'Admin', loginMock: () => cy.loginMock(true), viewActionButtonExists: true },
+  ];
 
-    it('should be able to navigate and view the employee page', () => {
-      interceptFetchEmployeeByIdRequest('333333333335');
-      interceptFetchBranchByIdRequest('222222222222');
-      cy.visit('/manage/employees');
+  roles.forEach(({ role, loginMock, viewActionButtonExists }) => {
+    describe(`${role} Role`, () => {
+      beforeEach(() => {
+        loginMock();
+      });
 
-      selectAction(Module.employeeManagement, SubModule.employeeTable, 'view', '333333333335');
+      it('should be able to navigate and view the employee page', () => {
+        interceptFetchEmployeeByIdRequest('333333333335');
+        interceptFetchBranchByIdRequest('222222222222');
+        cy.visit('/manage/employees');
 
-      cy.url().should('include', '/manage/employees/view/333333333335');
-      getLinearLoader(Module.employeeManagement, SubModule.employeeViewDetails, 'view-details').should('exist');
+        selectAction(Module.employeeManagement, SubModule.employeeTable, 'view', '333333333335');
 
-      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 100 });
-      cy.wait('@fetchEmployeeByIdRequest');
+        cy.url().should('include', '/manage/employees/view/333333333335');
+        getLinearLoader(Module.employeeManagement, SubModule.employeeViewDetails, 'view-details').should('exist');
 
-      testEmployeeViewFields();
-      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'view-action-button').should('not.exist');
+        interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 100 });
+        cy.wait('@fetchEmployeeByIdRequest');
+
+        testEmployeeViewFields();
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'view-action-button').should(
+          viewActionButtonExists ? 'exist' : 'not.exist'
+        );
+      });
     });
   });
 
   describe('Admin Role', () => {
     beforeEach(() => {
       cy.loginMock(true);
-    });
-
-    it('should be able to navigate and view the employee page', () => {
-      interceptFetchEmployeeByIdRequest('333333333335');
-      interceptFetchBranchByIdRequest('222222222222');
-      cy.visit('/manage/employees');
-
-      selectAction(Module.employeeManagement, SubModule.employeeTable, 'view', '333333333335');
-
-      cy.url().should('include', '/manage/employees/view/333333333335');
-
-      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 100 });
-
-      getLinearLoader(Module.employeeManagement, SubModule.employeeViewDetails, 'view-details').should('exist');
-      cy.wait('@fetchEmployeeByIdRequest');
-
-      testEmployeeViewFields();
-      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'view-action-button').should('exist');
     });
 
     it('should be able to navigate back when the back button is clicked', () => {

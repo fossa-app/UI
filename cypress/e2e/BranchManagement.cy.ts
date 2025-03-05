@@ -15,6 +15,7 @@ import {
   verifyBranchDetailsFormFieldsExist,
   verifyBranchDetailsFormFieldsNotExist,
   verifyTextFields,
+  selectAction,
 } from '../support/helpers';
 import {
   interceptCreateBranchFailedRequest,
@@ -177,8 +178,7 @@ describe('Branch Management Tests', () => {
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit('/manage/branches');
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-edit-222222222222').click();
+    selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
 
     cy.wait('@fetchBranchByIdRequest');
 
@@ -200,8 +200,7 @@ describe('Branch Management Tests', () => {
     cy.url().should('include', '/manage/branches');
     getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-edit-222222222222').click();
+    selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
 
     cy.wait('@fetchBranchByIdRequest');
 
@@ -222,8 +221,7 @@ describe('Branch Management Tests', () => {
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit('/manage/branches');
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-edit-222222222222').click();
+    selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
 
     cy.wait('@fetchBranchByIdRequest');
 
@@ -266,8 +264,7 @@ describe('Branch Management Tests', () => {
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit('/manage/branches');
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-edit-222222222222').click();
+    selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
 
     getLinearLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('exist');
     verifyTextFields(Module.branchManagement, SubModule.branchDetails, {
@@ -334,8 +331,7 @@ describe('Branch Management Tests', () => {
     cy.url().should('include', '/manage/branches');
 
     cy.visit('/manage/branches');
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-edit-222222222222').click();
+    selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
     cy.get('[data-cy="page-title-back-button"]').click();
 
     cy.url().should('include', '/manage/branches');
@@ -346,8 +342,7 @@ describe('Branch Management Tests', () => {
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit('/manage/branches');
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-edit-222222222222').click();
+    selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
     cy.wait('@fetchBranchByIdRequest');
 
     verifyInputFields(Module.branchManagement, SubModule.branchDetails, {

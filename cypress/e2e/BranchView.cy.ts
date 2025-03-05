@@ -1,5 +1,5 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getLinearLoader, getTestSelectorByModule, verifyTextFields } from '../support/helpers';
+import { getLinearLoader, getTestSelectorByModule, selectAction, verifyTextFields } from '../support/helpers';
 import {
   interceptEditBranchRequest,
   interceptFetchBranchByIdFailedRequest,
@@ -46,6 +46,129 @@ describe('Branch View Tests', () => {
     interceptFetchProfileRequest();
   });
 
+  const roles = [
+    {
+      role: 'User',
+      loginMock: () => cy.loginMock(),
+    },
+    {
+      role: 'Admin',
+      loginMock: () => cy.loginMock(true),
+    },
+  ];
+
+  roles.forEach(({ role, loginMock }) => {
+    describe(`${role} Role`, () => {
+      beforeEach(() => {
+        loginMock();
+      });
+
+      it('should be able to view the branch and navigate back', () => {
+        interceptEditBranchRequest('222222222222');
+        interceptFetchBranchByIdRequest('222222222222');
+        cy.visit('/manage/branches');
+
+        selectAction(Module.branchManagement, SubModule.branchTable, 'view', '222222222222');
+
+        getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
+
+        cy.wait('@fetchBranchByIdRequest');
+
+        testBranchFields();
+        getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-value-timeZoneName')
+          .find('p')
+          .should('not.have.attr', 'data-invalid');
+
+        cy.get('[data-cy="page-title-back-button"]').click();
+
+        cy.url().should('include', '/manage/branches');
+        getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
+      });
+
+      it('should fetch and display the branch view details by id when refreshing the page', () => {
+        interceptFetchBranchByIdRequest('222222222222');
+        cy.visit('/manage/branches/view/222222222222');
+
+        cy.reload();
+
+        getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
+        cy.wait('@fetchBranchByIdRequest');
+
+        getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-value-name').should(
+          'have.text',
+          'New York Branch'
+        );
+      });
+
+      it('should not display the loader if the request resolves quickly', () => {
+        interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdQuickRequest', 'branches', 200, 50);
+        cy.visit('/manage/branches/view/222222222222');
+
+        getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('not.exist');
+
+        cy.wait('@fetchBranchByIdQuickRequest');
+
+        getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('not.exist');
+      });
+
+      it('should mark the fields as invalid if the company country is different than the branch address country', () => {
+        interceptFetchCompanyRequest('fetchUpdatedCompanyRequest', 'company-updated');
+        interceptFetchBranchByIdRequest('222222222222');
+        cy.visit('/manage/branches/view/222222222222');
+
+        cy.wait('@fetchUpdatedCompanyRequest');
+        cy.wait('@fetchBranchByIdRequest');
+
+        const invalidFields = [
+          'timeZoneName',
+          'address.line1',
+          'address.line2',
+          'address.city',
+          'address.subdivision',
+          'address.countryName',
+          'address.postalCode',
+        ];
+
+        invalidFields.forEach((field) => {
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, `view-details-value-${field}`)
+            .find('p')
+            .should('have.attr', 'data-invalid');
+        });
+      });
+
+      it('should display default values if there is no address provided', () => {
+        interceptFetchBranchByIdRequest('222222222225', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
+        cy.visit('/manage/branches/view/222222222225');
+
+        cy.wait('@fetchBranchByIdRequest');
+
+        const emptyFields = [
+          'address.line1',
+          'address.line2',
+          'address.city',
+          'address.subdivision',
+          'address.countryName',
+          'address.postalCode',
+        ];
+
+        emptyFields.forEach((field) => {
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, `view-details-value-${field}`)
+            .find('p')
+            .should('have.text', '-');
+        });
+      });
+
+      it('should display not found page if the branch was not found', () => {
+        interceptFetchBranchByIdFailedRequest('222222222224');
+        cy.visit('/manage/branches/view/222222222224');
+
+        cy.get('[data-cy="not-found-page-title"]').should('exist').and('contain.text', 'Page Not Found');
+        cy.get('[data-cy="not-found-page-button"]').should('exist').click();
+        cy.url().should('include', '/manage/company');
+      });
+    });
+  });
+
   describe('User Role', () => {
     beforeEach(() => {
       cy.loginMock();
@@ -57,29 +180,6 @@ describe('Branch View Tests', () => {
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-action-button').should('not.exist');
     });
-
-    it('should be able to view the branch and navigate back', () => {
-      interceptEditBranchRequest('222222222222');
-      interceptFetchBranchByIdRequest('222222222222');
-      cy.visit('/manage/branches');
-
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').click();
-
-      getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
-
-      cy.wait('@fetchBranchByIdRequest');
-
-      testBranchFields();
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-value-timeZoneName')
-        .find('p')
-        .should('not.have.attr', 'data-invalid');
-
-      cy.get('[data-cy="page-title-back-button"]').click();
-
-      cy.url().should('include', '/manage/branches');
-      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
-    });
   });
 
   describe('Admin Role', () => {
@@ -87,44 +187,12 @@ describe('Branch View Tests', () => {
       cy.loginMock(true);
     });
 
-    it('should display not found page if the branch was not found', () => {
-      interceptFetchBranchByIdFailedRequest('222222222224');
-      cy.visit('/manage/branches/view/222222222224');
-
-      cy.get('[data-cy="not-found-page-title"]').should('exist').and('contain.text', 'Page Not Found');
-      cy.get('[data-cy="not-found-page-button"]').should('exist').click();
-      cy.url().should('include', '/manage/company');
-    });
-
-    it('should be able to view the branch and navigate back', () => {
-      interceptEditBranchRequest('222222222222');
-      interceptFetchBranchByIdRequest('222222222222');
-      cy.visit('/manage/branches');
-
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').click();
-
-      getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
-
-      cy.wait('@fetchBranchByIdRequest');
-
-      testBranchFields();
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-value-timeZoneName')
-        .find('p')
-        .should('not.have.attr', 'data-invalid');
-
-      cy.get('[data-cy="page-title-back-button"]').click();
-
-      cy.url().should('include', '/manage/branches');
-      getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
-    });
-
     it('should reset the branch after viewing and navigating back', () => {
       interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdRequest', 'branches');
       cy.visit('/manage/branches');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'actions-menu-icon-222222222222').click();
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').click();
+      selectAction(Module.branchManagement, SubModule.branchTable, 'view', '222222222222');
+
       cy.wait('@fetchBranchByIdRequest');
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-value-name').should(
@@ -141,76 +209,6 @@ describe('Branch View Tests', () => {
         .find('input')
         .should('be.visible')
         .and('have.value', '');
-    });
-
-    it('should fetch and display the branch view details by id when refreshing the page', () => {
-      interceptFetchBranchByIdRequest('222222222222');
-      cy.visit('/manage/branches/view/222222222222');
-
-      cy.reload();
-
-      getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
-      cy.wait('@fetchBranchByIdRequest');
-
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-value-name').should(
-        'have.text',
-        'New York Branch'
-      );
-    });
-
-    it('should not display the loader if the request resolves quickly', () => {
-      interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdQuickRequest', 'branches', 200, 50);
-      cy.visit('/manage/branches/view/222222222222');
-
-      getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('not.exist');
-      cy.wait('@fetchBranchByIdQuickRequest');
-    });
-
-    it('should mark the fields as invalid if the company country is different than the branch address country', () => {
-      interceptFetchCompanyRequest('fetchUpdatedCompanyRequest', 'company-updated');
-      interceptFetchBranchByIdRequest('222222222222');
-      cy.visit('/manage/branches/view/222222222222');
-
-      cy.wait('@fetchUpdatedCompanyRequest');
-      cy.wait('@fetchBranchByIdRequest');
-
-      const invalidFields = [
-        'timeZoneName',
-        'address.line1',
-        'address.line2',
-        'address.city',
-        'address.subdivision',
-        'address.countryName',
-        'address.postalCode',
-      ];
-
-      invalidFields.forEach((field) => {
-        getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, `view-details-value-${field}`)
-          .find('p')
-          .should('have.attr', 'data-invalid');
-      });
-    });
-
-    it('should display default values if there is no address provided', () => {
-      interceptFetchBranchByIdRequest('222222222225', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
-      cy.visit('/manage/branches/view/222222222225');
-
-      cy.wait('@fetchBranchByIdRequest');
-
-      const emptyFields = [
-        'address.line1',
-        'address.line2',
-        'address.city',
-        'address.subdivision',
-        'address.countryName',
-        'address.postalCode',
-      ];
-
-      emptyFields.forEach((field) => {
-        getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, `view-details-value-${field}`)
-          .find('p')
-          .should('have.text', '-');
-      });
     });
 
     it('should render the Edit branch button', () => {
