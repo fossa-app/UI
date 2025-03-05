@@ -37,207 +37,177 @@ describe('Setup Flow Tests', () => {
     interceptFetchCompanyLicenseFailedRequest();
   });
 
-  describe('User Role', () => {
-    beforeEach(() => {
-      cy.loginMock();
-    });
+  const roles = [
+    {
+      role: 'User',
+      loginMock: () => cy.loginMock(),
+      firstName: 'Anthony',
+      lastName: 'Crowley',
+      fullName: 'Anthony User Crowley',
+    },
+    {
+      role: 'Admin',
+      loginMock: () => cy.loginMock(true),
+      firstName: 'Gabriel',
+      lastName: 'Archangel',
+      fullName: 'Gabriel Admin Archangel',
+    },
+  ];
 
-    it('should navigate to company setup page and no other setup page if there is no company', () => {
-      interceptFetchCompanyFailedRequest();
+  roles.forEach(({ role, loginMock, firstName, lastName, fullName }) => {
+    const isAdminRole = role === 'Admin';
 
-      cy.visit('/setup/company');
-      cy.wait('@fetchCompanyFailedRequest');
+    describe(`${role} Role`, () => {
+      beforeEach(() => {
+        loginMock();
+      });
 
-      cy.url().should('include', '/setup/company');
-      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').should('have.attr', 'disabled');
-      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-general-validation-message')
-        .should('exist')
-        .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
-      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
+      it('should navigate to company setup page and no other setup page if there is no company', () => {
+        interceptFetchCompanyFailedRequest();
 
-      setupRoutes.forEach((route) => {
-        cy.visit(route);
+        cy.visit('/setup/company');
+        cy.wait('@fetchCompanyFailedRequest');
+
         cy.url().should('include', '/setup/company');
+
+        if (isAdminRole) {
+          getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-general-validation-message').should('not.exist');
+          getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').should('not.have.attr', 'disabled');
+        } else {
+          getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-general-validation-message')
+            .should('exist')
+            .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
+          getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').should('have.attr', 'disabled');
+        }
+
+        cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
+
+        setupRoutes.forEach((route) => {
+          cy.visit(route);
+          cy.url().should('include', '/setup/company');
+        });
       });
-    });
 
-    it('should navigate to branch setup page and no other setup page if company exists', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchBranchesFailedRequest();
-      interceptFetchProfileFailedRequest();
+      it('should navigate to branch setup page and no other setup page if company exists', () => {
+        interceptFetchCompanyRequest();
+        interceptFetchBranchesFailedRequest();
+        interceptFetchProfileFailedRequest();
 
-      cy.visit('/setup/branch');
+        cy.visit('/setup/branch');
 
-      cy.url().should('include', '/setup/branch');
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').should('have.attr', 'disabled');
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-general-validation-message')
-        .should('exist')
-        .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
-      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
-
-      setupRoutes.forEach((route) => {
-        cy.visit(route);
         cy.url().should('include', '/setup/branch');
+
+        if (isAdminRole) {
+          getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-general-validation-message').should('not.exist');
+          getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').should('not.have.attr', 'disabled');
+        } else {
+          getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').should('have.attr', 'disabled');
+          getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-general-validation-message')
+            .should('exist')
+            .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
+        }
+
+        cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
+
+        setupRoutes.forEach((route) => {
+          cy.visit(route);
+          cy.url().should('include', '/setup/branch');
+        });
       });
-    });
 
-    it('should navigate to employee setup page and no other setup page if company and branch exist', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchBranchesRequest();
-      interceptFetchProfileFailedRequest();
+      it('should navigate to employee setup page and no other setup page if company and branch exist', () => {
+        interceptFetchCompanyRequest();
+        interceptFetchBranchesRequest();
+        interceptFetchProfileFailedRequest();
 
-      cy.visit('/setup/employee');
-      cy.wait('@fetchCompanyRequest');
-      cy.wait('@fetchBranchesRequest');
-      cy.wait('@fetchProfileFailedRequest');
+        cy.visit('/setup/employee');
+        cy.wait('@fetchCompanyRequest');
+        cy.wait('@fetchBranchesRequest');
+        cy.wait('@fetchProfileFailedRequest');
 
-      cy.url().should('include', '/setup/employee');
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('not.have.attr', 'disabled');
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-general-validation-message').should('not.exist');
-      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
+        cy.url().should('include', '/setup/employee');
+        getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('not.have.attr', 'disabled');
+        getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-general-validation-message').should('not.exist');
+        getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('contain.text', 'Finish');
+        cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
 
-      setupRoutes.forEach((route) => {
-        cy.visit(route);
+        setupRoutes.forEach((route) => {
+          cy.visit(route);
+          cy.url().should('include', '/setup/employee');
+        });
+      });
+
+      it('should not be able to navigate to the company page if employee creation failed', () => {
+        interceptFetchCompanyRequest();
+        interceptFetchBranchesRequest();
+        interceptFetchProfileFailedRequest();
+        interceptCreateProfileFailedRequest();
+        cy.visit('/setup');
+
+        cy.wait('@fetchProfileFailedRequest');
+
+        cy.url().should('include', '/setup/employee');
+
+        clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
+
+        cy.wait('@createProfileFailedRequest');
+
+        cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
         cy.url().should('include', '/setup/employee');
       });
-    });
 
-    it('should not be able to navigate to company if employee creation failed', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchBranchesRequest();
-      interceptFetchProfileFailedRequest();
-      interceptCreateProfileFailedRequest();
-      cy.visit('/setup');
+      it('should be able to navigate to the company page if employee creation succeeded', () => {
+        interceptFetchCompanyRequest();
+        interceptFetchBranchesRequest();
+        interceptFetchProfileFailedRequest();
+        interceptCreateProfileRequest();
+        cy.visit('/setup');
 
-      cy.wait('@fetchProfileFailedRequest');
+        cy.wait('@fetchProfileFailedRequest');
 
-      cy.url().should('include', '/setup/employee');
+        cy.url().should('include', '/setup/employee');
+        getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-header').should('have.text', 'Employee Details');
+        getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-section-field-basicInfo').should(
+          'have.text',
+          'Basic Information'
+        );
 
-      clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
+        getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').clear();
+        getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').type(firstName);
+        getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName').find('input').clear();
+        getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName').find('input').type(lastName);
+        getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-fullName').find('input').clear();
+        getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-fullName').find('input').type(fullName);
 
-      cy.wait('@createProfileFailedRequest');
+        interceptFetchProfileRequest();
+        clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
 
-      cy.url().should('include', '/setup/employee');
-    });
+        cy.wait('@createProfileRequest');
+        cy.wait('@fetchProfileRequest');
 
-    it('should be able to navigate to company page if employee creation succeeded', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchBranchesRequest();
-      interceptFetchProfileFailedRequest();
-      interceptCreateProfileRequest();
-      cy.visit('/setup');
+        cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
+        cy.url().should('include', '/manage/company');
+      });
 
-      cy.wait('@fetchProfileFailedRequest');
+      it('should navigate to the company page if company, branch and employee data exist', () => {
+        interceptFetchCompanyRequest();
+        interceptFetchBranchesRequest();
+        interceptFetchProfileRequest();
 
-      cy.url().should('include', '/setup/employee');
+        cy.visit('/setup');
+        cy.wait('@fetchCompanyRequest');
+        cy.wait('@fetchBranchesRequest');
+        cy.wait('@fetchProfileRequest');
 
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').clear();
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').type('Anthony');
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName').find('input').clear();
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName').find('input').type('Crowley');
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-fullName').find('input').clear();
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-fullName')
-        .find('input')
-        .type('Anthony User Crowley');
-
-      interceptFetchProfileRequest();
-      clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
-
-      cy.wait('@createProfileRequest');
-      cy.wait('@fetchProfileRequest');
-
-      cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
-      cy.url().should('include', '/manage/company');
-    });
-
-    it('should navigate to company page if company, branch and employee data exist', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchBranchesRequest();
-      interceptFetchProfileRequest();
-
-      cy.visit('/setup');
-      cy.wait('@fetchCompanyRequest');
-      cy.wait('@fetchBranchesRequest');
-      cy.wait('@fetchProfileRequest');
-
-      cy.url().should('include', '/manage/company');
+        cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
+        cy.url().should('include', '/manage/company');
+      });
     });
   });
 
   describe('Admin Role', () => {
     beforeEach(() => {
       cy.loginMock(true);
-    });
-
-    it('should navigate to company setup page and no other setup page if there is no company', () => {
-      interceptFetchCompanyFailedRequest();
-
-      cy.visit('/setup/company');
-      cy.wait('@fetchCompanyFailedRequest');
-
-      cy.url().should('include', '/setup/company');
-      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').should('not.have.attr', 'disabled');
-      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').should('contain.text', 'Next');
-      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
-
-      setupRoutes.forEach((route) => {
-        cy.visit(route);
-        cy.url().should('include', '/setup/company');
-      });
-    });
-
-    it('should navigate to branch setup page and no other setup page if company exists', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchBranchesFailedRequest();
-      interceptFetchProfileFailedRequest();
-
-      cy.visit('/setup/branch');
-
-      cy.url().should('include', '/setup/branch');
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').should('not.have.attr', 'disabled');
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-action-button').should('contain.text', 'Next');
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-general-validation-message').should('not.exist');
-      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
-
-      setupRoutes.forEach((route) => {
-        cy.visit(route);
-        cy.url().should('include', '/setup/branch');
-      });
-    });
-
-    it('should navigate to employee setup page and no other setup page if company and branch exist', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchBranchesRequest();
-      interceptFetchProfileFailedRequest();
-
-      cy.visit('/setup/employee');
-      cy.wait('@fetchCompanyRequest');
-      cy.wait('@fetchBranchesRequest');
-      cy.wait('@fetchProfileFailedRequest');
-
-      cy.url().should('include', '/setup/employee');
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('not.have.attr', 'disabled');
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('contain.text', 'Finish');
-      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
-
-      setupRoutes.forEach((route) => {
-        cy.visit(route);
-        cy.url().should('include', '/setup/employee');
-      });
-    });
-
-    it('should navigate to company page if company, branch and employee data exist', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchBranchesRequest();
-      interceptFetchProfileRequest();
-
-      cy.visit('/setup');
-      cy.wait('@fetchCompanyRequest');
-      cy.wait('@fetchBranchesRequest');
-      cy.wait('@fetchProfileRequest');
-
-      cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
-      cy.url().should('include', '/manage/company');
     });
 
     it('should display validation messages if the company creation form is invalid', () => {
@@ -489,60 +459,6 @@ describe('Setup Flow Tests', () => {
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName-validation')
         .should('exist')
         .and('have.text', 'Last Name is required');
-    });
-
-    it('should not be able to navigate to company if employee creation failed', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchBranchesRequest();
-      interceptFetchProfileFailedRequest();
-      interceptCreateProfileFailedRequest();
-      cy.visit('/setup');
-
-      cy.wait('@fetchProfileFailedRequest');
-
-      cy.url().should('include', '/setup/employee');
-
-      clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
-
-      cy.wait('@createProfileFailedRequest');
-
-      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
-      cy.url().should('include', '/setup/employee');
-    });
-
-    it('should be able to navigate to company page if employee creation succeeded', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchBranchesRequest();
-      interceptFetchProfileFailedRequest();
-      interceptCreateProfileRequest();
-      cy.visit('/setup');
-
-      cy.wait('@fetchProfileFailedRequest');
-
-      cy.url().should('include', '/setup/employee');
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-header').should('have.text', 'Employee Details');
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-section-field-basicInfo').should(
-        'have.text',
-        'Basic Information'
-      );
-
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').clear();
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').type('Gabriel');
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName').find('input').clear();
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName').find('input').type('Archangel');
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-fullName').find('input').clear();
-      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-fullName')
-        .find('input')
-        .type('Gabriel Admin Archangel');
-
-      interceptFetchProfileRequest();
-      clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
-
-      cy.wait('@createProfileRequest');
-      cy.wait('@fetchProfileRequest');
-
-      cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
-      cy.url().should('include', '/manage/company');
     });
   });
 });

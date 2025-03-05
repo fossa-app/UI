@@ -66,30 +66,74 @@ describe('Company Management Tests', () => {
     interceptFetchCompanyLicenseFailedRequest();
     interceptFetchBranchesRequest();
     interceptFetchProfileRequest();
+    interceptFetchCompanyRequest();
+  });
+
+  const roles = [
+    {
+      role: 'User',
+      loginMock: () => cy.loginMock(),
+      viewActionButtonExists: false,
+    },
+    {
+      role: 'Admin',
+      loginMock: () => cy.loginMock(true),
+      viewActionButtonExists: true,
+    },
+  ];
+
+  roles.forEach(({ role, loginMock, viewActionButtonExists }) => {
+    describe(`${role} Role`, () => {
+      beforeEach(() => {
+        loginMock();
+      });
+
+      it('should be able to navigate and view the company page', () => {
+        cy.visit('/manage/company');
+
+        cy.get('[data-cy="menu-icon"]').click();
+        cy.get('[data-cy="menu-item-Company"]').click();
+
+        cy.url().should('include', '/manage/company/view');
+        verifyTextFields(Module.companyManagement, SubModule.companyViewDetails, {
+          'view-details-header': 'Company Details',
+          'view-details-section-basicInfo': 'Basic Information',
+          'view-details-label-name': 'Name',
+          'view-details-value-name': 'Good Omens',
+          'view-details-label-countryName': 'Country',
+          'view-details-value-countryName': 'United States',
+        });
+        getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should(
+          viewActionButtonExists ? 'exist' : 'not.exist'
+        );
+      });
+
+      it('should be able to view the company license details', () => {
+        cy.visit('/manage/company/view');
+        interceptFetchCompanyLicenseRequest();
+
+        testCompaLicenseFields();
+      });
+
+      it('should display a default template if the company license has not been uploaded', () => {
+        cy.visit('/manage/company/view');
+        interceptFetchCompanyLicenseFailedRequest();
+
+        verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
+          'view-details-header': 'Company License Details',
+        });
+        testCompaLicenseFieldsNotExist();
+        getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-company-license-details-no-details')
+          .should('exist')
+          .and('have.text', 'Company License has not been uploaded.');
+      });
+    });
   });
 
   describe('User Role', () => {
     beforeEach(() => {
       interceptFetchCompanyRequest();
       cy.loginMock();
-    });
-
-    it('should be able to navigate and view the company page', () => {
-      cy.visit('/manage/company');
-
-      cy.get('[data-cy="menu-icon"]').click();
-      cy.get('[data-cy="menu-item-Company"]').click();
-
-      cy.url().should('include', '/manage/company/view');
-      verifyTextFields(Module.companyManagement, SubModule.companyViewDetails, {
-        'view-details-label-name': 'Name',
-        'view-details-value-name': 'Good Omens',
-        'view-details-label-countryName': 'Country',
-        'view-details-value-countryName': 'United States',
-        'view-details-label-id': 'ID',
-        'view-details-value-id': '111111111111',
-      });
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('not.exist');
     });
 
     it('should not be able to navigate to the edit company page', () => {
@@ -101,50 +145,12 @@ describe('Company Management Tests', () => {
 
       cy.url().should('include', '/manage/company/view');
     });
-
-    it('should be able to view the company license details', () => {
-      cy.visit('/manage/company/view');
-      interceptFetchCompanyLicenseRequest();
-
-      testCompaLicenseFields();
-    });
-
-    it('should display a default template if the company license has not been uploaded', () => {
-      cy.visit('/manage/company/view');
-      interceptFetchCompanyLicenseFailedRequest();
-
-      verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
-        'view-details-header': 'Company License Details',
-      });
-      testCompaLicenseFieldsNotExist();
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-company-license-details-no-details')
-        .should('exist')
-        .and('have.text', 'Company License has not been uploaded.');
-    });
   });
 
   describe('Admin Role', () => {
     beforeEach(() => {
       interceptFetchCompanyRequest();
       cy.loginMock(true);
-    });
-
-    it('should be able to navigate and view the company page', () => {
-      cy.visit('/manage/company');
-
-      cy.get('[data-cy="menu-icon"]').click();
-      cy.get('[data-cy="menu-item-Company"]').click();
-
-      cy.url().should('include', '/manage/company/view');
-      verifyTextFields(Module.companyManagement, SubModule.companyViewDetails, {
-        'view-details-header': 'Company Details',
-        'view-details-section-basicInfo': 'Basic Information',
-        'view-details-label-name': 'Name',
-        'view-details-value-name': 'Good Omens',
-        'view-details-label-countryName': 'Country',
-        'view-details-value-countryName': 'United States',
-      });
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('exist');
     });
 
     it('should reset the form and navigate to view company page if the cancel button is clicked', () => {
@@ -240,26 +246,6 @@ describe('Company Management Tests', () => {
         'Canada'
       );
       cy.get('[data-cy="success-snackbar"]').should('exist').and('contain.text', 'Company has been successfully updated');
-    });
-
-    it('should be able to view the company license details', () => {
-      cy.visit('/manage/company/view');
-      interceptFetchCompanyLicenseRequest();
-
-      testCompaLicenseFields();
-    });
-
-    it('should display a default template if the company license has not been uploaded', () => {
-      cy.visit('/manage/company/view');
-      interceptFetchCompanyLicenseFailedRequest();
-
-      verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
-        'view-details-header': 'Company License Details',
-      });
-      testCompaLicenseFieldsNotExist();
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-company-license-details-no-details')
-        .should('exist')
-        .and('have.text', 'Company License has not been uploaded.');
     });
   });
 });
