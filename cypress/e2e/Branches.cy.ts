@@ -23,6 +23,7 @@ import {
   interceptFetchEmployeesRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
+  interceptFetchBranchesByIdsRequest,
 } from '../support/interceptors';
 
 const branchAdminRoutes = ['/manage/branches/new', '/manage/branches/edit/222222222222'];
@@ -191,6 +192,7 @@ describe('Branches Tests', () => {
             { pageNumber: 1, pageSize: 10 },
             { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
           );
+          interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
 
           getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
           cy.wait('@fetchMultipleBranchesRequest');

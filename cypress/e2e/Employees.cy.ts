@@ -18,6 +18,7 @@ import {
   interceptFetchEmployeesRequest,
   interceptFetchSystemLicenseRequest,
   interceptFetchBranchByIdRequest,
+  interceptFetchBranchesByIdsRequest,
 } from '../support/interceptors';
 
 describe('Employees Tests', () => {
@@ -66,6 +67,7 @@ describe('Employees Tests', () => {
 
       it('should display the loader if fetching employees is in progress', () => {
         interceptFetchEmployeesRequest();
+        interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
         cy.wait('@fetchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
@@ -88,6 +90,7 @@ describe('Employees Tests', () => {
           { pageNumber: 1, pageSize: 10 },
           { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
         );
+        interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
         cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
@@ -117,10 +120,9 @@ describe('Employees Tests', () => {
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-fullName')
           .should('exist')
           .and('have.text', 'Anthony User Crowley');
-        // TODO: uncomment when fetching branches by ids is implemented
-        // getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-assignedBranchName')
-        //   .should('exist')
-        //   .and('have.text', 'New York Branch');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-assignedBranchName')
+          .should('exist')
+          .and('have.text', 'New York Branch');
         getTablePaginationSizeInput(Module.employeeManagement, SubModule.employeeTable, 'table').should('have.value', '10');
         getTablePaginationDisplayedRows(Module.employeeManagement, SubModule.employeeTable, 'table-pagination').should(
           'have.text',
@@ -130,6 +132,7 @@ describe('Employees Tests', () => {
 
       it('should send correct request when pagination changes', () => {
         interceptFetchEmployeesRequest();
+        interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
         cy.wait('@fetchEmployeesRequest');
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-pagination')
@@ -149,11 +152,13 @@ describe('Employees Tests', () => {
 
         getTablePaginationSizeInput(Module.employeeManagement, SubModule.employeeTable, 'table').should('have.value', '20');
       });
-      it('should send correct request when search changes', () => {
+
+      it('should send correct request when the search changes', () => {
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10 },
           { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
         );
+        interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
 
         cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
 
@@ -206,6 +211,7 @@ describe('Employees Tests', () => {
           { pageNumber: 1, pageSize: 10, search: 'Anthony' },
           { alias: 'fetchSearchedEmployeesRequest', fixture: 'employees' }
         );
+        interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
 
         cy.get('[data-cy="search-employees"]').find('input').type('Anthony');
 
@@ -225,6 +231,7 @@ describe('Employees Tests', () => {
           { pageNumber: 1, pageSize: 10 },
           { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
         );
+        interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
         cy.wait('@fetchMultipleEmployeesRequest');
@@ -279,6 +286,7 @@ describe('Employees Tests', () => {
 
       it('should display action column and correct actions', () => {
         interceptFetchEmployeesRequest();
+        interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-layout-action-button').should('not.exist');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'actions-menu-icon-333333333335')
@@ -297,6 +305,7 @@ describe('Employees Tests', () => {
 
       it('should be able to navigate to employee view page', () => {
         interceptFetchEmployeesRequest();
+        interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
         interceptFetchEmployeeByIdRequest('333333333335');
         interceptFetchBranchByIdRequest('222222222222');
 
@@ -319,6 +328,7 @@ describe('Employees Tests', () => {
 
     it('should not be able to navigate to employee edit page', () => {
       interceptFetchEmployeesRequest();
+      interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
 
@@ -335,6 +345,7 @@ describe('Employees Tests', () => {
 
     it('should be able to navigate to employee edit page', () => {
       interceptFetchEmployeesRequest();
+      interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
       interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 100 });
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');

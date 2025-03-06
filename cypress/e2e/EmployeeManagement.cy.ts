@@ -19,6 +19,7 @@ import {
   interceptFetchEmployeesRequest,
   interceptFetchSystemLicenseRequest,
   interceptFetchBranchByIdRequest,
+  interceptFetchBranchesByIdsRequest,
 } from '../support/interceptors';
 
 const testEmployeeViewFields = () => {
@@ -79,6 +80,7 @@ describe('Employee Management Tests', () => {
       it('should be able to navigate and view the employee page', () => {
         interceptFetchEmployeeByIdRequest('333333333335');
         interceptFetchBranchByIdRequest('222222222222');
+        interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
         cy.visit('/manage/employees');
 
         selectAction(Module.employeeManagement, SubModule.employeeTable, 'view', '333333333335');
@@ -105,6 +107,7 @@ describe('Employee Management Tests', () => {
     it('should be able to navigate back when the back button is clicked', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
       cy.visit('/manage/employees');
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-firstName')
@@ -131,6 +134,7 @@ describe('Employee Management Tests', () => {
     it('should reset the form and navigate to employee table page if the cancel button is clicked', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100, search: '*' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
@@ -192,6 +196,7 @@ describe('Employee Management Tests', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
       interceptEditEmployeeRequest('333333333335');
+      interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100, search: '*' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
@@ -209,10 +214,9 @@ describe('Employee Management Tests', () => {
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-fullName')
         .should('exist')
         .and('have.text', 'Anthony User Crowley');
-      // TODO: uncomment when fetching branches by ids is implemented
-      // getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-assignedBranchName')
-      //   .should('exist')
-      //   .and('have.text', 'New York Branch');
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-assignedBranchName')
+        .should('exist')
+        .and('have.text', 'New York Branch');
 
       selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
 
@@ -238,6 +242,7 @@ describe('Employee Management Tests', () => {
         { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchMultipleEmployeesUpdatedRequest', fixture: 'employees-multiple-updated' }
       );
+      interceptFetchBranchesByIdsRequest({ ids: [222222222223] }, { alias: 'fetchBranchesByIdsRequest', fixture: 'branches-multiple' });
 
       cy.url().should('include', '/manage/employees');
       getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
@@ -255,10 +260,9 @@ describe('Employee Management Tests', () => {
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-fullName')
         .should('exist')
         .and('have.text', 'Anthony User Crowley');
-      // TODO: uncomment when fetching branches by ids is implemented
-      // getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-assignedBranchName')
-      //   .should('exist')
-      //   .and('have.text', 'Hawaii Branch');
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-assignedBranchName')
+        .should('exist')
+        .and('have.text', 'Hawaii Branch');
       cy.get('[data-cy="success-snackbar"]').should('exist').and('contain.text', 'Employee has been successfully updated');
     });
 

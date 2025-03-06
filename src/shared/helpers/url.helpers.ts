@@ -23,3 +23,7 @@ export const prepareQueryParams = (params: Record<string, any>): string => {
 
   return queryParams;
 };
+
+export const prepareCommaSeparatedQueryParamsByKey = (key: string, values: number[]): string => {
+  return values.map((value) => `${key}=${value}`).join('&');
+};

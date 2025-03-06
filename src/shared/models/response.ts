@@ -6,17 +6,17 @@ export interface ErrorResponse {
 }
 
 export interface PaginatedResponse<T> {
-  pageNumber: number;
-  pageSize: number;
+  pageNumber?: number;
+  pageSize?: number;
   totalItems?: number;
   totalPages?: number;
   items: T[];
 }
 
 export interface PaginationParams {
-  pageNumber: number;
-  pageSize: number;
-  search: string;
+  pageNumber?: number;
+  pageSize?: number;
+  search?: string;
   totalItems?: number;
   totalPages?: number;
 }
