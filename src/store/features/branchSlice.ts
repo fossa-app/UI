@@ -3,7 +3,7 @@ import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { Branch, BranchDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
-import { mapBranch, mapBranches, prepareQueryParams } from 'shared/helpers';
+import { mapBranch, mapBranches, prepareQueryParams, prepareCommaSeparatedQueryParamsByKey } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
 
 interface BranchState {
@@ -65,7 +65,7 @@ export const fetchBranches = createAsyncThunk<
 });
 
 export const fetchSearchedBranches = createAsyncThunk<
-  PaginatedResponse<Branch> | undefined,
+  PaginatedResponse<BranchDTO> | undefined,
   Partial<PaginationParams>,
   { rejectValue: ErrorResponse }
 >('branch/fetchSearchedBranches', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
@@ -81,6 +81,23 @@ export const fetchSearchedBranches = createAsyncThunk<
     });
   }
 });
+
+export const fetchBranchesByIds = createAsyncThunk<PaginatedResponse<BranchDTO> | undefined, number[], { rejectValue: ErrorResponse }>(
+  'branch/fetchSearchedBranches',
+  async (ids, { rejectWithValue }) => {
+    try {
+      const queryParams = prepareCommaSeparatedQueryParamsByKey('id', ids);
+      const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?${queryParams}`);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue({
+        ...(error as ErrorResponse),
+        title: MESSAGES.error.branches.notFound,
+      });
+    }
+  }
+);
 
 export const fetchBranchById = createAsyncThunk<Branch, string, { rejectValue: ErrorResponse }>(
   'branch/fetchBranchById',

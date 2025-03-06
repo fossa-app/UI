@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Branch, Employee, EmployeeDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
+import { Branch, BranchDTO, Employee, EmployeeDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
-import { mapEmployee, mapEmployees, prepareQueryParams } from 'shared/helpers';
+import { mapEmployee, mapEmployees, prepareQueryParams, getEmployeesAssignedBranchIds } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
-import { fetchBranchById } from './branchSlice';
+import { fetchBranchById, fetchBranchesByIds } from './branchSlice';
 
 interface EmployeeState {
   employees: StateEntity<PaginatedResponse<Employee> | undefined>;
@@ -29,15 +29,22 @@ export const fetchEmployees = createAsyncThunk<
   PaginatedResponse<Employee> | undefined,
   Partial<PaginationParams>,
   { rejectValue: ErrorResponse }
->('employee/fetchEmployees', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
+>('employee/fetchEmployees', async ({ pageNumber, pageSize, search }, { dispatch, rejectWithValue }) => {
   try {
     const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
     const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
 
     if (data) {
+      const assignedBranchIds = getEmployeesAssignedBranchIds(data.items);
+      let branches: PaginatedResponse<BranchDTO> | undefined;
+
+      if (assignedBranchIds.length) {
+        branches = await dispatch(fetchBranchesByIds(assignedBranchIds)).unwrap();
+      }
+
       return {
         ...data,
-        items: mapEmployees(data.items),
+        items: mapEmployees(data.items, branches?.items),
       };
     }
   } catch (error) {

@@ -113,6 +113,18 @@ export const interceptFetchBranchesFailedRequest = () => {
   });
 };
 
+export const interceptFetchBranchesByIdsRequest = (
+  { ids }: { ids: number[] },
+  { alias = 'fetchBranchesByIdsRequest', fixture = 'branches', statusCode = 200, delay = 300 } = {}
+) => {
+  cy.fixture(fixture).then((branches) => {
+    const queryString = ids.map((id) => `id=${id}`).join('&');
+    const url = `${serverBaseUrl}/Branches?${queryString}`;
+
+    cy.interceptWithAuth('GET', url, branches, alias, statusCode, delay);
+  });
+};
+
 export const interceptFetchBranchByIdRequest = (
   id: string,
   alias = 'fetchBranchByIdRequest',

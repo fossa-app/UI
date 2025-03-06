@@ -1,4 +1,4 @@
-import { AppUser, Branch, Employee, EmployeeDTO } from 'shared/models';
+import { AppUser, Branch, BranchDTO, Employee, EmployeeDTO } from 'shared/models';
 import { EMPLOYEE_FIELDS } from 'shared/constants';
 import { FieldProps, FieldOption } from 'components/UI/Form';
 import { mapUserProfileToEmployee } from './user.helpers';
@@ -13,8 +13,11 @@ export const mapEmployee = (employee: EmployeeDTO, user?: AppUser, branch?: Bran
   };
 };
 
-export const mapEmployees = (employees: EmployeeDTO[]): Employee[] => {
-  return employees.map((employee) => mapEmployee(employee, undefined));
+export const mapEmployees = (employees: EmployeeDTO[], branches: BranchDTO[] = []): Employee[] => {
+  return employees.map((employee) => {
+    const branch = branches.find(({ id }) => id === employee.assignedBranchId);
+    return mapEmployee(employee, undefined, branch);
+  });
 };
 
 export const mapEmployeeDTO = (employee: Employee): Pick<EmployeeDTO, 'assignedBranchId'> => {
@@ -36,9 +39,7 @@ export const mapEmployeeBranchesToFieldSelectOptions = (fields: FieldProps<Emplo
   return fields.map((field) => ({
     ...field,
     ...(field.name === EMPLOYEE_FIELDS.assignedBranchId!.field &&
-      branches?.length && {
-        options: branches.map(mapBranchesToFieldSelectOption),
-      }),
+      branches?.length && { options: branches.map(mapBranchesToFieldSelectOption) }),
   }));
 };
 
@@ -47,4 +48,8 @@ export const mapBranchesToFieldSelectOption = (branch: Branch): FieldOption => {
     label: branch.name,
     value: String(branch?.id),
   };
+};
+
+export const getEmployeesAssignedBranchIds = (employees: EmployeeDTO[]): number[] => {
+  return employees.filter(({ assignedBranchId }) => assignedBranchId).map(({ assignedBranchId }) => assignedBranchId) as number[];
 };
