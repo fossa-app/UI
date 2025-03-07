@@ -78,6 +78,7 @@ export const MESSAGES = {
       create: 'Employee has been successfully created 😊',
       updateEmployee: 'Employee has been successfully updated 😊',
       updateProfile: 'Profile has been successfully updated 😊',
+      deleteProfile: 'Profile has been successfully deleted 😊',
     },
   },
 };
