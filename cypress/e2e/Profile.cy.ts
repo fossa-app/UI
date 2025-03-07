@@ -216,11 +216,44 @@ describe('Profile Tests', () => {
 
         getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-title')
           .should('exist')
-          .and('have.text', 'Delete profile');
+          .and('have.text', 'Delete Profile');
         getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-subtitle')
           .should('exist')
           .and('have.text', 'Once you delete your profile, there is no going back. Please be certain.');
-        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-button').should('exist').click();
+        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-button').should('exist');
+      });
+
+      it('should display the delete confirmation popup when delete profile button is clicked', () => {
+        interceptFetchProfileRequest();
+        cy.visit('/manage/profile/view');
+
+        cy.wait('@fetchProfileRequest');
+
+        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-details-header').click();
+        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-button').click();
+
+        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'dialog').should('exist');
+        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'dialog-title')
+          .should('exist')
+          .and('have.text', 'Delete Profile');
+        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'dialog-content-text')
+          .should('exist')
+          .and('have.text', 'Once you delete your profile, there is no going back. Please be certain.');
+        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'dialog-cancel-button')
+          .should('exist')
+          .and('have.text', 'Cancel')
+          .click();
+
+        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'dialog').should('not.exist');
+
+        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-button').click();
+        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'dialog-action-button')
+          .should('exist')
+          .and('have.text', 'Acknowledge')
+          .click();
+
+        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'dialog').should('not.exist');
+        cy.get('[data-cy="success-snackbar"]').should('exist').and('contain.text', 'Profile has been successfully deleted');
       });
     });
   });

@@ -44,17 +44,18 @@ const CompanyLicenseDialog: React.FC<CompanyLicenseDialogProps> = ({ loading, on
   };
 
   return (
-    // TODO: move dialog to UI/components
     <Dialog
       {...props}
       fullWidth
       maxWidth="sm"
       onClose={handleClose}
-      PaperProps={{
-        component: 'form',
-        onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-          event.preventDefault();
-          handleUpload();
+      slotProps={{
+        paper: {
+          component: 'form',
+          onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
+            handleUpload();
+          },
         },
       }}
     >
