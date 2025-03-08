@@ -122,8 +122,7 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps<Branch>[] = [
     roles: [UserRole.administrator],
   },
   {
-    // TODO: setting this to FieldType.switch causes a bug in ManageBranch state update
-    type: FieldType.checkbox,
+    type: FieldType.switch,
     name: BRANCH_FIELDS.noPhysicalAddress.field,
     label: BRANCH_FIELDS.noPhysicalAddress.name,
     grid: { size: { xs: 12 } },

@@ -82,7 +82,7 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({
       />
       {error && (
         <FormHelperText error data-cy={`${module}-${subModule}-form-field-${name}-validation`}>
-          {error?.message}
+          {error.message}
         </FormHelperText>
       )}
     </FormControl>

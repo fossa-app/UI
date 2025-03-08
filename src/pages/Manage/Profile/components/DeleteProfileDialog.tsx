@@ -62,7 +62,7 @@ const DeleteProfileDialog: React.FC<DeleteProfileDialogProps> = ({ module, subMo
           loadingPosition="end"
           endIcon={<WarningIcon />}
         >
-          Acknowledge
+          Delete Profile
         </LoadingButton>
       </DialogActions>
     </Dialog>

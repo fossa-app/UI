@@ -249,7 +249,7 @@ describe('Profile Tests', () => {
         getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-button').click();
         getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'dialog-action-button')
           .should('exist')
-          .and('have.text', 'Acknowledge')
+          .and('have.text', 'Delete Profile')
           .click();
 
         getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'dialog').should('not.exist');

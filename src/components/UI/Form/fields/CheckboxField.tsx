@@ -32,7 +32,7 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({ module, subModule, name, 
       />
       {error && (
         <FormHelperText error data-cy={`${module}-${subModule}-form-field-${name}-validation`}>
-          {error?.message as string}
+          {error.message}
         </FormHelperText>
       )}
     </FormControl>
