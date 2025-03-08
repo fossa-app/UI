@@ -122,7 +122,7 @@ export const getBranchManagementDetailsByAddressFormSchema = (
       `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryCode!.field}`,
       `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
     ];
-    return schema.filter((field) => !addressFields.includes(field.name));
+    return schema.filter(({ name }) => !addressFields.includes(name));
   }
 
   return schema;

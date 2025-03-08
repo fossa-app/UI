@@ -95,6 +95,26 @@ describe('Employee Management Tests', () => {
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'view-action-button').should(
           viewActionButtonExists ? 'exist' : 'not.exist'
         );
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'view-profile-button').should('not.exist');
+      });
+
+      it('should render the profile button and be able to navigate to profile page if the employee is the current user', () => {
+        interceptFetchEmployeeByIdRequest('333333333333', 'fetchEmployeeByIdRequest', 'employees-multiple');
+        interceptFetchBranchByIdRequest('222222222222');
+        interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
+        cy.visit('/manage/employees');
+
+        selectAction(Module.employeeManagement, SubModule.employeeTable, 'view', '333333333333');
+
+        cy.url().should('include', '/manage/employees/view/333333333333');
+        getLinearLoader(Module.employeeManagement, SubModule.employeeViewDetails, 'view-details').should('exist');
+
+        interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 100 });
+        cy.wait('@fetchEmployeeByIdRequest');
+
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'view-profile-button').should('exist').click();
+
+        cy.url().should('include', '/manage/profile/view');
       });
     });
   });

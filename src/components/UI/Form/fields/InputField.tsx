@@ -30,7 +30,7 @@ const InputField: React.FC<InputFieldProps> = ({ module, subModule, name, ...pro
       />
       {error && (
         <FormHelperText error data-cy={`${module}-${subModule}-form-field-${name}-validation`}>
-          {error?.message as string}
+          {error.message}
         </FormHelperText>
       )}
     </FormControl>
