@@ -188,7 +188,7 @@ describe('Branch View Tests', () => {
     });
 
     it('should reset the branch after viewing and navigating back', () => {
-      interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdRequest', 'branches');
+      interceptFetchBranchByIdRequest('222222222222');
       cy.visit('/manage/branches');
 
       selectAction(Module.branchManagement, SubModule.branchTable, 'view', '222222222222');

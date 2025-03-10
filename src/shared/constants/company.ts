@@ -1,7 +1,7 @@
 import { Company, CompanyFieldConfig, CompanyLicense, CompanyLicenseFieldConfig, Module, SubModule, UserRole } from 'shared/models';
 import { FieldProps, FieldType } from 'components/UI/Form';
 import { ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
-import { renderCompanyIdField } from 'pages/Manage/Company/components/CompanyIdField';
+import { renderCopyableField } from 'components/UI/CopyableField';
 
 export const COMPANY_FIELDS: CompanyFieldConfig = {
   id: {
@@ -157,7 +157,7 @@ export const COMPANY_VIEW_DETAILS_SCHEMA: ViewDetailProps<Company>[] = [
     grid: { size: { xs: 12 } },
     module: Module.companyManagement,
     subModule: SubModule.companyViewDetails,
-    renderDetailField: (company) => renderCompanyIdField(company),
+    renderDetailField: (company) => renderCopyableField({ text: String(company.id) }),
   },
 ];
 

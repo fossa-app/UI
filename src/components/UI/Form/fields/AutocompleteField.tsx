@@ -55,8 +55,6 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({
             value={getValue(field)}
             isOptionEqualToValue={(option, valueObj) => option.value === valueObj.value}
             onChange={(_, newValue) => {
-              // TODO: check a redundant change on option selection
-              // First fires the field change in the component
               field.onChange(newValue ? (newValue as FieldOption).value : '');
             }}
             onInputChange={(event, newValue, reason) => {
@@ -71,8 +69,12 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({
                 error={!!error}
               />
             )}
-            renderOption={(props, option) => (
-              <Typography {...props} key={option.value} data-cy={`${module}-${subModule}-form-field-${name}-option-${option.value}`}>
+            renderOption={(renderOptionProps, option) => (
+              <Typography
+                {...renderOptionProps}
+                key={option.value}
+                data-cy={`${module}-${subModule}-form-field-${name}-option-${option.value}`}
+              >
                 {option.label}
               </Typography>
             )}

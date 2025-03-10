@@ -8,17 +8,17 @@ export const mapCompany = (company: CompanyDTO, countries: Country[]): Company =
   };
 };
 
-export const mapCountriesToFieldSelectOptions = (fields: FieldProps<Company>[], countries?: Country[]): FieldProps<Company>[] => {
+export const mapCountriesToFieldOptions = (fields: FieldProps<Company>[], countries?: Country[]): FieldProps<Company>[] => {
   return fields.map((field) => ({
     ...field,
     ...(field.type === FieldType.select &&
       countries?.length && {
-        options: countries.map(mapCountryToFieldSelectOption),
+        options: countries.map(mapCountryToFieldOption),
       }),
   }));
 };
 
-export const mapCountryToFieldSelectOption = (country: Country): FieldOption => {
+export const mapCountryToFieldOption = (country: Country): FieldOption => {
   return {
     label: country.name,
     value: country.code,

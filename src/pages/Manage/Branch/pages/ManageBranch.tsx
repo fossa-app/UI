@@ -20,7 +20,7 @@ import {
   getBranchManagementDetailsByAddressFormSchema,
   mapBranchDTO,
   mapDisabledFields,
-  mapBranchFieldOptionsToFieldSelectOptions,
+  mapBranchFieldOptionsToFieldOptions,
 } from 'shared/helpers';
 import BranchDetailsForm from 'components/forms/BranchDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
@@ -47,14 +47,9 @@ const ManageBranchPage: React.FC = () => {
   );
 
   const updateFields = React.useCallback(() => {
-    const mappedFields = mapBranchFieldOptionsToFieldSelectOptions(
-      mapDisabledFields(
-        getBranchManagementDetailsByAddressFormSchema(BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, !!noPhysicalAddress),
-        userRoles
-      ),
-      companyTimeZones,
-      availableCountries
-    );
+    const schema = getBranchManagementDetailsByAddressFormSchema(BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, !!noPhysicalAddress);
+    const disabledFields = mapDisabledFields(schema, userRoles);
+    const mappedFields = mapBranchFieldOptionsToFieldOptions(disabledFields, companyTimeZones, availableCountries);
 
     setFields(mappedFields);
     setFormLoading(!mappedFields.length);

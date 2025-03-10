@@ -12,7 +12,7 @@ import {
 } from 'store/features';
 import { COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
 import { CompanyDTO, Module, SubModule } from 'shared/models';
-import { mapCountriesToFieldSelectOptions, mapDisabledFields } from 'shared/helpers';
+import { mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
 import CompanyDetailsForm from 'components/forms/CompanyDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
 
@@ -29,15 +29,10 @@ const EditCompanyPage: React.FC = () => {
     navigate(ROUTES.viewCompany.path);
   }, [navigate]);
 
-  const handleSubmit = (data: Omit<CompanyDTO, 'id'>) => {
-    dispatch(editCompany(data));
-    setFormSubmitted(true);
-  };
-
-  const handleCancel = () => {
-    setFormSubmitted(false);
-    navigateToViewCompany();
-  };
+  const fields = React.useMemo(
+    () => mapCountriesToFieldOptions(mapDisabledFields(COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA, userRoles), countries),
+    [userRoles, countries]
+  );
 
   // TODO: move this logic to PageLayout
   React.useEffect(() => {
@@ -55,6 +50,16 @@ const EditCompanyPage: React.FC = () => {
     };
   }, [formSubmitted, dispatch]);
 
+  const handleSubmit = (data: Omit<CompanyDTO, 'id'>) => {
+    dispatch(editCompany(data));
+    setFormSubmitted(true);
+  };
+
+  const handleCancel = () => {
+    setFormSubmitted(false);
+    navigateToViewCompany();
+  };
+
   return (
     <PageLayout module={Module.companyManagement} subModule={SubModule.companyDetails} pageTitle="Edit Company">
       <CompanyDetailsForm
@@ -65,7 +70,7 @@ const EditCompanyPage: React.FC = () => {
         data={company}
         actionLoading={updateStatus === 'loading'}
         formLoading={fetchStatus === 'loading'}
-        fields={mapCountriesToFieldSelectOptions(mapDisabledFields(COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA, userRoles), countries)}
+        fields={fields}
         onSubmit={handleSubmit}
         onCancel={handleCancel}
       />

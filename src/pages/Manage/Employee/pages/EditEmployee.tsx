@@ -12,7 +12,7 @@ import {
 } from 'store/features';
 import { EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
 import { Branch, Employee, Module, SubModule } from 'shared/models';
-import { mapEmployeeBranchesToFieldSelectOptions, mapEmployeeDTO } from 'shared/helpers';
+import { mapBranchToFieldOption, mapEmployeeDTO } from 'shared/helpers';
 import EmployeeDetailsForm from 'components/forms/EmployeeDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
 
@@ -35,7 +35,6 @@ const EditEmployeePage: React.FC = () => {
 
   const handleBranchSearch = React.useCallback(
     (_: unknown, search: string) => {
-      // TODO: when moving from the Employee view page, there is a redundant request and employee.assignedBranchId is somehow undefined
       const isBranchOptionAvailable =
         branchItems.some((branchItem) => String(branchItem.id) === String(employee?.assignedBranchId)) &&
         branchItems.some((branchItem) => branchItem.name.toLowerCase().includes(search.toLowerCase()));
@@ -48,28 +47,20 @@ const EditEmployeePage: React.FC = () => {
     [branchItems, employee?.assignedBranchId, dispatch]
   );
 
-  const fields = React.useMemo(() => {
-    return mapEmployeeBranchesToFieldSelectOptions(
+  const fields = React.useMemo(
+    () =>
       EMPLOYEE_DETAILS_FORM_SCHEMA.map((field) =>
         field.name === EMPLOYEE_FIELDS.assignedBranchId?.field
-          ? { ...field, loading: searchedBranchesStatus === 'loading', onInputChange: handleBranchSearch }
+          ? {
+              ...field,
+              loading: searchedBranchesStatus === 'loading',
+              options: branchItems.map(mapBranchToFieldOption),
+              onInputChange: handleBranchSearch,
+            }
           : field
       ),
-      branchItems
-    );
-  }, [branchItems, searchedBranchesStatus, handleBranchSearch]);
-
-  const handleSubmit = (formValue: Employee) => {
-    const submitData = mapEmployeeDTO(formValue);
-
-    dispatch(editEmployee([id!, submitData]));
-    setFormSubmitted(true);
-  };
-
-  const handleCancel = () => {
-    dispatch(resetEmployee());
-    navigate(ROUTES.employees.path);
-  };
+    [branchItems, searchedBranchesStatus, handleBranchSearch]
+  );
 
   React.useEffect(() => {
     if (id) {
@@ -90,6 +81,18 @@ const EditEmployeePage: React.FC = () => {
       dispatch(resetEmployee());
     };
   }, [dispatch]);
+
+  const handleSubmit = (formValue: Employee) => {
+    const submitData = mapEmployeeDTO(formValue);
+
+    dispatch(editEmployee([id!, submitData]));
+    setFormSubmitted(true);
+  };
+
+  const handleCancel = () => {
+    dispatch(resetEmployee());
+    navigate(ROUTES.employees.path);
+  };
 
   return (
     <PageLayout
