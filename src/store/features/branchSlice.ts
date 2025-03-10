@@ -83,7 +83,7 @@ export const fetchSearchedBranches = createAsyncThunk<
 });
 
 export const fetchBranchesByIds = createAsyncThunk<PaginatedResponse<BranchDTO> | undefined, number[], { rejectValue: ErrorResponse }>(
-  'branch/fetchSearchedBranches',
+  'branch/fetchBranchesByIds',
   async (ids, { rejectWithValue }) => {
     try {
       const queryParams = prepareCommaSeparatedQueryParamsByKey('id', ids);

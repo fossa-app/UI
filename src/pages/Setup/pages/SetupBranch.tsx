@@ -17,7 +17,7 @@ import {
   getBranchManagementDetailsByAddressFormSchema,
   mapBranchDTO,
   mapDisabledFields,
-  mapBranchFieldOptionsToFieldSelectOptions,
+  mapBranchFieldOptionsToFieldOptions,
 } from 'shared/helpers';
 import { BRANCH_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
@@ -39,15 +39,13 @@ const SetupBranchPage: React.FC = () => {
     [countries, company]
   );
 
-  const fields = React.useMemo(
-    () =>
-      mapBranchFieldOptionsToFieldSelectOptions(
-        mapDisabledFields(getBranchManagementDetailsByAddressFormSchema(BRANCH_SETUP_DETAILS_FORM_SCHEMA, !!noPhysicalAddress), userRoles),
-        companyTimeZones,
-        availableCountries
-      ),
-    [noPhysicalAddress, userRoles, companyTimeZones, availableCountries]
-  );
+  const fields = React.useMemo(() => {
+    const schema = getBranchManagementDetailsByAddressFormSchema(BRANCH_SETUP_DETAILS_FORM_SCHEMA, !!noPhysicalAddress);
+    const disabledFields = mapDisabledFields(schema, userRoles);
+    const mappedFields = mapBranchFieldOptionsToFieldOptions(disabledFields, companyTimeZones, availableCountries);
+
+    return mappedFields;
+  }, [noPhysicalAddress, userRoles, companyTimeZones, availableCountries]);
 
   React.useEffect(() => {
     if (companyLicenseStatus === 'idle') {

@@ -1,7 +1,7 @@
 import { BRANCH_FIELDS } from 'shared/constants';
 import { Branch, BranchDTO, Company, Country, TimeZone } from 'shared/models';
 import { FieldProps, FieldOption } from 'components/UI/Form';
-import { mapCountryToFieldSelectOption } from './company.helpers';
+import { mapCountryToFieldOption } from './company.helpers';
 
 export const mapBranch = (
   branch: BranchDTO,
@@ -71,7 +71,7 @@ export const mapBranches = (
   return branches.map((branch) => mapBranch(branch, timeZones, companyCountryCode, countries));
 };
 
-export const mapBranchFieldOptionsToFieldSelectOptions = (
+export const mapBranchFieldOptionsToFieldOptions = (
   fields: FieldProps<Branch>[],
   timeZones?: TimeZone[],
   countries?: Country[]
@@ -80,16 +80,16 @@ export const mapBranchFieldOptionsToFieldSelectOptions = (
     ...field,
     ...(field.name === BRANCH_FIELDS.timeZoneId.field &&
       timeZones?.length && {
-        options: timeZones.map(mapTimeZoneToFieldSelectOption),
+        options: timeZones.map(mapTimeZoneToFieldOption),
       }),
     ...(field.name === `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryCode!.field}` &&
       countries?.length && {
-        options: countries.map(mapCountryToFieldSelectOption),
+        options: countries.map(mapCountryToFieldOption),
       }),
   }));
 };
 
-export const mapTimeZoneToFieldSelectOption = (timeZone: TimeZone): FieldOption => {
+export const mapTimeZoneToFieldOption = (timeZone: TimeZone): FieldOption => {
   return {
     label: timeZone.name,
     value: timeZone.id,

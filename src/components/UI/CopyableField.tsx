@@ -1,13 +1,15 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Company } from 'shared/models';
 import CopyToClipboard from 'components/UI/CopyToClipboard';
 
-// TODO: refactor to a generic renderCopyableField component
-export const renderCompanyIdField = ({ id }: Company) => (
+interface CopyableFieldProps {
+  text: string;
+}
+
+export const renderCopyableField: React.FC<CopyableFieldProps> = ({ text }) => (
   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-    <Typography variant="body1">{id}</Typography>
-    <CopyToClipboard text={`${id}`} />
+    <Typography variant="body1">{text}</Typography>
+    <CopyToClipboard text={text} />
   </Box>
 );
