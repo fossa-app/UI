@@ -31,12 +31,8 @@ const PageLayout: React.FC<React.PropsWithChildren<PageLayoutProps>> = ({
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, ...props.sx }} {...props}>
-      <Page>
-        <PageTitle
-          data-cy={`${module}-${subModule}-page-layout-title`}
-          withBackButton={withBackButton}
-          onBackButtonClick={onBackButtonClick}
-        >
+      <Page module={module} subModule={subModule}>
+        <PageTitle withBackButton={withBackButton} onBackButtonClick={onBackButtonClick}>
           {pageTitle}
         </PageTitle>
       </Page>

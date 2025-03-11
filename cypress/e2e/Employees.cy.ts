@@ -58,8 +58,8 @@ describe('Employees Tests', () => {
       it('should display the default message within the table if there are no employees', () => {
         interceptFetchEmployeesFailedRequest();
 
-        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-layout-title').should('have.text', 'Employees');
-        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-no-employees').should(
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'page-title').should('have.text', 'Employees');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'page-subtitle').should(
           'have.text',
           'No Employees Found'
         );
@@ -71,7 +71,7 @@ describe('Employees Tests', () => {
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
         cy.wait('@fetchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
-        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-no-employees').should('not.exist');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'page-subtitle').should('not.exist');
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.exist');
       });
@@ -94,7 +94,7 @@ describe('Employees Tests', () => {
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
         cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
-        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-no-employees').should('not.exist');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'page-subtitle').should('not.exist');
         getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.exist');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-header-cell-firstName').should(
@@ -164,7 +164,7 @@ describe('Employees Tests', () => {
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
 
-        search('search-employees', 'Anthony');
+        search(Module.employeeManagement, SubModule.employeeTable, 'search-employees', 'Anthony');
 
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10, search: 'Anthony' },
@@ -176,7 +176,7 @@ describe('Employees Tests', () => {
         cy.wait('@fetchSearchedEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10&search=Anthony');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 1);
 
-        search('search-employees', 'Joe');
+        search(Module.employeeManagement, SubModule.employeeTable, 'search-employees', 'Joe');
 
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10, search: 'Joe' },
@@ -188,7 +188,7 @@ describe('Employees Tests', () => {
         cy.wait('@fetchSearchedNoEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10&search=Joe');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 0);
 
-        cy.get('[data-cy="search-employees"]').find('input').clear();
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'search-employees').find('input').clear();
 
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10 },
@@ -213,13 +213,15 @@ describe('Employees Tests', () => {
         );
         interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
 
-        cy.get('[data-cy="search-employees"]').find('input').type('Anthony');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'search-employees').find('input').type('Anthony');
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 1);
 
-        cy.get('[data-cy="search-employees-clear"]').click();
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'search-employees-clear').click();
 
-        cy.get('[data-cy="search-employees"]').find('input').should('have.value', '');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'search-employees')
+          .find('input')
+          .should('have.value', '');
 
         cy.wait('@fetchMultipleEmployeesRequest');
 
@@ -238,7 +240,7 @@ describe('Employees Tests', () => {
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
 
-        search('search-employees', 'Test');
+        search(Module.employeeManagement, SubModule.employeeTable, 'search-employees', 'Test');
 
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10, search: 'Test' },
@@ -263,7 +265,7 @@ describe('Employees Tests', () => {
 
         cy.wait('@fetchMultipleBranchesRequest');
 
-        cy.get('[data-cy="search-branches"]').find('input').should('have.value', '');
+        getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'search-branches').find('input').should('have.value', '');
         getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
 
         cy.get('[data-cy="menu-icon"]').click();
@@ -313,7 +315,7 @@ describe('Employees Tests', () => {
 
         cy.url().should('include', '/manage/employees/view/333333333335');
 
-        cy.get('[data-cy="page-title-back-button"]').click();
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'page-title-back-button').click();
         selectAction(Module.employeeManagement, SubModule.employeeTable, 'view', '333333333335');
 
         cy.url().should('include', '/manage/employees/view/333333333335');

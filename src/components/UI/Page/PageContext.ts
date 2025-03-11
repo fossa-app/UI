@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { Module, SubModule } from 'shared/models';
 
-const PageContext = React.createContext({});
+const PageContext = React.createContext<{ module: Module; subModule: SubModule } | undefined>(undefined);
 
 export const usePageContext = () => {
   const context = React.useContext(PageContext);

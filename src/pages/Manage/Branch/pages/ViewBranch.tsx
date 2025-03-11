@@ -8,6 +8,9 @@ import { BRANCH_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
 import ViewDetails from 'components/UI/ViewDetails';
 
+const module = Module.branchManagement;
+const subModule = SubModule.branchViewDetails;
+
 const ViewBranchPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -41,19 +44,19 @@ const ViewBranchPage: React.FC = () => {
   return (
     <PageLayout
       withBackButton
-      module={Module.branchManagement}
-      subModule={SubModule.branchViewDetails}
+      module={module}
+      subModule={subModule}
       pageTitle="View Branch"
       displayNotFoundPage={fetchStatus === 'failed' && !branch}
       onBackButtonClick={navigateBack}
     >
-      <ViewDetails module={Module.branchManagement} subModule={SubModule.branchViewDetails} loading={fetchStatus === 'loading'}>
+      <ViewDetails module={module} subModule={subModule} loading={fetchStatus === 'loading'}>
         <ViewDetails.Header>Branch Details</ViewDetails.Header>
         <ViewDetails.Content fields={BRANCH_VIEW_DETAILS_SCHEMA} values={branch} />
         <ViewDetails.Actions>
           {isUserAdmin && (
             <Button
-              data-cy={`${Module.branchManagement}-${SubModule.branchViewDetails}-view-action-button`}
+              data-cy={`${module}-${subModule}-view-action-button`}
               aria-label="Edit Branch Button"
               variant="contained"
               color="primary"

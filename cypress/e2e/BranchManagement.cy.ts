@@ -119,7 +119,7 @@ describe('Branch Management Tests', () => {
     cy.visit('/manage/branches');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'page-layout-title').should('have.text', 'Create Branch');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'page-title').should('have.text', 'Create Branch');
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type('New Test Branch');
     selectOption(Module.branchManagement, SubModule.branchDetails, 'timeZoneId', 'America/Chicago');
@@ -169,8 +169,8 @@ describe('Branch Management Tests', () => {
     interceptFetchBranchByIdFailedRequest('222222222224');
     cy.visit('/manage/branches/edit/222222222224');
 
-    cy.get('[data-cy="not-found-page-title"]').should('exist').and('contain.text', 'Page Not Found');
-    cy.get('[data-cy="not-found-page-button"]').should('exist').click();
+    getTestSelectorByModule(Module.shared, SubModule.notFound, 'page-title').should('exist').and('contain.text', 'Page Not Found');
+    getTestSelectorByModule(Module.shared, SubModule.notFound, 'navigate-home-button').should('exist').click();
     cy.url().should('include', '/manage/company');
   });
 
@@ -225,7 +225,7 @@ describe('Branch Management Tests', () => {
 
     cy.wait('@fetchBranchByIdRequest');
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'page-layout-title').should('have.text', 'Edit Branch');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'page-title').should('have.text', 'Edit Branch');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name')
       .find('input')
       .should('have.value', 'New York Branch');
@@ -326,13 +326,13 @@ describe('Branch Management Tests', () => {
     cy.visit('/manage/branches');
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
-    cy.get('[data-cy="page-title-back-button"]').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'page-title-back-button').click();
 
     cy.url().should('include', '/manage/branches');
 
     cy.visit('/manage/branches');
     selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
-    cy.get('[data-cy="page-title-back-button"]').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'page-title-back-button').click();
 
     cy.url().should('include', '/manage/branches');
     getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
@@ -356,7 +356,7 @@ describe('Branch Management Tests', () => {
       'form-field-address.countryCode': 'US',
     });
 
-    cy.get('[data-cy="page-title-back-button"]').click();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'page-title-back-button').click();
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
     cy.url().should('include', '/manage/branches/new');

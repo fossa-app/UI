@@ -19,7 +19,7 @@ const ViewDetailsContent = <T,>({ fields, values, noValuesTemplate }: ViewDetail
     throw new Error('ViewDetailsContent must be used within a ViewDetails component using ViewDetailsContext.');
   }
 
-  const { loading } = context;
+  const { module, subModule, loading } = context;
 
   return (
     <AccordionDetails sx={{ minHeight: 150, overflow: 'auto' }}>
@@ -27,7 +27,7 @@ const ViewDetailsContent = <T,>({ fields, values, noValuesTemplate }: ViewDetail
         !values &&
         (noValuesTemplate ?? (
           // TODO: fix, it displays this initially
-          <Page sx={{ margin: 0 }}>
+          <Page module={module} subModule={subModule} sx={{ margin: 0 }}>
             <PageSubtitle>No Detail Found</PageSubtitle>
           </Page>
         ))}

@@ -38,7 +38,7 @@ const Header: React.FC = () => {
   };
 
   const handleCompanyClick = () => {
-    navigate(ROUTES.manage.path);
+    navigate(ROUTES.viewCompany.path);
   };
 
   const showSideBar = () => {

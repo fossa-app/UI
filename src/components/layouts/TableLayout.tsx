@@ -24,10 +24,12 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
 }) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}>
-      <Page sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', textAlign: 'left', mb: 5 }}>
-        <PageTitle data-cy={`${module}-${subModule}-table-layout-title`} sx={{ flexGrow: 1 }}>
-          {pageTitle}
-        </PageTitle>
+      <Page
+        module={module}
+        subModule={subModule}
+        sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', textAlign: 'left', mb: 5 }}
+      >
+        <PageTitle sx={{ flexGrow: 1 }}>{pageTitle}</PageTitle>
         {withActionButton && (
           <Button
             data-cy={`${module}-${subModule}-table-layout-action-button`}
