@@ -141,12 +141,12 @@ describe('Employee Management Tests', () => {
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
 
-      cy.get('[data-cy="page-title-back-button"]').click();
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'page-title-back-button').click();
 
       cy.url().should('include', '/manage/employees');
 
       selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
-      cy.get('[data-cy="page-title-back-button"]').click();
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'page-title-back-button').click();
 
       cy.url().should('include', '/manage/employees');
     });

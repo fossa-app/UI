@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { fetchCompany, selectCompany, selectCompanyLicense, selectIsUserAdmin } from 'store/features';
 import { Module, SubModule } from 'shared/models';
 import { COMPANY_LICENSE_VIEW_DETAILS_SCHEMA, COMPANY_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
-import { getTestSelectorByModule } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
 import ViewDetails from 'components/UI/ViewDetails';
 import Page, { PageSubtitle } from 'components/UI/Page';
@@ -19,17 +18,8 @@ const ViewCompanyPage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
 
   const companyLicenseNoValuesTemplate = (
-    <Page sx={{ margin: 0 }}>
-      <PageSubtitle
-        data-cy={getTestSelectorByModule(
-          Module.companyManagement,
-          SubModule.companyLicenseViewDetails,
-          'view-company-license-details-no-details'
-        )}
-        fontSize={20}
-      >
-        Company License has not been uploaded.
-      </PageSubtitle>
+    <Page module={Module.companyManagement} subModule={SubModule.companyLicenseViewDetails} sx={{ margin: 0 }}>
+      <PageSubtitle fontSize={20}>Company License has not been uploaded.</PageSubtitle>
     </Page>
   );
 

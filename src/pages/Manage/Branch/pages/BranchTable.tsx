@@ -23,6 +23,9 @@ import TableLayout from 'components/layouts/TableLayout';
 import { useSearch } from 'components/Search';
 import { renderPrimaryLinkText } from 'components/UI/PrimaryLinkText';
 
+const module = Module.branchManagement;
+const subModule = SubModule.branchTable;
+
 const BranchTablePage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -88,9 +91,7 @@ const BranchTablePage: React.FC = () => {
               }
             : column
         ),
-        (branch) => (
-          <ActionsMenu<Branch> module={Module.branchManagement} subModule={SubModule.branchTable} actions={actions} context={branch} />
-        )
+        (branch) => <ActionsMenu<Branch> module={module} subModule={subModule} actions={actions} context={branch} />
       ),
     [actions, handleBranchAction]
   );
@@ -102,7 +103,10 @@ const BranchTablePage: React.FC = () => {
   }, [fetchStatus, page, dispatch]);
 
   React.useEffect(() => {
-    setProps({ label: 'Search Branches', testSelector: 'search-branches' });
+    setProps({
+      label: 'Search Branches',
+      testSelector: getTestSelectorByModule(module, subModule, 'search-branches'),
+    });
   }, [setProps]);
 
   React.useEffect(() => {
@@ -123,16 +127,16 @@ const BranchTablePage: React.FC = () => {
 
   return (
     <TableLayout
-      module={Module.branchManagement}
-      subModule={SubModule.branchTable}
+      module={module}
+      subModule={subModule}
       withActionButton={isUserAdmin}
       pageTitle="Branches"
       actionButtonLabel="New Branch"
       onActionClick={() => handleNavigate(ROUTES.newBranch.path)}
     >
       <Table<Branch>
-        module={Module.branchManagement}
-        subModule={SubModule.branchTable}
+        module={module}
+        subModule={subModule}
         loading={loading}
         columns={columns}
         items={branches?.items}
@@ -141,13 +145,8 @@ const BranchTablePage: React.FC = () => {
         totalItems={page.totalItems}
         pageSizeOptions={pageSizeOptions}
         noRecordsTemplate={
-          <Page sx={{ margin: 0 }}>
-            <PageSubtitle
-              data-cy={getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches')}
-              variant="h6"
-            >
-              No Branches Found
-            </PageSubtitle>
+          <Page module={module} subModule={subModule} sx={{ margin: 0 }}>
+            <PageSubtitle variant="h6">No Branches Found</PageSubtitle>
           </Page>
         }
         onPageNumberChange={(pageNumber) => handlePageChange({ pageNumber })}

@@ -20,6 +20,9 @@ import { useSearch } from 'components/Search';
 import ActionsMenu from 'components/UI/Table/ActionsMenu';
 import { renderPrimaryLinkText } from 'components/UI/PrimaryLinkText';
 
+const module = Module.employeeManagement;
+const subModule = SubModule.employeeTable;
+
 const EmployeeTablePage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -76,14 +79,7 @@ const EmployeeTablePage: React.FC = () => {
               }
             : column
         ),
-        (employee) => (
-          <ActionsMenu<Employee>
-            module={Module.employeeManagement}
-            subModule={SubModule.employeeTable}
-            actions={actions}
-            context={employee}
-          />
-        )
+        (employee) => <ActionsMenu<Employee> module={module} subModule={subModule} actions={actions} context={employee} />
       ),
     [actions, handleEmployeeAction]
   );
@@ -95,7 +91,10 @@ const EmployeeTablePage: React.FC = () => {
   }, [fetchStatus, page, dispatch]);
 
   React.useEffect(() => {
-    setProps({ label: 'Search Employees', testSelector: 'search-employees' });
+    setProps({
+      label: 'Search Employees',
+      testSelector: getTestSelectorByModule(module, subModule, 'search-employees'),
+    });
   }, [setProps]);
 
   React.useEffect(() => {
@@ -115,11 +114,10 @@ const EmployeeTablePage: React.FC = () => {
   });
 
   return (
-    <TableLayout module={Module.employeeManagement} subModule={SubModule.employeeTable} pageTitle="Employees">
-      {/* TODO: when the assigned branch is not in the paginated response, it displays the default cell value */}
+    <TableLayout module={module} subModule={subModule} pageTitle="Employees">
       <Table<Employee>
-        module={Module.employeeManagement}
-        subModule={SubModule.employeeTable}
+        module={module}
+        subModule={subModule}
         loading={fetchStatus === 'loading'}
         columns={columns}
         items={employees?.items}
@@ -128,13 +126,8 @@ const EmployeeTablePage: React.FC = () => {
         totalItems={page.totalItems}
         pageSizeOptions={pageSizeOptions}
         noRecordsTemplate={
-          <Page sx={{ my: 0 }}>
-            <PageSubtitle
-              data-cy={getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-no-employees')}
-              variant="h6"
-            >
-              No Employees Found
-            </PageSubtitle>
+          <Page module={module} subModule={subModule} sx={{ my: 0 }}>
+            <PageSubtitle variant="h6">No Employees Found</PageSubtitle>
           </Page>
         }
         onPageNumberChange={(pageNumber) => handlePageChange({ pageNumber })}

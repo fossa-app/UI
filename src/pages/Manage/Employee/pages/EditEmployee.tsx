@@ -16,6 +16,9 @@ import { mapBranchToFieldOption, mapEmployeeDTO } from 'shared/helpers';
 import EmployeeDetailsForm from 'components/forms/EmployeeDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
 
+const module = Module.employeeManagement;
+const subModule = SubModule.employeeDetails;
+
 const EditEmployeePage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -97,16 +100,16 @@ const EditEmployeePage: React.FC = () => {
   return (
     <PageLayout
       withBackButton
-      module={Module.employeeManagement}
-      subModule={SubModule.employeeDetails}
+      module={module}
+      subModule={subModule}
       pageTitle="Edit Employee Branch"
       displayNotFoundPage={fetchStatus === 'failed' && !employee}
       onBackButtonClick={handleCancel}
     >
       <EmployeeDetailsForm
         withCancel
-        module={Module.employeeManagement}
-        subModule={SubModule.employeeDetails}
+        module={module}
+        subModule={subModule}
         headerText="Employee Details"
         actionLoading={updateStatus === 'loading'}
         formLoading={fetchStatus === 'loading'}

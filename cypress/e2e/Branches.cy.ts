@@ -76,7 +76,7 @@ describe('Branches Tests', () => {
           interceptFetchBranchesRequest();
 
           getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
-          getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'page-subtitle').should('not.exist');
 
           cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
 
@@ -96,7 +96,7 @@ describe('Branches Tests', () => {
           interceptFetchBranchesRequest();
 
           cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
-          getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-no-branches').should('not.exist');
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'page-subtitle').should('not.exist');
           getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
           getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
           getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-header-cell-name').should('have.text', 'Name');
@@ -153,7 +153,7 @@ describe('Branches Tests', () => {
 
           getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
 
-          search('search-branches', 'New');
+          search(Module.branchManagement, SubModule.branchTable, 'search-branches', 'New');
 
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: 'New' },
@@ -164,7 +164,7 @@ describe('Branches Tests', () => {
           cy.wait('@fetchSearchedBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10&search=New');
           getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
 
-          search('search-branches', 'Old');
+          search(Module.branchManagement, SubModule.branchTable, 'search-branches', 'Old');
 
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: 'Old' },
@@ -175,7 +175,7 @@ describe('Branches Tests', () => {
           cy.wait('@fetchSearchedNoBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10&search=Old');
           getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 0);
 
-          cy.get('[data-cy="search-branches"]').find('input').clear();
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'search-branches').find('input').clear();
 
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: '' },
@@ -199,7 +199,7 @@ describe('Branches Tests', () => {
 
           getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
 
-          search('search-branches', 'Test');
+          search(Module.branchManagement, SubModule.branchTable, 'search-branches', 'Test');
 
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: 'Test' },
@@ -224,7 +224,9 @@ describe('Branches Tests', () => {
 
           cy.wait('@fetchMultipleEmployeesRequest');
 
-          cy.get('[data-cy="search-employees"]').find('input').should('have.value', '');
+          getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'search-employees')
+            .find('input')
+            .should('have.value', '');
           getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
 
           cy.get('[data-cy="menu-icon"]').click();
@@ -335,13 +337,13 @@ describe('Branches Tests', () => {
             { alias: 'fetchSearchedBranchesRequest', fixture: 'branches' }
           );
 
-          cy.get('[data-cy="search-branches"]').find('input').type('New');
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'search-branches').find('input').type('New');
 
           getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
 
-          cy.get('[data-cy="search-branches-clear"]').click();
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'search-branches-clear').click();
 
-          cy.get('[data-cy="search-branches"]').find('input').should('have.value', '');
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'search-branches').find('input').should('have.value', '');
 
           cy.wait('@fetchMultipleBranchesRequest');
 
@@ -393,11 +395,11 @@ describe('Branches Tests', () => {
         { alias: 'fetchSearchedBranchesRequest', fixture: 'branches' }
       );
 
-      cy.get('[data-cy="search-branches"]').find('input').type('New');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'search-branches').find('input').type('New');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
-      cy.get('[data-cy="page-title-back-button"]').click();
-      cy.get('[data-cy="search-branches"]').find('input').should('have.value', '');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'page-title-back-button').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'search-branches').find('input').should('have.value', '');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
@@ -414,7 +416,7 @@ describe('Branches Tests', () => {
       cy.wait('@createBranchRequest');
       cy.wait('@fetchMultipleUpdatedBranchesRequest');
 
-      cy.get('[data-cy="search-branches"]').find('input').should('have.value', '');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'search-branches').find('input').should('have.value', '');
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
     });
 

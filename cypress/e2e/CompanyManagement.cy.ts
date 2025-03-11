@@ -123,7 +123,7 @@ describe('Company Management Tests', () => {
           'view-details-header': 'Company License Details',
         });
         testCompaLicenseFieldsNotExist();
-        getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-company-license-details-no-details')
+        getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'page-subtitle')
           .should('exist')
           .and('have.text', 'Company License has not been uploaded.');
       });

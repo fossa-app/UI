@@ -79,7 +79,7 @@ describe('Branch View Tests', () => {
           .find('p')
           .should('not.have.attr', 'data-invalid');
 
-        cy.get('[data-cy="page-title-back-button"]').click();
+        getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'page-title-back-button').click();
 
         cy.url().should('include', '/manage/branches');
         getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
@@ -162,8 +162,8 @@ describe('Branch View Tests', () => {
         interceptFetchBranchByIdFailedRequest('222222222224');
         cy.visit('/manage/branches/view/222222222224');
 
-        cy.get('[data-cy="not-found-page-title"]').should('exist').and('contain.text', 'Page Not Found');
-        cy.get('[data-cy="not-found-page-button"]').should('exist').click();
+        getTestSelectorByModule(Module.shared, SubModule.notFound, 'page-title').should('exist').and('contain.text', 'Page Not Found');
+        getTestSelectorByModule(Module.shared, SubModule.notFound, 'navigate-home-button').should('exist').click();
         cy.url().should('include', '/manage/company');
       });
     });
@@ -200,7 +200,7 @@ describe('Branch View Tests', () => {
         'New York Branch'
       );
 
-      cy.get('[data-cy="page-title-back-button"]').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'page-title-back-button').click();
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
       cy.url().should('include', '/manage/branches/new');

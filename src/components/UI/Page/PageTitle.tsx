@@ -22,15 +22,21 @@ export const PageTitle: React.FC<React.PropsWithChildren<PageTitleProps>> = ({
     throw new Error('PageTitle must be used within a Page component using PageContext.');
   }
 
+  const { module, subModule } = context;
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} {...props}>
       {withBackButton && (
-        // TODO: make the page-title-back-button module based
-        <IconButton aria-label="Navigate Back" data-cy="page-title-back-button" size="large" onClick={onBackButtonClick}>
+        <IconButton
+          aria-label="Navigate Back"
+          data-cy={`${module}-${subModule}-page-title-back-button`}
+          size="large"
+          onClick={onBackButtonClick}
+        >
           <ArrowBackIcon />
         </IconButton>
       )}
-      <Typography variant="h5" component="h1" sx={{ flexGrow: 1 }}>
+      <Typography data-cy={`${module}-${subModule}-page-title`} variant="h5" component="h1" sx={{ flexGrow: 1 }}>
         {children}
       </Typography>
     </Box>

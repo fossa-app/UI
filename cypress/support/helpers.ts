@@ -42,9 +42,9 @@ export const clickActionButton = (module: Module, subModule: SubModule) => {
   getTestSelectorByModule(module, subModule, 'form-action-button').click();
 };
 
-export const search = (selector: string, text: string) => {
-  cy.get(`[data-cy=${selector}]`).find('input').clear();
-  cy.get(`[data-cy=${selector}]`).find('input').type(text);
+export const search = (module: Module, subModule: SubModule, selector: string, text: string) => {
+  getTestSelectorByModule(module, subModule, selector).find('input').clear();
+  getTestSelectorByModule(module, subModule, selector).find('input').type(text);
 };
 
 export const openUserProfile = () => {

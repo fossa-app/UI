@@ -26,6 +26,9 @@ import BranchDetailsForm from 'components/forms/BranchDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
 import { FieldProps } from 'components/UI/Form';
 
+const module = Module.branchManagement;
+const subModule = SubModule.branchDetails;
+
 const ManageBranchPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -111,16 +114,16 @@ const ManageBranchPage: React.FC = () => {
   return (
     <PageLayout
       withBackButton
-      module={Module.branchManagement}
-      subModule={SubModule.branchDetails}
+      module={module}
+      subModule={subModule}
       pageTitle={id ? 'Edit Branch' : 'Create Branch'}
       displayNotFoundPage={fetchStatus === 'failed' && !branch}
       onBackButtonClick={handleCancel}
     >
       <BranchDetailsForm
         withCancel
-        module={Module.branchManagement}
-        subModule={SubModule.branchDetails}
+        module={module}
+        subModule={subModule}
         isAdmin={isUserAdmin}
         data={branch}
         fields={fields}

@@ -56,7 +56,7 @@ const Table = <T extends Item>({
         <TableRow>
           <TableCell colSpan={columns.length} align="center">
             {noRecordsTemplate ?? (
-              <Page sx={{ margin: 0 }}>
+              <Page module={module} subModule={subModule} sx={{ margin: 0 }}>
                 <PageSubtitle>No Records Found</PageSubtitle>
               </Page>
             )}

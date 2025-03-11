@@ -11,8 +11,10 @@ export const PageSubtitle: React.FC<React.PropsWithChildren<PageSubtitleProps>> 
     throw new Error('PageSubtitle must be used within a Page component using PageContext.');
   }
 
+  const { module, subModule } = context;
+
   return (
-    <Typography variant="subtitle1" component="h2" color="textSecondary" {...props}>
+    <Typography data-cy={`${module}-${subModule}-page-subtitle`} variant="subtitle1" component="h2" color="textSecondary" {...props}>
       {children}
     </Typography>
   );
