@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { Controller, FieldError, useFormContext } from 'react-hook-form';
+import { Controller, FieldError, get, useFormContext } from 'react-hook-form';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import FormHelperText from '@mui/material/FormHelperText';
-import { getNestedValue } from 'shared/helpers';
 import { SwitchFieldProps } from '../form.model';
 
 const SwitchField: React.FC<SwitchFieldProps> = ({ module, subModule, name, label, ...props }) => {
@@ -14,7 +13,7 @@ const SwitchField: React.FC<SwitchFieldProps> = ({ module, subModule, name, labe
     setValue,
   } = useFormContext();
 
-  const error = getNestedValue(errors, name) as FieldError;
+  const error = get(errors, name) as FieldError;
 
   return (
     <FormControl>

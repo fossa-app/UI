@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import { ErrorResponse, PaginationParams, Status } from 'shared/models';
+import { FieldValues } from 'react-hook-form';
+import { ErrorResponse, ErrorResponseUI, PaginationParams, Status } from 'shared/models';
 import clientReducer from './features/identitySlice';
 import appConfigReducer from './features/appConfigSlice';
 import licenseReducer from './features/licenseSlice';
@@ -40,7 +41,7 @@ export interface StateEntity<T = unknown> {
   fetchStatus?: Status;
   updateStatus?: Status;
   deleteStatus?: Status;
-  error?: ErrorResponse;
+  error?: ErrorResponse | ErrorResponseUI<FieldValues>;
   page?: Partial<PaginationParams>;
 }
 

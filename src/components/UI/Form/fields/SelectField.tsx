@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { FieldError, useFormContext, useWatch } from 'react-hook-form';
+import { FieldError, get, useFormContext, useWatch } from 'react-hook-form';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
-import { getNestedValue } from 'shared/helpers';
 import { SelectFieldProps } from '../form.model';
 
 const SelectField: React.FC<SelectFieldProps> = ({ module, subModule, label, name, options, ...props }) => {
@@ -16,7 +15,7 @@ const SelectField: React.FC<SelectFieldProps> = ({ module, subModule, label, nam
   } = useFormContext();
 
   const value = useWatch({ control, name });
-  const error = getNestedValue(errors, name) as FieldError;
+  const error = get(errors, name) as FieldError;
   const isValueAvailable = options.some((option) => option.value === String(value));
   const fieldValue = !!options?.length && isValueAvailable ? value : '';
 
