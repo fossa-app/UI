@@ -1,32 +1,40 @@
 import * as React from 'react';
-import { FieldError, useFormContext, useWatch } from 'react-hook-form';
+import { Controller, FieldError, get, useFormContext } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
-import { getNestedValue } from 'shared/helpers';
 import { InputFieldProps } from '../form.model';
 
 const InputField: React.FC<InputFieldProps> = ({ module, subModule, name, ...props }) => {
   const {
-    register,
-    formState: { errors },
     control,
+    formState: { errors },
   } = useFormContext();
 
-  const value = useWatch({ control, name });
-  const error = getNestedValue(errors, name) as FieldError;
+  const error = get(errors, name) as FieldError;
 
   return (
     <FormControl fullWidth>
-      <TextField
-        data-cy={`${module}-${subModule}-form-field-${name}`}
-        variant="filled"
-        error={!!error}
-        slotProps={{
-          inputLabel: { shrink: !!value },
-        }}
-        {...register(name, { ...props.rules })}
-        {...props}
+      <Controller
+        // TODO: nested error structure & redux store casues runtime error in react-hook-form
+        // TypeError: e.g. Cannot delete property 'postalCode' of #<Object>
+        // Setting shouldUnregister={true} fixes the issue, however unregisters the form field from the form context
+        name={name}
+        control={control}
+        rules={props.rules}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            {...props}
+            data-cy={`${module}-${subModule}-form-field-${name}`}
+            value={field.value ?? ''}
+            variant="filled"
+            error={!!error}
+            slotProps={{
+              inputLabel: { shrink: !!field.value },
+            }}
+          />
+        )}
       />
       {error && (
         <FormHelperText error data-cy={`${module}-${subModule}-form-field-${name}-validation`}>

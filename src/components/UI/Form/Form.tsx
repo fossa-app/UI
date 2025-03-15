@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FormProvider as ReactHookFormProvider, useForm, DefaultValues } from 'react-hook-form';
+import { FormProvider as ReactHookFormProvider, useForm, DefaultValues, FieldErrors, FieldValues } from 'react-hook-form';
 import Paper from '@mui/material/Paper';
 import { Item, Module, SubModule } from 'shared/models';
 import { deepEqual } from 'shared/helpers';
@@ -9,11 +9,12 @@ import FormHeader from './FormHeader';
 import FormContent from './FormContent';
 import FormActions from './FormActions';
 
-type FormProps<T> = React.PropsWithChildren<{
+type FormProps<T extends FieldValues> = React.PropsWithChildren<{
   module: Module;
   subModule: SubModule;
   defaultValues: DefaultValues<T>;
   values?: T;
+  errors?: FieldErrors<T>;
   loading?: boolean;
   onSubmit: (formValue: T) => void;
   onChange?: (formValue: T) => void;
@@ -24,6 +25,7 @@ const Form = <T extends Item>({
   subModule,
   defaultValues,
   values,
+  errors,
   loading = false,
   onSubmit,
   onChange,
@@ -34,6 +36,7 @@ const Form = <T extends Item>({
     reValidateMode: 'onBlur',
     defaultValues,
     values,
+    errors,
   });
 
   const watchedValues = methods.watch();

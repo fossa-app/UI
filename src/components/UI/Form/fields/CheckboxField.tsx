@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { FieldError, useFormContext, useWatch } from 'react-hook-form';
+import { FieldError, get, useFormContext, useWatch } from 'react-hook-form';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import FormHelperText from '@mui/material/FormHelperText';
-import { getNestedValue } from 'shared/helpers';
 import { CheckboxFieldProps } from '../form.model';
 
 const CheckboxField: React.FC<CheckboxFieldProps> = ({ module, subModule, name, label, ...props }) => {
@@ -14,7 +13,7 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({ module, subModule, name, 
     control,
   } = useFormContext();
 
-  const error = getNestedValue(errors, name) as FieldError;
+  const error = get(errors, name) as FieldError;
   const checked = useWatch({ control, name });
 
   return (

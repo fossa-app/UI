@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FieldError, useFormContext, Controller, ControllerRenderProps, FieldValues } from 'react-hook-form';
+import { FieldError, useFormContext, Controller, ControllerRenderProps, FieldValues, get } from 'react-hook-form';
 import { debounce } from '@mui/material/utils';
 import Autocomplete, { AutocompleteInputChangeReason } from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -7,7 +7,6 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Typography from '@mui/material/Typography';
 import { APP_CONFIG } from 'shared/constants';
-import { getNestedValue } from 'shared/helpers';
 import { AutocompleteFieldProps, FieldOption } from '../form.model';
 
 const AutocompleteField: React.FC<AutocompleteFieldProps> = ({
@@ -25,7 +24,7 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({
     control,
   } = useFormContext();
 
-  const error = getNestedValue(errors, name) as FieldError;
+  const error = get(errors, name) as FieldError;
 
   const getValue = (field: ControllerRenderProps<FieldValues, string>) => {
     return options.find((option) => option.value === String(field.value)) || null;
@@ -44,6 +43,7 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({
       <Controller
         name={name}
         control={control}
+        rules={props.rules}
         render={({ field }) => (
           <Autocomplete
             {...field}
