@@ -21,6 +21,7 @@ import {
   interceptCreateBranchFailedRequest,
   interceptCreateBranchRequest,
   interceptEditBranchFailedRequest,
+  interceptEditBranchFailedWithErrorRequest,
   interceptEditBranchRequest,
   interceptFetchBranchByIdFailedRequest,
   interceptFetchBranchByIdRequest,
@@ -256,6 +257,21 @@ describe('Branch Management Tests', () => {
 
     cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to update the Branch');
     cy.url().should('include', '/manage/branches/edit/222222222222');
+
+    interceptEditBranchFailedWithErrorRequest('222222222222');
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').find('input').clear();
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').type('999999999');
+    clickActionButton(Module.branchManagement, SubModule.branchDetails);
+
+    cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to update the Branch');
+    verifyBranchDetailsFormValidationMessages(Module.branchManagement, SubModule.branchDetails, [
+      { field: 'form-section-field-address-validation', message: 'Value is provided however is not valid' },
+      {
+        field: 'form-field-address.postalCode-validation',
+        message: `Postal Code '999999999' for Country 'US - [United States]' is invalid.`,
+      },
+    ]);
   });
 
   // TODO: flaky test

@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { FieldValues } from 'react-hook-form';
+import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Branch, BranchDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
+import { Branch, BranchDTO, ErrorResponse, ErrorResponseUI, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
-import { mapBranch, mapBranches, prepareQueryParams, prepareCommaSeparatedQueryParamsByKey } from 'shared/helpers';
+import { mapBranch, mapBranches, mapError, prepareQueryParams, prepareCommaSeparatedQueryParamsByKey } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
 
 interface BranchState {
@@ -140,7 +142,7 @@ export const createBranch = createAsyncThunk<void, [BranchDTO, boolean?], { reje
   }
 );
 
-export const editBranch = createAsyncThunk<void, [string, Omit<BranchDTO, 'id'>], { rejectValue: ErrorResponse }>(
+export const editBranch = createAsyncThunk<void, [string, Omit<BranchDTO, 'id'>], { rejectValue: ErrorResponseUI<FieldValues> }>(
   'branch/editBranch',
   async ([id, branch], { dispatch, rejectWithValue }) => {
     try {
@@ -155,7 +157,9 @@ export const editBranch = createAsyncThunk<void, [string, Omit<BranchDTO, 'id'>]
         })
       );
 
-      return rejectWithValue(error as ErrorResponse);
+      const mappedError = mapError(error as ErrorResponse) as ErrorResponseUI<FieldValues>;
+
+      return rejectWithValue(mappedError);
     }
   }
 );
@@ -192,7 +196,7 @@ const branchSlice = createSlice({
       state.branches.page = initialState.branches.page;
     },
     resetBranch(state) {
-      state.branch = initialState.branch;
+      state.branch = initialState.branch as WritableDraft<StateEntity<Branch>>;
     },
     resetBranchesFetchStatus(state) {
       state.branches.fetchStatus = initialState.branches.fetchStatus;
@@ -257,9 +261,9 @@ const branchSlice = createSlice({
       .addCase(editBranch.pending, (state) => {
         state.branch.updateStatus = 'loading';
       })
-      .addCase(editBranch.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(editBranch.rejected, (state, action: PayloadAction<ErrorResponseUI<FieldValues> | undefined>) => {
         state.branch.updateStatus = 'failed';
-        state.branch.error = action.payload;
+        state.branch.error = action.payload as WritableDraft<ErrorResponseUI<FieldValues>>;
       })
       .addCase(editBranch.fulfilled, (state) => {
         state.branch.updateStatus = 'succeeded';
