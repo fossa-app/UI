@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FieldErrors } from 'react-hook-form';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import { Branch, Module, SubModule } from 'shared/models';
@@ -17,6 +18,7 @@ interface BranchDetailsFormProps {
   withCancel?: boolean;
   formLoading?: boolean;
   data?: Branch;
+  errors?: FieldErrors<Branch>;
   onSubmit: (formValue: Branch) => void;
   onChange?: (formValue: Branch) => void;
   onCancel?: () => void;
@@ -27,6 +29,7 @@ const BranchDetailsForm: React.FC<BranchDetailsFormProps> = ({
   subModule,
   isAdmin,
   data,
+  errors,
   actionLabel = 'Save',
   actionIcon = <SaveIcon />,
   actionLoading = false,
@@ -63,6 +66,7 @@ const BranchDetailsForm: React.FC<BranchDetailsFormProps> = ({
       subModule={subModule}
       defaultValues={defaultValues}
       values={data}
+      errors={errors}
       loading={formLoading}
       onChange={handleFormChange}
       onSubmit={handleFormSubmit}

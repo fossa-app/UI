@@ -184,10 +184,14 @@ describe('Company Management Tests', () => {
       interceptEditCompanyFailedRequest();
       cy.visit('/manage/company/view');
 
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('exist').click();
+
+      cy.url().should('include', '/manage/company/edit');
+
       cy.wait('@fetchCompanyRequest');
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').click();
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-action-button').should('not.have.attr', 'disabled');
+
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name').find('input').clear();
 
       clickActionButton(Module.companyManagement, SubModule.companyDetails);

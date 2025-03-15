@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   createBranch,
@@ -38,11 +39,14 @@ const ManageBranchPage: React.FC = () => {
   const companyTimeZones = useAppSelector(selectCompanyTimeZones);
   const { data: company } = useAppSelector(selectCompany);
   const countries = useAppSelector(selectSystemCountries);
-  const { data: branch, fetchStatus, updateStatus } = useAppSelector(selectBranch);
+  const { data: branch, error, fetchStatus, updateStatus } = useAppSelector(selectBranch);
   const [formSubmitted, setFormSubmitted] = React.useState(false);
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
   const [fields, setFields] = React.useState<FieldProps<Branch>[]>([]);
   const [formLoading, setFormLoading] = React.useState(true);
+  // TODO: this is a workaround for the issue mentioned in InputField
+  // Need to remove the 'Address' validation error from the backend
+  const errors = error?.errors ? (JSON.parse(JSON.stringify(error.errors)) as FieldErrors<FieldValues>) : undefined;
 
   const availableCountries = React.useMemo(
     () => countries?.filter(({ code }) => code === company?.countryCode || code === branch?.address?.countryCode) || [],
@@ -126,6 +130,7 @@ const ManageBranchPage: React.FC = () => {
         subModule={subModule}
         isAdmin={isUserAdmin}
         data={branch}
+        errors={errors}
         fields={fields}
         actionLoading={updateStatus === 'loading'}
         formLoading={formLoading}

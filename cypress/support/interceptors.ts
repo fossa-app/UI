@@ -167,6 +167,16 @@ export const interceptEditBranchFailedRequest = (id: string) => {
   cy.interceptWithAuth('PUT', `${serverBaseUrl}/Branches/${id}`, null, 'editBranchFailedRequest', 404);
 };
 
+export const interceptEditBranchFailedWithErrorRequest = (
+  id: string,
+  alias = 'editBranchFailedWithErrorRequest',
+  fixture = 'branch-error'
+) => {
+  cy.fixture(fixture).then((branchError) => {
+    cy.interceptWithAuth('PUT', `${serverBaseUrl}/Branches/${id}`, branchError, alias, 422);
+  });
+};
+
 export const interceptDeleteBranchRequest = (id: string) => {
   cy.interceptWithAuth('DELETE', `${serverBaseUrl}/Branches/${id}`, null, 'deleteBranchRequest');
 };

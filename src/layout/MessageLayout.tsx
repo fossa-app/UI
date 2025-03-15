@@ -17,6 +17,7 @@ const MessageLayout: React.FC = () => {
 
   return (
     <Snackbar
+      // TODO: use module/subModule
       data-cy={error ? 'error-snackbar' : 'success-snackbar'}
       type={error ? 'error' : 'success'}
       open={!!error || !!success}

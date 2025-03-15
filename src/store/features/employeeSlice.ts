@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { Branch, BranchDTO, Employee, EmployeeDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
@@ -107,7 +108,7 @@ const employeeSlice = createSlice({
       state.employees.fetchStatus = initialState.employees.fetchStatus;
     },
     resetEmployee(state) {
-      state.employee = initialState.employee;
+      state.employee = initialState.employee as WritableDraft<StateEntity<Employee>>;
     },
   },
   extraReducers: (builder) => {
