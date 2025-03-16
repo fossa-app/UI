@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { CompanyLicense, ErrorResponse, SystemLicense } from 'shared/models';
+import { CompanyLicense, ErrorResponseDTO, SystemLicense } from 'shared/models';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import { mapCompanyLicense, parseResponseData } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
@@ -23,7 +23,7 @@ const initialState: LicenseState = {
   },
 };
 
-export const fetchSystemLicense = createAsyncThunk<SystemLicense | null, void, { rejectValue: ErrorResponse }>(
+export const fetchSystemLicense = createAsyncThunk<SystemLicense | null, void, { rejectValue: ErrorResponseDTO }>(
   'license/fetchSystemLicense',
   async (_, { rejectWithValue }) => {
     try {
@@ -33,12 +33,12 @@ export const fetchSystemLicense = createAsyncThunk<SystemLicense | null, void, {
 
       return parsedData || rejectWithValue({ title: MESSAGES.error.license.system.notFound });
     } catch (error) {
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue(error as ErrorResponseDTO);
     }
   }
 );
 
-export const fetchCompanyLicense = createAsyncThunk<CompanyLicense | undefined, void, { rejectValue: ErrorResponse }>(
+export const fetchCompanyLicense = createAsyncThunk<CompanyLicense | undefined, void, { rejectValue: ErrorResponseDTO }>(
   'license/fetchCompanyLicense',
   async (_, { rejectWithValue }) => {
     try {
@@ -47,14 +47,14 @@ export const fetchCompanyLicense = createAsyncThunk<CompanyLicense | undefined, 
       return mapCompanyLicense(data);
     } catch (error) {
       return rejectWithValue({
-        ...(error as ErrorResponse),
+        ...(error as ErrorResponseDTO),
         title: MESSAGES.error.license.company.notFound,
       });
     }
   }
 );
 
-export const uploadCompanyLicense = createAsyncThunk<void, File, { rejectValue: ErrorResponse }>(
+export const uploadCompanyLicense = createAsyncThunk<void, File, { rejectValue: ErrorResponseDTO }>(
   'license/uploadCompanyLicense',
   async (file, { dispatch, rejectWithValue }) => {
     try {
@@ -74,12 +74,12 @@ export const uploadCompanyLicense = createAsyncThunk<void, File, { rejectValue: 
     } catch (error) {
       dispatch(
         setError({
-          ...(error as ErrorResponse),
+          ...(error as ErrorResponseDTO),
           title: MESSAGES.error.license.company.create,
         })
       );
 
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue(error as ErrorResponseDTO);
     }
   }
 );
@@ -93,7 +93,7 @@ const licenseSlice = createSlice({
       .addCase(fetchSystemLicense.pending, (state) => {
         state.system.status = 'loading';
       })
-      .addCase(fetchSystemLicense.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(fetchSystemLicense.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.system.data = null;
         state.system.status = 'failed';
         state.system.error = action.payload;
@@ -105,7 +105,7 @@ const licenseSlice = createSlice({
       .addCase(fetchCompanyLicense.pending, (state) => {
         state.company.fetchStatus = 'loading';
       })
-      .addCase(fetchCompanyLicense.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(fetchCompanyLicense.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.company.data = undefined;
         state.company.fetchStatus = 'failed';
         state.company.error = action.payload;
@@ -117,7 +117,7 @@ const licenseSlice = createSlice({
       .addCase(uploadCompanyLicense.pending, (state) => {
         state.company.updateStatus = 'loading';
       })
-      .addCase(uploadCompanyLicense.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(uploadCompanyLicense.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.company.data = undefined;
         state.company.updateStatus = 'failed';
         state.company.error = action.payload;

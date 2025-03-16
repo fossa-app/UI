@@ -209,7 +209,9 @@ describe('Employee Management Tests', () => {
 
       cy.wait('@editEmployeeFailedRequest');
 
-      cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to update the Employee');
+      getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
+        .should('exist')
+        .and('contain.text', 'Failed to update the Employee');
     });
 
     it('should be able to edit the employee and be navigated to employee table page if the employee updating succeeded', () => {
@@ -283,7 +285,9 @@ describe('Employee Management Tests', () => {
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-assignedBranchName')
         .should('exist')
         .and('have.text', 'Hawaii Branch');
-      cy.get('[data-cy="success-snackbar"]').should('exist').and('contain.text', 'Employee has been successfully updated');
+      getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
+        .should('exist')
+        .and('contain.text', 'Employee has been successfully updated');
     });
 
     it('should fetch and display the employee view details by id when refreshing the page', () => {

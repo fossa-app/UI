@@ -209,7 +209,9 @@ describe('Company Management Tests', () => {
 
       cy.wait('@editCompanyFailedRequest');
 
-      cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to update Company');
+      getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
+        .should('exist')
+        .and('contain.text', 'Failed to update the Company');
     });
 
     it('should be able to edit the company and be navigated to view company page if the form is valid and company updating succeeded', () => {
@@ -249,7 +251,9 @@ describe('Company Management Tests', () => {
         'have.text',
         'Canada'
       );
-      cy.get('[data-cy="success-snackbar"]').should('exist').and('contain.text', 'Company has been successfully updated');
+      getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
+        .should('exist')
+        .and('contain.text', 'Company has been successfully updated');
     });
   });
 });

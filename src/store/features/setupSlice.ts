@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
-import { ErrorResponse, SetupStep } from 'shared/models';
+import { ErrorResponseDTO, SetupStep } from 'shared/models';
 import { APP_CONFIG } from 'shared/constants';
 import { fetchCompany } from './companySlice';
 import { fetchBranches } from './branchSlice';
@@ -17,7 +17,7 @@ const initialState: SetupState = {
   },
 };
 
-export const fetchSetupData = createAsyncThunk<void, void, { rejectValue: ErrorResponse }>(
+export const fetchSetupData = createAsyncThunk<void, void, { rejectValue: ErrorResponseDTO }>(
   'setup/fetchSetupData',
   async (_, { dispatch }) => {
     const companyResponse = await dispatch(fetchCompany(true)).unwrap();
@@ -57,7 +57,6 @@ const setupSlice = createSlice({
       })
       .addCase(fetchProfile.rejected, (state) => {
         state.step.status = 'failed';
-        // TODO: monitor this step
         state.step.data = SetupStep.EMPLOYEE;
       })
       .addCase(fetchProfile.fulfilled, (state) => {

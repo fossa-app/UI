@@ -43,7 +43,7 @@ export const MESSAGES = {
     company: {
       notFound: 'Company not found 😞',
       create: 'Failed to create a Company 😞',
-      update: 'Failed to update Company 😞',
+      update: 'Failed to update the Company 😞',
     },
     branches: {
       notFound: 'Branch not found 😞',

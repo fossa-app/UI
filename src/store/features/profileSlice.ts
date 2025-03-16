@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { AppUser, Employee, EmployeeDTO, ErrorResponse } from 'shared/models';
+import { AppUser, Employee, EmployeeDTO, ErrorResponseDTO } from 'shared/models';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import { mapEmployee, mapUserProfileToEmployee } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
@@ -19,7 +19,7 @@ const initialState: ProfileState = {
   },
 };
 
-export const fetchProfile = createAsyncThunk<Employee | undefined, void, { rejectValue: ErrorResponse }>(
+export const fetchProfile = createAsyncThunk<Employee | undefined, void, { rejectValue: ErrorResponseDTO }>(
   'profile/fetchProfile',
   async (_, { getState, rejectWithValue }) => {
     try {
@@ -33,14 +33,14 @@ export const fetchProfile = createAsyncThunk<Employee | undefined, void, { rejec
       }
     } catch (error) {
       return rejectWithValue({
-        ...(error as ErrorResponse),
+        ...(error as ErrorResponseDTO),
         title: MESSAGES.error.employee.notFound,
       });
     }
   }
 );
 
-export const createProfile = createAsyncThunk<void, EmployeeDTO, { state: RootState; rejectValue: ErrorResponse }>(
+export const createProfile = createAsyncThunk<void, EmployeeDTO, { state: RootState; rejectValue: ErrorResponseDTO }>(
   'profile/createProfile',
   async (employee, { dispatch, rejectWithValue }) => {
     try {
@@ -51,17 +51,17 @@ export const createProfile = createAsyncThunk<void, EmployeeDTO, { state: RootSt
     } catch (error) {
       dispatch(
         setError({
-          ...(error as ErrorResponse),
+          ...(error as ErrorResponseDTO),
           title: MESSAGES.error.employee.create,
         })
       );
 
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue(error as ErrorResponseDTO);
     }
   }
 );
 
-export const editProfile = createAsyncThunk<void, Omit<EmployeeDTO, 'id'>, { rejectValue: ErrorResponse }>(
+export const editProfile = createAsyncThunk<void, Omit<EmployeeDTO, 'id'>, { rejectValue: ErrorResponseDTO }>(
   'profile/editProfile',
   async (employee, { dispatch, rejectWithValue }) => {
     try {
@@ -71,12 +71,12 @@ export const editProfile = createAsyncThunk<void, Omit<EmployeeDTO, 'id'>, { rej
     } catch (error) {
       dispatch(
         setError({
-          ...(error as ErrorResponse),
+          ...(error as ErrorResponseDTO),
           title: MESSAGES.error.employee.updateProfile,
         })
       );
 
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue(error as ErrorResponseDTO);
     }
   }
 );
@@ -94,7 +94,7 @@ const profileSlice = createSlice({
       .addCase(fetchProfile.pending, (state) => {
         state.profile.fetchStatus = 'loading';
       })
-      .addCase(fetchProfile.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(fetchProfile.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.profile.fetchStatus = 'failed';
         state.profile.error = action.payload;
       })
@@ -111,7 +111,7 @@ const profileSlice = createSlice({
       .addCase(createProfile.pending, (state) => {
         state.profile.updateStatus = 'loading';
       })
-      .addCase(createProfile.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(createProfile.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.profile.updateStatus = 'failed';
         state.profile.error = action.payload;
       })
@@ -121,7 +121,7 @@ const profileSlice = createSlice({
       .addCase(editProfile.pending, (state) => {
         state.profile.updateStatus = 'loading';
       })
-      .addCase(editProfile.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(editProfile.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.profile.updateStatus = 'failed';
         state.profile.error = action.payload;
       })

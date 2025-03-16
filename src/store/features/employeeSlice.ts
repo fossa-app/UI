@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Branch, BranchDTO, Employee, EmployeeDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
+import { Branch, BranchDTO, Employee, EmployeeDTO, ErrorResponseDTO, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
 import { mapEmployee, mapEmployees, prepareQueryParams, getEmployeesAssignedBranchIds } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
@@ -29,7 +29,7 @@ const initialState: EmployeeState = {
 export const fetchEmployees = createAsyncThunk<
   PaginatedResponse<Employee> | undefined,
   Partial<PaginationParams>,
-  { rejectValue: ErrorResponse }
+  { rejectValue: ErrorResponseDTO }
 >('employee/fetchEmployees', async ({ pageNumber, pageSize, search }, { dispatch, rejectWithValue }) => {
   try {
     const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
@@ -50,13 +50,13 @@ export const fetchEmployees = createAsyncThunk<
     }
   } catch (error) {
     return rejectWithValue({
-      ...(error as ErrorResponse),
+      ...(error as ErrorResponseDTO),
       title: MESSAGES.error.employee.notFound,
     });
   }
 });
 
-export const fetchEmployeeById = createAsyncThunk<Employee, string, { rejectValue: ErrorResponse }>(
+export const fetchEmployeeById = createAsyncThunk<Employee, string, { rejectValue: ErrorResponseDTO }>(
   'employee/fetchEmployeeById',
   async (id, { dispatch, rejectWithValue }) => {
     try {
@@ -69,12 +69,12 @@ export const fetchEmployeeById = createAsyncThunk<Employee, string, { rejectValu
 
       return mapEmployee(data, undefined, branch);
     } catch (error) {
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue(error as ErrorResponseDTO);
     }
   }
 );
 
-export const editEmployee = createAsyncThunk<void, [string, Pick<EmployeeDTO, 'assignedBranchId'>], { rejectValue: ErrorResponse }>(
+export const editEmployee = createAsyncThunk<void, [string, Pick<EmployeeDTO, 'assignedBranchId'>], { rejectValue: ErrorResponseDTO }>(
   'employee/editEmployee',
   async ([id, employee], { dispatch, rejectWithValue }) => {
     try {
@@ -84,12 +84,12 @@ export const editEmployee = createAsyncThunk<void, [string, Pick<EmployeeDTO, 'a
     } catch (error) {
       dispatch(
         setError({
-          ...(error as ErrorResponse),
+          ...(error as ErrorResponseDTO),
           title: MESSAGES.error.employee.updateEmployee,
         })
       );
 
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue(error as ErrorResponseDTO);
     }
   }
 );
@@ -116,7 +116,7 @@ const employeeSlice = createSlice({
       .addCase(fetchEmployees.pending, (state) => {
         state.employees.fetchStatus = 'loading';
       })
-      .addCase(fetchEmployees.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(fetchEmployees.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.employees.data = undefined;
         state.employees.fetchStatus = 'failed';
         state.employees.error = action.payload;
@@ -130,7 +130,7 @@ const employeeSlice = createSlice({
       .addCase(fetchEmployeeById.pending, (state) => {
         state.employee.fetchStatus = 'loading';
       })
-      .addCase(fetchEmployeeById.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(fetchEmployeeById.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.employee.fetchStatus = 'failed';
         state.employee.error = action.payload;
       })
@@ -141,7 +141,7 @@ const employeeSlice = createSlice({
       .addCase(editEmployee.pending, (state) => {
         state.employee.updateStatus = 'loading';
       })
-      .addCase(editEmployee.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(editEmployee.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.employee.updateStatus = 'failed';
         state.employee.error = action.payload;
       })

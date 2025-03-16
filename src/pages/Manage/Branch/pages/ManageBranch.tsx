@@ -22,6 +22,7 @@ import {
   mapBranchDTO,
   mapDisabledFields,
   mapBranchFieldOptionsToFieldOptions,
+  deepCopyObject,
 } from 'shared/helpers';
 import BranchDetailsForm from 'components/forms/BranchDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
@@ -46,7 +47,7 @@ const ManageBranchPage: React.FC = () => {
   const [formLoading, setFormLoading] = React.useState(true);
   // TODO: this is a workaround for the issue mentioned in InputField
   // Need to remove the 'Address' validation error from the backend
-  const errors = error?.errors ? (JSON.parse(JSON.stringify(error.errors)) as FieldErrors<FieldValues>) : undefined;
+  const errors = error?.errors ? deepCopyObject(error.errors as FieldErrors<FieldValues>) : undefined;
 
   const availableCountries = React.useMemo(
     () => countries?.filter(({ code }) => code === company?.countryCode || code === branch?.address?.countryCode) || [],

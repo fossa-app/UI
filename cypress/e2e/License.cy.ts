@@ -1,5 +1,11 @@
 import { Module, SubModule } from 'shared/models';
-import { getCompanyLicenseDialogElement, getLinearLoader, uploadTestFile, verifyTextFields } from '../support/helpers';
+import {
+  getCompanyLicenseDialogElement,
+  getLinearLoader,
+  getTestSelectorByModule,
+  uploadTestFile,
+  verifyTextFields,
+} from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -118,7 +124,9 @@ describe('License Tests', () => {
         });
 
         cy.get('[data-cy="company-license-dialog"]').should('exist');
-        cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to upload Company license');
+        getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
+          .should('exist')
+          .and('contain.text', 'Failed to upload Company license');
       });
 
       it('should be able to upload and display the company license if the selected file is valid and the uploading succeeded', () => {
@@ -150,7 +158,9 @@ describe('License Tests', () => {
 
         cy.get('[data-cy="company-license-dialog"]').should('not.exist');
         cy.get('[data-cy="company-license-text"]').should('exist').and('have.text', 'TCL');
-        cy.get('[data-cy="success-snackbar"]').should('exist').and('contain.text', 'Company License has been successfully uploaded');
+        getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
+          .should('exist')
+          .and('contain.text', 'Company License has been successfully uploaded');
 
         verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
           'view-details-header': 'Company License Details',

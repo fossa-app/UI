@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { OidcClientSettings } from 'oidc-client-ts';
 import { RootState, StateEntity } from 'store';
 import { getUserManager, updateUserManager, mapUser, decodeJwt } from 'shared/helpers';
-import { AppUser, ErrorResponse, UserRole } from 'shared/models';
+import { AppUser, ErrorResponseDTO, UserRole } from 'shared/models';
 import { MESSAGES, OIDC_INITIAL_CONFIG } from 'shared/constants';
 
 interface AuthState {
@@ -21,7 +21,7 @@ const initialState: AuthState = {
   },
 };
 
-export const fetchUser = createAsyncThunk<AppUser | undefined, void, { rejectValue: ErrorResponse }>(
+export const fetchUser = createAsyncThunk<AppUser | undefined, void, { rejectValue: ErrorResponseDTO }>(
   'auth/fetchUser',
   async (_, { rejectWithValue }) => {
     try {
@@ -36,7 +36,7 @@ export const fetchUser = createAsyncThunk<AppUser | undefined, void, { rejectVal
         status: 401,
       });
     } catch (error) {
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue(error as ErrorResponseDTO);
     }
   }
 );
@@ -64,7 +64,7 @@ const authSlice = createSlice({
       .addCase(fetchUser.pending, (state) => {
         state.user.status = 'loading';
       })
-      .addCase(fetchUser.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(fetchUser.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.user.data = undefined;
         state.user.status = 'failed';
         state.user.error = action.payload;
