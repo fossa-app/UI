@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'store';
-import { ErrorResponse } from 'shared/models';
+import { ErrorResponseDTO } from 'shared/models';
 
 interface MessageState {
-  error: ErrorResponse | undefined;
+  error: ErrorResponseDTO | undefined;
   success: string | undefined;
 }
 
@@ -16,7 +16,7 @@ const messageSlice = createSlice({
   name: 'message',
   initialState,
   reducers: {
-    setError: (state, action: PayloadAction<ErrorResponse>) => {
+    setError: (state, action: PayloadAction<ErrorResponseDTO>) => {
       state.error = action.payload;
       state.success = undefined;
     },

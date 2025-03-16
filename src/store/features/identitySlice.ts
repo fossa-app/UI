@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Client, ErrorResponse } from 'shared/models';
+import { Client, ErrorResponseDTO } from 'shared/models';
 import { MESSAGES, ROUTES, ENDPOINTS } from 'shared/constants';
 import { parseResponseData } from 'shared/helpers';
 import { updateAuthSettings } from './authSlice';
@@ -17,7 +17,7 @@ const initialState: IdentityState = {
   },
 };
 
-export const fetchClient = createAsyncThunk<Client | null, void, { rejectValue: ErrorResponse }>(
+export const fetchClient = createAsyncThunk<Client | null, void, { rejectValue: ErrorResponseDTO }>(
   'identity/fetchClient',
   async (_, { dispatch, rejectWithValue }) => {
     try {
@@ -39,7 +39,7 @@ export const fetchClient = createAsyncThunk<Client | null, void, { rejectValue: 
 
       return rejectWithValue({ title: MESSAGES.error.client.notFound });
     } catch (error) {
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue(error as ErrorResponseDTO);
     }
   }
 );
@@ -53,7 +53,7 @@ const identitySlice = createSlice({
       .addCase(fetchClient.pending, (state) => {
         state.client.status = 'loading';
       })
-      .addCase(fetchClient.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(fetchClient.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.client.data = null;
         state.client.status = 'failed';
         state.client.error = action.payload;

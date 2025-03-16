@@ -1,7 +1,6 @@
 import { FieldErrors, FieldValues } from 'react-hook-form';
 
-// TODO: change to ErrorResponseDTO
-export interface ErrorResponse {
+export interface ErrorResponseDTO {
   type?: string;
   title?: string;
   traceId?: string;
@@ -9,8 +8,7 @@ export interface ErrorResponse {
   errors?: Record<string, string[]>;
 }
 
-// TODO: change to ErrorResponse
-export interface ErrorResponseUI<T extends FieldValues> extends Omit<ErrorResponse, 'errors'> {
+export interface ErrorResponse<T extends FieldValues> extends Omit<ErrorResponseDTO, 'errors'> {
   errors?: FieldErrors<T>;
 }
 

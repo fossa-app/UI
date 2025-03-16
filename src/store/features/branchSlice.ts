@@ -3,7 +3,7 @@ import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Branch, BranchDTO, ErrorResponse, ErrorResponseUI, PaginatedResponse, PaginationParams } from 'shared/models';
+import { Branch, BranchDTO, ErrorResponseDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
 import { mapBranch, mapBranches, mapError, prepareQueryParams, prepareCommaSeparatedQueryParamsByKey } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
@@ -36,7 +36,7 @@ const initialState: BranchState = {
 export const fetchBranches = createAsyncThunk<
   PaginatedResponse<Branch> | undefined,
   [Partial<PaginationParams>, boolean?],
-  { rejectValue: ErrorResponse }
+  { rejectValue: ErrorResponseDTO }
 >('branch/fetchBranches', async ([{ pageNumber, pageSize, search }, shouldRejectEmptyResponse = false], { getState, rejectWithValue }) => {
   try {
     const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
@@ -60,7 +60,7 @@ export const fetchBranches = createAsyncThunk<
     };
   } catch (error) {
     return rejectWithValue({
-      ...(error as ErrorResponse),
+      ...(error as ErrorResponseDTO),
       title: MESSAGES.error.branches.notFound,
     });
   }
@@ -69,7 +69,7 @@ export const fetchBranches = createAsyncThunk<
 export const fetchSearchedBranches = createAsyncThunk<
   PaginatedResponse<BranchDTO> | undefined,
   Partial<PaginationParams>,
-  { rejectValue: ErrorResponse }
+  { rejectValue: ErrorResponseDTO }
 >('branch/fetchSearchedBranches', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
   try {
     const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
@@ -78,13 +78,13 @@ export const fetchSearchedBranches = createAsyncThunk<
     return data;
   } catch (error) {
     return rejectWithValue({
-      ...(error as ErrorResponse),
+      ...(error as ErrorResponseDTO),
       title: MESSAGES.error.branches.notFound,
     });
   }
 });
 
-export const fetchBranchesByIds = createAsyncThunk<PaginatedResponse<BranchDTO> | undefined, number[], { rejectValue: ErrorResponse }>(
+export const fetchBranchesByIds = createAsyncThunk<PaginatedResponse<BranchDTO> | undefined, number[], { rejectValue: ErrorResponseDTO }>(
   'branch/fetchBranchesByIds',
   async (ids, { rejectWithValue }) => {
     try {
@@ -94,14 +94,14 @@ export const fetchBranchesByIds = createAsyncThunk<PaginatedResponse<BranchDTO> 
       return data;
     } catch (error) {
       return rejectWithValue({
-        ...(error as ErrorResponse),
+        ...(error as ErrorResponseDTO),
         title: MESSAGES.error.branches.notFound,
       });
     }
   }
 );
 
-export const fetchBranchById = createAsyncThunk<Branch, string, { rejectValue: ErrorResponse }>(
+export const fetchBranchById = createAsyncThunk<Branch, string, { rejectValue: ErrorResponseDTO }>(
   'branch/fetchBranchById',
   async (id, { getState, rejectWithValue }) => {
     try {
@@ -113,12 +113,12 @@ export const fetchBranchById = createAsyncThunk<Branch, string, { rejectValue: E
 
       return mapBranch(data, timeZones, companyCountryCode, countries);
     } catch (error) {
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue(error as ErrorResponseDTO);
     }
   }
 );
 
-export const createBranch = createAsyncThunk<void, [BranchDTO, boolean?], { rejectValue: ErrorResponse }>(
+export const createBranch = createAsyncThunk<void, [BranchDTO, boolean?], { rejectValue: ErrorResponseDTO }>(
   'branch/createBranch',
   async ([branch, shouldFetchBranches = true], { dispatch, rejectWithValue }) => {
     try {
@@ -132,17 +132,17 @@ export const createBranch = createAsyncThunk<void, [BranchDTO, boolean?], { reje
     } catch (error) {
       dispatch(
         setError({
-          ...(error as ErrorResponse),
+          ...(error as ErrorResponseDTO),
           title: MESSAGES.error.branches.create,
         })
       );
 
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue(error as ErrorResponseDTO);
     }
   }
 );
 
-export const editBranch = createAsyncThunk<void, [string, Omit<BranchDTO, 'id'>], { rejectValue: ErrorResponseUI<FieldValues> }>(
+export const editBranch = createAsyncThunk<void, [string, Omit<BranchDTO, 'id'>], { rejectValue: ErrorResponse<FieldValues> }>(
   'branch/editBranch',
   async ([id, branch], { dispatch, rejectWithValue }) => {
     try {
@@ -152,19 +152,19 @@ export const editBranch = createAsyncThunk<void, [string, Omit<BranchDTO, 'id'>]
     } catch (error) {
       dispatch(
         setError({
-          ...(error as ErrorResponse),
+          ...(error as ErrorResponseDTO),
           title: MESSAGES.error.branches.update,
         })
       );
 
-      const mappedError = mapError(error as ErrorResponse) as ErrorResponseUI<FieldValues>;
+      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
 
       return rejectWithValue(mappedError);
     }
   }
 );
 
-export const deleteBranch = createAsyncThunk<void, BranchDTO['id'], { state: RootState; rejectValue: ErrorResponse }>(
+export const deleteBranch = createAsyncThunk<void, BranchDTO['id'], { state: RootState; rejectValue: ErrorResponseDTO }>(
   'branch/deleteBranch',
   async (id, { dispatch, rejectWithValue }) => {
     try {
@@ -175,12 +175,12 @@ export const deleteBranch = createAsyncThunk<void, BranchDTO['id'], { state: Roo
     } catch (error) {
       dispatch(
         setError({
-          ...(error as ErrorResponse),
+          ...(error as ErrorResponseDTO),
           title: MESSAGES.error.branches.delete,
         })
       );
 
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue(error as ErrorResponseDTO);
     }
   }
 );
@@ -207,7 +207,7 @@ const branchSlice = createSlice({
       .addCase(fetchBranches.pending, (state) => {
         state.branches.fetchStatus = 'loading';
       })
-      .addCase(fetchBranches.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(fetchBranches.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.branches.data = undefined;
         state.branches.fetchStatus = 'failed';
         state.branches.error = action.payload;
@@ -222,7 +222,7 @@ const branchSlice = createSlice({
       .addCase(fetchSearchedBranches.pending, (state) => {
         state.searchedBranches.fetchStatus = 'loading';
       })
-      .addCase(fetchSearchedBranches.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(fetchSearchedBranches.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.searchedBranches.data = undefined;
         state.searchedBranches.fetchStatus = 'failed';
         state.searchedBranches.error = action.payload;
@@ -237,7 +237,7 @@ const branchSlice = createSlice({
       .addCase(fetchBranchById.pending, (state) => {
         state.branch.fetchStatus = 'loading';
       })
-      .addCase(fetchBranchById.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(fetchBranchById.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.branch.data = undefined;
         state.branch.fetchStatus = 'failed';
         state.branch.error = action.payload;
@@ -250,7 +250,7 @@ const branchSlice = createSlice({
       .addCase(createBranch.pending, (state) => {
         state.branch.updateStatus = 'loading';
       })
-      .addCase(createBranch.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(createBranch.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.branch.updateStatus = 'failed';
         state.branch.error = action.payload;
       })
@@ -261,9 +261,9 @@ const branchSlice = createSlice({
       .addCase(editBranch.pending, (state) => {
         state.branch.updateStatus = 'loading';
       })
-      .addCase(editBranch.rejected, (state, action: PayloadAction<ErrorResponseUI<FieldValues> | undefined>) => {
+      .addCase(editBranch.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.branch.updateStatus = 'failed';
-        state.branch.error = action.payload as WritableDraft<ErrorResponseUI<FieldValues>>;
+        state.branch.error = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(editBranch.fulfilled, (state) => {
         state.branch.updateStatus = 'succeeded';
@@ -272,7 +272,7 @@ const branchSlice = createSlice({
       .addCase(deleteBranch.pending, (state) => {
         state.branch.deleteStatus = 'loading';
       })
-      .addCase(deleteBranch.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(deleteBranch.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.branch.deleteStatus = 'failed';
         state.branch.error = action.payload;
       })

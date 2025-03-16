@@ -152,7 +152,9 @@ describe('Profile Tests', () => {
 
         cy.wait('@editProfileFailedRequest');
 
-        cy.get('[data-cy="error-snackbar"]').should('exist').and('contain.text', 'Failed to update the Profile');
+        getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
+          .should('exist')
+          .and('contain.text', 'Failed to update the Profile');
       });
 
       it('should be able to edit the profile and be navigated to view profile page if the form is valid and employee updating succeeded', () => {
@@ -194,7 +196,9 @@ describe('Profile Tests', () => {
           'have.text',
           'Anthony User Crowley'
         );
-        cy.get('[data-cy="success-snackbar"]').should('exist').and('contain.text', 'Profile has been successfully updated');
+        getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
+          .should('exist')
+          .and('contain.text', 'Profile has been successfully updated');
 
         cy.get('[data-cy="user-avatar"]').click();
         cy.get('[data-cy="user-name"]').should('exist').and('have.text', 'Hi, Anthony');
@@ -253,7 +257,9 @@ describe('Profile Tests', () => {
           .click();
 
         getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'dialog').should('not.exist');
-        cy.get('[data-cy="success-snackbar"]').should('exist').and('contain.text', 'Profile has been successfully deleted');
+        getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
+          .should('exist')
+          .and('contain.text', 'Profile has been successfully deleted');
       });
     });
   });

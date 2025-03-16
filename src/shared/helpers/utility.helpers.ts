@@ -56,3 +56,7 @@ export const deepEqual = <T extends object>(obj1: T, obj2: T): boolean => {
 
   return true;
 };
+
+export const deepCopyObject = <T>(obj: T): T => {
+  return structuredClone(obj);
+};

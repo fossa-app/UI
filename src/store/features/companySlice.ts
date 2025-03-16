@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Company, CompanyDTO, ErrorResponse } from 'shared/models';
+import { Company, CompanyDTO, ErrorResponseDTO } from 'shared/models';
 import { filterUniqueByField, mapCompany } from 'shared/helpers';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import { setError, setSuccess } from './messageSlice';
@@ -18,7 +18,7 @@ const initialState: CompanyState = {
   },
 };
 
-export const fetchCompany = createAsyncThunk<Company | undefined, boolean | undefined, { rejectValue: ErrorResponse }>(
+export const fetchCompany = createAsyncThunk<Company | undefined, boolean | undefined, { rejectValue: ErrorResponseDTO }>(
   'company/fetchCompany',
   async (_, { getState, rejectWithValue }) => {
     try {
@@ -32,14 +32,14 @@ export const fetchCompany = createAsyncThunk<Company | undefined, boolean | unde
       }
     } catch (error) {
       return rejectWithValue({
-        ...(error as ErrorResponse),
+        ...(error as ErrorResponseDTO),
         title: MESSAGES.error.company.notFound,
       });
     }
   }
 );
 
-export const createCompany = createAsyncThunk<void, CompanyDTO, { rejectValue: ErrorResponse }>(
+export const createCompany = createAsyncThunk<void, CompanyDTO, { rejectValue: ErrorResponseDTO }>(
   'company/createCompany',
   async (company, { dispatch, rejectWithValue }) => {
     try {
@@ -50,17 +50,17 @@ export const createCompany = createAsyncThunk<void, CompanyDTO, { rejectValue: E
     } catch (error) {
       dispatch(
         setError({
-          ...(error as ErrorResponse),
+          ...(error as ErrorResponseDTO),
           title: MESSAGES.error.company.create,
         })
       );
 
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue(error as ErrorResponseDTO);
     }
   }
 );
 
-export const editCompany = createAsyncThunk<void, Omit<CompanyDTO, 'id'>, { rejectValue: ErrorResponse }>(
+export const editCompany = createAsyncThunk<void, Omit<CompanyDTO, 'id'>, { rejectValue: ErrorResponseDTO }>(
   'company/editCompany',
   async (company, { dispatch, rejectWithValue }) => {
     try {
@@ -70,12 +70,12 @@ export const editCompany = createAsyncThunk<void, Omit<CompanyDTO, 'id'>, { reje
     } catch (error) {
       dispatch(
         setError({
-          ...(error as ErrorResponse),
+          ...(error as ErrorResponseDTO),
           title: MESSAGES.error.company.update,
         })
       );
 
-      return rejectWithValue(error as ErrorResponse);
+      return rejectWithValue(error as ErrorResponseDTO);
     }
   }
 );
@@ -93,7 +93,7 @@ const companySlice = createSlice({
       .addCase(fetchCompany.pending, (state) => {
         state.company.fetchStatus = 'loading';
       })
-      .addCase(fetchCompany.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(fetchCompany.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.company.data = undefined;
         state.company.fetchStatus = 'failed';
         state.company.error = action.payload;
@@ -105,7 +105,7 @@ const companySlice = createSlice({
       .addCase(createCompany.pending, (state) => {
         state.company.updateStatus = 'loading';
       })
-      .addCase(createCompany.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(createCompany.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.company.updateStatus = 'failed';
         state.company.error = action.payload;
       })
@@ -115,7 +115,7 @@ const companySlice = createSlice({
       .addCase(editCompany.pending, (state) => {
         state.company.updateStatus = 'loading';
       })
-      .addCase(editCompany.rejected, (state, action: PayloadAction<ErrorResponse | undefined>) => {
+      .addCase(editCompany.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.company.updateStatus = 'failed';
         state.company.error = action.payload;
       })

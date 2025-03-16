@@ -1,7 +1,7 @@
 import { FieldErrors, FieldValues } from 'react-hook-form';
-import { ErrorResponse, ErrorResponseUI } from 'shared/models';
+import { ErrorResponseDTO, ErrorResponse } from 'shared/models';
 
-export const mapError = <T extends FieldValues>(error: ErrorResponse): ErrorResponseUI<T> => {
+export const mapError = <T extends FieldValues>(error: ErrorResponseDTO): ErrorResponse<T> => {
   const errors: FieldErrors<T> = {} as FieldErrors<T>;
 
   if (!error.errors) {

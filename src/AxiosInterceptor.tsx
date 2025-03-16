@@ -5,7 +5,7 @@ import { removeUser, selectAuthSettings, setError } from 'store/features';
 import axios, { AxiosError, AxiosRequestConfig } from 'shared/configs/axios';
 import { getUserFromLocalStorage, getUserManager, parseResponseData } from 'shared/helpers';
 import { MESSAGES, ROUTES } from 'shared/constants';
-import { ErrorResponse } from 'shared/models';
+import { ErrorResponseDTO } from 'shared/models';
 
 // TODO: debug, a weird issue takes place when authenticated, the token is not being set and receiving 401, fixes after refresh
 const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
@@ -16,7 +16,7 @@ const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [shouldNavigate, setShouldNavigate] = React.useState(false);
 
   const refreshToken = React.useCallback(
-    async (errorConfig: AxiosRequestConfig): Promise<ErrorResponse | null> => {
+    async (errorConfig: AxiosRequestConfig): Promise<ErrorResponseDTO | null> => {
       try {
         const user = await userManager.signinSilent();
 
@@ -106,7 +106,7 @@ const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
           );
 
           return Promise.reject({
-            ...(error.response.data as ErrorResponse),
+            ...(error.response.data as ErrorResponseDTO),
             title: MESSAGES.error.general.common,
           });
         }

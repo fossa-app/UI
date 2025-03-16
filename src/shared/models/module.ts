@@ -23,4 +23,5 @@ export enum SubModule {
   profileViewDetails = 'profileViewDetails',
   profileViewSettings = 'profileViewSettings',
   notFound = 'notFound',
+  snackbar = 'snackbar',
 }
