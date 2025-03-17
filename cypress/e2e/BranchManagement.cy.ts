@@ -363,6 +363,7 @@ describe('Branch Management Tests', () => {
     cy.visit('/manage/branches');
 
     selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
+
     cy.wait('@fetchBranchByIdRequest');
 
     verifyInputFields(Module.branchManagement, SubModule.branchDetails, {

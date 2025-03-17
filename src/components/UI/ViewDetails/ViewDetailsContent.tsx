@@ -26,7 +26,6 @@ const ViewDetailsContent = <T,>({ fields, values, noValuesTemplate }: ViewDetail
       {!loading &&
         !values &&
         (noValuesTemplate ?? (
-          // TODO: fix, it displays this initially
           <Page module={module} subModule={subModule} sx={{ margin: 0 }}>
             <PageSubtitle>No Detail Found</PageSubtitle>
           </Page>

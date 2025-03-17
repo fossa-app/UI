@@ -44,8 +44,8 @@ export const search = (module: Module, subModule: SubModule, selector: string, t
 };
 
 export const openUserProfile = () => {
-  cy.get('[data-cy="user-avatar"]').click();
-  cy.get('[data-cy="user-name"]').should('exist').click();
+  getTestSelectorByModule(Module.shared, SubModule.header, 'profile-avatar').click();
+  getTestSelectorByModule(Module.shared, SubModule.header, 'profile-name').should('exist').click();
 };
 
 export const fillBranchDetailsForm = (module: Module, subModule: SubModule, branch: Branch) => {

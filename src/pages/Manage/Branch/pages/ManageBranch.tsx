@@ -57,11 +57,11 @@ const ManageBranchPage: React.FC = () => {
   const availableTimeZones = React.useMemo(() => {
     const isTimeZoneAvailable = companyTimeZones.some(({ id }) => id === branch?.timeZoneId);
 
-    if (isTimeZoneAvailable) {
+    if (isTimeZoneAvailable || (!branch?.timeZoneId && !branch?.timeZoneName)) {
       return companyTimeZones;
     }
 
-    return [{ id: branch?.timeZoneId, name: branch?.timeZoneName } as TimeZone, ...companyTimeZones];
+    return [{ id: branch.timeZoneId, name: branch.timeZoneName } as TimeZone, ...companyTimeZones];
   }, [companyTimeZones, branch]);
 
   const updateFields = React.useCallback(() => {

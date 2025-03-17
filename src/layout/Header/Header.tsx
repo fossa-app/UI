@@ -11,7 +11,7 @@ import { openSideBar, selectAppConfig, selectCompany, selectProfile, selectStep,
 import { getUserManager } from 'shared/helpers';
 import { ROUTES, SEARCH_PORTAL_ID } from 'shared/constants';
 import SearchPortal from 'components/Search';
-import UserMenu from './components/UserMenu';
+import ProfileMenu from './components/ProfileMenu';
 import ThemeButton from './components/ThemeButton';
 
 const Header: React.FC = () => {
@@ -33,7 +33,7 @@ const Header: React.FC = () => {
     await userManager.signoutRedirect();
   };
 
-  const handleUserClick = () => {
+  const handleProfileClick = () => {
     navigate(ROUTES.viewProfile.path);
   };
 
@@ -79,7 +79,9 @@ const Header: React.FC = () => {
           <Grid size="auto">
             <ThemeButton isDarkTheme={isDarkTheme} onClick={handleThemeChange} />
           </Grid>
-          <Grid size="auto">{profile && <UserMenu user={profile} onLogoutClick={handleLogout} onUserClick={handleUserClick} />}</Grid>
+          <Grid size="auto">
+            {profile && <ProfileMenu profile={profile} onLogoutClick={handleLogout} onProfileClick={handleProfileClick} />}
+          </Grid>
         </Grid>
       </Toolbar>
     </AppBar>
