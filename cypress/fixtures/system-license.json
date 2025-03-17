@@ -61,15 +61,15 @@
         "currentOffset": "-05:00:00"
       },
       {
-        "id": "America/Winnipeg",
-        "name": "Central Standard Time",
-        "countryCode": "CA",
-        "currentOffset": "-06:00:00"
-      },
-      {
         "id": "America/Chicago",
         "name": "Central Standard Time",
         "countryCode": "US",
+        "currentOffset": "-06:00:00"
+      },
+      {
+        "id": "America/Winnipeg",
+        "name": "Central Standard Time",
+        "countryCode": "CA",
         "currentOffset": "-06:00:00"
       },
       {

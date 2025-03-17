@@ -20,10 +20,6 @@ export const getLoadingButtonLoadingIcon = (module: Module, subModule: SubModule
   return getTestSelectorByModule(module, subModule, selector).find('[data-cy="loading-button-end-icon"]');
 };
 
-export const getCompanyLicenseDialogElement = (selector: string) => {
-  return cy.get('[data-cy="company-license-dialog"]').find(`[data-cy=${selector}]`);
-};
-
 export const selectOption = (module: Module, subModule: SubModule, fieldName: string, optionName: string) => {
   getTestSelectorByModule(module, subModule, `form-field-${fieldName}`).click();
   getTestSelectorByModule(module, subModule, `form-field-${fieldName}-option-${optionName}`).click();
@@ -116,8 +112,8 @@ export const verifyBranchDetailsFormValidationMessages = (
   });
 };
 
-export const verifyBranchDetailsFormTimeZoneOptions = (module: Module, subModule: SubModule, expectedValues: string[]) => {
-  cy.get(`[data-cy^="${module}-${subModule}-form-field-timeZoneId-option"]`)
+export const verifyOptions = (module: Module, subModule: SubModule, selector: string, expectedValues: string[]) => {
+  getTestSelectorByModule(module, subModule, selector, true)
     .should('have.length', expectedValues.length)
     .then((items) => {
       cy.wrap(items).each((item, index) => {

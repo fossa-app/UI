@@ -3,7 +3,11 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
-import { CompanyLicense, SystemLicense } from 'shared/models';
+import { CompanyLicense, Module, SubModule, SystemLicense } from 'shared/models';
+import { getTestSelectorByModule } from 'shared/helpers';
+
+const testModule = Module.shared;
+const testSubModule = SubModule.license;
 
 interface LicenseProps {
   isAdmin: boolean;
@@ -24,7 +28,11 @@ const License: React.FC<LicenseProps> = ({
     if (company) {
       return (
         <Tooltip title={company.longName}>
-          <Typography data-cy="company-license-text" variant="caption" textAlign="right">
+          <Typography
+            data-cy={getTestSelectorByModule(testModule, testSubModule, 'company-license-text')}
+            variant="caption"
+            textAlign="right"
+          >
             {company.shortName}
           </Typography>
         </Tooltip>
@@ -34,7 +42,7 @@ const License: React.FC<LicenseProps> = ({
     if (setupCompleted && !company) {
       return isAdmin ? (
         <Button
-          data-cy="company-license-button"
+          data-cy={getTestSelectorByModule(testModule, testSubModule, 'company-license-button')}
           aria-label="No License"
           variant="text"
           color="error"
@@ -44,7 +52,12 @@ const License: React.FC<LicenseProps> = ({
           Unlicensed Company
         </Button>
       ) : (
-        <Typography data-cy="company-license-text" color="error" variant="caption" textAlign="right">
+        <Typography
+          data-cy={getTestSelectorByModule(testModule, testSubModule, 'company-license-text')}
+          color="error"
+          variant="caption"
+          textAlign="right"
+        >
           Unlicensed Company
         </Typography>
       );
@@ -63,7 +76,7 @@ const License: React.FC<LicenseProps> = ({
     >
       {renderCompanyLicense()}
       <Tooltip title={system.longName}>
-        <Typography data-cy="system-license" variant="caption" textAlign="right">
+        <Typography data-cy={getTestSelectorByModule(testModule, testSubModule, 'system-license')} variant="caption" textAlign="right">
           {system.shortName}
         </Typography>
       </Tooltip>

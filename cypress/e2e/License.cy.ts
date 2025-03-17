@@ -1,11 +1,5 @@
 import { Module, SubModule } from 'shared/models';
-import {
-  getCompanyLicenseDialogElement,
-  getLinearLoader,
-  getTestSelectorByModule,
-  uploadTestFile,
-  verifyTextFields,
-} from '../support/helpers';
+import { getLinearLoader, getTestSelectorByModule, uploadTestFile, verifyTextFields } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -30,10 +24,13 @@ describe('License Tests', () => {
 
       cy.wait('@fetchSystemLicenseRequest');
 
-      cy.get('[data-cy="system-license"]').should('exist').and('have.text', 'TSL');
-      // TODO: check the tooltip on hover
-      cy.get('[data-cy="company-license-button"]').should('not.exist');
-      cy.get('[data-cy="company-license-text"]').should('not.exist');
+      getTestSelectorByModule(Module.shared, SubModule.license, 'system-license').should('exist').and('have.text', 'TSL');
+
+      getTestSelectorByModule(Module.shared, SubModule.license, 'system-license').trigger('mouseover');
+
+      cy.get('.MuiTooltip-tooltip').should('exist').and('have.text', 'Test System Licensee');
+      getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button').should('not.exist');
+      getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text').should('not.exist');
     });
   });
 
@@ -49,15 +46,16 @@ describe('License Tests', () => {
         interceptFetchProfileRequest();
         interceptFetchCompanyLicenseFailedRequest();
         interceptUploadCompanyLicenseFailedRequest();
-
         cy.visit('/manage/company');
 
-        cy.get('[data-cy="company-license-text"]').should('exist').and('have.text', 'Unlicensed Company');
-        cy.get('[data-cy="company-license-button"]').should('not.exist');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text')
+          .should('exist')
+          .and('have.text', 'Unlicensed Company');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button').should('not.exist');
 
-        cy.get('[data-cy="company-license-text"]').click();
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text').click();
 
-        cy.get('[data-cy="company-license-dialog"]').should('not.exist');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-dialog').should('not.exist');
       });
     });
 
@@ -68,11 +66,10 @@ describe('License Tests', () => {
 
       it('should not display default company license if setup has not completed', () => {
         interceptUploadCompanyLicenseFailedRequest();
-
         cy.visit('/setup');
 
-        cy.get('[data-cy="company-license-button"]').should('not.exist');
-        cy.get('[data-cy="company-license-text"]').should('not.exist');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button').should('not.exist');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text').should('not.exist');
       });
 
       it('should display default company license if setup has completed', () => {
@@ -81,10 +78,11 @@ describe('License Tests', () => {
         interceptFetchProfileRequest();
         interceptFetchCompanyLicenseFailedRequest();
         interceptUploadCompanyLicenseFailedRequest();
-
         cy.visit('/manage/company');
 
-        cy.get('[data-cy="company-license-button"]').should('exist').and('have.text', 'Unlicensed Company');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button')
+          .should('exist')
+          .and('have.text', 'Unlicensed Company');
       });
 
       it('should not be able to upload a company license if a file is not selected or the uploading failed', () => {
@@ -95,35 +93,42 @@ describe('License Tests', () => {
         interceptUploadCompanyLicenseFailedRequest();
         cy.visit('/manage/company');
 
-        cy.get('[data-cy="company-license-dialog"]').should('not.exist');
-        cy.get('[data-cy="company-license-button"]').click();
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-dialog').should('not.exist');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button').click();
 
-        cy.get('[data-cy="company-license-dialog"]').should('be.visible');
-        getCompanyLicenseDialogElement('dialog-title').should('have.text', 'Upload License File');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-dialog').should('be.visible');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'dialog-title').should('have.text', 'Upload License File');
 
-        getCompanyLicenseDialogElement('dialog-cancel-button').click();
+        getTestSelectorByModule(Module.shared, SubModule.license, 'dialog-cancel-button').click();
 
-        cy.get('[data-cy="company-license-dialog"]').should('not.exist');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-dialog').should('not.exist');
 
-        cy.get('[data-cy="company-license-button"]').click();
-        getCompanyLicenseDialogElement('dialog-upload-button').click();
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button').click();
+        getTestSelectorByModule(Module.shared, SubModule.license, 'dialog-upload-button').click();
 
-        getCompanyLicenseDialogElement('dialog-validation-message').should('exist').and('have.text', 'File is not selected');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'dialog-validation-message')
+          .should('exist')
+          .and('have.text', 'File is not selected');
 
         uploadTestFile('input#file-upload-input', 'invalid-company-license.lic');
 
-        cy.get('[data-cy="file-upload-selected-file-name"]').should('have.text', 'invalid-company-license.lic');
+        getTestSelectorByModule(Module.shared, SubModule.upload, 'file-upload-selected-file-name').should(
+          'have.text',
+          'invalid-company-license.lic'
+        );
 
         interceptUploadCompanyLicenseFailedRequest();
-        getCompanyLicenseDialogElement('dialog-upload-button').click();
+        getTestSelectorByModule(Module.shared, SubModule.license, 'dialog-upload-button').click();
 
-        getCompanyLicenseDialogElement('dialog-upload-button').find('[data-cy="loading-button-end-icon"]').should('be.visible');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'dialog-upload-button')
+          .find('[data-cy="loading-button-end-icon"]')
+          .should('be.visible');
 
         cy.wait('@uploadCompanyLicenseFailedRequest').then(({ request }) => {
           cy.wrap(request.headers['content-type']).should('contain', 'multipart/form-data');
         });
 
-        cy.get('[data-cy="company-license-dialog"]').should('exist');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-dialog').should('exist');
         getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
           .should('exist')
           .and('contain.text', 'Failed to upload Company license');
@@ -137,16 +142,21 @@ describe('License Tests', () => {
         interceptUploadCompanyLicenseFailedRequest();
         cy.visit('/manage/company');
 
-        cy.get('[data-cy="company-license-button"]').click();
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button').click();
         uploadTestFile('input#file-upload-input', 'valid-company-license.lic');
 
-        cy.get('[data-cy="file-upload-selected-file-name"]').should('have.text', 'valid-company-license.lic');
+        getTestSelectorByModule(Module.shared, SubModule.upload, 'file-upload-selected-file-name').should(
+          'have.text',
+          'valid-company-license.lic'
+        );
 
         interceptUploadCompanyLicenseRequest();
         interceptFetchCompanyLicenseRequest();
-        getCompanyLicenseDialogElement('dialog-upload-button').click();
+        getTestSelectorByModule(Module.shared, SubModule.license, 'dialog-upload-button').click();
 
-        getCompanyLicenseDialogElement('dialog-upload-button').find('[data-cy="loading-button-end-icon"]').should('be.visible');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'dialog-upload-button')
+          .find('[data-cy="loading-button-end-icon"]')
+          .should('be.visible');
 
         cy.wait('@uploadCompanyLicenseRequest').then(({ request }) => {
           cy.wrap(request.headers['content-type']).should('contain', 'multipart/form-data');
@@ -156,8 +166,8 @@ describe('License Tests', () => {
 
         cy.wait('@fetchCompanyLicenseRequest');
 
-        cy.get('[data-cy="company-license-dialog"]').should('not.exist');
-        cy.get('[data-cy="company-license-text"]').should('exist').and('have.text', 'TCL');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-dialog').should('not.exist');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text').should('exist').and('have.text', 'TCL');
         getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
           .should('exist')
           .and('contain.text', 'Company License has been successfully uploaded');
@@ -186,12 +196,14 @@ describe('License Tests', () => {
         interceptFetchBranchesRequest();
         interceptFetchProfileRequest();
         interceptFetchCompanyLicenseRequest();
-
         cy.visit('/manage/company');
 
-        cy.get('[data-cy="company-license-button"]').should('not.exist');
-        cy.get('[data-cy="company-license-text"]').should('exist').and('have.text', 'TCL');
-        // TODO: check the tooltip on hover
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button').should('not.exist');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text').should('exist').and('have.text', 'TCL');
+
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text').trigger('mouseover');
+
+        cy.get('.MuiTooltip-tooltip').should('exist').and('have.text', 'Test Company Licensee');
       });
     });
   });
