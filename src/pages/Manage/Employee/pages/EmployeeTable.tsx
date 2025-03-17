@@ -20,8 +20,8 @@ import { useSearch } from 'components/Search';
 import ActionsMenu from 'components/UI/Table/ActionsMenu';
 import { renderPrimaryLinkText } from 'components/UI/PrimaryLinkText';
 
-const module = Module.employeeManagement;
-const subModule = SubModule.employeeTable;
+const testModule = Module.employeeManagement;
+const testSubModule = SubModule.employeeTable;
 
 const EmployeeTablePage: React.FC = () => {
   const navigate = useNavigate();
@@ -79,7 +79,7 @@ const EmployeeTablePage: React.FC = () => {
               }
             : column
         ),
-        (employee) => <ActionsMenu<Employee> module={module} subModule={subModule} actions={actions} context={employee} />
+        (employee) => <ActionsMenu<Employee> module={testModule} subModule={testSubModule} actions={actions} context={employee} />
       ),
     [actions, handleEmployeeAction]
   );
@@ -93,7 +93,7 @@ const EmployeeTablePage: React.FC = () => {
   React.useEffect(() => {
     setProps({
       label: 'Search Employees',
-      testSelector: getTestSelectorByModule(module, subModule, 'search-employees'),
+      testSelector: getTestSelectorByModule(testModule, testSubModule, 'search-employees'),
     });
   }, [setProps]);
 
@@ -114,10 +114,10 @@ const EmployeeTablePage: React.FC = () => {
   });
 
   return (
-    <TableLayout module={module} subModule={subModule} pageTitle="Employees">
+    <TableLayout module={testModule} subModule={testSubModule} pageTitle="Employees">
       <Table<Employee>
-        module={module}
-        subModule={subModule}
+        module={testModule}
+        subModule={testSubModule}
         loading={fetchStatus === 'loading'}
         columns={columns}
         items={employees?.items}
@@ -126,7 +126,7 @@ const EmployeeTablePage: React.FC = () => {
         totalItems={page.totalItems}
         pageSizeOptions={pageSizeOptions}
         noRecordsTemplate={
-          <Page module={module} subModule={subModule} sx={{ my: 0 }}>
+          <Page module={testModule} subModule={testSubModule} sx={{ my: 0 }}>
             <PageSubtitle variant="h6">No Employees Found</PageSubtitle>
           </Page>
         }

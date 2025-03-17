@@ -18,6 +18,7 @@ export const APP_CONFIG = {
     defaultPageSizeOptions: [10, 20, 50],
   },
   searchDebounceTime: 300,
+  emptyValue: '-',
 };
 
 export const MESSAGES = {

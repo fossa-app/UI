@@ -7,6 +7,7 @@ import TableBody from '@mui/material/TableBody';
 import TablePagination from '@mui/material/TablePagination';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import { Item, Module, SubModule } from 'shared/models';
+import { APP_CONFIG } from 'shared/constants';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import { Column } from './table.model';
 import { StyledTable } from './StyledTable';
@@ -72,8 +73,7 @@ const Table = <T extends Item>({
                 align={column.align || 'left'}
                 sx={{ width: column.width || 'auto' }}
               >
-                {/* TODO: move '-' symbol to a constant */}
-                {column.renderBodyCell ? column.renderBodyCell(row) : (row[column.field] ?? '-')}
+                {column.renderBodyCell ? column.renderBodyCell(row) : (row[column.field] ?? APP_CONFIG.emptyValue)}
               </TableCell>
             ))}
           </TableRow>

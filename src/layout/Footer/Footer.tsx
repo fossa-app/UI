@@ -6,6 +6,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompanyLicense, selectIsUserAdmin, selectStep, selectSystemLicense, uploadCompanyLicense } from 'store/features';
+import { getTestSelectorByModule } from 'shared/helpers';
+import { Module, SubModule } from 'shared/models';
 import Logo from 'components/UI/Logo';
 import License from './components/License';
 import Environment from './components/Environment';
@@ -67,7 +69,7 @@ const Footer: React.FC = () => {
         </Toolbar>
       </AppBar>
       <CompanyLicenseDialog
-        data-cy="company-license-dialog"
+        data-cy={getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-dialog')}
         open={dialogOpen}
         loading={updateStatus === 'loading'}
         onClose={handleClose}

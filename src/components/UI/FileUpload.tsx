@@ -3,6 +3,8 @@ import Box, { BoxProps } from '@mui/material/Box';
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { getTestSelectorByModule } from 'shared/helpers';
+import { Module, SubModule } from 'shared/models';
 
 type FileUploadProps = {
   accept?: string;
@@ -30,7 +32,13 @@ const FileUpload: React.FC<FileUploadProps> = ({ accept = '*/*', onFileSelect, s
         </Button>
       </label>
       {fileName && (
-        <Typography noWrap data-cy="file-upload-selected-file-name" variant="body2" color="textSecondary" sx={{ flexGrow: 1 }}>
+        <Typography
+          noWrap
+          data-cy={getTestSelectorByModule(Module.shared, SubModule.upload, 'file-upload-selected-file-name')}
+          variant="body2"
+          color="textSecondary"
+          sx={{ flexGrow: 1 }}
+        >
           {fileName}
         </Typography>
       )}

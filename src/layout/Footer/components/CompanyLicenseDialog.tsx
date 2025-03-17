@@ -7,8 +7,13 @@ import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { Module, SubModule } from 'shared/models';
+import { getTestSelectorByModule } from 'shared/helpers';
 import LoadingButton from 'components/UI/LoadingButton';
 import FileUpload from 'components/UI/FileUpload';
+
+const testModule = Module.shared;
+const testSubModule = SubModule.license;
 
 type CompanyLicenseDialogProps = {
   loading: boolean;
@@ -59,19 +64,23 @@ const CompanyLicenseDialog: React.FC<CompanyLicenseDialogProps> = ({ loading, on
         },
       }}
     >
-      <DialogTitle data-cy="dialog-title">Upload License File</DialogTitle>
+      <DialogTitle data-cy={getTestSelectorByModule(testModule, testSubModule, 'dialog-title')}>Upload License File</DialogTitle>
       <DialogContent>
         <DialogContentText>Please select a license file to upload.</DialogContentText>
         <FileUpload onFileSelect={handleFileSelect} sx={{ my: 2 }} />
         {errorMessage && (
-          <Typography data-cy="dialog-validation-message" variant="body2" color="error">
+          <Typography
+            data-cy={getTestSelectorByModule(testModule, testSubModule, 'dialog-validation-message')}
+            variant="body2"
+            color="error"
+          >
             {errorMessage}
           </Typography>
         )}
       </DialogContent>
       <DialogActions>
         <Button
-          data-cy="dialog-cancel-button"
+          data-cy={getTestSelectorByModule(testModule, testSubModule, 'dialog-cancel-button')}
           aria-label="Cancel"
           variant="text"
           color="secondary"
@@ -79,7 +88,13 @@ const CompanyLicenseDialog: React.FC<CompanyLicenseDialogProps> = ({ loading, on
         >
           Cancel
         </Button>
-        <LoadingButton data-cy="dialog-upload-button" type="submit" loadingPosition="end" loading={loading} endIcon={<UploadFileIcon />}>
+        <LoadingButton
+          data-cy={getTestSelectorByModule(testModule, testSubModule, 'dialog-upload-button')}
+          type="submit"
+          loadingPosition="end"
+          loading={loading}
+          endIcon={<UploadFileIcon />}
+        >
           Upload
         </LoadingButton>
       </DialogActions>

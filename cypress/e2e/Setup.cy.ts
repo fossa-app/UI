@@ -6,7 +6,7 @@ import {
   getTestSelectorByModule,
   selectOption,
   verifyNotExist,
-  verifyBranchDetailsFormTimeZoneOptions,
+  verifyOptions,
   verifyBranchDetailsFormValidationMessages,
   verifyTextFields,
 } from '../support/helpers';
@@ -305,7 +305,7 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', '/setup/branch');
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-timeZoneId').click();
 
-      verifyBranchDetailsFormTimeZoneOptions(Module.branchSetup, SubModule.branchDetails, [
+      verifyOptions(Module.branchSetup, SubModule.branchDetails, 'form-field-timeZoneId-option', [
         'Pacific/Honolulu',
         'America/Anchorage',
         'America/New_York',

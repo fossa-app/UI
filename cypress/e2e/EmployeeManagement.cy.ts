@@ -193,6 +193,40 @@ describe('Employee Management Tests', () => {
       });
     });
 
+    it('should reset the form when navigating between different employees', () => {
+      interceptFetchBranchesRequest(
+        { pageNumber: 1, pageSize: 100, search: '*' },
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+      );
+      interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
+      interceptFetchEmployeeByIdRequest('333333333334', 'fetchFirstEmployeeByIdRequest', 'employees-multiple');
+      interceptFetchEmployeeByIdRequest('333333333335', 'fetchSecondEmployeeByIdRequest', 'employees-multiple');
+      cy.visit('/manage/employees');
+
+      selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333334');
+      cy.wait('@fetchFirstEmployeeByIdRequest');
+
+      verifyTextFields(Module.employeeManagement, SubModule.employeeDetails, {
+        'form-field-label-firstName': 'First Name',
+        'form-field-value-firstName': 'Aziraphale',
+        'form-field-label-lastName': 'Last Name',
+        'form-field-value-lastName': 'Fell',
+        'form-field-label-fullName': 'Full Name',
+        'form-field-value-fullName': 'Aziraphale User Fell',
+      });
+      verifyInputFields(Module.employeeManagement, SubModule.employeeDetails, {
+        'form-field-assignedBranchId-input': '',
+      });
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-cancel-button').click();
+      selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
+
+      cy.wait('@fetchSecondEmployeeByIdRequest');
+
+      testEmployeeFormFields();
+    });
+
     it('should not be able to edit the employee if the employee updating failed', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
@@ -371,7 +405,5 @@ describe('Employee Management Tests', () => {
         2
       );
     });
-
-    // TODO: add test cases when navigating between different employees, check if the employee is being reset correctly
   });
 });

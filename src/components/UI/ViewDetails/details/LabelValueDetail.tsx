@@ -2,6 +2,7 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { getNestedValue } from 'shared/helpers';
+import { APP_CONFIG } from 'shared/constants';
 import { ViewDetailProps } from '../view-details.model';
 
 const LabelValueDetail = <T,>({ module, subModule, values, ...props }: { values: T } & ViewDetailProps<T>) => {
@@ -16,7 +17,7 @@ const LabelValueDetail = <T,>({ module, subModule, values, ...props }: { values:
         {props.renderDetailField ? (
           props.renderDetailField(values)
         ) : (
-          <Typography variant="body1">{fieldValue ? String(fieldValue) : '-'}</Typography>
+          <Typography variant="body1">{fieldValue ? String(fieldValue) : APP_CONFIG.emptyValue}</Typography>
         )}
       </Box>
     </>

@@ -16,7 +16,7 @@ import {
   selectSystemCountries,
 } from 'store/features';
 import { BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
-import { Branch, Module, SubModule } from 'shared/models';
+import { Branch, Module, SubModule, TimeZone } from 'shared/models';
 import {
   getBranchManagementDetailsByAddressFormSchema,
   mapBranchDTO,
@@ -28,8 +28,8 @@ import BranchDetailsForm from 'components/forms/BranchDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
 import { FieldProps } from 'components/UI/Form';
 
-const module = Module.branchManagement;
-const subModule = SubModule.branchDetails;
+const testModule = Module.branchManagement;
+const testSubModule = SubModule.branchDetails;
 
 const ManageBranchPage: React.FC = () => {
   const navigate = useNavigate();
@@ -54,14 +54,24 @@ const ManageBranchPage: React.FC = () => {
     [countries, company, branch]
   );
 
+  const availableTimeZones = React.useMemo(() => {
+    const isTimeZoneAvailable = companyTimeZones.some(({ id }) => id === branch?.timeZoneId);
+
+    if (isTimeZoneAvailable) {
+      return companyTimeZones;
+    }
+
+    return [{ id: branch?.timeZoneId, name: branch?.timeZoneName } as TimeZone, ...companyTimeZones];
+  }, [companyTimeZones, branch]);
+
   const updateFields = React.useCallback(() => {
     const schema = getBranchManagementDetailsByAddressFormSchema(BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, !!noPhysicalAddress);
     const disabledFields = mapDisabledFields(schema, userRoles);
-    const mappedFields = mapBranchFieldOptionsToFieldOptions(disabledFields, companyTimeZones, availableCountries);
+    const mappedFields = mapBranchFieldOptionsToFieldOptions(disabledFields, availableTimeZones, availableCountries);
 
     setFields(mappedFields);
     setFormLoading(!mappedFields.length);
-  }, [noPhysicalAddress, userRoles, companyTimeZones, availableCountries]);
+  }, [noPhysicalAddress, userRoles, availableCountries, availableTimeZones]);
 
   React.useEffect(() => {
     if (id) {
@@ -119,16 +129,16 @@ const ManageBranchPage: React.FC = () => {
   return (
     <PageLayout
       withBackButton
-      module={module}
-      subModule={subModule}
+      module={testModule}
+      subModule={testSubModule}
       pageTitle={id ? 'Edit Branch' : 'Create Branch'}
       displayNotFoundPage={fetchStatus === 'failed' && !branch}
       onBackButtonClick={handleCancel}
     >
       <BranchDetailsForm
         withCancel
-        module={module}
-        subModule={subModule}
+        module={testModule}
+        subModule={testSubModule}
         isAdmin={isUserAdmin}
         data={branch}
         errors={errors}

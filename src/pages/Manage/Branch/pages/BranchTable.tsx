@@ -23,8 +23,8 @@ import TableLayout from 'components/layouts/TableLayout';
 import { useSearch } from 'components/Search';
 import { renderPrimaryLinkText } from 'components/UI/PrimaryLinkText';
 
-const module = Module.branchManagement;
-const subModule = SubModule.branchTable;
+const testModule = Module.branchManagement;
+const testSubModule = SubModule.branchTable;
 
 const BranchTablePage: React.FC = () => {
   const navigate = useNavigate();
@@ -91,7 +91,7 @@ const BranchTablePage: React.FC = () => {
               }
             : column
         ),
-        (branch) => <ActionsMenu<Branch> module={module} subModule={subModule} actions={actions} context={branch} />
+        (branch) => <ActionsMenu<Branch> module={testModule} subModule={testSubModule} actions={actions} context={branch} />
       ),
     [actions, handleBranchAction]
   );
@@ -105,7 +105,7 @@ const BranchTablePage: React.FC = () => {
   React.useEffect(() => {
     setProps({
       label: 'Search Branches',
-      testSelector: getTestSelectorByModule(module, subModule, 'search-branches'),
+      testSelector: getTestSelectorByModule(testModule, testSubModule, 'search-branches'),
     });
   }, [setProps]);
 
@@ -127,16 +127,16 @@ const BranchTablePage: React.FC = () => {
 
   return (
     <TableLayout
-      module={module}
-      subModule={subModule}
+      module={testModule}
+      subModule={testSubModule}
       withActionButton={isUserAdmin}
       pageTitle="Branches"
       actionButtonLabel="New Branch"
       onActionClick={() => handleNavigate(ROUTES.newBranch.path)}
     >
       <Table<Branch>
-        module={module}
-        subModule={subModule}
+        module={testModule}
+        subModule={testSubModule}
         loading={loading}
         columns={columns}
         items={branches?.items}
@@ -145,7 +145,7 @@ const BranchTablePage: React.FC = () => {
         totalItems={page.totalItems}
         pageSizeOptions={pageSizeOptions}
         noRecordsTemplate={
-          <Page module={module} subModule={subModule} sx={{ margin: 0 }}>
+          <Page module={testModule} subModule={testSubModule} sx={{ margin: 0 }}>
             <PageSubtitle variant="h6">No Branches Found</PageSubtitle>
           </Page>
         }

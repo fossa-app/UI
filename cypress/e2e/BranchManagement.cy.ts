@@ -11,7 +11,7 @@ import {
   verifyBranchDetailsFormValidationMessages,
   clickActionButton,
   verifyNotExist,
-  verifyBranchDetailsFormTimeZoneOptions,
+  verifyOptions,
   verifyBranchDetailsFormFieldsExist,
   verifyBranchDetailsFormFieldsNotExist,
   verifyTextFields,
@@ -393,6 +393,37 @@ describe('Branch Management Tests', () => {
     });
   });
 
+  it('should reset the form when navigating between different branches', () => {
+    interceptFetchBranchesRequest(
+      { pageNumber: 1, pageSize: 10, search: '' },
+      { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+    );
+    interceptFetchBranchByIdRequest('222222222222', 'fetchFirstBranchByIdRequest', 'branches-multiple');
+    interceptFetchBranchByIdRequest('222222222223', 'fetchSecondBranchByIdRequest', 'branches-multiple');
+    cy.visit('/manage/branches');
+
+    selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
+
+    cy.wait('@fetchFirstBranchByIdRequest');
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-cancel-button').click();
+
+    selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222223');
+
+    cy.wait('@fetchSecondBranchByIdRequest');
+
+    verifyInputFields(Module.branchManagement, SubModule.branchDetails, {
+      'form-field-name': 'Hawaii Branch',
+      'form-field-timeZoneId': 'Pacific/Honolulu',
+      'form-field-address.line1': '3211 Dewert Ln',
+      'form-field-address.line2': '',
+      'form-field-address.city': 'Honolulu',
+      'form-field-address.subdivision': 'HI',
+      'form-field-address.postalCode': '96818',
+      'form-field-address.countryCode': 'US',
+    });
+  });
+
   it('should fetch and display the branch form details by id when refreshing the page', () => {
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit('/manage/branches/edit/222222222222');
@@ -428,14 +459,13 @@ describe('Branch Management Tests', () => {
 
     cy.wait('@fetchBranchByIdRequest');
 
+    verifyInputFields(Module.branchManagement, SubModule.branchDetails, {
+      'form-field-address.countryCode': 'PL',
+    });
+
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.countryCode').click();
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.countryCode-option-PL')
-      .should('exist')
-      .and('have.text', 'Poland');
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.countryCode-option-US')
-      .should('exist')
-      .and('have.text', 'United States');
+    verifyOptions(Module.branchManagement, SubModule.branchDetails, 'form-field-address.countryCode-option', ['PL', 'US']);
   });
 
   it('should display only available timezones for selected company country', () => {
@@ -446,7 +476,31 @@ describe('Branch Management Tests', () => {
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-timeZoneId').click();
 
-    verifyBranchDetailsFormTimeZoneOptions(Module.branchManagement, SubModule.branchDetails, [
+    verifyOptions(Module.branchManagement, SubModule.branchDetails, 'form-field-timeZoneId-option', [
+      'Pacific/Honolulu',
+      'America/Anchorage',
+      'America/New_York',
+      'America/Chicago',
+    ]);
+  });
+
+  it('should display company timezones and the branch timezone if the company timezone is different than the branch address timezone', () => {
+    interceptFetchBranchByIdRequest('222222222224', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
+    cy.visit('/manage/branches/edit/222222222224');
+
+    cy.wait('@fetchBranchByIdRequest');
+
+    verifyInputFields(Module.branchManagement, SubModule.branchDetails, {
+      'form-field-timeZoneId': 'Europe/Warsaw',
+    });
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-timeZoneId').click();
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-timeZoneId-option-Europe/Warsaw')
+      .should('exist')
+      .and('have.text', 'Central European Standard Time');
+    verifyOptions(Module.branchManagement, SubModule.branchDetails, 'form-field-timeZoneId-option', [
+      'Europe/Warsaw',
       'Pacific/Honolulu',
       'America/Anchorage',
       'America/New_York',
@@ -507,7 +561,5 @@ describe('Branch Management Tests', () => {
       'form-field-address.postalCode',
       'form-field-address.countryCode',
     ]);
-
-    // TODO: add test cases when navigating between different branches, check if the branch is being reset correctly
   });
 });
