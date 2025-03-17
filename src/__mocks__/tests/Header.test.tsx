@@ -68,7 +68,7 @@ describe('Header Component', () => {
     expect(mockDispatch).toHaveBeenCalledWith(toggleAppTheme(true));
   });
 
-  it('should display the user name and logout button after login', async () => {
+  it('should display the profile name and logout button after login', async () => {
     setMockState({
       profile: { profile: { data: { firstName: 'Test' } } } as any,
     });
@@ -79,10 +79,10 @@ describe('Header Component', () => {
       </MockRouterWrapper>
     );
 
-    const userName = await screen.findByTestId('user-name');
+    const profileName = await screen.findByTestId('profile-name');
     const logoutButton = await screen.findByTestId('logout-button');
 
-    expect(userName).toHaveTextContent('Test');
+    expect(profileName).toHaveTextContent('Test');
     expect(logoutButton).toBeInTheDocument();
   });
 
@@ -99,9 +99,9 @@ describe('Header Component', () => {
       </MockRouterWrapper>
     );
 
-    const userMenuButton = await screen.findByTestId('user-menu');
+    const profileMenuButton = await screen.findByTestId('profile-menu');
 
-    fireEvent.click(userMenuButton);
+    fireEvent.click(profileMenuButton);
 
     const logoutButton = await screen.findByTestId('logout-button');
 

@@ -26,4 +26,5 @@ export enum SubModule {
   snackbar = 'snackbar',
   license = 'license',
   upload = 'upload',
+  header = 'header',
 }

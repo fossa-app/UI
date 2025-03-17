@@ -1,5 +1,5 @@
 import { Module, SubModule } from '../../src/shared/models';
-import { getLinearLoader, getTestSelectorByModule, selectAction, verifyTextFields } from '../support/helpers';
+import { getLinearLoader, getTestSelectorByModule, selectAction, verifyInputFields, verifyTextFields } from '../support/helpers';
 import {
   interceptEditBranchRequest,
   interceptFetchBranchByIdFailedRequest,
@@ -195,21 +195,23 @@ describe('Branch View Tests', () => {
 
       cy.wait('@fetchBranchByIdRequest');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-value-name').should(
-        'have.text',
-        'New York Branch'
-      );
+      testBranchFields();
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'page-title-back-button').click();
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
       cy.url().should('include', '/manage/branches/new');
       // TODO: flaky part
-      // Uncomment
-      // getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name')
-      //   .find('input')
-      //   .should('be.visible')
-      //   .and('have.value', '');
+      verifyInputFields(Module.branchManagement, SubModule.branchDetails, {
+        'form-field-name': '',
+        'form-field-timeZoneId': '',
+        'form-field-address.line1': '',
+        'form-field-address.line2': '',
+        'form-field-address.city': '',
+        'form-field-address.subdivision': '',
+        'form-field-address.postalCode': '',
+        'form-field-address.countryCode': '',
+      });
     });
 
     it('should render the Edit branch button', () => {

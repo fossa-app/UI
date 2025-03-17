@@ -60,7 +60,7 @@ describe('Profile Tests', () => {
         cy.url().should('include', '/setup/employee');
       });
 
-      it('should navigate to view profile page if the employee exists when clicking the user menu item', () => {
+      it('should navigate to view profile page if the employee exists when clicking the profile menu item', () => {
         interceptFetchProfileRequest();
         cy.visit('/manage/company/view');
 
@@ -200,8 +200,8 @@ describe('Profile Tests', () => {
           .should('exist')
           .and('contain.text', 'Profile has been successfully updated');
 
-        cy.get('[data-cy="user-avatar"]').click();
-        cy.get('[data-cy="user-name"]').should('exist').and('have.text', 'Hi, Anthony');
+        getTestSelectorByModule(Module.shared, SubModule.header, 'profile-avatar').click();
+        getTestSelectorByModule(Module.shared, SubModule.header, 'profile-name').should('exist').and('have.text', 'Hi, Anthony');
       });
 
       it('should render the danger zone on the view profile page', () => {

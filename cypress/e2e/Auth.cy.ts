@@ -1,3 +1,5 @@
+import { Module, SubModule } from '../../src/shared/models';
+import { getTestSelectorByModule } from '../support/helpers';
 import {
   interceptFetchClientRequest,
   interceptFetchCompanyFailedRequest,
@@ -23,7 +25,7 @@ describe('Authentication Flow Tests', () => {
 
     cy.get('[data-cy="login-form-title"]').should('exist').contains('Login');
     cy.get('[data-cy="login-button"]').should('exist').contains('Login');
-    cy.get('[data-cy="user-menu"]').should('not.exist');
+    getTestSelectorByModule(Module.shared, SubModule.header, 'profile-menu').should('not.exist');
   });
 
   it('should not be able to manually navigate to secured pages if not authenticated', () => {
@@ -65,13 +67,13 @@ describe('Authentication Flow Tests', () => {
     interceptOpenidConfigurationRequest();
     interceptFetchCompanyFailedRequest();
     cy.loginMock();
-
     cy.visit('/setup');
 
     cy.url().should('include', '/setup');
-    cy.get('[data-cy="user-menu"]').should('exist');
-    cy.get('[data-cy="user-avatar"]').click();
-    cy.get('[data-cy="user-name"]').should('exist').and('have.text', 'Hi, User');
+    getTestSelectorByModule(Module.shared, SubModule.header, 'profile-menu').should('exist');
+    getTestSelectorByModule(Module.shared, SubModule.header, 'profile-avatar').click();
+
+    getTestSelectorByModule(Module.shared, SubModule.header, 'profile-name').should('exist').and('have.text', 'Hi, User');
   });
 
   it('should login successfully and display correct user name for admin role', () => {
@@ -79,12 +81,11 @@ describe('Authentication Flow Tests', () => {
     interceptOpenidConfigurationRequest();
     interceptFetchCompanyFailedRequest();
     cy.loginMock(true);
-
     cy.visit('/setup');
 
     cy.url().should('include', '/setup');
-    cy.get('[data-cy="user-avatar"]').click();
-    cy.get('[data-cy="user-name"]').should('exist').and('have.text', 'Hi, Admin');
+    getTestSelectorByModule(Module.shared, SubModule.header, 'profile-avatar').click();
+    getTestSelectorByModule(Module.shared, SubModule.header, 'profile-name').should('exist').and('have.text', 'Hi, Admin');
   });
 
   it('should logout successfully', () => {
@@ -92,19 +93,18 @@ describe('Authentication Flow Tests', () => {
     interceptOpenidConfigurationRequest();
     interceptFetchCompanyFailedRequest();
     interceptLogoutRequest();
-
     cy.loginMock();
     cy.visit('/setup');
 
-    cy.get('[data-cy="user-avatar"]').click();
-    cy.get('[data-cy="logout-button"]').click();
+    getTestSelectorByModule(Module.shared, SubModule.header, 'profile-avatar').click();
+    getTestSelectorByModule(Module.shared, SubModule.header, 'logout-button').click();
 
     cy.logoutMock();
     cy.wait('@openidConfigurationRequest');
     cy.wait('@logoutRequest');
 
     cy.url().should('include', '/login');
-    cy.get('[data-cy="user-menu"]').should('not.exist');
+    getTestSelectorByModule(Module.shared, SubModule.header, 'profile-menu').should('not.exist');
   });
 
   // TODO: add test cases for auto-refresh and session expiration
