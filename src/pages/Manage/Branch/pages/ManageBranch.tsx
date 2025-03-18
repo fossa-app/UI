@@ -62,11 +62,7 @@ const ManageBranchPage: React.FC = () => {
   }, [companyTimeZones, branch]);
 
   const errors = React.useMemo(() => {
-    if (!error?.errors) {
-      return;
-    }
-
-    return deepCopyObject(error.errors as FieldErrors<FieldValues>);
+    return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
   }, [error?.errors]);
 
   const updateFields = React.useCallback(() => {

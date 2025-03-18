@@ -8,7 +8,7 @@ import {
   clickField,
   selectOption,
   verifyInputFields,
-  verifyBranchDetailsFormValidationMessages,
+  verifyFormValidationMessages,
   clickActionButton,
   verifyNotExist,
   verifyOptions,
@@ -61,7 +61,7 @@ describe('Branch Management Tests', () => {
 
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
-    verifyBranchDetailsFormValidationMessages(Module.branchManagement, SubModule.branchDetails, [
+    verifyFormValidationMessages(Module.branchManagement, SubModule.branchDetails, [
       { field: 'form-field-name-validation', message: 'Branch Name is required' },
       { field: 'form-field-timeZoneId-validation', message: 'TimeZone is required' },
       { field: 'form-field-address.line1-validation', message: 'Address Line 1 is required' },
@@ -85,7 +85,7 @@ describe('Branch Management Tests', () => {
     });
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
-    verifyBranchDetailsFormValidationMessages(Module.branchManagement, SubModule.branchDetails, [
+    verifyFormValidationMessages(Module.branchManagement, SubModule.branchDetails, [
       { field: 'form-field-name-validation', message: 'The Branch Name must not exceed 50 characters.' },
       { field: 'form-field-address.line1-validation', message: 'Address Line 1 must not exceed 50 characters.' },
       { field: 'form-field-address.line2-validation', message: 'Address Line 2 must not exceed 50 characters.' },
@@ -275,7 +275,7 @@ describe('Branch Management Tests', () => {
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
     getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error').should('exist').and('contain.text', 'Failed to update the Branch');
-    verifyBranchDetailsFormValidationMessages(Module.branchManagement, SubModule.branchDetails, [
+    verifyFormValidationMessages(Module.branchManagement, SubModule.branchDetails, [
       { field: 'form-section-field-address-validation', message: 'Value is provided however is not valid' },
       {
         field: 'form-field-address.postalCode-validation',

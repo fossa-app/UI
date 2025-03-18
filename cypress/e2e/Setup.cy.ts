@@ -7,7 +7,7 @@ import {
   selectOption,
   verifyNotExist,
   verifyOptions,
-  verifyBranchDetailsFormValidationMessages,
+  verifyFormValidationMessages,
   verifyTextFields,
 } from '../support/helpers';
 import {
@@ -27,6 +27,7 @@ import {
   interceptCreateProfileFailedRequest,
   interceptCreateProfileRequest,
   interceptCreateBranchFailedWithErrorRequest,
+  interceptCreateProfileFailedWithErrorRequest,
 } from '../support/interceptors';
 
 const setupRoutes = ['/setup/company', '/setup/branch', '/setup/employee'];
@@ -335,7 +336,7 @@ describe('Setup Flow Tests', () => {
 
       clickActionButton(Module.branchSetup, SubModule.branchDetails);
 
-      verifyBranchDetailsFormValidationMessages(Module.branchSetup, SubModule.branchDetails, [
+      verifyFormValidationMessages(Module.branchSetup, SubModule.branchDetails, [
         { field: 'form-field-name-validation', message: 'Branch Name is required' },
         { field: 'form-field-timeZoneId-validation', message: 'TimeZone is required' },
         { field: 'form-field-address.line1-validation', message: 'Address Line 1 is required' },
@@ -360,7 +361,7 @@ describe('Setup Flow Tests', () => {
 
       clickActionButton(Module.branchSetup, SubModule.branchDetails);
 
-      verifyBranchDetailsFormValidationMessages(Module.branchSetup, SubModule.branchDetails, [
+      verifyFormValidationMessages(Module.branchSetup, SubModule.branchDetails, [
         { field: 'form-field-name-validation', message: 'The Branch Name must not exceed 50 characters.' },
         { field: 'form-field-address.line1-validation', message: 'Address Line 1 must not exceed 50 characters.' },
         { field: 'form-field-address.line2-validation', message: 'Address Line 2 must not exceed 50 characters.' },
@@ -414,7 +415,7 @@ describe('Setup Flow Tests', () => {
       clickActionButton(Module.branchSetup, SubModule.branchDetails);
 
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error').should('exist').and('contain.text', 'Failed to create a Branch');
-      verifyBranchDetailsFormValidationMessages(Module.branchSetup, SubModule.branchDetails, [
+      verifyFormValidationMessages(Module.branchSetup, SubModule.branchDetails, [
         { field: 'form-section-field-address-validation', message: 'Value is provided however is not valid' },
         {
           field: 'form-field-address.postalCode-validation',
@@ -505,6 +506,38 @@ describe('Setup Flow Tests', () => {
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName-validation')
         .should('exist')
         .and('have.text', 'Last Name is required');
+    });
+
+    it('should display async validation messages if the employee creation failed with validation errors', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesRequest();
+      interceptFetchProfileFailedRequest();
+      interceptCreateProfileFailedWithErrorRequest();
+      cy.visit('/setup');
+
+      cy.wait('@fetchProfileFailedRequest');
+
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').clear();
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName').find('input').type('Joe');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName').find('input').clear();
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName').find('input').type('Joe');
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-fullName').find('input').clear();
+      getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-fullName').find('input').type('Joe Joe');
+
+      clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
+
+      cy.wait('@createProfileFailedWithErrorRequest');
+
+      getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
+        .should('exist')
+        .and('contain.text', 'Failed to create an Employee');
+      verifyFormValidationMessages(Module.employeeSetup, SubModule.employeeDetails, [
+        {
+          field: 'form-field-lastName-validation',
+          message: `'First Name' and 'Last Name' cannot be the same.`,
+        },
+      ]);
+      cy.url().should('include', '/setup/employee');
     });
 
     it('should navigate to the company page at once if the branch creation succeeded and the employee had been created before', () => {
