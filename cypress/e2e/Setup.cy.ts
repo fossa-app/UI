@@ -26,6 +26,7 @@ import {
   interceptCreateBranchRequest,
   interceptCreateProfileFailedRequest,
   interceptCreateProfileRequest,
+  interceptCreateBranchFailedWithErrorRequest,
 } from '../support/interceptors';
 
 const setupRoutes = ['/setup/company', '/setup/branch', '/setup/employee'];
@@ -64,8 +65,8 @@ describe('Setup Flow Tests', () => {
 
       it('should navigate to company setup page and no other setup page if there is no company', () => {
         interceptFetchCompanyFailedRequest();
-
         cy.visit('/setup/company');
+
         cy.wait('@fetchCompanyFailedRequest');
 
         cy.url().should('include', '/setup/company');
@@ -80,7 +81,7 @@ describe('Setup Flow Tests', () => {
           getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-action-button').should('have.attr', 'disabled');
         }
 
-        cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
+        getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
 
         setupRoutes.forEach((route) => {
           cy.visit(route);
@@ -92,7 +93,6 @@ describe('Setup Flow Tests', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesFailedRequest();
         interceptFetchProfileFailedRequest();
-
         cy.visit('/setup/branch');
 
         cy.url().should('include', '/setup/branch');
@@ -107,7 +107,7 @@ describe('Setup Flow Tests', () => {
             .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
         }
 
-        cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
+        getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
 
         setupRoutes.forEach((route) => {
           cy.visit(route);
@@ -119,8 +119,8 @@ describe('Setup Flow Tests', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileFailedRequest();
-
         cy.visit('/setup/employee');
+
         cy.wait('@fetchCompanyRequest');
         cy.wait('@fetchBranchesRequest');
         cy.wait('@fetchProfileFailedRequest');
@@ -129,7 +129,7 @@ describe('Setup Flow Tests', () => {
         getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('not.have.attr', 'disabled');
         getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-general-validation-message').should('not.exist');
         getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('contain.text', 'Finish');
-        cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
+        getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
 
         setupRoutes.forEach((route) => {
           cy.visit(route);
@@ -152,7 +152,7 @@ describe('Setup Flow Tests', () => {
 
         cy.wait('@createProfileFailedRequest');
 
-        cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
+        getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
         cy.url().should('include', '/setup/employee');
       });
 
@@ -185,21 +185,34 @@ describe('Setup Flow Tests', () => {
         cy.wait('@createProfileRequest');
         cy.wait('@fetchProfileRequest');
 
-        cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
+        getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('not.have.attr', 'disabled');
         cy.url().should('include', '/manage/company');
+      });
+
+      it('should not be able to navigate to company page by clicking the company logo if the employee is in a draft status', () => {
+        interceptFetchCompanyRequest();
+        interceptFetchBranchesRequest();
+        interceptFetchProfileFailedRequest();
+        cy.visit('/setup/employee');
+
+        cy.wait('@fetchProfileFailedRequest');
+
+        getTestSelectorByModule(Module.shared, SubModule.header, 'company-logo').should('exist').click();
+
+        cy.url().should('include', '/setup/employee');
       });
 
       it('should navigate to the company page if company, branch and employee data exist', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileRequest();
-
         cy.visit('/setup');
+
         cy.wait('@fetchCompanyRequest');
         cy.wait('@fetchBranchesRequest');
         cy.wait('@fetchProfileRequest');
 
-        cy.get('[data-cy="menu-icon"]').should('not.have.attr', 'disabled');
+        getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('not.have.attr', 'disabled');
         cy.url().should('include', '/manage/company');
       });
     });
@@ -270,8 +283,8 @@ describe('Setup Flow Tests', () => {
         'have.text',
         'Basic Information'
       );
-      cy.get('[data-cy="company-logo"]').should('not.exist');
-      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
+      getTestSelectorByModule(Module.shared, SubModule.header, 'company-logo').should('not.exist');
+      getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
 
       interceptFetchCompanyRequest();
 
@@ -283,14 +296,13 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchCompanyRequest');
 
       cy.url().should('include', '/setup/branch');
-      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
-      cy.get('[data-cy="company-logo"]').should('exist').and('have.text', 'Good Omens');
+      getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
+      getTestSelectorByModule(Module.shared, SubModule.header, 'company-logo').should('exist').and('have.text', 'Good Omens');
     });
 
     it('should display only available timezones for selected company country', () => {
       interceptFetchCompanyFailedRequest();
       interceptCreateCompanyRequest();
-
       cy.visit('/setup/company');
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('US Company');
@@ -378,6 +390,40 @@ describe('Setup Flow Tests', () => {
       ]);
     });
 
+    it('should display async validation messages if the branch creation failed with validation errors', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptCreateBranchFailedWithErrorRequest();
+      cy.visit('/setup');
+
+      cy.wait('@fetchBranchesFailedRequest');
+
+      fillBranchDetailsForm(Module.branchSetup, SubModule.branchDetails, {
+        name: 'Hawaii Branch',
+        timeZoneId: 'Pacific/Honolulu',
+        address: {
+          line1: '3211 Dewert Ln',
+          line2: '',
+          city: 'Honolulu',
+          subdivision: 'HI',
+          postalCode: '*****',
+          countryCode: 'US',
+        },
+      });
+
+      clickActionButton(Module.branchSetup, SubModule.branchDetails);
+
+      getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error').should('exist').and('contain.text', 'Failed to create a Branch');
+      verifyBranchDetailsFormValidationMessages(Module.branchSetup, SubModule.branchDetails, [
+        { field: 'form-section-field-address-validation', message: 'Value is provided however is not valid' },
+        {
+          field: 'form-field-address.postalCode-validation',
+          message: `Postal Code '*****' for Country 'US - [United States]' is invalid.`,
+        },
+      ]);
+      cy.url().should('include', '/setup/branch');
+    });
+
     it('should not be able to navigate to employee setup step if branch creation failed', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
@@ -425,7 +471,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchBranchesRequest');
 
       cy.url().should('include', '/setup/employee');
-      cy.get('[data-cy="menu-icon"]').should('have.attr', 'disabled');
+      getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName')
         .find('input')
         .should('have.value', 'Admin');
@@ -459,6 +505,32 @@ describe('Setup Flow Tests', () => {
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-lastName-validation')
         .should('exist')
         .and('have.text', 'Last Name is required');
+    });
+
+    it('should navigate to the company page at once if the branch creation succeeded and the employee had been created before', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptCreateBranchRequest();
+      interceptFetchProfileRequest();
+      cy.visit('/setup');
+
+      cy.wait('@fetchBranchesFailedRequest');
+
+      cy.url().should('include', '/setup/branch');
+
+      interceptFetchBranchesRequest();
+
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type('America/New_York');
+      selectOption(Module.branchSetup, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
+      clickField(Module.branchSetup, SubModule.branchDetails, 'form-field-noPhysicalAddress');
+      clickActionButton(Module.branchSetup, SubModule.branchDetails);
+
+      cy.wait('@createBranchRequest');
+      cy.wait('@fetchBranchesRequest');
+      cy.wait('@fetchProfileRequest');
+
+      getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('not.have.attr', 'disabled');
+      cy.url().should('include', '/manage/company');
     });
   });
 });

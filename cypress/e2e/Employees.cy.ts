@@ -6,6 +6,7 @@ import {
   getTestSelectorByModule,
   search,
   selectAction,
+  selectNavigationMenuItem,
 } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
@@ -253,8 +254,7 @@ describe('Employees Tests', () => {
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 0);
 
-        cy.get('[data-cy="menu-icon"]').click();
-        cy.get('[data-cy="menu-item-Branches"]').click();
+        selectNavigationMenuItem('Branches');
 
         interceptFetchBranchesRequest(
           { pageNumber: 1, pageSize: 10 },
@@ -268,8 +268,7 @@ describe('Employees Tests', () => {
         getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'search-branches').find('input').should('have.value', '');
         getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
 
-        cy.get('[data-cy="menu-icon"]').click();
-        cy.get('[data-cy="menu-item-Employees"]').click();
+        selectNavigationMenuItem('Employees');
 
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10 },

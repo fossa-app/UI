@@ -27,4 +27,5 @@ export enum SubModule {
   license = 'license',
   upload = 'upload',
   header = 'header',
+  menu = 'menu',
 }

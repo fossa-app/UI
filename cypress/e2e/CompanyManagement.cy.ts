@@ -4,6 +4,7 @@ import {
   getLinearLoader,
   getLoadingButtonLoadingIcon,
   getTestSelectorByModule,
+  selectNavigationMenuItem,
   selectOption,
   verifyNotExist,
   verifyTextFields,
@@ -91,8 +92,7 @@ describe('Company Management Tests', () => {
       it('should be able to navigate and view the company page', () => {
         cy.visit('/manage/company');
 
-        cy.get('[data-cy="menu-icon"]').click();
-        cy.get('[data-cy="menu-item-Company"]').click();
+        selectNavigationMenuItem('Company');
 
         cy.url().should('include', '/manage/company/view');
         verifyTextFields(Module.companyManagement, SubModule.companyViewDetails, {

@@ -259,11 +259,19 @@ describe('Branch Management Tests', () => {
 
     getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error').should('exist').and('contain.text', 'Failed to update the Branch');
     cy.url().should('include', '/manage/branches/edit/222222222222');
+  });
 
+  it('should display async validation messages if the branch update failed with validation errors', () => {
     interceptEditBranchFailedWithErrorRequest('222222222222');
+    interceptFetchBranchByIdRequest('222222222222');
+    cy.visit('/manage/branches');
+
+    selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
+
+    cy.wait('@fetchBranchByIdRequest');
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').find('input').clear();
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').type('999999999');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').type('*****');
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
     getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error').should('exist').and('contain.text', 'Failed to update the Branch');
@@ -271,9 +279,10 @@ describe('Branch Management Tests', () => {
       { field: 'form-section-field-address-validation', message: 'Value is provided however is not valid' },
       {
         field: 'form-field-address.postalCode-validation',
-        message: `Postal Code '999999999' for Country 'US - [United States]' is invalid.`,
+        message: `Postal Code '*****' for Country 'US - [United States]' is invalid.`,
       },
     ]);
+    cy.url().should('include', '/manage/branches/edit/222222222222');
   });
 
   // TODO: flaky test

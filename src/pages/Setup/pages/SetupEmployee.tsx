@@ -11,7 +11,7 @@ import PageLayout from 'components/layouts/PageLayout';
 const SetupEmployeePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { data: user } = useAppSelector(selectUser);
-  const { data: profile, fetchStatus, updateStatus } = useAppSelector(selectProfile);
+  const { data: profile, updateStatus } = useAppSelector(selectProfile);
 
   const handleSubmit = (formValue: Employee) => {
     const submitData = mapProfileDTO(formValue);
@@ -20,10 +20,10 @@ const SetupEmployeePage: React.FC = () => {
   };
 
   React.useEffect(() => {
-    if (!profile && fetchStatus === 'idle') {
+    if (!profile || profile.isDraft) {
       dispatch(fetchProfile());
     }
-  }, [profile, fetchStatus, dispatch]);
+  }, [profile, dispatch]);
 
   return (
     <PageLayout module={Module.employeeSetup} subModule={SubModule.employeeDetails} pageTitle="Create Employee">

@@ -8,6 +8,8 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { MENU_ITEMS } from 'shared/constants';
+import { getTestSelectorByModule } from 'shared/helpers';
+import { Module, SubModule } from 'shared/models';
 
 interface MenuProps {
   onCloseSideBar: () => void;
@@ -36,7 +38,7 @@ const Menu: React.FC<MenuProps> = ({ onCloseSideBar }) => {
             <ListItem disablePadding key={item.name}>
               <ListItemButton
                 aria-label={item.name}
-                data-cy={`menu-item-${item.name}`}
+                data-cy={getTestSelectorByModule(Module.shared, SubModule.menu, `menu-item-${item.name}`)}
                 component={Link}
                 to={item.path}
                 onClick={closeSideBar}
