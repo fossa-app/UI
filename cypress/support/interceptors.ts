@@ -159,6 +159,12 @@ export const interceptCreateBranchFailedRequest = () => {
   cy.interceptWithAuth('POST', `${serverBaseUrl}/Branches`, null, 'createBranchFailedRequest', 404);
 };
 
+export const interceptCreateBranchFailedWithErrorRequest = (alias = 'createBranchFailedWithErrorRequest', fixture = 'branch-error') => {
+  cy.fixture(fixture).then((branchError) => {
+    cy.interceptWithAuth('POST', `${serverBaseUrl}/Branches`, branchError, alias, 422);
+  });
+};
+
 export const interceptEditBranchRequest = (id: string) => {
   cy.interceptWithAuth('PUT', `${serverBaseUrl}/Branches/${id}`, null, 'editBranchRequest');
 };

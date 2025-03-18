@@ -122,6 +122,11 @@ export const verifyOptions = (module: Module, subModule: SubModule, selector: st
     });
 };
 
+export const selectNavigationMenuItem = (menuItem: string) => {
+  getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').click();
+  getTestSelectorByModule(Module.shared, SubModule.menu, `menu-item-${menuItem}`).click();
+};
+
 export const uploadTestFile = (selector: string, fixtureName: string, fileType = 'application/octet-stream') => {
   cy.fixture(fixtureName, 'binary').then((fileContent) => {
     const blob = Cypress.Blob.binaryStringToBlob(fileContent, fileType);

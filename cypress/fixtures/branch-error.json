@@ -3,7 +3,7 @@
   "title": "One or more validation errors occurred.",
   "status": 422,
   "errors": {
-    "Address.PostalCode": ["Postal Code '999999999' for Country 'US - [United States]' is invalid."],
+    "Address.PostalCode": ["Postal Code '*****' for Country 'US - [United States]' is invalid."],
     "Address": ["Value is provided however is not valid"]
   },
   "traceId": "00-a248ae299c4f4e353e4db34458c884ac-e520d278eee7e7a1-01"

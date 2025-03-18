@@ -9,8 +9,6 @@ type SnackbarProps = {
   onClose: () => void;
 } & MuiSnackbarProps;
 
-// TODO: update to "@mui/material": "^6.4.8"
-// https://github.com/mui/material-ui/issues/45477
 const Snackbar: React.FC<SnackbarProps> = ({ open = false, message = '', type, onClose, ...props }) => {
   const onSnackbarClose = (_: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
     if (reason === 'clickaway') {

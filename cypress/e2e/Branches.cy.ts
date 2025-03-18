@@ -8,6 +8,7 @@ import {
   getTestSelectorByModule,
   search,
   selectAction,
+  selectNavigationMenuItem,
   selectOption,
 } from '../support/helpers';
 import {
@@ -212,8 +213,7 @@ describe('Branches Tests', () => {
 
           getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 0);
 
-          cy.get('[data-cy="menu-icon"]').click();
-          cy.get('[data-cy="menu-item-Employees"]').click();
+          selectNavigationMenuItem('Employees');
 
           interceptFetchEmployeesRequest(
             { pageNumber: 1, pageSize: 10 },
@@ -229,8 +229,7 @@ describe('Branches Tests', () => {
             .should('have.value', '');
           getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
 
-          cy.get('[data-cy="menu-icon"]').click();
-          cy.get('[data-cy="menu-item-Branches"]').click();
+          selectNavigationMenuItem('Branches');
 
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10 },

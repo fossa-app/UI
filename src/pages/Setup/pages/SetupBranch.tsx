@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FieldErrors, FieldValues } from 'react-hook-form';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
@@ -18,6 +19,7 @@ import {
   mapBranchDTO,
   mapDisabledFields,
   mapBranchFieldOptionsToFieldOptions,
+  deepCopyObject,
 } from 'shared/helpers';
 import { BRANCH_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
@@ -28,7 +30,7 @@ const SetupBranchPage: React.FC = () => {
   const userRoles = useAppSelector(selectUserRoles);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { data: company } = useAppSelector(selectCompany);
-  const { updateStatus } = useAppSelector(selectBranch);
+  const { updateStatus, error } = useAppSelector(selectBranch);
   const { status: companyLicenseStatus } = useAppSelector(selectCompanyLicense);
   const companyTimeZones = useAppSelector(selectCompanyTimeZones);
   const countries = useAppSelector(selectSystemCountries);
@@ -46,6 +48,14 @@ const SetupBranchPage: React.FC = () => {
 
     return mappedFields;
   }, [noPhysicalAddress, userRoles, companyTimeZones, availableCountries]);
+
+  const errors = React.useMemo(() => {
+    if (!error?.errors) {
+      return;
+    }
+
+    return deepCopyObject(error.errors as FieldErrors<FieldValues>);
+  }, [error?.errors]);
 
   React.useEffect(() => {
     if (companyLicenseStatus === 'idle') {
@@ -72,6 +82,7 @@ const SetupBranchPage: React.FC = () => {
         actionLabel="Next"
         actionIcon={<NavigateNextIcon />}
         actionLoading={updateStatus === 'loading'}
+        errors={errors}
         fields={fields}
         onSubmit={handleSubmit}
         onChange={handleChange}

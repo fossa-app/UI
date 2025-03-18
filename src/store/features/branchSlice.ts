@@ -118,7 +118,7 @@ export const fetchBranchById = createAsyncThunk<Branch, string, { rejectValue: E
   }
 );
 
-export const createBranch = createAsyncThunk<void, [BranchDTO, boolean?], { rejectValue: ErrorResponseDTO }>(
+export const createBranch = createAsyncThunk<void, [BranchDTO, boolean?], { rejectValue: ErrorResponse<FieldValues> }>(
   'branch/createBranch',
   async ([branch, shouldFetchBranches = true], { dispatch, rejectWithValue }) => {
     try {
@@ -137,7 +137,9 @@ export const createBranch = createAsyncThunk<void, [BranchDTO, boolean?], { reje
         })
       );
 
-      return rejectWithValue(error as ErrorResponseDTO);
+      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+
+      return rejectWithValue(mappedError);
     }
   }
 );
@@ -250,9 +252,9 @@ const branchSlice = createSlice({
       .addCase(createBranch.pending, (state) => {
         state.branch.updateStatus = 'loading';
       })
-      .addCase(createBranch.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(createBranch.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.branch.updateStatus = 'failed';
-        state.branch.error = action.payload;
+        state.branch.error = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(createBranch.fulfilled, (state) => {
         state.branch.updateStatus = 'succeeded';

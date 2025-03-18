@@ -45,9 +45,6 @@ const ManageBranchPage: React.FC = () => {
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
   const [fields, setFields] = React.useState<FieldProps<Branch>[]>([]);
   const [formLoading, setFormLoading] = React.useState(true);
-  // TODO: this is a workaround for the issue mentioned in InputField
-  // Need to remove the 'Address' validation error from the backend
-  const errors = error?.errors ? deepCopyObject(error.errors as FieldErrors<FieldValues>) : undefined;
 
   const availableCountries = React.useMemo(
     () => countries?.filter(({ code }) => code === company?.countryCode || code === branch?.address?.countryCode) || [],
@@ -63,6 +60,14 @@ const ManageBranchPage: React.FC = () => {
 
     return [{ id: branch.timeZoneId, name: branch.timeZoneName } as TimeZone, ...companyTimeZones];
   }, [companyTimeZones, branch]);
+
+  const errors = React.useMemo(() => {
+    if (!error?.errors) {
+      return;
+    }
+
+    return deepCopyObject(error.errors as FieldErrors<FieldValues>);
+  }, [error?.errors]);
 
   const updateFields = React.useCallback(() => {
     const schema = getBranchManagementDetailsByAddressFormSchema(BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, !!noPhysicalAddress);

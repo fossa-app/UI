@@ -8,8 +8,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
 import { openSideBar, selectAppConfig, selectCompany, selectProfile, selectStep, toggleAppTheme } from 'store/features';
-import { getUserManager } from 'shared/helpers';
+import { getTestSelectorByModule, getUserManager } from 'shared/helpers';
 import { ROUTES, SEARCH_PORTAL_ID } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import SearchPortal from 'components/Search';
 import ProfileMenu from './components/ProfileMenu';
 import ThemeButton from './components/ThemeButton';
@@ -38,6 +39,10 @@ const Header: React.FC = () => {
   };
 
   const handleCompanyClick = () => {
+    if (profile?.isDraft) {
+      return;
+    }
+
     navigate(ROUTES.viewCompany.path);
   };
 
@@ -54,7 +59,14 @@ const Header: React.FC = () => {
       <Toolbar>
         <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexGrow: 1 }}>
           <Grid size="auto">
-            <IconButton data-cy="menu-icon" aria-label="Menu" disabled={!setupCompleted} edge="end" color="inherit" onClick={showSideBar}>
+            <IconButton
+              data-cy={getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon')}
+              aria-label="Menu"
+              disabled={!setupCompleted}
+              edge="end"
+              color="inherit"
+              onClick={showSideBar}
+            >
               <MenuIcon />
             </IconButton>
           </Grid>
@@ -62,7 +74,7 @@ const Header: React.FC = () => {
             {companyName && (
               <Typography
                 data-testid="company-logo"
-                data-cy="company-logo"
+                data-cy={getTestSelectorByModule(Module.shared, SubModule.header, 'company-logo')}
                 noWrap
                 variant="h6"
                 onClick={handleCompanyClick}
