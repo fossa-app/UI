@@ -5,10 +5,12 @@ import {
   getLoadingButtonLoadingIcon,
   getTestSelectorByModule,
   openUserProfile,
+  verifyFormValidationMessages,
   verifyTextFields,
 } from '../support/helpers';
 import {
   interceptEditProfileFailedRequest,
+  interceptEditProfileFailedWithErrorRequest,
   interceptEditProfileRequest,
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -155,6 +157,34 @@ describe('Profile Tests', () => {
         getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
           .should('exist')
           .and('contain.text', 'Failed to update the Profile');
+      });
+
+      it('should display async validation messages if the profile update failed with validation errors', () => {
+        interceptFetchProfileRequest();
+        interceptEditProfileFailedWithErrorRequest();
+        cy.visit('/manage/profile/edit');
+
+        cy.wait('@fetchProfileRequest');
+
+        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName').find('input').clear();
+        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName').find('input').type('Joe');
+        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-lastName').find('input').clear();
+        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-lastName').find('input').type('Joe');
+        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').clear();
+        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').type('Joe Joe');
+
+        clickActionButton(Module.profile, SubModule.profileDetails);
+
+        getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
+          .should('exist')
+          .and('contain.text', 'Failed to update the Profile');
+        verifyFormValidationMessages(Module.profile, SubModule.profileDetails, [
+          {
+            field: 'form-field-lastName-validation',
+            message: `'First Name' and 'Last Name' cannot be the same.`,
+          },
+        ]);
+        cy.url().should('include', '/manage/profile/edit');
       });
 
       it('should be able to edit the profile and be navigated to view profile page if the form is valid and employee updating succeeded', () => {

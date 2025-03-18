@@ -102,11 +102,7 @@ export const verifyBranchDetailsFormFieldsNotExist = (fieldKeys: string[]) => {
   });
 };
 
-export const verifyBranchDetailsFormValidationMessages = (
-  module: Module,
-  subModule: SubModule,
-  validations: { field: string; message: string }[]
-) => {
+export const verifyFormValidationMessages = (module: Module, subModule: SubModule, validations: { field: string; message: string }[]) => {
   validations.forEach(({ field, message }) => {
     getTestSelectorByModule(module, subModule, field).should('exist').and('have.text', message);
   });
