@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   selectIsUserAdmin,
@@ -12,7 +13,7 @@ import {
 } from 'store/features';
 import { COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
 import { CompanyDTO, Module, SubModule } from 'shared/models';
-import { mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
+import { deepCopyObject, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
 import CompanyDetailsForm from 'components/forms/CompanyDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
 
@@ -22,7 +23,7 @@ const EditCompanyPage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const userRoles = useAppSelector(selectUserRoles);
   const countries = useAppSelector(selectSystemCountries);
-  const { data: company, fetchStatus, updateStatus } = useAppSelector(selectCompany);
+  const { data: company, error, fetchStatus, updateStatus } = useAppSelector(selectCompany);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
 
   const navigateToViewCompany = React.useCallback(() => {
@@ -33,6 +34,10 @@ const EditCompanyPage: React.FC = () => {
     () => mapCountriesToFieldOptions(mapDisabledFields(COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA, userRoles), countries),
     [userRoles, countries]
   );
+
+  const errors = React.useMemo(() => {
+    return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
+  }, [error?.errors]);
 
   // TODO: move this logic to PageLayout
   React.useEffect(() => {
@@ -68,6 +73,7 @@ const EditCompanyPage: React.FC = () => {
         subModule={SubModule.companyDetails}
         isAdmin={isUserAdmin}
         data={company}
+        errors={errors}
         actionLoading={updateStatus === 'loading'}
         formLoading={fetchStatus === 'loading'}
         fields={fields}

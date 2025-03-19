@@ -6,11 +6,13 @@ import {
   getTestSelectorByModule,
   selectNavigationMenuItem,
   selectOption,
+  verifyFormValidationMessages,
   verifyNotExist,
   verifyTextFields,
 } from '../support/helpers';
 import {
   interceptEditCompanyFailedRequest,
+  interceptEditCompanyFailedWithErrorRequest,
   interceptEditCompanyRequest,
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -212,6 +214,32 @@ describe('Company Management Tests', () => {
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
         .should('exist')
         .and('contain.text', 'Failed to update the Company');
+    });
+
+    it('should display async validation messages if the company update failed with validation errors', () => {
+      interceptEditCompanyFailedWithErrorRequest();
+      cy.visit('/manage/company/edit');
+
+      cy.wait('@fetchCompanyRequest');
+
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name').find('input').clear();
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name')
+        .find('input')
+        .type('Good Omens Updated');
+      selectOption(Module.companyManagement, SubModule.companyDetails, 'countryCode', 'DE');
+
+      clickActionButton(Module.companyManagement, SubModule.companyDetails);
+
+      getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
+        .should('exist')
+        .and('contain.text', 'Failed to update the Company');
+      verifyFormValidationMessages(Module.companyManagement, SubModule.companyDetails, [
+        {
+          field: 'form-field-name-validation',
+          message: `Company 'Good Omens Updated' already exists in the system.`,
+        },
+      ]);
+      cy.url().should('include', '/manage/company/edit');
     });
 
     it('should be able to edit the company and be navigated to view company page if the form is valid and company updating succeeded', () => {

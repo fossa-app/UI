@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FieldErrors } from 'react-hook-form';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import { Company, Module, SubModule } from 'shared/models';
@@ -17,6 +18,7 @@ interface CompanyDetailsFormProps {
   withCancel?: boolean;
   formLoading?: boolean;
   data?: Company;
+  errors?: FieldErrors<Company>;
   onSubmit: (formValue: Company) => void;
   onCancel?: () => void;
 }
@@ -26,6 +28,7 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({
   subModule,
   isAdmin,
   data,
+  errors,
   actionLabel = 'Save',
   actionIcon = <SaveIcon />,
   actionLoading = false,
@@ -56,6 +59,7 @@ const CompanyDetailsForm: React.FC<CompanyDetailsFormProps> = ({
       subModule={subModule}
       defaultValues={defaultValues}
       values={data}
+      errors={errors}
       loading={formLoading}
       onSubmit={handleFormSubmit}
     >

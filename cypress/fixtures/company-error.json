@@ -1,0 +1,9 @@
+{
+  "type": "https://httpstatuses.io/422",
+  "title": "One or more validation errors occurred.",
+  "status": 422,
+  "errors": {
+    "Name": ["Company 'Good Omens Updated' already exists in the system."]
+  },
+  "traceId": "00-bbb289197cb0d70eaa131a57e5e19174-b0cfa8b9b958aeb1-01"
+}
