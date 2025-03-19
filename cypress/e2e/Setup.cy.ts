@@ -28,6 +28,7 @@ import {
   interceptCreateProfileRequest,
   interceptCreateBranchFailedWithErrorRequest,
   interceptCreateProfileFailedWithErrorRequest,
+  interceptCreateCompanyFailedWithErrorRequest,
 } from '../support/interceptors';
 
 const setupRoutes = ['/setup/company', '/setup/branch', '/setup/employee'];
@@ -267,6 +268,29 @@ describe('Setup Flow Tests', () => {
 
       cy.wait('@createCompanyFailedRequest');
 
+      cy.url().should('include', '/setup/company');
+    });
+
+    it('should display async validation messages if the company create failed with validation errors', () => {
+      interceptFetchCompanyFailedRequest();
+      interceptCreateCompanyFailedWithErrorRequest();
+      cy.visit('/setup');
+
+      cy.wait('@fetchCompanyFailedRequest');
+
+      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').find('input').clear();
+      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').find('input').type('Good Omens Updated');
+      selectOption(Module.companySetup, SubModule.companyDetails, 'countryCode', 'DE');
+
+      clickActionButton(Module.companySetup, SubModule.companyDetails);
+
+      getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error').should('exist').and('contain.text', 'Failed to create a Company');
+      verifyFormValidationMessages(Module.companySetup, SubModule.companyDetails, [
+        {
+          field: 'form-field-name-validation',
+          message: `Company 'Good Omens Updated' already exists in the system.`,
+        },
+      ]);
       cy.url().should('include', '/setup/company');
     });
 

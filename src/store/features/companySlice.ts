@@ -1,8 +1,10 @@
 import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
+import { WritableDraft } from 'immer';
+import { FieldValues } from 'react-hook-form';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Company, CompanyDTO, ErrorResponseDTO } from 'shared/models';
-import { filterUniqueByField, mapCompany } from 'shared/helpers';
+import { Company, CompanyDTO, ErrorResponse, ErrorResponseDTO } from 'shared/models';
+import { filterUniqueByField, mapCompany, mapError } from 'shared/helpers';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import { setError, setSuccess } from './messageSlice';
 
@@ -39,7 +41,7 @@ export const fetchCompany = createAsyncThunk<Company | undefined, boolean | unde
   }
 );
 
-export const createCompany = createAsyncThunk<void, CompanyDTO, { rejectValue: ErrorResponseDTO }>(
+export const createCompany = createAsyncThunk<void, CompanyDTO, { rejectValue: ErrorResponse<FieldValues> }>(
   'company/createCompany',
   async (company, { dispatch, rejectWithValue }) => {
     try {
@@ -55,12 +57,14 @@ export const createCompany = createAsyncThunk<void, CompanyDTO, { rejectValue: E
         })
       );
 
-      return rejectWithValue(error as ErrorResponseDTO);
+      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+
+      return rejectWithValue(mappedError);
     }
   }
 );
 
-export const editCompany = createAsyncThunk<void, Omit<CompanyDTO, 'id'>, { rejectValue: ErrorResponseDTO }>(
+export const editCompany = createAsyncThunk<void, Omit<CompanyDTO, 'id'>, { rejectValue: ErrorResponse<FieldValues> }>(
   'company/editCompany',
   async (company, { dispatch, rejectWithValue }) => {
     try {
@@ -75,7 +79,9 @@ export const editCompany = createAsyncThunk<void, Omit<CompanyDTO, 'id'>, { reje
         })
       );
 
-      return rejectWithValue(error as ErrorResponseDTO);
+      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+
+      return rejectWithValue(mappedError);
     }
   }
 );
@@ -105,9 +111,9 @@ const companySlice = createSlice({
       .addCase(createCompany.pending, (state) => {
         state.company.updateStatus = 'loading';
       })
-      .addCase(createCompany.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(createCompany.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.company.updateStatus = 'failed';
-        state.company.error = action.payload;
+        state.company.error = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(createCompany.fulfilled, (state) => {
         state.company.updateStatus = 'succeeded';
@@ -115,9 +121,9 @@ const companySlice = createSlice({
       .addCase(editCompany.pending, (state) => {
         state.company.updateStatus = 'loading';
       })
-      .addCase(editCompany.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(editCompany.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.company.updateStatus = 'failed';
-        state.company.error = action.payload;
+        state.company.error = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(editCompany.fulfilled, (state) => {
         state.company.updateStatus = 'succeeded';

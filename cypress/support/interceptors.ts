@@ -69,6 +69,12 @@ export const interceptEditCompanyFailedRequest = () => {
   cy.interceptWithAuth('PUT', `${serverBaseUrl}/Company`, null, 'editCompanyFailedRequest', 404);
 };
 
+export const interceptEditCompanyFailedWithErrorRequest = (alias = 'editCompanyFailedWithErrorRequest', fixture = 'company-error') => {
+  cy.fixture(fixture).then((companyError) => {
+    cy.interceptWithAuth('PUT', `${serverBaseUrl}/Company`, companyError, alias, 422);
+  });
+};
+
 export const interceptFetchCompanyLicenseRequest = () => {
   cy.fixture('company-license').then((companyLicense) => {
     cy.interceptWithAuth('GET', `${serverBaseUrl}/License/Company`, companyLicense, 'fetchCompanyLicenseRequest');
@@ -93,6 +99,12 @@ export const interceptCreateCompanyRequest = () => {
 
 export const interceptCreateCompanyFailedRequest = () => {
   cy.interceptWithAuth('POST', `${serverBaseUrl}/Company`, null, 'createCompanyFailedRequest', 404);
+};
+
+export const interceptCreateCompanyFailedWithErrorRequest = (alias = 'createCompanyFailedWithErrorRequest', fixture = 'company-error') => {
+  cy.fixture(fixture).then((companyError) => {
+    cy.interceptWithAuth('POST', `${serverBaseUrl}/Company`, companyError, alias, 422);
+  });
 };
 
 export const interceptFetchBranchesRequest = (
