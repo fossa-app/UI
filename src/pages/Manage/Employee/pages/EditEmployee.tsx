@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   selectEmployee,
@@ -12,7 +13,7 @@ import {
 } from 'store/features';
 import { EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
 import { Branch, Employee, Module, SubModule } from 'shared/models';
-import { mapBranchToFieldOption, mapEmployeeDTO } from 'shared/helpers';
+import { deepCopyObject, mapBranchToFieldOption, mapEmployeeDTO } from 'shared/helpers';
 import EmployeeDetailsForm from 'components/forms/EmployeeDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
 
@@ -23,7 +24,7 @@ const EditEmployeePage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  const { data: employee, fetchStatus, updateStatus } = useAppSelector(selectEmployee);
+  const { data: employee, error, fetchStatus, updateStatus } = useAppSelector(selectEmployee);
   const { data: branches, fetchStatus: searchedBranchesStatus } = useAppSelector(selectSearchedBranches);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
 
@@ -35,6 +36,10 @@ const EditEmployeePage: React.FC = () => {
       ? [...branchList, { id: employee.assignedBranchId, name: employee.assignedBranchName } as Branch]
       : branchList;
   }, [branches?.items, employee?.assignedBranchId, employee?.assignedBranchName]);
+
+  const errors = React.useMemo(() => {
+    return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
+  }, [error?.errors]);
 
   const handleBranchSearch = React.useCallback(
     (_: unknown, search: string) => {
@@ -115,6 +120,7 @@ const EditEmployeePage: React.FC = () => {
         formLoading={fetchStatus === 'loading'}
         fields={fields}
         data={employee}
+        errors={errors}
         onSubmit={handleSubmit}
         onCancel={handleCancel}
       />

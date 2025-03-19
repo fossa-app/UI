@@ -1,0 +1,9 @@
+{
+  "type": "https://httpstatuses.io/422",
+  "title": "One or more validation errors occurred.",
+  "status": 422,
+  "errors": {
+    "LastName": ["'First Name' and 'Last Name' cannot be the same."]
+  },
+  "traceId": "00-bf3a3befa762e94b721ce8d3c90ea972-efaa8aa5d0487830-01"
+}
