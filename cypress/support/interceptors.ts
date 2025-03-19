@@ -221,9 +221,9 @@ export const interceptCreateProfileFailedRequest = () => {
   cy.interceptWithAuth('POST', `${serverBaseUrl}/Employee`, null, 'createProfileFailedRequest', 404);
 };
 
-export const interceptCreateProfileFailedWithErrorRequest = (alias = 'createProfileFailedWithErrorRequest', fixture = 'employee-error') => {
-  cy.fixture(fixture).then((employeeError) => {
-    cy.interceptWithAuth('POST', `${serverBaseUrl}/Employee`, employeeError, alias, 422);
+export const interceptCreateProfileFailedWithErrorRequest = (alias = 'createProfileFailedWithErrorRequest', fixture = 'profile-error') => {
+  cy.fixture(fixture).then((profileError) => {
+    cy.interceptWithAuth('POST', `${serverBaseUrl}/Employee`, profileError, alias, 422);
   });
 };
 
@@ -235,9 +235,9 @@ export const interceptEditProfileFailedRequest = () => {
   cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employee`, null, 'editProfileFailedRequest', 404);
 };
 
-export const interceptEditProfileFailedWithErrorRequest = (alias = 'editProfileFailedWithErrorRequest', fixture = 'employee-error') => {
-  cy.fixture(fixture).then((employeeError) => {
-    cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employee`, employeeError, alias, 422);
+export const interceptEditProfileFailedWithErrorRequest = (alias = 'editProfileFailedWithErrorRequest', fixture = 'profile-error') => {
+  cy.fixture(fixture).then((profileError) => {
+    cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employee`, profileError, alias, 422);
   });
 };
 
@@ -289,4 +289,14 @@ export const interceptEditEmployeeRequest = (id: string) => {
 
 export const interceptEditEmployeeFailedRequest = (id: string) => {
   cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employees/${id}`, null, 'editEmployeeFailedRequest', 404);
+};
+
+export const interceptEditEmployeeFailedWithErrorRequest = (
+  id: string,
+  alias = 'editEmployeeFailedWithErrorRequest',
+  fixture = 'employee-error'
+) => {
+  cy.fixture(fixture).then((employeeError) => {
+    cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employees/${id}`, employeeError, alias, 422);
+  });
 };

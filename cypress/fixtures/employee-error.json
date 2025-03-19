@@ -3,7 +3,7 @@
   "title": "One or more validation errors occurred.",
   "status": 422,
   "errors": {
-    "LastName": ["'First Name' and 'Last Name' cannot be the same."]
+    "AssignedBranchId": ["'Hawaii Branch' has been removed. Please choose different branch."]
   },
-  "traceId": "00-bf3a3befa762e94b721ce8d3c90ea972-efaa8aa5d0487830-01"
+  "traceId": "00-cf3a3befa762e94b721ce8d3c90ea972-efaa8aa5d0487830-02"
 }

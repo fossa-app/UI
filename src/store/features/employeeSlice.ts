@@ -1,10 +1,20 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Branch, BranchDTO, Employee, EmployeeDTO, ErrorResponseDTO, PaginatedResponse, PaginationParams } from 'shared/models';
+import {
+  Branch,
+  BranchDTO,
+  Employee,
+  EmployeeDTO,
+  ErrorResponse,
+  ErrorResponseDTO,
+  PaginatedResponse,
+  PaginationParams,
+} from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
-import { mapEmployee, mapEmployees, prepareQueryParams, getEmployeesAssignedBranchIds } from 'shared/helpers';
+import { mapEmployee, mapEmployees, prepareQueryParams, getEmployeesAssignedBranchIds, mapError } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
 import { fetchBranchById, fetchBranchesByIds } from './branchSlice';
 
@@ -74,25 +84,28 @@ export const fetchEmployeeById = createAsyncThunk<Employee, string, { rejectValu
   }
 );
 
-export const editEmployee = createAsyncThunk<void, [string, Pick<EmployeeDTO, 'assignedBranchId'>], { rejectValue: ErrorResponseDTO }>(
-  'employee/editEmployee',
-  async ([id, employee], { dispatch, rejectWithValue }) => {
-    try {
-      await axios.put<void>(`${ENDPOINTS.employees}/${id}`, employee);
+export const editEmployee = createAsyncThunk<
+  void,
+  [string, Pick<EmployeeDTO, 'assignedBranchId'>],
+  { rejectValue: ErrorResponse<FieldValues> }
+>('employee/editEmployee', async ([id, employee], { dispatch, rejectWithValue }) => {
+  try {
+    await axios.put<void>(`${ENDPOINTS.employees}/${id}`, employee);
 
-      dispatch(setSuccess(MESSAGES.success.employee.updateEmployee));
-    } catch (error) {
-      dispatch(
-        setError({
-          ...(error as ErrorResponseDTO),
-          title: MESSAGES.error.employee.updateEmployee,
-        })
-      );
+    dispatch(setSuccess(MESSAGES.success.employee.updateEmployee));
+  } catch (error) {
+    dispatch(
+      setError({
+        ...(error as ErrorResponseDTO),
+        title: MESSAGES.error.employee.updateEmployee,
+      })
+    );
 
-      return rejectWithValue(error as ErrorResponseDTO);
-    }
+    const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+
+    return rejectWithValue(mappedError);
   }
-);
+});
 
 const employeeSlice = createSlice({
   name: 'employee',
@@ -141,9 +154,9 @@ const employeeSlice = createSlice({
       .addCase(editEmployee.pending, (state) => {
         state.employee.updateStatus = 'loading';
       })
-      .addCase(editEmployee.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(editEmployee.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.employee.updateStatus = 'failed';
-        state.employee.error = action.payload;
+        state.employee.error = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(editEmployee.fulfilled, (state) => {
         state.employee.updateStatus = 'succeeded';

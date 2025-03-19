@@ -4,6 +4,7 @@ import {
   getLinearLoader,
   getTestSelectorByModule,
   selectAction,
+  verifyFormValidationMessages,
   verifyInputFields,
   verifyTextFields,
 } from '../support/helpers';
@@ -20,6 +21,7 @@ import {
   interceptFetchSystemLicenseRequest,
   interceptFetchBranchByIdRequest,
   interceptFetchBranchesByIdsRequest,
+  interceptEditEmployeeFailedWithErrorRequest,
 } from '../support/interceptors';
 
 const testEmployeeViewFields = () => {
@@ -246,6 +248,47 @@ describe('Employee Management Tests', () => {
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
         .should('exist')
         .and('contain.text', 'Failed to update the Employee');
+    });
+
+    it('should display async validation messages if the employee update failed with validation errors', () => {
+      interceptFetchEmployeeByIdRequest('333333333335');
+      interceptFetchBranchByIdRequest('222222222222');
+      interceptEditEmployeeFailedWithErrorRequest('333333333335');
+      interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
+      interceptFetchBranchesRequest(
+        { pageNumber: 1, pageSize: 100, search: '*' },
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-updated' }
+      );
+      cy.visit('/manage/employees/edit/333333333335');
+
+      cy.wait('@fetchEmployeeByIdRequest');
+      cy.wait('@fetchBranchByIdRequest');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId').click();
+      cy.get('.MuiAutocomplete-clearIndicator').click();
+      cy.focused().type('Anchorage Branch');
+
+      cy.wait('@fetchMultipleBranchesRequest');
+
+      getTestSelectorByModule(
+        Module.employeeManagement,
+        SubModule.employeeDetails,
+        'form-field-assignedBranchId-option-222222222223'
+      ).click();
+
+      clickActionButton(Module.employeeManagement, SubModule.employeeDetails);
+      cy.wait('@editEmployeeFailedWithErrorRequest');
+
+      getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
+        .should('exist')
+        .and('contain.text', 'Failed to update the Employee');
+      verifyFormValidationMessages(Module.employeeManagement, SubModule.employeeDetails, [
+        {
+          field: 'form-field-assignedBranchId-validation',
+          message: `'Hawaii Branch' has been removed. Please choose different branch.`,
+        },
+      ]);
+      cy.url().should('include', '/manage/employees/edit/333333333335');
     });
 
     it('should be able to edit the employee and be navigated to employee table page if the employee updating succeeded', () => {
