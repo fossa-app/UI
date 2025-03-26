@@ -16,6 +16,7 @@ import {
   verifyBranchDetailsFormFieldsNotExist,
   verifyTextFields,
   selectAction,
+  selectNavigationMenuItem,
 } from '../support/helpers';
 import {
   interceptCreateBranchFailedRequest,
@@ -25,10 +26,13 @@ import {
   interceptEditBranchRequest,
   interceptFetchBranchByIdFailedRequest,
   interceptFetchBranchByIdRequest,
+  interceptFetchBranchesByIdsRequest,
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
   interceptFetchCompanyLicenseFailedRequest,
   interceptFetchCompanyRequest,
+  interceptFetchEmployeeByIdRequest,
+  interceptFetchEmployeesRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
 } from '../support/interceptors';
@@ -431,6 +435,44 @@ describe('Branch Management Tests', () => {
       'form-field-address.subdivision': 'HI',
       'form-field-address.postalCode': '96818',
       'form-field-address.countryCode': 'US',
+    });
+  });
+
+  it('should reset the form when navigating to an employee page and back to the branch creation page', () => {
+    interceptFetchEmployeeByIdRequest('333333333335');
+    interceptFetchBranchByIdRequest('222222222222');
+    interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 10 },
+      { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+    );
+    interceptFetchBranchesRequest(
+      { pageNumber: 1, pageSize: 10, search: '' },
+      { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+    );
+    cy.visit('/manage/employees');
+
+    cy.wait('@fetchMultipleEmployeesRequest');
+
+    selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
+    cy.wait('@fetchEmployeeByIdRequest');
+
+    getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'page-title-back-button').click();
+    selectNavigationMenuItem('Branches');
+
+    cy.url().should('include', '/manage/branches');
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
+
+    verifyInputFields(Module.branchManagement, SubModule.branchDetails, {
+      'form-field-name': '',
+      'form-field-timeZoneId': '',
+      'form-field-address.line1': '',
+      'form-field-address.line2': '',
+      'form-field-address.city': '',
+      'form-field-address.subdivision': '',
+      'form-field-address.postalCode': '',
+      'form-field-address.countryCode': '',
     });
   });
 

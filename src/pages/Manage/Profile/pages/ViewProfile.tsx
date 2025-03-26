@@ -17,6 +17,7 @@ const ViewProfilePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { data: profile, fetchStatus } = useAppSelector(selectProfile);
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const loading = fetchStatus === 'idle' || fetchStatus === 'loading';
 
   const handleEditClick = () => {
     navigate(ROUTES.editProfile.path);
@@ -47,7 +48,7 @@ const ViewProfilePage: React.FC = () => {
       <PageLayout module={Module.profile} subModule={SubModule.profileViewDetails} pageTitle="View Profile">
         <Grid container spacing={5}>
           <Grid size={12}>
-            <ViewDetails module={Module.profile} subModule={SubModule.profileViewDetails} loading={fetchStatus === 'loading'}>
+            <ViewDetails module={Module.profile} subModule={SubModule.profileViewDetails} loading={loading}>
               <ViewDetails.Header>Profile Details</ViewDetails.Header>
               <ViewDetails.Content fields={PROFILE_VIEW_DETAILS_SCHEMA} values={profile} />
               <ViewDetails.Actions>

@@ -8,6 +8,7 @@ import TablePagination from '@mui/material/TablePagination';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import { Item, Module, SubModule } from 'shared/models';
 import { APP_CONFIG } from 'shared/constants';
+import { CUSTOM_STYLES } from 'shared/configs/theme';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import { Column } from './table.model';
 import { StyledTable } from './StyledTable';
@@ -96,7 +97,7 @@ const Table = <T extends Item>({
         pb: 1,
         pl: 3,
         position: 'relative',
-        height: 'calc(100vh - 250px)',
+        height: CUSTOM_STYLES.scrollableContentHeight,
       }}
       {...props}
     >

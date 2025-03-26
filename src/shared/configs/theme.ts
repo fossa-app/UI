@@ -97,6 +97,10 @@ const components = {
   },
 };
 
+export const CUSTOM_STYLES = {
+  scrollableContentHeight: 'calc(100vh - 250px)',
+};
+
 export const lightTheme = createTheme({
   spacing,
   components,

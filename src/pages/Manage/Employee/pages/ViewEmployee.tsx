@@ -15,6 +15,7 @@ const ViewEmployeePage: React.FC = () => {
   const { data: employee, fetchStatus } = useAppSelector(selectEmployee);
   const { data: profile } = useAppSelector(selectProfile);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
+  const loading = fetchStatus === 'idle' || fetchStatus === 'loading';
 
   const handleEditClick = () => {
     const editPath = generatePath(ROUTES.editEmployee.path, { id });
@@ -51,7 +52,7 @@ const ViewEmployeePage: React.FC = () => {
       displayNotFoundPage={fetchStatus === 'failed' && !employee}
       onBackButtonClick={navigateBack}
     >
-      <ViewDetails module={Module.employeeManagement} subModule={SubModule.employeeViewDetails} loading={fetchStatus === 'loading'}>
+      <ViewDetails module={Module.employeeManagement} subModule={SubModule.employeeViewDetails} loading={loading}>
         <ViewDetails.Header>Employee Details</ViewDetails.Header>
         <ViewDetails.Content fields={EMPLOYEE_VIEW_DETAILS_SCHEMA} values={employee} />
         <ViewDetails.Actions>

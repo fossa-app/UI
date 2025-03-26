@@ -76,7 +76,7 @@ const ManageBranchPage: React.FC = () => {
 
   React.useEffect(() => {
     if (id) {
-      dispatch(fetchBranchById(id));
+      dispatch(fetchBranchById({ id, skipState: false }));
     } else {
       dispatch(resetBranch());
     }

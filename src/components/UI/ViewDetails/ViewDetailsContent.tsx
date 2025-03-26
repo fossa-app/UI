@@ -22,7 +22,7 @@ const ViewDetailsContent = <T,>({ fields, values, noValuesTemplate }: ViewDetail
   const { module, subModule, loading } = context;
 
   return (
-    <AccordionDetails sx={{ minHeight: 150, overflow: 'auto' }}>
+    <AccordionDetails sx={{ minHeight: 150, overflowY: 'auto' }}>
       {!loading &&
         !values &&
         (noValuesTemplate ?? (
