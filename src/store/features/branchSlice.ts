@@ -101,9 +101,9 @@ export const fetchBranchesByIds = createAsyncThunk<PaginatedResponse<BranchDTO> 
   }
 );
 
-export const fetchBranchById = createAsyncThunk<Branch, string, { rejectValue: ErrorResponseDTO }>(
+export const fetchBranchById = createAsyncThunk<Branch, { id: string; skipState: boolean }, { rejectValue: ErrorResponseDTO }>(
   'branch/fetchBranchById',
-  async (id, { getState, rejectWithValue }) => {
+  async ({ id }, { getState, rejectWithValue }) => {
     try {
       const { data } = await axios.get<BranchDTO>(`${ENDPOINTS.branches}/${id}`);
       const state = getState() as RootState;
@@ -236,15 +236,27 @@ const branchSlice = createSlice({
         state.searchedBranches.fetchStatus = 'succeeded';
         state.searchedBranches.error = undefined;
       })
-      .addCase(fetchBranchById.pending, (state) => {
+      .addCase(fetchBranchById.pending, (state, action) => {
+        if (action.meta.arg.skipState) {
+          return;
+        }
+
         state.branch.fetchStatus = 'loading';
       })
-      .addCase(fetchBranchById.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchBranchById.rejected, (state, action) => {
+        if (action.meta.arg.skipState) {
+          return;
+        }
+
         state.branch.data = undefined;
         state.branch.fetchStatus = 'failed';
         state.branch.error = action.payload;
       })
-      .addCase(fetchBranchById.fulfilled, (state, action: PayloadAction<Branch | undefined>) => {
+      .addCase(fetchBranchById.fulfilled, (state, action) => {
+        if (action.meta.arg.skipState) {
+          return;
+        }
+
         state.branch.data = action.payload;
         state.branch.fetchStatus = 'succeeded';
         state.branch.error = undefined;

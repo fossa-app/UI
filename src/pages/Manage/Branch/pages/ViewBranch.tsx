@@ -17,6 +17,7 @@ const ViewBranchPage: React.FC = () => {
   const { data: branch, fetchStatus } = useAppSelector(selectBranch);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { id } = useParams();
+  const loading = fetchStatus === 'idle' || fetchStatus === 'loading';
 
   const navigateBack = () => {
     navigate(ROUTES.branches.path);
@@ -30,7 +31,7 @@ const ViewBranchPage: React.FC = () => {
 
   React.useEffect(() => {
     if (id) {
-      dispatch(fetchBranchById(id));
+      dispatch(fetchBranchById({ id, skipState: false }));
     }
   }, [id, dispatch]);
 
@@ -50,7 +51,7 @@ const ViewBranchPage: React.FC = () => {
       displayNotFoundPage={fetchStatus === 'failed' && !branch}
       onBackButtonClick={navigateBack}
     >
-      <ViewDetails module={testModule} subModule={testSubModule} loading={fetchStatus === 'loading'}>
+      <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>
         <ViewDetails.Header>Branch Details</ViewDetails.Header>
         <ViewDetails.Content fields={BRANCH_VIEW_DETAILS_SCHEMA} values={branch} />
         <ViewDetails.Actions>

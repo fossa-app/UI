@@ -116,7 +116,6 @@ describe('Profile Tests', () => {
           .should('have.value', 'Gabriel Admin Archangel');
       });
 
-      // TODO: flaky test
       it('should not be able to edit the profile if the form is invalid or employee updating failed', () => {
         interceptFetchProfileRequest();
         interceptEditProfileFailedRequest();

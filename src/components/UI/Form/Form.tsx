@@ -3,6 +3,7 @@ import { FormProvider as ReactHookFormProvider, useForm, DefaultValues, FieldErr
 import Paper from '@mui/material/Paper';
 import { Item, Module, SubModule } from 'shared/models';
 import { deepEqual } from 'shared/helpers';
+import { CUSTOM_STYLES } from 'shared/configs/theme';
 import LinearLoader from '../LinearLoader';
 import FormContext from './FormContext';
 import FormHeader from './FormHeader';
@@ -55,10 +56,16 @@ const Form = <T extends Item>({
         <Paper
           data-cy={`${module}-${subModule}-form`}
           elevation={3}
-          sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, position: 'relative' }}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            flexGrow: 1,
+            position: 'relative',
+            height: CUSTOM_STYLES.scrollableContentHeight,
+          }}
         >
           <form
-            style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
+            style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1, height: '100%' }}
             onSubmit={methods.handleSubmit((data) => {
               onSubmit(data as T);
             })}

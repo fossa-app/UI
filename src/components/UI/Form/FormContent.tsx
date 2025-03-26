@@ -18,7 +18,7 @@ const FormContent = <T,>({ fields, values }: FormContentProps<T>) => {
   }
 
   return (
-    <Box sx={{ flexGrow: 1, padding: 6 }}>
+    <Box sx={{ flexGrow: 1, padding: 6, overflowY: 'auto' }}>
       <Grid container spacing={4}>
         {fields.map((field) => (
           <Grid key={field.name} {...field.grid}>

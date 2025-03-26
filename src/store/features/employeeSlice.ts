@@ -74,7 +74,7 @@ export const fetchEmployeeById = createAsyncThunk<Employee, string, { rejectValu
       let branch: Branch | undefined;
 
       if (data.assignedBranchId) {
-        branch = await dispatch(fetchBranchById(String(data.assignedBranchId))).unwrap();
+        branch = await dispatch(fetchBranchById({ id: String(data.assignedBranchId), skipState: true })).unwrap();
       }
 
       return mapEmployee(data, undefined, branch);

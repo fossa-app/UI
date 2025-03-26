@@ -16,6 +16,7 @@ const ViewCompanyPage: React.FC = () => {
   const { data: company, fetchStatus: companyFetchStatus } = useAppSelector(selectCompany);
   const { data: companyLicense, fetchStatus: companyLicenseFetchStatus } = useAppSelector(selectCompanyLicense);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
+  const companyLoading = companyFetchStatus === 'idle' || companyFetchStatus === 'loading';
 
   const companyLicenseNoValuesTemplate = (
     <Page module={Module.companyManagement} subModule={SubModule.companyLicenseViewDetails} sx={{ margin: 0 }}>
@@ -37,11 +38,7 @@ const ViewCompanyPage: React.FC = () => {
     <PageLayout module={Module.companyManagement} subModule={SubModule.companyViewDetails} pageTitle="View Company">
       <Grid container spacing={5}>
         <Grid size={12}>
-          <ViewDetails
-            module={Module.companyManagement}
-            subModule={SubModule.companyViewDetails}
-            loading={companyFetchStatus === 'loading'}
-          >
+          <ViewDetails module={Module.companyManagement} subModule={SubModule.companyViewDetails} loading={companyLoading}>
             <ViewDetails.Header>Company Details</ViewDetails.Header>
             <ViewDetails.Content fields={COMPANY_VIEW_DETAILS_SCHEMA} values={company} />
             <ViewDetails.Actions>
@@ -63,7 +60,7 @@ const ViewCompanyPage: React.FC = () => {
           <ViewDetails
             module={Module.companyManagement}
             subModule={SubModule.companyLicenseViewDetails}
-            loading={companyLicenseFetchStatus === 'loading'}
+            loading={companyLicenseFetchStatus === 'idle' || companyLicenseFetchStatus === 'loading'}
           >
             <ViewDetails.Header>Company License Details</ViewDetails.Header>
             <ViewDetails.Content
