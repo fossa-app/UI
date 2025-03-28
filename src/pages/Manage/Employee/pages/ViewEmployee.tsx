@@ -2,10 +2,11 @@ import * as React from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchEmployeeById, selectEmployee, selectIsUserAdmin, resetEmployee, selectProfile } from 'store/features';
-import { Module, SubModule } from 'shared/models';
+import { fetchEmployeeById, selectEmployee, resetEmployee, selectProfile, selectUserRoles } from 'store/features';
+import { Module, SubModule, UserRole } from 'shared/models';
 import { EMPLOYEE_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
+import WithRolesLayout from 'components/layouts/WithRolesLayout';
 import ViewDetails from 'components/UI/ViewDetails';
 
 const ViewEmployeePage: React.FC = () => {
@@ -14,7 +15,7 @@ const ViewEmployeePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { data: employee, fetchStatus } = useAppSelector(selectEmployee);
   const { data: profile } = useAppSelector(selectProfile);
-  const isUserAdmin = useAppSelector(selectIsUserAdmin);
+  const userRoles = useAppSelector(selectUserRoles);
   const loading = fetchStatus === 'idle' || fetchStatus === 'loading';
 
   const handleEditClick = () => {
@@ -67,7 +68,7 @@ const ViewEmployeePage: React.FC = () => {
               Profile
             </Button>
           )}
-          {isUserAdmin && (
+          <WithRolesLayout allowedRoles={[UserRole.administrator]} userRoles={userRoles}>
             <Button
               data-cy={`${Module.employeeManagement}-${SubModule.employeeViewDetails}-view-action-button`}
               aria-label="Edit Employee Button"
@@ -77,7 +78,7 @@ const ViewEmployeePage: React.FC = () => {
             >
               Edit
             </Button>
-          )}
+          </WithRolesLayout>
         </ViewDetails.Actions>
       </ViewDetails>
     </PageLayout>

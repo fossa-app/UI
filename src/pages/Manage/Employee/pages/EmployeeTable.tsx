@@ -11,7 +11,7 @@ import {
 } from 'store/features';
 import { Employee, Module, PaginationParams, SubModule } from 'shared/models';
 import { ACTION_FIELDS, APP_CONFIG, EMPLOYEE_FIELDS, EMPLOYEE_TABLE_ACTIONS_SCHEMA, EMPLOYEE_TABLE_SCHEMA, ROUTES } from 'shared/constants';
-import { filterTableActionsByRoles, getTestSelectorByModule, mapTableActionsColumn } from 'shared/helpers';
+import { getTestSelectorByModule, mapTableActionsColumn } from 'shared/helpers';
 import { useUnmount } from 'shared/hooks';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import Table from 'components/UI/Table';
@@ -56,11 +56,11 @@ const EmployeeTablePage: React.FC = () => {
 
   const actions = React.useMemo(
     () =>
-      filterTableActionsByRoles<Employee>(EMPLOYEE_TABLE_ACTIONS_SCHEMA, userRoles).map((action) => ({
+      EMPLOYEE_TABLE_ACTIONS_SCHEMA.map((action) => ({
         ...action,
         onClick: (employee: Employee) => handleEmployeeAction(employee, action.field as keyof typeof ACTION_FIELDS),
       })),
-    [userRoles, handleEmployeeAction]
+    [handleEmployeeAction]
   );
 
   const columns = React.useMemo(
@@ -79,9 +79,11 @@ const EmployeeTablePage: React.FC = () => {
               }
             : column
         ),
-        (employee) => <ActionsMenu<Employee> module={testModule} subModule={testSubModule} actions={actions} context={employee} />
+        (employee) => (
+          <ActionsMenu<Employee> module={testModule} subModule={testSubModule} actions={actions} context={employee} userRoles={userRoles} />
+        )
       ),
-    [actions, handleEmployeeAction]
+    [actions, userRoles, handleEmployeeAction]
   );
 
   React.useEffect(() => {
@@ -114,7 +116,7 @@ const EmployeeTablePage: React.FC = () => {
   });
 
   return (
-    <TableLayout module={testModule} subModule={testSubModule} pageTitle="Employees">
+    <TableLayout module={testModule} subModule={testSubModule} allowedRoles={[]} pageTitle="Employees">
       <Table<Employee>
         module={testModule}
         subModule={testSubModule}

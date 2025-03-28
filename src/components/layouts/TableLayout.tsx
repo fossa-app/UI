@@ -1,14 +1,16 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule, UserRole } from 'shared/models';
 import Page, { PageTitle } from 'components/UI/Page';
+import WithRolesLayout from './WithRolesLayout';
 
 interface TableLayoutProps {
   module: Module;
   subModule: SubModule;
   pageTitle: string;
-  withActionButton?: boolean;
+  userRoles?: UserRole[];
+  allowedRoles?: UserRole[];
   actionButtonLabel?: string;
   onActionClick?: () => void;
 }
@@ -17,7 +19,8 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
   module,
   subModule,
   pageTitle,
-  withActionButton = false,
+  userRoles,
+  allowedRoles,
   actionButtonLabel = 'New Item',
   onActionClick,
   children,
@@ -30,7 +33,7 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
         sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', textAlign: 'left', mb: 5 }}
       >
         <PageTitle sx={{ flexGrow: 1 }}>{pageTitle}</PageTitle>
-        {withActionButton && (
+        <WithRolesLayout allowedRoles={allowedRoles} userRoles={userRoles}>
           <Button
             data-cy={`${module}-${subModule}-table-layout-action-button`}
             aria-label="New Item"
@@ -40,7 +43,7 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
           >
             {actionButtonLabel}
           </Button>
-        )}
+        </WithRolesLayout>
       </Page>
       {children}
     </Box>

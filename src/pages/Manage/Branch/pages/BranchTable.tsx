@@ -8,13 +8,12 @@ import {
   resetBranchesPagination,
   selectBranch,
   selectBranches,
-  selectIsUserAdmin,
   selectUserRoles,
   setBranchesPagination,
 } from 'store/features';
-import { Branch, Module, PaginationParams, SubModule } from 'shared/models';
+import { Branch, Module, PaginationParams, SubModule, UserRole } from 'shared/models';
 import { ACTION_FIELDS, APP_CONFIG, BRANCH_FIELDS, BRANCH_TABLE_ACTIONS_SCHEMA, BRANCH_TABLE_SCHEMA, ROUTES } from 'shared/constants';
-import { filterTableActionsByRoles, getTestSelectorByModule, mapTableActionsColumn } from 'shared/helpers';
+import { getTestSelectorByModule, mapTableActionsColumn } from 'shared/helpers';
 import { useUnmount } from 'shared/hooks';
 import Page, { PageSubtitle } from 'components/UI/Page';
 import Table from 'components/UI/Table';
@@ -31,7 +30,6 @@ const BranchTablePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { fetchStatus, data: branches, page = APP_CONFIG.table.defaultPagination as PaginationParams } = useAppSelector(selectBranches);
   const { deleteStatus } = useAppSelector(selectBranch);
-  const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const userRoles = useAppSelector(selectUserRoles);
   const { search, searchChanged, setSearchChanged, setProps } = useSearch();
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
@@ -68,11 +66,11 @@ const BranchTablePage: React.FC = () => {
 
   const actions = React.useMemo(
     () =>
-      filterTableActionsByRoles<Branch>(BRANCH_TABLE_ACTIONS_SCHEMA, userRoles).map((action) => ({
+      BRANCH_TABLE_ACTIONS_SCHEMA.map((action) => ({
         ...action,
         onClick: (branch: Branch) => handleBranchAction(branch, action.field as keyof typeof ACTION_FIELDS),
       })),
-    [userRoles, handleBranchAction]
+    [handleBranchAction]
   );
 
   const columns = React.useMemo(
@@ -91,9 +89,11 @@ const BranchTablePage: React.FC = () => {
               }
             : column
         ),
-        (branch) => <ActionsMenu<Branch> module={testModule} subModule={testSubModule} actions={actions} context={branch} />
+        (branch) => (
+          <ActionsMenu<Branch> module={testModule} subModule={testSubModule} actions={actions} context={branch} userRoles={userRoles} />
+        )
       ),
-    [actions, handleBranchAction]
+    [actions, userRoles, handleBranchAction]
   );
 
   React.useEffect(() => {
@@ -129,7 +129,8 @@ const BranchTablePage: React.FC = () => {
     <TableLayout
       module={testModule}
       subModule={testSubModule}
-      withActionButton={isUserAdmin}
+      userRoles={userRoles}
+      allowedRoles={[UserRole.administrator]}
       pageTitle="Branches"
       actionButtonLabel="New Branch"
       onActionClick={() => handleNavigate(ROUTES.newBranch.path)}

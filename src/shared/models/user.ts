@@ -1,6 +1,7 @@
 import { User } from 'oidc-client-ts';
 
 export enum UserRole {
+  user = 'user',
   administrator = 'administrator',
 }
 
