@@ -5,17 +5,19 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import { Item, Module, SubModule } from 'shared/models';
+import { Item, Module, SubModule, UserRole } from 'shared/models';
 import { Action } from 'components/UI/Table';
+import WithRolesLayout from 'components/layouts/WithRolesLayout';
 
 interface ActionsMenuProps<T> {
   module: Module;
   subModule: SubModule;
   actions: Action<T>[];
   context: T;
+  userRoles?: UserRole[];
 }
 
-const ActionsMenu = <T extends Item>({ module, subModule, actions, context }: ActionsMenuProps<T>) => {
+const ActionsMenu = <T extends Item>({ module, subModule, actions, context, userRoles }: ActionsMenuProps<T>) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleOpenActionsMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -61,13 +63,11 @@ const ActionsMenu = <T extends Item>({ module, subModule, actions, context }: Ac
         onClose={handleCloseActionsMenu}
       >
         {actions.map((action) => (
-          <MenuItem
-            key={action.field}
-            data-cy={`${module}-${subModule}-action-${action.field}-${context.id}`}
-            onClick={() => handleActionClick(action)}
-          >
-            <Typography variant="body2">{action.name}</Typography>
-          </MenuItem>
+          <WithRolesLayout key={action.field} allowedRoles={action.roles} userRoles={userRoles}>
+            <MenuItem data-cy={`${module}-${subModule}-action-${action.field}-${context.id}`} onClick={() => handleActionClick(action)}>
+              <Typography variant="body2">{action.name}</Typography>
+            </MenuItem>
+          </WithRolesLayout>
         ))}
       </Menu>
     </Box>

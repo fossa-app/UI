@@ -2,10 +2,11 @@ import * as React from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchBranchById, resetBranch, selectBranch, selectIsUserAdmin } from 'store/features';
-import { Module, SubModule } from 'shared/models';
+import { fetchBranchById, resetBranch, selectBranch, selectUserRoles } from 'store/features';
+import { Module, SubModule, UserRole } from 'shared/models';
 import { BRANCH_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
+import WithRolesLayout from 'components/layouts/WithRolesLayout';
 import ViewDetails from 'components/UI/ViewDetails';
 
 const testModule = Module.branchManagement;
@@ -15,7 +16,7 @@ const ViewBranchPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { data: branch, fetchStatus } = useAppSelector(selectBranch);
-  const isUserAdmin = useAppSelector(selectIsUserAdmin);
+  const userRoles = useAppSelector(selectUserRoles);
   const { id } = useParams();
   const loading = fetchStatus === 'idle' || fetchStatus === 'loading';
 
@@ -55,7 +56,7 @@ const ViewBranchPage: React.FC = () => {
         <ViewDetails.Header>Branch Details</ViewDetails.Header>
         <ViewDetails.Content fields={BRANCH_VIEW_DETAILS_SCHEMA} values={branch} />
         <ViewDetails.Actions>
-          {isUserAdmin && (
+          <WithRolesLayout allowedRoles={[UserRole.administrator]} userRoles={userRoles}>
             <Button
               data-cy={`${testModule}-${testSubModule}-view-action-button`}
               aria-label="Edit Branch Button"
@@ -65,7 +66,7 @@ const ViewBranchPage: React.FC = () => {
             >
               Edit
             </Button>
-          )}
+          </WithRolesLayout>
         </ViewDetails.Actions>
       </ViewDetails>
     </PageLayout>

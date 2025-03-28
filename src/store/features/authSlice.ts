@@ -75,8 +75,8 @@ const authSlice = createSlice({
 
         const atClaims = decodeJwt<AppUser>(action.payload?.access_token);
 
-        if (state.user.data && atClaims?.roles?.length) {
-          state.user.data.roles = atClaims.roles as UserRole[];
+        if (state.user.data) {
+          state.user.data.roles = atClaims?.roles?.length ? (atClaims.roles as UserRole[]) : [UserRole.user];
         }
       });
   },
