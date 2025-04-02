@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { FieldErrors, FieldValues } from 'react-hook-form';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompany, createCompany, selectIsUserAdmin, selectUserRoles, selectSystemCountries } from 'store/features';
-import { CompanyDTO, Module, SubModule } from 'shared/models';
+import { Company, CompanyDTO } from 'shared/models';
 import { deepCopyObject, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
-import { COMPANY_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
-import CompanyDetailsForm from 'components/forms/CompanyDetailsForm';
+import { COMPANY_SETUP_DETAILS_FORM_SCHEMA, MESSAGES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
+import Form, { FormActionName } from 'components/UI/Form';
+
+const testModule = COMPANY_SETUP_DETAILS_FORM_SCHEMA.module;
+const testSubModule = COMPANY_SETUP_DETAILS_FORM_SCHEMA.subModule;
 
 const SetupCompanyPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -16,9 +18,25 @@ const SetupCompanyPage: React.FC = () => {
   const { error, updateStatus } = useAppSelector(selectCompany);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
 
+  // TODO: move outside the component context and create a constant
+  const defaultValues: Company = {
+    name: '',
+    countryCode: '',
+  };
+
   const fields = React.useMemo(
-    () => mapCountriesToFieldOptions(mapDisabledFields(COMPANY_SETUP_DETAILS_FORM_SCHEMA, userRoles), countries),
+    () => mapCountriesToFieldOptions(mapDisabledFields(COMPANY_SETUP_DETAILS_FORM_SCHEMA.fields, userRoles), countries),
     [userRoles, countries]
+  );
+
+  const actions = React.useMemo(
+    () =>
+      COMPANY_SETUP_DETAILS_FORM_SCHEMA.actions.map((action) =>
+        action.name === FormActionName.submit
+          ? { ...action, disabled: !userRoles?.some((role) => action.roles?.includes(role)), loading: updateStatus === 'loading' }
+          : action
+      ),
+    [userRoles, updateStatus]
   );
 
   const errors = React.useMemo(() => {
@@ -30,18 +48,17 @@ const SetupCompanyPage: React.FC = () => {
   };
 
   return (
-    <PageLayout module={Module.companySetup} subModule={SubModule.companyDetails} pageTitle="Create Company">
-      <CompanyDetailsForm
-        module={Module.companySetup}
-        subModule={SubModule.companyDetails}
-        isAdmin={isUserAdmin}
-        actionLabel="Next"
-        actionIcon={<NavigateNextIcon />}
-        actionLoading={updateStatus === 'loading'}
-        fields={fields}
-        errors={errors}
-        onSubmit={handleSubmit}
-      />
+    <PageLayout module={testModule} subModule={testSubModule} pageTitle="Create Company">
+      <Form<Company> module={testModule} subModule={testSubModule} defaultValues={defaultValues} errors={errors} onSubmit={handleSubmit}>
+        <Form.Header>{COMPANY_SETUP_DETAILS_FORM_SCHEMA.title}</Form.Header>
+
+        <Form.Content fields={fields} />
+
+        <Form.Actions
+          actions={actions}
+          generalValidationMessage={isUserAdmin ? undefined : MESSAGES.error.general.permission}
+        ></Form.Actions>
+      </Form>
     </PageLayout>
   );
 };

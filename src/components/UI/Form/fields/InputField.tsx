@@ -1,22 +1,25 @@
 import * as React from 'react';
-import { Controller, FieldError, get, useFormContext } from 'react-hook-form';
+import { Controller, FieldError, get, useFormContext as reactHookFormContext } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import { InputFieldProps } from '../form.model';
+import { useFormContext } from '../FormContext';
 
-const InputField: React.FC<InputFieldProps> = ({ module, subModule, name, ...props }) => {
+const InputField: React.FC<InputFieldProps> = ({ name, ...props }) => {
   const {
     control,
     formState: { errors },
-  } = useFormContext();
+  } = reactHookFormContext();
+
+  const { module, subModule } = useFormContext();
 
   const error = get(errors, name) as FieldError;
 
   return (
     <FormControl fullWidth>
       <Controller
-        // TODO: nested error structure & redux store casues runtime error in react-hook-form
+        // TODO: nested error structure & redux store casue a runtime error in react-hook-form
         // TypeError: e.g. Cannot delete property 'postalCode' of #<Object>
         // Setting shouldUnregister={true} fixes the issue, however unregisters the form field from the form context
         name={name}

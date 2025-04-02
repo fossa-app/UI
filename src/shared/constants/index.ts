@@ -6,4 +6,5 @@ export * from './menu-items';
 export * from './employees';
 export * from './branches';
 export * from './company';
+export * from './icons';
 export * from './common';

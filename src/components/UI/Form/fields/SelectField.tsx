@@ -1,18 +1,20 @@
 import * as React from 'react';
-import { FieldError, get, useFormContext, useWatch } from 'react-hook-form';
+import { FieldError, get, useFormContext as reactHookFormContext, useWatch } from 'react-hook-form';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import { SelectFieldProps } from '../form.model';
+import { useFormContext } from '../FormContext';
 
-const SelectField: React.FC<SelectFieldProps> = ({ module, subModule, label, name, options, ...props }) => {
+const SelectField: React.FC<SelectFieldProps> = ({ label, name, options, ...props }) => {
   const {
     register,
     formState: { errors },
     control,
-  } = useFormContext();
+  } = reactHookFormContext();
+  const { module, subModule } = useFormContext();
 
   const value = useWatch({ control, name });
   const error = get(errors, name) as FieldError;

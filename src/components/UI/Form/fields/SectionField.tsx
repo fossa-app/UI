@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { FieldError, get, useFormContext } from 'react-hook-form';
+import { FieldError, get, useFormContext as reactHookFormContext } from 'react-hook-form';
 import Typography from '@mui/material/Typography';
 import FormHelperText from '@mui/material/FormHelperText';
 import { SectionFieldProps } from '../form.model';
+import { useFormContext } from '../FormContext';
 
-const SectionField: React.FC<SectionFieldProps> = ({ module, subModule, name, label, ...props }) => {
+const SectionField: React.FC<SectionFieldProps> = ({ name, label, ...props }) => {
   const {
     formState: { errors },
-  } = useFormContext();
+  } = reactHookFormContext();
+  const { module, subModule } = useFormContext();
 
   const error = get(errors, name) as FieldError;
 

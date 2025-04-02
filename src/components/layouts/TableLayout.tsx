@@ -30,7 +30,7 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
       <Page
         module={module}
         subModule={subModule}
-        sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', textAlign: 'left', mb: 5 }}
+        sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', textAlign: 'left', mb: 5, minHeight: 38 }}
       >
         <PageTitle sx={{ flexGrow: 1 }}>{pageTitle}</PageTitle>
         <WithRolesLayout allowedRoles={allowedRoles} userRoles={userRoles}>

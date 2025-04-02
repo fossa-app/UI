@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FieldError, useFormContext, Controller, ControllerRenderProps, FieldValues, get } from 'react-hook-form';
+import { FieldError, useFormContext as reactHookFormContext, Controller, ControllerRenderProps, FieldValues, get } from 'react-hook-form';
 import { debounce } from '@mui/material/utils';
 import Autocomplete, { AutocompleteInputChangeReason } from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -8,21 +8,14 @@ import FormControl from '@mui/material/FormControl';
 import Typography from '@mui/material/Typography';
 import { APP_CONFIG } from 'shared/constants';
 import { AutocompleteFieldProps, FieldOption } from '../form.model';
+import { useFormContext } from '../FormContext';
 
-const AutocompleteField: React.FC<AutocompleteFieldProps> = ({
-  module,
-  subModule,
-  label,
-  name,
-  options,
-  loading,
-  onInputChange,
-  ...props
-}) => {
+const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ label, name, options, loading, onInputChange, ...props }) => {
   const {
     formState: { errors },
     control,
-  } = useFormContext();
+  } = reactHookFormContext();
+  const { module, subModule } = useFormContext();
 
   const error = get(errors, name) as FieldError;
 

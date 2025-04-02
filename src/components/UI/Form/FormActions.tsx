@@ -2,13 +2,15 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import FormHelperText from '@mui/material/FormHelperText';
 import { useFormContext } from './FormContext';
+import { ActionProps } from './form.model';
+import Action from './actions';
 
-// TODO: consider passing actions buttons as a config
-const FormActions: React.FC<
-  React.PropsWithChildren<{
-    generalValidationMessage?: string;
-  }>
-> = ({ generalValidationMessage, children }) => {
+type FormActionsProps = {
+  actions: ActionProps[];
+  generalValidationMessage?: string;
+};
+
+const FormActions: React.FC<FormActionsProps> = ({ actions, generalValidationMessage }) => {
   const context = useFormContext();
 
   if (!context) {
@@ -24,7 +26,11 @@ const FormActions: React.FC<
           {generalValidationMessage}
         </FormHelperText>
       )}
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 4 }}>{children}</Box>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 4 }}>
+        {actions.map((action) => (
+          <Action key={action.name} {...action} />
+        ))}
+      </Box>
     </Box>
   );
 };

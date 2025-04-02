@@ -11,11 +11,14 @@ import {
   resetCompanyFetchStatus,
   resetBranchesFetchStatus,
 } from 'store/features';
-import { COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
-import { CompanyDTO, Module, SubModule } from 'shared/models';
+import { COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA, MESSAGES, ROUTES } from 'shared/constants';
+import { Company, CompanyDTO } from 'shared/models';
 import { deepCopyObject, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
-import CompanyDetailsForm from 'components/forms/CompanyDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
+import Form, { FormActionName } from 'components/UI/Form';
+
+const testModule = COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA.module;
+const testSubModule = COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA.subModule;
 
 const EditCompanyPage: React.FC = () => {
   const navigate = useNavigate();
@@ -26,13 +29,43 @@ const EditCompanyPage: React.FC = () => {
   const { data: company, error, fetchStatus, updateStatus } = useAppSelector(selectCompany);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
 
+  const defaultValues: Company = {
+    name: '',
+    countryCode: '',
+  };
+
+  const handleSubmit = (data: Omit<CompanyDTO, 'id'>) => {
+    dispatch(editCompany(data));
+    setFormSubmitted(true);
+  };
+
   const navigateToViewCompany = React.useCallback(() => {
     navigate(ROUTES.viewCompany.path);
   }, [navigate]);
 
+  const handleCancel = React.useCallback(() => {
+    setFormSubmitted(false);
+    navigateToViewCompany();
+  }, [navigateToViewCompany]);
+
   const fields = React.useMemo(
-    () => mapCountriesToFieldOptions(mapDisabledFields(COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA, userRoles), countries),
+    () => mapCountriesToFieldOptions(mapDisabledFields(COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, userRoles), countries),
     [userRoles, countries]
+  );
+
+  const actions = React.useMemo(
+    () =>
+      COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA.actions.map((action) => {
+        switch (action.name) {
+          case FormActionName.cancel:
+            return { ...action, onClick: handleCancel };
+          case FormActionName.submit:
+            return { ...action, loading: updateStatus === 'loading' };
+          default:
+            return action;
+        }
+      }),
+    [updateStatus, handleCancel]
   );
 
   const errors = React.useMemo(() => {
@@ -55,31 +88,26 @@ const EditCompanyPage: React.FC = () => {
     };
   }, [formSubmitted, dispatch]);
 
-  const handleSubmit = (data: Omit<CompanyDTO, 'id'>) => {
-    dispatch(editCompany(data));
-    setFormSubmitted(true);
-  };
-
-  const handleCancel = () => {
-    setFormSubmitted(false);
-    navigateToViewCompany();
-  };
-
   return (
-    <PageLayout module={Module.companyManagement} subModule={SubModule.companyDetails} pageTitle="Edit Company">
-      <CompanyDetailsForm
-        withCancel
-        module={Module.companyManagement}
-        subModule={SubModule.companyDetails}
-        isAdmin={isUserAdmin}
-        data={company}
+    <PageLayout module={testModule} subModule={testSubModule} pageTitle="Edit Company">
+      <Form<Company>
+        module={testModule}
+        subModule={testSubModule}
+        defaultValues={defaultValues}
+        values={company}
         errors={errors}
-        actionLoading={updateStatus === 'loading'}
-        formLoading={fetchStatus === 'loading'}
-        fields={fields}
+        loading={fetchStatus === 'loading'}
         onSubmit={handleSubmit}
-        onCancel={handleCancel}
-      />
+      >
+        <Form.Header>{COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA.title}</Form.Header>
+
+        <Form.Content fields={fields} />
+
+        <Form.Actions
+          actions={actions}
+          generalValidationMessage={isUserAdmin ? undefined : MESSAGES.error.general.permission}
+        ></Form.Actions>
+      </Form>
     </PageLayout>
   );
 };

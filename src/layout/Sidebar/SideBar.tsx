@@ -15,7 +15,17 @@ const SideBar: React.FC<SideBarProps> = ({ ...props }) => {
   };
 
   return (
-    <Drawer {...props} variant={props.variant} PaperProps={{ sx: { width: { xs: '100%', sm: 280 } } }} open={sideBarOpened} onClose={close}>
+    <Drawer
+      {...props}
+      variant={props.variant}
+      slotProps={{
+        paper: {
+          sx: { width: { xs: '100%', sm: 280 } },
+        },
+      }}
+      open={sideBarOpened}
+      onClose={close}
+    >
       <Menu onCloseSideBar={close} />
     </Drawer>
   );
