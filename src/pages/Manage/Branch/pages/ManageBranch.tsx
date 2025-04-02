@@ -15,8 +15,8 @@ import {
   selectCompany,
   selectSystemCountries,
 } from 'store/features';
-import { BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
-import { Branch, Module, SubModule, TimeZone } from 'shared/models';
+import { BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, MESSAGES, ROUTES } from 'shared/constants';
+import { Branch, TimeZone } from 'shared/models';
 import {
   getBranchManagementDetailsByAddressFormSchema,
   mapBranchDTO,
@@ -24,12 +24,11 @@ import {
   mapBranchFieldOptionsToFieldOptions,
   deepCopyObject,
 } from 'shared/helpers';
-import BranchDetailsForm from 'components/forms/BranchDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
-import { FieldProps } from 'components/UI/Form';
+import Form, { FieldProps, FormActionName } from 'components/UI/Form';
 
-const testModule = Module.branchManagement;
-const testSubModule = SubModule.branchDetails;
+const testModule = BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.module;
+const testSubModule = BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.subModule;
 
 const ManageBranchPage: React.FC = () => {
   const navigate = useNavigate();
@@ -45,6 +44,12 @@ const ManageBranchPage: React.FC = () => {
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
   const [fields, setFields] = React.useState<FieldProps<Branch>[]>([]);
   const [formLoading, setFormLoading] = React.useState(true);
+
+  const defaultValues: Branch = {
+    name: '',
+    timeZoneId: '',
+    address: null,
+  };
 
   const availableCountries = React.useMemo(
     () => countries?.filter(({ code }) => code === company?.countryCode || code === branch?.address?.countryCode) || [],
@@ -65,8 +70,28 @@ const ManageBranchPage: React.FC = () => {
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
   }, [error?.errors]);
 
+  const handleCancel = React.useCallback(() => {
+    dispatch(resetBranch());
+    navigate(ROUTES.branches.path);
+  }, [navigate, dispatch]);
+
+  const actions = React.useMemo(
+    () =>
+      BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.actions.map((action) => {
+        switch (action.name) {
+          case FormActionName.cancel:
+            return { ...action, onClick: handleCancel };
+          case FormActionName.submit:
+            return { ...action, loading: updateStatus === 'loading' };
+          default:
+            return action;
+        }
+      }),
+    [updateStatus, handleCancel]
+  );
+
   const updateFields = React.useCallback(() => {
-    const schema = getBranchManagementDetailsByAddressFormSchema(BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, !!noPhysicalAddress);
+    const schema = getBranchManagementDetailsByAddressFormSchema(BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, !!noPhysicalAddress);
     const disabledFields = mapDisabledFields(schema, userRoles);
     const mappedFields = mapBranchFieldOptionsToFieldOptions(disabledFields, availableTimeZones, availableCountries);
 
@@ -122,11 +147,6 @@ const ManageBranchPage: React.FC = () => {
     }
   };
 
-  const handleCancel = () => {
-    dispatch(resetBranch());
-    navigate(ROUTES.branches.path);
-  };
-
   return (
     <PageLayout
       withBackButton
@@ -136,20 +156,25 @@ const ManageBranchPage: React.FC = () => {
       displayNotFoundPage={fetchStatus === 'failed' && !branch}
       onBackButtonClick={handleCancel}
     >
-      <BranchDetailsForm
-        withCancel
+      <Form<Branch>
         module={testModule}
         subModule={testSubModule}
-        isAdmin={isUserAdmin}
-        data={branch}
+        defaultValues={defaultValues}
+        values={branch}
         errors={errors}
-        fields={fields}
-        actionLoading={updateStatus === 'loading'}
-        formLoading={formLoading}
-        onSubmit={handleSubmit}
+        loading={formLoading}
         onChange={handleChange}
-        onCancel={handleCancel}
-      />
+        onSubmit={handleSubmit}
+      >
+        <Form.Header>{BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.title}</Form.Header>
+
+        <Form.Content fields={fields} />
+
+        <Form.Actions
+          actions={actions}
+          generalValidationMessage={isUserAdmin ? undefined : MESSAGES.error.general.permission}
+        ></Form.Actions>
+      </Form>
     </PageLayout>
   );
 };

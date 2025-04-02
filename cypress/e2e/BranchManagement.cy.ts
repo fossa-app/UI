@@ -289,7 +289,6 @@ describe('Branch Management Tests', () => {
     cy.url().should('include', '/manage/branches/edit/222222222222');
   });
 
-  // TODO: flaky test
   it('should be able to edit the branch and be navigated back to branch table page if the form is valid and branch updating succeeded', () => {
     interceptEditBranchRequest('222222222222');
     interceptFetchBranchByIdRequest('222222222222');

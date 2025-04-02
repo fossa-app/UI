@@ -2,27 +2,24 @@ import * as React from 'react';
 import Button, { ButtonProps } from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 
-type LoadingButtonProps = {
+export type LoadingButtonProps = {
   loading?: boolean;
-  loadingPosition?: 'start' | 'end';
   spinnerSize?: number;
 } & ButtonProps;
 
 const LoadingButton: React.FC<React.PropsWithChildren<LoadingButtonProps>> = ({
   loading = false,
-  loadingPosition = 'end',
   spinnerSize = 20,
   children,
   disabled,
   ...props
 }) => {
-  const isStart = loadingPosition === 'start';
-  const isEnd = loadingPosition === 'end';
+  const isStart = props.loadingPosition === 'start';
+  const isEnd = props.loadingPosition === 'end';
 
   return (
     <Button
       {...props}
-      aria-label="Loading Button"
       variant="contained"
       disabled={disabled || loading}
       startIcon={

@@ -1,17 +1,19 @@
 import * as React from 'react';
-import { FieldError, get, useFormContext, useWatch } from 'react-hook-form';
+import { FieldError, get, useFormContext as reactHookFormContext, useWatch } from 'react-hook-form';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import FormHelperText from '@mui/material/FormHelperText';
 import { CheckboxFieldProps } from '../form.model';
+import { useFormContext } from '../FormContext';
 
-const CheckboxField: React.FC<CheckboxFieldProps> = ({ module, subModule, name, label, ...props }) => {
+const CheckboxField: React.FC<CheckboxFieldProps> = ({ name, label, ...props }) => {
   const {
     register,
     formState: { errors },
     control,
-  } = useFormContext();
+  } = reactHookFormContext();
+  const { module, subModule } = useFormContext();
 
   const error = get(errors, name) as FieldError;
   const checked = useWatch({ control, name });

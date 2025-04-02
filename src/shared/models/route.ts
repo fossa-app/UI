@@ -1,5 +1,4 @@
-import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { SvgIconTypeMap } from '@mui/material/SvgIcon';
+import { SvgIcon } from './icon';
 
 export enum RouteKey {
   login = 'login',
@@ -27,7 +26,7 @@ export enum RouteKey {
 export interface RouteItem {
   name: string;
   path: string;
-  icon?: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;
+  icon?: SvgIcon;
 }
 
 export type AppRoute = { [key in RouteKey]: RouteItem };

@@ -1,5 +1,5 @@
-import { Branch, BranchFieldConfig, Module, SubModule, UserRole } from 'shared/models';
-import { FieldProps, FieldType } from 'components/UI/Form';
+import { Branch, BranchFieldConfig, IconType, Module, SubModule, UserRole } from 'shared/models';
+import { ActionType, FieldType, FormActionName, FormProps } from 'components/UI/Form';
 import { Action, Column } from 'components/UI/Table';
 import { ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
 import { renderBranchField } from 'pages/Manage/Branch/components/BranchField';
@@ -72,161 +72,183 @@ export const BRANCH_FIELDS: BranchFieldConfig = {
   },
 };
 
-export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps<Branch>[] = [
-  {
-    type: FieldType.section,
-    name: 'basicInfo',
-    label: 'Basic Information',
-    grid: { size: { xs: 12 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
-    roles: [UserRole.administrator],
-  },
-  {
-    type: FieldType.text,
-    name: BRANCH_FIELDS.name.field,
-    label: 'Enter Branch Name',
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
-    autoFocus: true,
-    rules: {
-      required: { value: true, message: 'Branch Name is required' },
-      maxLength: {
-        value: 50,
-        message: 'The Branch Name must not exceed 50 characters.',
+export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
+  module: Module.branchManagement,
+  subModule: SubModule.branchDetails,
+  title: 'Branch Details',
+  fields: [
+    {
+      type: FieldType.section,
+      name: 'basicInfo',
+      label: 'Basic Information',
+      grid: { size: { xs: 12 } },
+      roles: [UserRole.administrator],
+    },
+    {
+      type: FieldType.text,
+      name: BRANCH_FIELDS.name.field,
+      label: 'Enter Branch Name',
+      grid: { size: { xs: 12, md: 6 } },
+      autoFocus: true,
+      rules: {
+        required: { value: true, message: 'Branch Name is required' },
+        maxLength: {
+          value: 50,
+          message: 'The Branch Name must not exceed 50 characters.',
+        },
       },
+      roles: [UserRole.administrator],
     },
-    roles: [UserRole.administrator],
-  },
-  {
-    type: FieldType.select,
-    name: BRANCH_FIELDS.timeZoneId.field,
-    label: 'Select TimeZone',
-    grid: { size: { xs: 12, md: 6 } },
-    options: [],
-    module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
-    rules: {
-      required: { value: true, message: 'TimeZone is required' },
-    },
-    roles: [UserRole.administrator],
-  },
-  {
-    type: FieldType.section,
-    name: BRANCH_FIELDS.address.field,
-    label: BRANCH_FIELDS.address.name,
-    grid: { size: { xs: 12 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
-    roles: [UserRole.administrator],
-  },
-  {
-    type: FieldType.switch,
-    name: BRANCH_FIELDS.noPhysicalAddress.field,
-    label: BRANCH_FIELDS.noPhysicalAddress.name,
-    grid: { size: { xs: 12 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
-    roles: [UserRole.administrator],
-  },
-  {
-    type: FieldType.text,
-    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
-    label: 'Enter Address Line 1',
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
-    rules: {
-      required: { value: true, message: 'Address Line 1 is required' },
-      maxLength: {
-        value: 50,
-        message: 'Address Line 1 must not exceed 50 characters.',
+    {
+      type: FieldType.select,
+      name: BRANCH_FIELDS.timeZoneId.field,
+      label: 'Select TimeZone',
+      grid: { size: { xs: 12, md: 6 } },
+      options: [],
+      rules: {
+        required: { value: true, message: 'TimeZone is required' },
       },
+      roles: [UserRole.administrator],
     },
-    roles: [UserRole.administrator],
-  },
-  {
-    type: FieldType.text,
-    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
-    label: 'Enter Address Line 2',
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
-    rules: {
-      maxLength: {
-        value: 50,
-        message: 'Address Line 2 must not exceed 50 characters.',
+    {
+      type: FieldType.section,
+      name: BRANCH_FIELDS.address.field,
+      label: BRANCH_FIELDS.address.name,
+      grid: { size: { xs: 12 } },
+      roles: [UserRole.administrator],
+    },
+    {
+      type: FieldType.switch,
+      name: BRANCH_FIELDS.noPhysicalAddress.field,
+      label: BRANCH_FIELDS.noPhysicalAddress.name,
+      grid: { size: { xs: 12 } },
+      roles: [UserRole.administrator],
+    },
+    {
+      type: FieldType.text,
+      name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
+      label: 'Enter Address Line 1',
+      grid: { size: { xs: 12, md: 6 } },
+      rules: {
+        required: { value: true, message: 'Address Line 1 is required' },
+        maxLength: {
+          value: 50,
+          message: 'Address Line 1 must not exceed 50 characters.',
+        },
       },
+      roles: [UserRole.administrator],
     },
-    roles: [UserRole.administrator],
-  },
-  {
-    type: FieldType.text,
-    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.city!.field}`,
-    label: 'City',
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
-    rules: {
-      required: { value: true, message: 'City is required' },
-      maxLength: {
-        value: 50,
-        message: 'City must not exceed 50 characters.',
+    {
+      type: FieldType.text,
+      name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
+      label: 'Enter Address Line 2',
+      grid: { size: { xs: 12, md: 6 } },
+      rules: {
+        maxLength: {
+          value: 50,
+          message: 'Address Line 2 must not exceed 50 characters.',
+        },
       },
+      roles: [UserRole.administrator],
     },
-    roles: [UserRole.administrator],
-  },
-  {
-    type: FieldType.text,
-    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.subdivision!.field}`,
-    label: 'State',
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
-    rules: {
-      required: { value: true, message: 'State is required' },
-      maxLength: {
-        value: 50,
-        message: 'State must not exceed 50 characters.',
+    {
+      type: FieldType.text,
+      name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.city!.field}`,
+      label: 'City',
+      grid: { size: { xs: 12, md: 6 } },
+      rules: {
+        required: { value: true, message: 'City is required' },
+        maxLength: {
+          value: 50,
+          message: 'City must not exceed 50 characters.',
+        },
       },
+      roles: [UserRole.administrator],
     },
-    roles: [UserRole.administrator],
-  },
-  {
-    type: FieldType.select,
-    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryCode!.field}`,
-    label: 'Country',
-    grid: { size: { xs: 12, md: 6 } },
-    options: [],
-    module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
-    rules: {
-      required: { value: true, message: 'Country is required' },
-    },
-    roles: [UserRole.administrator],
-  },
-  {
-    type: FieldType.text,
-    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
-    label: 'Postal Code',
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchDetails,
-    rules: {
-      required: { value: true, message: 'Postal Code is required' },
-      minLength: {
-        value: 4,
-        message: 'Postal Code must be at least 4 characters long.',
+    {
+      type: FieldType.text,
+      name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.subdivision!.field}`,
+      label: 'State',
+      grid: { size: { xs: 12, md: 6 } },
+      rules: {
+        required: { value: true, message: 'State is required' },
+        maxLength: {
+          value: 50,
+          message: 'State must not exceed 50 characters.',
+        },
       },
-      maxLength: {
-        value: 10,
-        message: 'Postal Code must not exceed 10 characters.',
-      },
+      roles: [UserRole.administrator],
     },
-    roles: [UserRole.administrator],
-  },
-];
+    {
+      type: FieldType.select,
+      name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryCode!.field}`,
+      label: 'Country',
+      grid: { size: { xs: 12, md: 6 } },
+      options: [],
+      rules: {
+        required: { value: true, message: 'Country is required' },
+      },
+      roles: [UserRole.administrator],
+    },
+    {
+      type: FieldType.text,
+      name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
+      label: 'Postal Code',
+      grid: { size: { xs: 12, md: 6 } },
+      rules: {
+        required: { value: true, message: 'Postal Code is required' },
+        minLength: {
+          value: 4,
+          message: 'Postal Code must be at least 4 characters long.',
+        },
+        maxLength: {
+          value: 10,
+          message: 'Postal Code must not exceed 10 characters.',
+        },
+      },
+      roles: [UserRole.administrator],
+    },
+  ],
+  actions: [
+    {
+      actionType: ActionType.button,
+      label: 'Cancel',
+      name: FormActionName.cancel,
+      variant: 'text',
+      color: 'secondary',
+      roles: [UserRole.administrator],
+      'aria-label': 'Cancel Branch',
+    },
+    {
+      actionType: ActionType.loadingButton,
+      label: 'Save',
+      name: FormActionName.submit,
+      type: 'submit',
+      loadingPosition: 'end',
+      endIcon: IconType.save,
+      roles: [UserRole.administrator],
+      'aria-label': 'Save Branch',
+    },
+  ],
+};
+
+export const BRANCH_SETUP_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
+  ...BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA,
+  module: Module.branchSetup,
+  subModule: SubModule.branchDetails,
+  actions: [
+    {
+      actionType: ActionType.loadingButton,
+      label: 'Next',
+      name: FormActionName.submit,
+      loadingPosition: 'end',
+      endIcon: IconType.next,
+      type: 'submit',
+      roles: [UserRole.administrator],
+      'aria-label': 'Create Branch',
+    },
+  ],
+};
 
 export const BRANCH_VIEW_DETAILS_SCHEMA: ViewDetailProps<Branch>[] = [
   {
@@ -347,12 +369,6 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewDetailProps<Branch>[] = [
       }),
   },
 ];
-
-export const BRANCH_SETUP_DETAILS_FORM_SCHEMA = [...BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA].map((field) => ({
-  ...field,
-  module: Module.branchSetup,
-  subModule: SubModule.branchDetails,
-}));
 
 export const BRANCH_TABLE_SCHEMA: Column<Branch>[] = [
   {

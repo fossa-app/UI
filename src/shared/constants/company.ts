@@ -1,5 +1,14 @@
-import { Company, CompanyFieldConfig, CompanyLicense, CompanyLicenseFieldConfig, Module, SubModule, UserRole } from 'shared/models';
-import { FieldProps, FieldType } from 'components/UI/Form';
+import {
+  Company,
+  CompanyFieldConfig,
+  CompanyLicense,
+  CompanyLicenseFieldConfig,
+  IconType,
+  Module,
+  SubModule,
+  UserRole,
+} from 'shared/models';
+import { ActionType, FieldType, FormActionName, FormProps } from 'components/UI/Form';
 import { ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
 import { renderCopyableField } from 'components/UI/CopyableField';
 
@@ -77,53 +86,83 @@ export const COMPANY_LICENSE_FIELDS: CompanyLicenseFieldConfig = {
   },
 };
 
-export const COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA: FieldProps<Company>[] = [
-  {
-    type: FieldType.section,
-    name: 'basicInfo',
-    label: 'Basic Information',
-    grid: { size: { xs: 12 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyDetails,
-    roles: [UserRole.administrator],
-  },
-  {
-    type: FieldType.text,
-    name: COMPANY_FIELDS.name.field,
-    label: 'Enter Company Name',
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyDetails,
-    autoFocus: true,
-    rules: {
-      required: { value: true, message: 'Company Name is required' },
-      maxLength: {
-        value: 50,
-        message: 'The Company Name must not exceed 50 characters.',
+export const COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Company> = {
+  module: Module.companyManagement,
+  subModule: SubModule.companyDetails,
+  title: 'Company Details',
+  fields: [
+    {
+      type: FieldType.section,
+      name: 'basicInfo',
+      label: 'Basic Information',
+      grid: { size: { xs: 12 } },
+      roles: [UserRole.administrator],
+    },
+    {
+      type: FieldType.text,
+      name: COMPANY_FIELDS.name.field,
+      label: 'Enter Company Name',
+      grid: { size: { xs: 12, md: 6 } },
+      autoFocus: true,
+      rules: {
+        required: { value: true, message: 'Company Name is required' },
+        maxLength: {
+          value: 50,
+          message: 'The Company Name must not exceed 50 characters.',
+        },
       },
+      roles: [UserRole.administrator],
     },
-    roles: [UserRole.administrator],
-  },
-  {
-    type: FieldType.select,
-    name: COMPANY_FIELDS.countryCode.field,
-    label: 'Select Country',
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyDetails,
-    rules: {
-      required: { value: true, message: 'Country is required' },
+    {
+      type: FieldType.select,
+      name: COMPANY_FIELDS.countryCode.field,
+      label: 'Select Country',
+      grid: { size: { xs: 12, md: 6 } },
+      rules: {
+        required: { value: true, message: 'Country is required' },
+      },
+      options: [],
+      roles: [UserRole.administrator],
     },
-    options: [],
-    roles: [UserRole.administrator],
-  },
-];
+  ],
+  actions: [
+    {
+      actionType: ActionType.button,
+      label: 'Cancel',
+      name: FormActionName.cancel,
+      variant: 'text',
+      color: 'secondary',
+      'aria-label': 'Cancel Company',
+    },
+    {
+      actionType: ActionType.loadingButton,
+      label: 'Save',
+      name: FormActionName.submit,
+      type: 'submit',
+      loadingPosition: 'end',
+      endIcon: IconType.save,
+      'aria-label': 'Save Company',
+    },
+  ],
+};
 
-export const COMPANY_SETUP_DETAILS_FORM_SCHEMA = [...COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA].map((field) => ({
-  ...field,
+export const COMPANY_SETUP_DETAILS_FORM_SCHEMA: FormProps<Company> = {
+  ...COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA,
   module: Module.companySetup,
   subModule: SubModule.companyDetails,
-}));
+  actions: [
+    {
+      actionType: ActionType.loadingButton,
+      label: 'Next',
+      name: FormActionName.submit,
+      loadingPosition: 'end',
+      endIcon: IconType.next,
+      type: 'submit',
+      roles: [UserRole.administrator],
+      'aria-label': 'Create Company',
+    },
+  ],
+};
 
 export const COMPANY_VIEW_DETAILS_SCHEMA: ViewDetailProps<Company>[] = [
   {

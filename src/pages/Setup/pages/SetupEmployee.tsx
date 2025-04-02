@@ -1,22 +1,39 @@
 import * as React from 'react';
 import { FieldErrors, FieldValues } from 'react-hook-form';
-import DoneIcon from '@mui/icons-material/Done';
 import { useAppDispatch, useAppSelector } from 'store';
 import { createProfile, fetchProfile, selectUser, selectProfile } from 'store/features';
-import { Employee, Module, SubModule } from 'shared/models';
+import { Employee } from 'shared/models';
 import { EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import { deepCopyObject, mapProfileDTO, mapUserProfileToEmployee } from 'shared/helpers';
-import EmployeeDetailsForm from 'components/forms/EmployeeDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
+import Form, { FormActionName } from 'components/UI/Form';
+
+const testModule = EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA.module;
+const testSubModule = EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA.subModule;
 
 const SetupEmployeePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { data: user } = useAppSelector(selectUser);
   const { data: profile, error, updateStatus } = useAppSelector(selectProfile);
 
+  const defaultValues: Employee = {
+    firstName: '',
+    lastName: '',
+    fullName: '',
+    assignedBranchId: null,
+  };
+
   const employeeData = React.useMemo(() => {
     return mapUserProfileToEmployee(user?.profile);
   }, [user?.profile]);
+
+  const actions = React.useMemo(
+    () =>
+      EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA.actions.map((action) =>
+        action.name === FormActionName.submit ? { ...action, loading: updateStatus === 'loading' } : action
+      ),
+    [updateStatus]
+  );
 
   const errors = React.useMemo(() => {
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
@@ -35,19 +52,21 @@ const SetupEmployeePage: React.FC = () => {
   };
 
   return (
-    <PageLayout module={Module.employeeSetup} subModule={SubModule.employeeDetails} pageTitle="Create Employee">
-      <EmployeeDetailsForm
-        actionLabel="Finish"
-        headerText="Employee Details"
-        actionIcon={<DoneIcon />}
-        module={Module.employeeSetup}
-        subModule={SubModule.employeeDetails}
-        actionLoading={updateStatus === 'loading'}
-        fields={EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA}
-        data={employeeData}
+    <PageLayout module={testModule} subModule={testSubModule} pageTitle="Create Employee">
+      <Form<Employee>
+        module={testModule}
+        subModule={testSubModule}
+        defaultValues={defaultValues}
+        values={employeeData}
         errors={errors}
         onSubmit={handleSubmit}
-      />
+      >
+        <Form.Header>{EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA.title}</Form.Header>
+
+        <Form.Content fields={EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA.fields} />
+
+        <Form.Actions actions={actions}></Form.Actions>
+      </Form>
     </PageLayout>
   );
 };

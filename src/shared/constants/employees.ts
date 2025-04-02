@@ -1,5 +1,5 @@
-import { Employee, EmployeeFieldConfig, Module, SubModule, UserRole } from 'shared/models';
-import { FieldProps, FieldType } from 'components/UI/Form';
+import { Employee, EmployeeFieldConfig, IconType, Module, SubModule, UserRole } from 'shared/models';
+import { ActionType, FieldType, FormActionName, FormProps } from 'components/UI/Form';
 import { Action, Column } from 'components/UI/Table';
 import { ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
 import { ACTION_FIELD, ACTION_FIELDS } from './common';
@@ -72,47 +72,55 @@ export const EMPLOYEE_TABLE_ACTIONS_SCHEMA: Action<Employee>[] = [
   },
 ];
 
-export const EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA: FieldProps<Employee>[] = [
-  {
-    type: FieldType.section,
-    name: 'basicInfo',
-    label: 'Basic Information',
-    grid: { size: { xs: 12 } },
-    module: Module.employeeSetup,
-    subModule: SubModule.employeeDetails,
-  },
-  {
-    type: FieldType.text,
-    name: EMPLOYEE_FIELDS.firstName.field,
-    label: 'Enter First Name',
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.employeeSetup,
-    subModule: SubModule.employeeDetails,
-    autoFocus: true,
-    rules: {
-      required: { value: true, message: 'First Name is required' },
+export const EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
+  module: Module.employeeSetup,
+  subModule: SubModule.employeeDetails,
+  title: 'Employee Details',
+  fields: [
+    {
+      type: FieldType.section,
+      name: 'basicInfo',
+      label: 'Basic Information',
+      grid: { size: { xs: 12 } },
     },
-  },
-  {
-    type: FieldType.text,
-    name: EMPLOYEE_FIELDS.lastName.field,
-    label: 'Enter Last Name',
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.employeeSetup,
-    subModule: SubModule.employeeDetails,
-    rules: {
-      required: { value: true, message: 'Last Name is required' },
+    {
+      type: FieldType.text,
+      name: EMPLOYEE_FIELDS.firstName.field,
+      label: 'Enter First Name',
+      grid: { size: { xs: 12, md: 6 } },
+      autoFocus: true,
+      rules: {
+        required: { value: true, message: 'First Name is required' },
+      },
     },
-  },
-  {
-    type: FieldType.text,
-    name: EMPLOYEE_FIELDS.fullName.field,
-    label: 'Enter Full Name',
-    grid: { size: { xs: 12 } },
-    module: Module.employeeSetup,
-    subModule: SubModule.employeeDetails,
-  },
-];
+    {
+      type: FieldType.text,
+      name: EMPLOYEE_FIELDS.lastName.field,
+      label: 'Enter Last Name',
+      grid: { size: { xs: 12, md: 6 } },
+      rules: {
+        required: { value: true, message: 'Last Name is required' },
+      },
+    },
+    {
+      type: FieldType.text,
+      name: EMPLOYEE_FIELDS.fullName.field,
+      label: 'Enter Full Name',
+      grid: { size: { xs: 12 } },
+    },
+  ],
+  actions: [
+    {
+      actionType: ActionType.loadingButton,
+      label: 'Finish',
+      name: FormActionName.submit,
+      type: 'submit',
+      loadingPosition: 'end',
+      endIcon: IconType.done,
+      'aria-label': 'Create Employee',
+    },
+  ],
+};
 
 export const PROFILE_VIEW_DETAILS_SCHEMA: ViewDetailProps<Employee>[] = [
   {
@@ -200,61 +208,95 @@ export const EMPLOYEE_VIEW_DETAILS_SCHEMA: ViewDetailProps<Employee>[] = [
   },
 ];
 
-export const EMPLOYEE_DETAILS_FORM_SCHEMA: FieldProps<Employee>[] = [
-  {
-    type: FieldType.section,
-    name: 'basicInfo',
-    label: 'Basic Information',
-    grid: { size: { xs: 12 } },
-    module: Module.employeeManagement,
-    subModule: SubModule.employeeDetails,
-  },
-  {
-    type: FieldType.labelValue,
-    name: EMPLOYEE_FIELDS.firstName.field,
-    label: 'First Name',
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.employeeManagement,
-    subModule: SubModule.employeeDetails,
-  },
-  {
-    type: FieldType.labelValue,
-    name: EMPLOYEE_FIELDS.lastName.field,
-    label: 'Last Name',
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.employeeManagement,
-    subModule: SubModule.employeeDetails,
-  },
-  {
-    type: FieldType.labelValue,
-    name: EMPLOYEE_FIELDS.fullName.field,
-    label: 'Full Name',
-    grid: { size: { xs: 12 } },
-    module: Module.employeeManagement,
-    subModule: SubModule.employeeDetails,
-  },
-  {
-    type: FieldType.section,
-    name: 'branchInfo',
-    label: 'Branch Information',
-    grid: { size: { xs: 12 } },
-    module: Module.employeeManagement,
-    subModule: SubModule.employeeDetails,
-  },
-  {
-    type: FieldType.autocomplete,
-    name: EMPLOYEE_FIELDS.assignedBranchId!.field,
-    label: 'Search Branch',
-    grid: { size: { xs: 12, md: 6 } },
-    options: [],
-    module: Module.employeeManagement,
-    subModule: SubModule.employeeDetails,
-    roles: [UserRole.administrator],
-  },
-];
+export const EMPLOYEE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
+  module: Module.employeeManagement,
+  subModule: SubModule.employeeDetails,
+  title: 'Employee Details',
+  fields: [
+    {
+      type: FieldType.section,
+      name: 'basicInfo',
+      label: 'Basic Information',
+      grid: { size: { xs: 12 } },
+    },
+    {
+      type: FieldType.labelValue,
+      name: EMPLOYEE_FIELDS.firstName.field,
+      label: 'First Name',
+      grid: { size: { xs: 12, md: 6 } },
+    },
+    {
+      type: FieldType.labelValue,
+      name: EMPLOYEE_FIELDS.lastName.field,
+      label: 'Last Name',
+      grid: { size: { xs: 12, md: 6 } },
+    },
+    {
+      type: FieldType.labelValue,
+      name: EMPLOYEE_FIELDS.fullName.field,
+      label: 'Full Name',
+      grid: { size: { xs: 12 } },
+    },
+    {
+      type: FieldType.section,
+      name: 'branchInfo',
+      label: 'Branch Information',
+      grid: { size: { xs: 12 } },
+    },
+    {
+      type: FieldType.autocomplete,
+      name: EMPLOYEE_FIELDS.assignedBranchId!.field,
+      label: 'Search Branch',
+      grid: { size: { xs: 12, md: 6 } },
+      options: [],
+      roles: [UserRole.administrator],
+    },
+  ],
+  actions: [
+    {
+      actionType: ActionType.button,
+      label: 'Cancel',
+      name: FormActionName.cancel,
+      variant: 'text',
+      color: 'secondary',
+      roles: [UserRole.administrator],
+      'aria-label': 'Cancel Employee',
+    },
+    {
+      actionType: ActionType.loadingButton,
+      label: 'Save',
+      name: FormActionName.submit,
+      type: 'submit',
+      loadingPosition: 'end',
+      endIcon: IconType.save,
+      roles: [UserRole.administrator],
+      'aria-label': 'Save Employee',
+    },
+  ],
+};
 
-export const PROFILE_DETAILS_FORM_SCHEMA = [...EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA].map((field) => ({
-  ...field,
+export const PROFILE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
+  ...EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA,
   module: Module.profile,
   subModule: SubModule.profileDetails,
-}));
+  title: 'Profile Details',
+  actions: [
+    {
+      actionType: ActionType.button,
+      label: 'Cancel',
+      name: FormActionName.cancel,
+      variant: 'text',
+      color: 'secondary',
+      'aria-label': 'Cancel Profile',
+    },
+    {
+      actionType: ActionType.loadingButton,
+      label: 'Save',
+      name: FormActionName.submit,
+      loadingPosition: 'end',
+      endIcon: IconType.save,
+      type: 'submit',
+      'aria-label': 'Save Profile',
+    },
+  ],
+};

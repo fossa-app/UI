@@ -12,13 +12,13 @@ import {
   resetEmployee,
 } from 'store/features';
 import { EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
-import { Branch, Employee, Module, SubModule } from 'shared/models';
+import { Branch, Employee } from 'shared/models';
 import { deepCopyObject, mapBranchToFieldOption, mapEmployeeDTO } from 'shared/helpers';
-import EmployeeDetailsForm from 'components/forms/EmployeeDetailsForm';
 import PageLayout from 'components/layouts/PageLayout';
+import Form, { FormActionName } from 'components/UI/Form';
 
-const testModule = Module.employeeManagement;
-const testSubModule = SubModule.employeeDetails;
+const testModule = EMPLOYEE_DETAILS_FORM_SCHEMA.module;
+const testSubModule = EMPLOYEE_DETAILS_FORM_SCHEMA.subModule;
 
 const EditEmployeePage: React.FC = () => {
   const navigate = useNavigate();
@@ -27,6 +27,13 @@ const EditEmployeePage: React.FC = () => {
   const { data: employee, error, fetchStatus, updateStatus } = useAppSelector(selectEmployee);
   const { data: branches, fetchStatus: searchedBranchesStatus } = useAppSelector(selectSearchedBranches);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
+
+  const defaultValues: Employee = {
+    firstName: employee?.firstName ?? '',
+    lastName: employee?.lastName ?? '',
+    fullName: employee?.fullName ?? '',
+    assignedBranchId: employee?.assignedBranchId ?? null,
+  };
 
   const branchItems = React.useMemo(() => {
     const branchList = branches?.items || [];
@@ -55,9 +62,14 @@ const EditEmployeePage: React.FC = () => {
     [branchItems, employee?.assignedBranchId, dispatch]
   );
 
+  const handleCancel = React.useCallback(() => {
+    dispatch(resetEmployee());
+    navigate(ROUTES.employees.path);
+  }, [dispatch, navigate]);
+
   const fields = React.useMemo(
     () =>
-      EMPLOYEE_DETAILS_FORM_SCHEMA.map((field) =>
+      EMPLOYEE_DETAILS_FORM_SCHEMA.fields.map((field) =>
         field.name === EMPLOYEE_FIELDS.assignedBranchId?.field
           ? {
               ...field,
@@ -68,6 +80,21 @@ const EditEmployeePage: React.FC = () => {
           : field
       ),
     [branchItems, searchedBranchesStatus, handleBranchSearch]
+  );
+
+  const actions = React.useMemo(
+    () =>
+      EMPLOYEE_DETAILS_FORM_SCHEMA.actions.map((action) => {
+        switch (action.name) {
+          case FormActionName.cancel:
+            return { ...action, onClick: handleCancel };
+          case FormActionName.submit:
+            return { ...action, loading: updateStatus === 'loading' };
+          default:
+            return action;
+        }
+      }),
+    [updateStatus, handleCancel]
   );
 
   React.useEffect(() => {
@@ -97,11 +124,6 @@ const EditEmployeePage: React.FC = () => {
     setFormSubmitted(true);
   };
 
-  const handleCancel = () => {
-    dispatch(resetEmployee());
-    navigate(ROUTES.employees.path);
-  };
-
   return (
     <PageLayout
       withBackButton
@@ -111,19 +133,21 @@ const EditEmployeePage: React.FC = () => {
       displayNotFoundPage={fetchStatus === 'failed' && !employee}
       onBackButtonClick={handleCancel}
     >
-      <EmployeeDetailsForm
-        withCancel
+      <Form<Employee>
         module={testModule}
         subModule={testSubModule}
-        headerText="Employee Details"
-        actionLoading={updateStatus === 'loading'}
-        formLoading={fetchStatus === 'loading'}
-        fields={fields}
-        data={employee}
+        loading={fetchStatus === 'loading'}
+        defaultValues={defaultValues}
+        values={employee}
         errors={errors}
         onSubmit={handleSubmit}
-        onCancel={handleCancel}
-      />
+      >
+        <Form.Header>{EMPLOYEE_DETAILS_FORM_SCHEMA.title}</Form.Header>
+
+        <Form.Content fields={fields} />
+
+        <Form.Actions actions={actions}></Form.Actions>
+      </Form>
     </PageLayout>
   );
 };

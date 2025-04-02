@@ -1,17 +1,19 @@
 import * as React from 'react';
-import { Controller, FieldError, get, useFormContext } from 'react-hook-form';
+import { Controller, FieldError, get, useFormContext as reactHookFormContext } from 'react-hook-form';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import FormHelperText from '@mui/material/FormHelperText';
 import { SwitchFieldProps } from '../form.model';
+import { useFormContext } from '../FormContext';
 
-const SwitchField: React.FC<SwitchFieldProps> = ({ module, subModule, name, label, ...props }) => {
+const SwitchField: React.FC<SwitchFieldProps> = ({ name, label, ...props }) => {
   const {
     control,
     formState: { errors },
     setValue,
-  } = useFormContext();
+  } = reactHookFormContext();
+  const { module, subModule } = useFormContext();
 
   const error = get(errors, name) as FieldError;
 
