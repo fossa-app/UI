@@ -2,12 +2,12 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid2';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Page, { PageSubtitle } from '../Page';
-import { ViewDetailProps } from './view-details.model';
+import { ViewDetailFieldProps } from './view-details.model';
 import { useViewDetailsContext } from './ViewDetailsContext';
 import Detail from './details';
 
 type ViewDetailsContentProps<T> = {
-  fields: ViewDetailProps<T>[];
+  fields: ViewDetailFieldProps<T>[];
   values?: T;
   noValuesTemplate?: React.ReactElement;
 };

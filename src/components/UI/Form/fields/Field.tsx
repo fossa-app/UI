@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FieldProps, FieldType } from '../form.model';
+import { FormFieldProps, FormFieldType } from '../form.model';
 import InputField from './InputField';
 import AutocompleteField from './AutocompleteField';
 import SelectField from './SelectField';
@@ -8,24 +8,24 @@ import SectionField from './SectionField';
 import LabelValueField from './LabelValueField';
 import SwitchField from './SwitchField';
 
-const Field = <T,>(props: FieldProps<T>) => {
+const Field = <T,>(props: FormFieldProps<T>) => {
   switch (props.type) {
-    case FieldType.text:
+    case FormFieldType.text:
       return <InputField {...props} />;
-    case FieldType.autocomplete:
+    case FormFieldType.autocomplete:
       return <AutocompleteField {...props} />;
-    case FieldType.select:
+    case FormFieldType.select:
       return <SelectField {...props} />;
-    case FieldType.checkbox:
+    case FormFieldType.checkbox:
       return <CheckboxField {...props} />;
-    case FieldType.switch:
+    case FormFieldType.switch:
       return <SwitchField {...props} />;
-    case FieldType.section:
+    case FormFieldType.section:
       return <SectionField {...props} />;
-    case FieldType.labelValue:
+    case FormFieldType.labelValue:
       return <LabelValueField {...props} />;
     default:
-      throw new Error('Invalid Field Type');
+      throw new Error('Invalid Form Field Type');
   }
 };
 

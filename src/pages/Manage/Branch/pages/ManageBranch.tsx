@@ -15,7 +15,7 @@ import {
   selectCompany,
   selectSystemCountries,
 } from 'store/features';
-import { BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, MESSAGES, ROUTES } from 'shared/constants';
+import { BRANCH_DETAILS_FORM_DEFAULT_VALUES, BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, MESSAGES, ROUTES } from 'shared/constants';
 import { Branch, TimeZone } from 'shared/models';
 import {
   getBranchManagementDetailsByAddressFormSchema,
@@ -25,7 +25,7 @@ import {
   deepCopyObject,
 } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
-import Form, { FieldProps, FormActionName } from 'components/UI/Form';
+import Form, { FormFieldProps, FormActionName } from 'components/UI/Form';
 
 const testModule = BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.module;
 const testSubModule = BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.subModule;
@@ -42,14 +42,8 @@ const ManageBranchPage: React.FC = () => {
   const { data: branch, error, fetchStatus, updateStatus } = useAppSelector(selectBranch);
   const [formSubmitted, setFormSubmitted] = React.useState(false);
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
-  const [fields, setFields] = React.useState<FieldProps<Branch>[]>([]);
+  const [fields, setFields] = React.useState<FormFieldProps<Branch>[]>([]);
   const [formLoading, setFormLoading] = React.useState(true);
-
-  const defaultValues: Branch = {
-    name: '',
-    timeZoneId: '',
-    address: null,
-  };
 
   const availableCountries = React.useMemo(
     () => countries?.filter(({ code }) => code === company?.countryCode || code === branch?.address?.countryCode) || [],
@@ -159,7 +153,7 @@ const ManageBranchPage: React.FC = () => {
       <Form<Branch>
         module={testModule}
         subModule={testSubModule}
-        defaultValues={defaultValues}
+        defaultValues={BRANCH_DETAILS_FORM_DEFAULT_VALUES}
         values={branch}
         errors={errors}
         loading={formLoading}

@@ -3,7 +3,7 @@ import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import { createProfile, fetchProfile, selectUser, selectProfile } from 'store/features';
 import { Employee } from 'shared/models';
-import { EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
+import { EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import { deepCopyObject, mapProfileDTO, mapUserProfileToEmployee } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
@@ -15,13 +15,6 @@ const SetupEmployeePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { data: user } = useAppSelector(selectUser);
   const { data: profile, error, updateStatus } = useAppSelector(selectProfile);
-
-  const defaultValues: Employee = {
-    firstName: '',
-    lastName: '',
-    fullName: '',
-    assignedBranchId: null,
-  };
 
   const employeeData = React.useMemo(() => {
     return mapUserProfileToEmployee(user?.profile);
@@ -56,7 +49,7 @@ const SetupEmployeePage: React.FC = () => {
       <Form<Employee>
         module={testModule}
         subModule={testSubModule}
-        defaultValues={defaultValues}
+        defaultValues={EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES}
         values={employeeData}
         errors={errors}
         onSubmit={handleSubmit}

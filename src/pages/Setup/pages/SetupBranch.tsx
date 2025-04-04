@@ -20,7 +20,7 @@ import {
   mapBranchFieldOptionsToFieldOptions,
   deepCopyObject,
 } from 'shared/helpers';
-import { BRANCH_SETUP_DETAILS_FORM_SCHEMA, MESSAGES } from 'shared/constants';
+import { BRANCH_SETUP_DETAILS_FORM_SCHEMA, BRANCH_DETAILS_FORM_DEFAULT_VALUES, MESSAGES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
 
@@ -37,12 +37,6 @@ const SetupBranchPage: React.FC = () => {
   const companyTimeZones = useAppSelector(selectCompanyTimeZones);
   const countries = useAppSelector(selectSystemCountries);
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
-
-  const defaultValues: Branch = {
-    name: '',
-    timeZoneId: '',
-    address: null,
-  };
 
   const availableCountries = React.useMemo(
     () => countries?.filter(({ code }) => code === company?.countryCode) || [],
@@ -92,7 +86,7 @@ const SetupBranchPage: React.FC = () => {
       <Form<Branch>
         module={testModule}
         subModule={testSubModule}
-        defaultValues={defaultValues}
+        defaultValues={BRANCH_DETAILS_FORM_DEFAULT_VALUES}
         errors={errors}
         onChange={handleChange}
         onSubmit={handleSubmit}

@@ -9,8 +9,11 @@ import { fetchProfile, selectProfile, setSuccess } from 'store/features';
 import { Module, SubModule } from 'shared/models';
 import { MESSAGES, PROFILE_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
-import ViewDetails from 'components/UI/ViewDetails';
+import ViewDetails, { ViewDetailActionName } from 'components/UI/ViewDetails';
 import DeleteProfileDialog from '../components/DeleteProfileDialog';
+
+const testModule = PROFILE_VIEW_DETAILS_SCHEMA.module;
+const testSubModule = PROFILE_VIEW_DETAILS_SCHEMA.subModule;
 
 const ViewProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -19,9 +22,22 @@ const ViewProfilePage: React.FC = () => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const loading = fetchStatus === 'idle' || fetchStatus === 'loading';
 
-  const handleEditClick = () => {
+  const handleEdit = React.useCallback(() => {
     navigate(ROUTES.editProfile.path);
-  };
+  }, [navigate]);
+
+  const actions = React.useMemo(
+    () =>
+      PROFILE_VIEW_DETAILS_SCHEMA.actions?.map((action) => {
+        switch (action.name) {
+          case ViewDetailActionName.edit:
+            return { ...action, onClick: handleEdit };
+          default:
+            return action;
+        }
+      }),
+    [handleEdit]
+  );
 
   const handleDeleteClick = () => {
     setDialogOpen(true);
@@ -45,23 +61,13 @@ const ViewProfilePage: React.FC = () => {
 
   return (
     <>
-      <PageLayout module={Module.profile} subModule={SubModule.profileViewDetails} pageTitle="View Profile">
+      <PageLayout module={testModule} subModule={testSubModule} pageTitle="View Profile">
         <Grid container spacing={5}>
           <Grid size={12}>
-            <ViewDetails module={Module.profile} subModule={SubModule.profileViewDetails} loading={loading}>
-              <ViewDetails.Header>Profile Details</ViewDetails.Header>
-              <ViewDetails.Content fields={PROFILE_VIEW_DETAILS_SCHEMA} values={profile} />
-              <ViewDetails.Actions>
-                <Button
-                  data-cy={`${Module.profile}-${SubModule.profileViewDetails}-view-action-button`}
-                  aria-label="Edit Profile Button"
-                  variant="contained"
-                  color="primary"
-                  onClick={handleEditClick}
-                >
-                  Edit
-                </Button>
-              </ViewDetails.Actions>
+            <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>
+              <ViewDetails.Header>{PROFILE_VIEW_DETAILS_SCHEMA.title}</ViewDetails.Header>
+              <ViewDetails.Content fields={PROFILE_VIEW_DETAILS_SCHEMA.fields} values={profile} />
+              <ViewDetails.Actions actions={actions!}></ViewDetails.Actions>
             </ViewDetails>
           </Grid>
           <Grid size={12}>

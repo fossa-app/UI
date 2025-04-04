@@ -1,12 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
-import { FieldProps } from './form.model';
+import { FormFieldProps } from './form.model';
 import Field from './fields';
 import { useFormContext } from './FormContext';
 
 type FormContentProps<T> = {
-  fields: FieldProps<T>[];
+  fields: FormFieldProps<T>[];
   values?: T;
 };
 

@@ -1,5 +1,5 @@
 import { Company, CompanyDTO, Country } from 'shared/models';
-import { FieldProps, FieldType, FieldOption } from 'components/UI/Form';
+import { FormFieldProps, FormFieldType, FieldOption } from 'components/UI/Form';
 
 export const mapCompany = (company: CompanyDTO, countries: Country[]): Company => {
   return {
@@ -8,10 +8,10 @@ export const mapCompany = (company: CompanyDTO, countries: Country[]): Company =
   };
 };
 
-export const mapCountriesToFieldOptions = (fields: FieldProps<Company>[], countries?: Country[]): FieldProps<Company>[] => {
+export const mapCountriesToFieldOptions = (fields: FormFieldProps<Company>[], countries?: Country[]): FormFieldProps<Company>[] => {
   return fields.map((field) => ({
     ...field,
-    ...(field.type === FieldType.select &&
+    ...(field.type === FormFieldType.select &&
       countries?.length && {
         options: countries.map(mapCountryToFieldOption),
       }),

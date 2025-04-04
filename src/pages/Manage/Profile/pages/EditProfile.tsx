@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import { editProfile, resetProfileFetchStatus, selectProfile } from 'store/features';
-import { PROFILE_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
+import { EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, PROFILE_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
 import { Employee } from 'shared/models';
 import { deepCopyObject, mapProfileDTO } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
@@ -17,13 +17,7 @@ const EditProfilePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { data: profile, error, updateStatus } = useAppSelector(selectProfile);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
-
-  const defaultValues: Employee = {
-    firstName: profile?.firstName ?? '',
-    lastName: profile?.lastName ?? '',
-    fullName: profile?.fullName ?? '',
-    assignedBranchId: profile?.assignedBranchId ?? null,
-  };
+  const defaultValues: Employee = profile || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
 
   const errors = React.useMemo(() => {
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);

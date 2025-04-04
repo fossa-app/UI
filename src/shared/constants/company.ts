@@ -8,8 +8,8 @@ import {
   SubModule,
   UserRole,
 } from 'shared/models';
-import { ActionType, FieldType, FormActionName, FormProps } from 'components/UI/Form';
-import { ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
+import { FormActionType, FormFieldType, FormActionName, FormProps } from 'components/UI/Form';
+import { ViewDetailActionName, ViewDetailActionType, ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
 import { renderCopyableField } from 'components/UI/CopyableField';
 
 export const COMPANY_FIELDS: CompanyFieldConfig = {
@@ -92,14 +92,14 @@ export const COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Company> = {
   title: 'Company Details',
   fields: [
     {
-      type: FieldType.section,
+      type: FormFieldType.section,
       name: 'basicInfo',
       label: 'Basic Information',
       grid: { size: { xs: 12 } },
       roles: [UserRole.administrator],
     },
     {
-      type: FieldType.text,
+      type: FormFieldType.text,
       name: COMPANY_FIELDS.name.field,
       label: 'Enter Company Name',
       grid: { size: { xs: 12, md: 6 } },
@@ -114,7 +114,7 @@ export const COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Company> = {
       roles: [UserRole.administrator],
     },
     {
-      type: FieldType.select,
+      type: FormFieldType.select,
       name: COMPANY_FIELDS.countryCode.field,
       label: 'Select Country',
       grid: { size: { xs: 12, md: 6 } },
@@ -127,21 +127,21 @@ export const COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Company> = {
   ],
   actions: [
     {
-      actionType: ActionType.button,
+      actionType: FormActionType.button,
       label: 'Cancel',
       name: FormActionName.cancel,
       variant: 'text',
       color: 'secondary',
-      'aria-label': 'Cancel Company',
+      'aria-label': 'Cancel Company Button',
     },
     {
-      actionType: ActionType.loadingButton,
+      actionType: FormActionType.loadingButton,
       label: 'Save',
       name: FormActionName.submit,
       type: 'submit',
       loadingPosition: 'end',
       endIcon: IconType.save,
-      'aria-label': 'Save Company',
+      'aria-label': 'Save Company Button',
     },
   ],
 };
@@ -152,117 +152,119 @@ export const COMPANY_SETUP_DETAILS_FORM_SCHEMA: FormProps<Company> = {
   subModule: SubModule.companyDetails,
   actions: [
     {
-      actionType: ActionType.loadingButton,
+      actionType: FormActionType.loadingButton,
       label: 'Next',
       name: FormActionName.submit,
       loadingPosition: 'end',
       endIcon: IconType.next,
       type: 'submit',
       roles: [UserRole.administrator],
-      'aria-label': 'Create Company',
+      'aria-label': 'Create Company Button',
     },
   ],
 };
 
-export const COMPANY_VIEW_DETAILS_SCHEMA: ViewDetailProps<Company>[] = [
-  {
-    name: 'basicInfo',
-    label: 'Basic Information',
-    type: ViewDetailType.section,
-    grid: { size: { xs: 12 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyViewDetails,
-  },
-  {
-    name: COMPANY_FIELDS.name.field,
-    label: COMPANY_FIELDS.name.name,
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyViewDetails,
-  },
-  {
-    name: COMPANY_FIELDS.countryName!.field,
-    label: COMPANY_FIELDS.countryName!.name,
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyViewDetails,
-  },
-  {
-    name: COMPANY_FIELDS.id!.field,
-    label: COMPANY_FIELDS.id!.name,
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyViewDetails,
-    renderDetailField: (company) => renderCopyableField({ text: String(company.id) }),
-  },
-];
+export const COMPANY_VIEW_DETAILS_SCHEMA: ViewDetailProps<Company> = {
+  module: Module.companyManagement,
+  subModule: SubModule.companyViewDetails,
+  title: 'Company Details',
+  fields: [
+    {
+      name: 'basicInfo',
+      label: 'Basic Information',
+      type: ViewDetailType.section,
+      grid: { size: { xs: 12 } },
+    },
+    {
+      name: COMPANY_FIELDS.name.field,
+      label: COMPANY_FIELDS.name.name,
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+    },
+    {
+      name: COMPANY_FIELDS.countryName!.field,
+      label: COMPANY_FIELDS.countryName!.name,
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+    },
+    {
+      name: COMPANY_FIELDS.id!.field,
+      label: COMPANY_FIELDS.id!.name,
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12 } },
+      renderDetailField: (company) => renderCopyableField({ text: String(company.id) }),
+    },
+  ],
+  actions: [
+    {
+      actionType: ViewDetailActionType.button,
+      label: 'Edit',
+      name: ViewDetailActionName.edit,
+      roles: [UserRole.administrator],
+      color: 'primary',
+      variant: 'contained',
+      'aria-label': 'Edit Company Button',
+    },
+  ],
+};
 
-export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewDetailProps<CompanyLicense>[] = [
-  {
-    name: COMPANY_LICENSE_FIELDS.terms.field,
-    label: COMPANY_LICENSE_FIELDS.terms.name,
-    type: ViewDetailType.section,
-    grid: { size: { xs: 12 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyLicenseViewDetails,
-  },
-  {
-    name: `${COMPANY_LICENSE_FIELDS.terms.field}.${COMPANY_LICENSE_FIELDS.terms.licensee.field}.${COMPANY_LICENSE_FIELDS.terms.licensee.longName.field}`,
-    label: COMPANY_LICENSE_FIELDS.terms.licensee.longName.name,
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyLicenseViewDetails,
-  },
-  {
-    name: `${COMPANY_LICENSE_FIELDS.terms.field}.${COMPANY_LICENSE_FIELDS.terms.licensee.field}.${COMPANY_LICENSE_FIELDS.terms.licensee.shortName.field}`,
-    label: COMPANY_LICENSE_FIELDS.terms.licensee.shortName.name,
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyLicenseViewDetails,
-  },
-  {
-    name: `${COMPANY_LICENSE_FIELDS.terms.field}.${COMPANY_LICENSE_FIELDS.terms.notBefore.field}`,
-    label: COMPANY_LICENSE_FIELDS.terms.notBefore.name,
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyLicenseViewDetails,
-  },
-  {
-    name: `${COMPANY_LICENSE_FIELDS.terms.field}.${COMPANY_LICENSE_FIELDS.terms.notAfter.field}`,
-    label: COMPANY_LICENSE_FIELDS.terms.notAfter.name,
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyLicenseViewDetails,
-  },
-  {
-    name: COMPANY_LICENSE_FIELDS.entitlements.field,
-    label: COMPANY_LICENSE_FIELDS.entitlements.name,
-    type: ViewDetailType.section,
-    grid: { size: { xs: 12 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyLicenseViewDetails,
-  },
-  {
-    name: `${COMPANY_LICENSE_FIELDS.entitlements.field}.${COMPANY_LICENSE_FIELDS.entitlements.maximumBranchCount.field}`,
-    label: COMPANY_LICENSE_FIELDS.entitlements.maximumBranchCount.name,
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyLicenseViewDetails,
-  },
-  {
-    name: `${COMPANY_LICENSE_FIELDS.entitlements.field}.${COMPANY_LICENSE_FIELDS.entitlements.maximumEmployeeCount.field}`,
-    label: COMPANY_LICENSE_FIELDS.entitlements.maximumEmployeeCount.name,
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.companyManagement,
-    subModule: SubModule.companyLicenseViewDetails,
-  },
-];
+export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewDetailProps<CompanyLicense> = {
+  title: 'Company License Details',
+  module: Module.companyManagement,
+  subModule: SubModule.companyLicenseViewDetails,
+  fields: [
+    {
+      name: COMPANY_LICENSE_FIELDS.terms.field,
+      label: COMPANY_LICENSE_FIELDS.terms.name,
+      type: ViewDetailType.section,
+      grid: { size: { xs: 12 } },
+    },
+    {
+      name: `${COMPANY_LICENSE_FIELDS.terms.field}.${COMPANY_LICENSE_FIELDS.terms.licensee.field}.${COMPANY_LICENSE_FIELDS.terms.licensee.longName.field}`,
+      label: COMPANY_LICENSE_FIELDS.terms.licensee.longName.name,
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+    },
+    {
+      name: `${COMPANY_LICENSE_FIELDS.terms.field}.${COMPANY_LICENSE_FIELDS.terms.licensee.field}.${COMPANY_LICENSE_FIELDS.terms.licensee.shortName.field}`,
+      label: COMPANY_LICENSE_FIELDS.terms.licensee.shortName.name,
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+    },
+    {
+      name: `${COMPANY_LICENSE_FIELDS.terms.field}.${COMPANY_LICENSE_FIELDS.terms.notBefore.field}`,
+      label: COMPANY_LICENSE_FIELDS.terms.notBefore.name,
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+    },
+    {
+      name: `${COMPANY_LICENSE_FIELDS.terms.field}.${COMPANY_LICENSE_FIELDS.terms.notAfter.field}`,
+      label: COMPANY_LICENSE_FIELDS.terms.notAfter.name,
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+    },
+    {
+      name: COMPANY_LICENSE_FIELDS.entitlements.field,
+      label: COMPANY_LICENSE_FIELDS.entitlements.name,
+      type: ViewDetailType.section,
+      grid: { size: { xs: 12 } },
+    },
+    {
+      name: `${COMPANY_LICENSE_FIELDS.entitlements.field}.${COMPANY_LICENSE_FIELDS.entitlements.maximumBranchCount.field}`,
+      label: COMPANY_LICENSE_FIELDS.entitlements.maximumBranchCount.name,
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+    },
+    {
+      name: `${COMPANY_LICENSE_FIELDS.entitlements.field}.${COMPANY_LICENSE_FIELDS.entitlements.maximumEmployeeCount.field}`,
+      label: COMPANY_LICENSE_FIELDS.entitlements.maximumEmployeeCount.name,
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+    },
+  ],
+};
+
+export const COMPANY_DETAILS_FORM_DEFAULT_VALUES: Company = {
+  name: '',
+  countryCode: '',
+};

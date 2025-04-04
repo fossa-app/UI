@@ -11,7 +11,7 @@ import {
   fetchSearchedBranches,
   resetEmployee,
 } from 'store/features';
-import { EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
+import { EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
 import { Branch, Employee } from 'shared/models';
 import { deepCopyObject, mapBranchToFieldOption, mapEmployeeDTO } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
@@ -27,13 +27,7 @@ const EditEmployeePage: React.FC = () => {
   const { data: employee, error, fetchStatus, updateStatus } = useAppSelector(selectEmployee);
   const { data: branches, fetchStatus: searchedBranchesStatus } = useAppSelector(selectSearchedBranches);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
-
-  const defaultValues: Employee = {
-    firstName: employee?.firstName ?? '',
-    lastName: employee?.lastName ?? '',
-    fullName: employee?.fullName ?? '',
-    assignedBranchId: employee?.assignedBranchId ?? null,
-  };
+  const defaultValues: Employee = employee || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
 
   const branchItems = React.useMemo(() => {
     const branchList = branches?.items || [];
