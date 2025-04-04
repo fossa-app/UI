@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { fetchBranchById, resetBranch, selectBranch, selectUserRoles } from 'store/features';
 import { Module, SubModule } from 'shared/models';
 import { BRANCH_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
+import { hasAllowedRole } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
 import ViewDetails, { ViewDetailActionName } from 'components/UI/ViewDetails';
 
@@ -27,8 +28,7 @@ const ViewBranchPage: React.FC = () => {
   const actions = React.useMemo(
     () =>
       BRANCH_VIEW_DETAILS_SCHEMA.actions
-        // TODO: move the role filter to a separate method
-        ?.filter((action) => userRoles?.some((role) => action.roles?.includes(role)))
+        ?.filter(({ roles }) => hasAllowedRole(roles, userRoles))
         .map((action) => {
           switch (action.name) {
             case ViewDetailActionName.edit:
