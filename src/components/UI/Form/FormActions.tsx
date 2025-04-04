@@ -2,22 +2,27 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import FormHelperText from '@mui/material/FormHelperText';
 import { useFormContext } from './FormContext';
-import { ActionProps } from './form.model';
-import Action from './actions';
+import { FormActionProps } from './form.model';
+import FormAction from './actions';
 
 type FormActionsProps = {
-  actions: ActionProps[];
+  actions?: FormActionProps[];
   generalValidationMessage?: string;
+  children?: React.ReactNode;
 };
 
-const FormActions: React.FC<FormActionsProps> = ({ actions, generalValidationMessage }) => {
+const FormActions: React.FC<FormActionsProps> = ({ actions, generalValidationMessage, children }) => {
   const context = useFormContext();
 
   if (!context) {
     throw new Error('FormActions must be used within a Form component using FormContext.');
   }
 
-  const { module, subModule } = useFormContext();
+  if (actions?.length && children) {
+    throw new Error('FormActions cannot accept both "actions" and "children". Provide only one.');
+  }
+
+  const { module, subModule } = context;
 
   return (
     <Box sx={{ padding: 6 }}>
@@ -27,9 +32,7 @@ const FormActions: React.FC<FormActionsProps> = ({ actions, generalValidationMes
         </FormHelperText>
       )}
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 4 }}>
-        {actions.map((action) => (
-          <Action key={action.name} {...action} />
-        ))}
+        {actions ? actions.map((action) => <FormAction key={action.name} {...action} />) : children}
       </Box>
     </Box>
   );

@@ -3,10 +3,12 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { getNestedValue } from 'shared/helpers';
 import { APP_CONFIG } from 'shared/constants';
-import { ViewDetailProps } from '../view-details.model';
+import { ViewDetailFieldProps } from '../view-details.model';
+import { useViewDetailsContext } from '../ViewDetailsContext';
 
-const LabelValueDetail = <T,>({ module, subModule, values, ...props }: { values: T } & ViewDetailProps<T>) => {
+const LabelValueDetail = <T,>({ values, ...props }: { values: T } & ViewDetailFieldProps<T>) => {
   const fieldValue = getNestedValue<T>(values, props.name);
+  const { module, subModule } = useViewDetailsContext();
 
   return (
     <>

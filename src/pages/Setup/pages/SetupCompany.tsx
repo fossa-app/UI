@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompany, createCompany, selectIsUserAdmin, selectUserRoles, selectSystemCountries } from 'store/features';
 import { Company, CompanyDTO } from 'shared/models';
 import { deepCopyObject, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
-import { COMPANY_SETUP_DETAILS_FORM_SCHEMA, MESSAGES } from 'shared/constants';
+import { COMPANY_DETAILS_FORM_DEFAULT_VALUES, COMPANY_SETUP_DETAILS_FORM_SCHEMA, MESSAGES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
 
@@ -17,12 +17,6 @@ const SetupCompanyPage: React.FC = () => {
   const countries = useAppSelector(selectSystemCountries);
   const { error, updateStatus } = useAppSelector(selectCompany);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
-
-  // TODO: move outside the component context and create a constant
-  const defaultValues: Company = {
-    name: '',
-    countryCode: '',
-  };
 
   const fields = React.useMemo(
     () => mapCountriesToFieldOptions(mapDisabledFields(COMPANY_SETUP_DETAILS_FORM_SCHEMA.fields, userRoles), countries),
@@ -49,7 +43,13 @@ const SetupCompanyPage: React.FC = () => {
 
   return (
     <PageLayout module={testModule} subModule={testSubModule} pageTitle="Create Company">
-      <Form<Company> module={testModule} subModule={testSubModule} defaultValues={defaultValues} errors={errors} onSubmit={handleSubmit}>
+      <Form<Company>
+        module={testModule}
+        subModule={testSubModule}
+        defaultValues={COMPANY_DETAILS_FORM_DEFAULT_VALUES}
+        errors={errors}
+        onSubmit={handleSubmit}
+      >
         <Form.Header>{COMPANY_SETUP_DETAILS_FORM_SCHEMA.title}</Form.Header>
 
         <Form.Content fields={fields} />

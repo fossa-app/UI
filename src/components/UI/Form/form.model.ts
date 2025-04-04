@@ -20,7 +20,7 @@ export type FormControlRules =
   | { validate?: Validate<FieldValues> }
   | undefined;
 
-export enum FieldType {
+export enum FormFieldType {
   section = 'section',
   text = 'text',
   select = 'select',
@@ -30,24 +30,29 @@ export enum FieldType {
   labelValue = 'labelValue',
 }
 
-export enum ActionType {
+export enum FormActionType {
   button = 'button',
   loadingButton = 'loadingButton',
 }
 
-interface BaseFieldProps {
+export enum FormActionName {
+  cancel = 'cancel',
+  submit = 'submit',
+}
+
+interface BaseFormFieldProps {
   label: string;
   name: string;
-  type: FieldType;
+  type: FormFieldType;
   roles?: UserRole[];
   grid?: GridBaseProps;
   rules?: FormControlRules;
 }
 
-interface BaseActionProps {
+interface FormBaseActionProps {
   label: string;
   name: string;
-  actionType: ActionType;
+  actionType: FormActionType;
   roles?: UserRole[];
 }
 
@@ -56,43 +61,43 @@ export interface FieldOption {
   value: string;
 }
 
-export type SectionFieldProps = BaseFieldProps & {
-  type: FieldType.section;
+export type SectionFieldProps = BaseFormFieldProps & {
+  type: FormFieldType.section;
 } & TypographyProps;
 
-export type LabelValueFieldProps = BaseFieldProps & {
-  type: FieldType.labelValue;
+export type LabelValueFieldProps = BaseFormFieldProps & {
+  type: FormFieldType.labelValue;
 } & TypographyProps;
 
-export type InputFieldProps = BaseFieldProps & {
-  type: FieldType.text;
+export type InputFieldProps = BaseFormFieldProps & {
+  type: FormFieldType.text;
 } & TextFieldProps;
 
-export type AutocompleteFieldProps = BaseFieldProps & {
-  type: FieldType.autocomplete;
+export type AutocompleteFieldProps = BaseFormFieldProps & {
+  type: FormFieldType.autocomplete;
   // TODO: add renderOptions to map to the field options
   options: FieldOption[];
   loading?: boolean;
   onInputChange?: (event: React.SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => void;
 } & Omit<AutocompleteProps<FieldOption, boolean | undefined, boolean | undefined, boolean | undefined>, 'renderInput'>;
 
-export type SelectFieldProps = BaseFieldProps & {
-  type: FieldType.select;
+export type SelectFieldProps = BaseFormFieldProps & {
+  type: FormFieldType.select;
   // TODO: add renderOptions to map to the field options
   options: FieldOption[];
 } & SelectProps;
 
-export type CheckboxFieldProps = BaseFieldProps & {
-  type: FieldType.checkbox;
+export type CheckboxFieldProps = BaseFormFieldProps & {
+  type: FormFieldType.checkbox;
   label: string;
 } & CheckboxProps;
 
-export type SwitchFieldProps = BaseFieldProps & {
-  type: FieldType.switch;
+export type SwitchFieldProps = BaseFormFieldProps & {
+  type: FormFieldType.switch;
   label: string;
 } & SwitchProps;
 
-export type FieldProps<T> = { renderField?: (item?: T) => React.ReactNode } & (
+export type FormFieldProps<T> = { renderField?: (item?: T) => React.ReactNode } & (
   | SectionFieldProps
   | LabelValueFieldProps
   | InputFieldProps
@@ -102,25 +107,20 @@ export type FieldProps<T> = { renderField?: (item?: T) => React.ReactNode } & (
   | SwitchFieldProps
 );
 
-export type ButtonActionProps = BaseActionProps & {
-  actionType: ActionType.button;
+type FormActionButtonProps = FormBaseActionProps & {
+  actionType: FormActionType.button;
 } & ButtonProps;
 
-export type LoadingButtonActionProps = BaseActionProps & {
-  actionType: ActionType.loadingButton;
+type FormActionLoadingButtonProps = FormBaseActionProps & {
+  actionType: FormActionType.loadingButton;
 } & LoadingButtonProps;
 
-export type ActionProps = ButtonActionProps | LoadingButtonActionProps;
+export type FormActionProps = FormActionButtonProps | FormActionLoadingButtonProps;
 
 export type FormProps<T> = {
   module: Module;
   subModule: SubModule;
   title: string;
-  fields: FieldProps<T>[];
-  actions: ActionProps[];
+  fields: FormFieldProps<T>[];
+  actions: FormActionProps[];
 };
-
-export enum FormActionName {
-  cancel = 'cancel',
-  submit = 'submit',
-}

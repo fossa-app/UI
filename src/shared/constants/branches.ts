@@ -1,7 +1,7 @@
 import { Branch, BranchFieldConfig, IconType, Module, SubModule, UserRole } from 'shared/models';
-import { ActionType, FieldType, FormActionName, FormProps } from 'components/UI/Form';
+import { FormActionType, FormFieldType, FormActionName, FormProps } from 'components/UI/Form';
 import { Action, Column } from 'components/UI/Table';
-import { ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
+import { ViewDetailActionName, ViewDetailActionType, ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
 import { renderBranchField } from 'pages/Manage/Branch/components/BranchField';
 import { ACTION_FIELD, ACTION_FIELDS } from './common';
 
@@ -78,14 +78,14 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
   title: 'Branch Details',
   fields: [
     {
-      type: FieldType.section,
+      type: FormFieldType.section,
       name: 'basicInfo',
       label: 'Basic Information',
       grid: { size: { xs: 12 } },
       roles: [UserRole.administrator],
     },
     {
-      type: FieldType.text,
+      type: FormFieldType.text,
       name: BRANCH_FIELDS.name.field,
       label: 'Enter Branch Name',
       grid: { size: { xs: 12, md: 6 } },
@@ -100,7 +100,7 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
       roles: [UserRole.administrator],
     },
     {
-      type: FieldType.select,
+      type: FormFieldType.select,
       name: BRANCH_FIELDS.timeZoneId.field,
       label: 'Select TimeZone',
       grid: { size: { xs: 12, md: 6 } },
@@ -111,21 +111,21 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
       roles: [UserRole.administrator],
     },
     {
-      type: FieldType.section,
+      type: FormFieldType.section,
       name: BRANCH_FIELDS.address.field,
       label: BRANCH_FIELDS.address.name,
       grid: { size: { xs: 12 } },
       roles: [UserRole.administrator],
     },
     {
-      type: FieldType.switch,
+      type: FormFieldType.switch,
       name: BRANCH_FIELDS.noPhysicalAddress.field,
       label: BRANCH_FIELDS.noPhysicalAddress.name,
       grid: { size: { xs: 12 } },
       roles: [UserRole.administrator],
     },
     {
-      type: FieldType.text,
+      type: FormFieldType.text,
       name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
       label: 'Enter Address Line 1',
       grid: { size: { xs: 12, md: 6 } },
@@ -139,7 +139,7 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
       roles: [UserRole.administrator],
     },
     {
-      type: FieldType.text,
+      type: FormFieldType.text,
       name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
       label: 'Enter Address Line 2',
       grid: { size: { xs: 12, md: 6 } },
@@ -152,7 +152,7 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
       roles: [UserRole.administrator],
     },
     {
-      type: FieldType.text,
+      type: FormFieldType.text,
       name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.city!.field}`,
       label: 'City',
       grid: { size: { xs: 12, md: 6 } },
@@ -166,7 +166,7 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
       roles: [UserRole.administrator],
     },
     {
-      type: FieldType.text,
+      type: FormFieldType.text,
       name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.subdivision!.field}`,
       label: 'State',
       grid: { size: { xs: 12, md: 6 } },
@@ -180,7 +180,7 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
       roles: [UserRole.administrator],
     },
     {
-      type: FieldType.select,
+      type: FormFieldType.select,
       name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryCode!.field}`,
       label: 'Country',
       grid: { size: { xs: 12, md: 6 } },
@@ -191,7 +191,7 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
       roles: [UserRole.administrator],
     },
     {
-      type: FieldType.text,
+      type: FormFieldType.text,
       name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
       label: 'Postal Code',
       grid: { size: { xs: 12, md: 6 } },
@@ -211,23 +211,23 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
   ],
   actions: [
     {
-      actionType: ActionType.button,
+      actionType: FormActionType.button,
       label: 'Cancel',
       name: FormActionName.cancel,
       variant: 'text',
       color: 'secondary',
       roles: [UserRole.administrator],
-      'aria-label': 'Cancel Branch',
+      'aria-label': 'Cancel Branch Button',
     },
     {
-      actionType: ActionType.loadingButton,
+      actionType: FormActionType.loadingButton,
       label: 'Save',
       name: FormActionName.submit,
       type: 'submit',
       loadingPosition: 'end',
       endIcon: IconType.save,
       roles: [UserRole.administrator],
-      'aria-label': 'Save Branch',
+      'aria-label': 'Save Branch Button',
     },
   ],
 };
@@ -238,137 +238,133 @@ export const BRANCH_SETUP_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
   subModule: SubModule.branchDetails,
   actions: [
     {
-      actionType: ActionType.loadingButton,
+      actionType: FormActionType.loadingButton,
       label: 'Next',
       name: FormActionName.submit,
       loadingPosition: 'end',
       endIcon: IconType.next,
       type: 'submit',
       roles: [UserRole.administrator],
-      'aria-label': 'Create Branch',
+      'aria-label': 'Create Branch Button',
     },
   ],
 };
 
-export const BRANCH_VIEW_DETAILS_SCHEMA: ViewDetailProps<Branch>[] = [
-  {
-    name: 'basicInfo',
-    label: 'Basic Information',
-    type: ViewDetailType.section,
-    grid: { size: { xs: 12 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchViewDetails,
-  },
-  {
-    name: BRANCH_FIELDS.name.field,
-    label: 'Branch Name',
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchViewDetails,
-  },
-  {
-    name: BRANCH_FIELDS.timeZoneName!.field,
-    label: 'TimeZone',
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchViewDetails,
-    renderDetailField: (branch) => renderBranchField({ branch, field: BRANCH_FIELDS.timeZoneName!.field, tooltip: 'Invalid TimeZone' }),
-  },
-  {
-    name: BRANCH_FIELDS.address.field,
-    label: 'Address Information',
-    type: ViewDetailType.section,
-    grid: { size: { xs: 12 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchViewDetails,
-  },
-  {
-    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
-    label: 'Address Line 1',
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchViewDetails,
-    renderDetailField: (branch) =>
-      renderBranchField({
-        branch,
-        field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
-        tooltip: 'Invalid Address Line 1',
-      }),
-  },
-  {
-    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
-    label: 'Address Line 2',
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchViewDetails,
-    renderDetailField: (branch) =>
-      renderBranchField({
-        branch,
-        field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
-        tooltip: 'Invalid Address Line 2',
-      }),
-  },
-  {
-    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.city!.field}`,
-    label: 'City',
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchViewDetails,
-    renderDetailField: (branch) =>
-      renderBranchField({
-        branch,
-        field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.city!.field}`,
-        tooltip: 'Invalid City',
-      }),
-  },
-  {
-    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.subdivision!.field}`,
-    label: 'State',
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchViewDetails,
-    renderDetailField: (branch) =>
-      renderBranchField({
-        branch,
-        field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.subdivision!.field}`,
-        tooltip: 'Invalid State',
-      }),
-  },
-  {
-    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryName!.field}`,
-    label: 'Country',
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchViewDetails,
-    renderDetailField: (branch) =>
-      renderBranchField({
-        branch,
-        field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryName!.field}`,
-        tooltip: 'Invalid Country',
-      }),
-  },
-  {
-    name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
-    label: 'Postal Code',
-    type: ViewDetailType.labelValue,
-    grid: { size: { xs: 12, md: 6 } },
-    module: Module.branchManagement,
-    subModule: SubModule.branchViewDetails,
-    renderDetailField: (branch) =>
-      renderBranchField({
-        branch,
-        field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
-        tooltip: 'Invalid Postal Code',
-      }),
-  },
-];
+export const BRANCH_VIEW_DETAILS_SCHEMA: ViewDetailProps<Branch> = {
+  title: 'Branch Details',
+  module: Module.branchManagement,
+  subModule: SubModule.branchViewDetails,
+  fields: [
+    {
+      name: 'basicInfo',
+      label: 'Basic Information',
+      type: ViewDetailType.section,
+      grid: { size: { xs: 12 } },
+    },
+    {
+      name: BRANCH_FIELDS.name.field,
+      label: 'Branch Name',
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+    },
+    {
+      name: BRANCH_FIELDS.timeZoneName!.field,
+      label: 'TimeZone',
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+      renderDetailField: (branch) => renderBranchField({ branch, field: BRANCH_FIELDS.timeZoneName!.field, tooltip: 'Invalid TimeZone' }),
+    },
+    {
+      name: BRANCH_FIELDS.address.field,
+      label: 'Address Information',
+      type: ViewDetailType.section,
+      grid: { size: { xs: 12 } },
+    },
+    {
+      name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
+      label: 'Address Line 1',
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+      renderDetailField: (branch) =>
+        renderBranchField({
+          branch,
+          field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
+          tooltip: 'Invalid Address Line 1',
+        }),
+    },
+    {
+      name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
+      label: 'Address Line 2',
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+      renderDetailField: (branch) =>
+        renderBranchField({
+          branch,
+          field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
+          tooltip: 'Invalid Address Line 2',
+        }),
+    },
+    {
+      name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.city!.field}`,
+      label: 'City',
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+      renderDetailField: (branch) =>
+        renderBranchField({
+          branch,
+          field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.city!.field}`,
+          tooltip: 'Invalid City',
+        }),
+    },
+    {
+      name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.subdivision!.field}`,
+      label: 'State',
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+      renderDetailField: (branch) =>
+        renderBranchField({
+          branch,
+          field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.subdivision!.field}`,
+          tooltip: 'Invalid State',
+        }),
+    },
+    {
+      name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryName!.field}`,
+      label: 'Country',
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+      renderDetailField: (branch) =>
+        renderBranchField({
+          branch,
+          field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryName!.field}`,
+          tooltip: 'Invalid Country',
+        }),
+    },
+    {
+      name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
+      label: 'Postal Code',
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+      renderDetailField: (branch) =>
+        renderBranchField({
+          branch,
+          field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
+          tooltip: 'Invalid Postal Code',
+        }),
+    },
+  ],
+  actions: [
+    {
+      actionType: ViewDetailActionType.button,
+      label: 'Edit',
+      name: ViewDetailActionName.edit,
+      roles: [UserRole.administrator],
+      color: 'primary',
+      variant: 'contained',
+      'aria-label': 'Edit Branch Button',
+    },
+  ],
+};
 
 export const BRANCH_TABLE_SCHEMA: Column<Branch>[] = [
   {
@@ -412,3 +408,9 @@ export const BRANCH_TABLE_ACTIONS_SCHEMA: Action<Branch>[] = [
     roles: [UserRole.administrator],
   },
 ];
+
+export const BRANCH_DETAILS_FORM_DEFAULT_VALUES: Branch = {
+  name: '',
+  timeZoneId: '',
+  address: null,
+};

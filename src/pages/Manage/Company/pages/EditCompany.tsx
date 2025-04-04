@@ -11,7 +11,7 @@ import {
   resetCompanyFetchStatus,
   resetBranchesFetchStatus,
 } from 'store/features';
-import { COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA, MESSAGES, ROUTES } from 'shared/constants';
+import { COMPANY_DETAILS_FORM_DEFAULT_VALUES, COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA, MESSAGES, ROUTES } from 'shared/constants';
 import { Company, CompanyDTO } from 'shared/models';
 import { deepCopyObject, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
@@ -28,11 +28,6 @@ const EditCompanyPage: React.FC = () => {
   const countries = useAppSelector(selectSystemCountries);
   const { data: company, error, fetchStatus, updateStatus } = useAppSelector(selectCompany);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
-
-  const defaultValues: Company = {
-    name: '',
-    countryCode: '',
-  };
 
   const handleSubmit = (data: Omit<CompanyDTO, 'id'>) => {
     dispatch(editCompany(data));
@@ -93,7 +88,7 @@ const EditCompanyPage: React.FC = () => {
       <Form<Company>
         module={testModule}
         subModule={testSubModule}
-        defaultValues={defaultValues}
+        defaultValues={COMPANY_DETAILS_FORM_DEFAULT_VALUES}
         values={company}
         errors={errors}
         loading={fetchStatus === 'loading'}

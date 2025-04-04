@@ -3,11 +3,14 @@ import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchEmployeeById, selectEmployee, resetEmployee, selectProfile, selectUserRoles } from 'store/features';
-import { Module, SubModule, UserRole } from 'shared/models';
+import { UserRole } from 'shared/models';
 import { EMPLOYEE_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
 import WithRolesLayout from 'components/layouts/WithRolesLayout';
 import ViewDetails from 'components/UI/ViewDetails';
+
+const testModule = EMPLOYEE_VIEW_DETAILS_SCHEMA.module;
+const testSubModule = EMPLOYEE_VIEW_DETAILS_SCHEMA.subModule;
 
 const ViewEmployeePage: React.FC = () => {
   const navigate = useNavigate();
@@ -47,19 +50,19 @@ const ViewEmployeePage: React.FC = () => {
   return (
     <PageLayout
       withBackButton
-      module={Module.employeeManagement}
-      subModule={SubModule.employeeViewDetails}
+      module={testModule}
+      subModule={testSubModule}
       pageTitle="View Employee"
       displayNotFoundPage={fetchStatus === 'failed' && !employee}
       onBackButtonClick={navigateBack}
     >
-      <ViewDetails module={Module.employeeManagement} subModule={SubModule.employeeViewDetails} loading={loading}>
-        <ViewDetails.Header>Employee Details</ViewDetails.Header>
-        <ViewDetails.Content fields={EMPLOYEE_VIEW_DETAILS_SCHEMA} values={employee} />
+      <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>
+        <ViewDetails.Header>{EMPLOYEE_VIEW_DETAILS_SCHEMA.title}</ViewDetails.Header>
+        <ViewDetails.Content fields={EMPLOYEE_VIEW_DETAILS_SCHEMA.fields} values={employee} />
         <ViewDetails.Actions>
           {profile?.id === employee?.id && (
             <Button
-              data-cy={`${Module.employeeManagement}-${SubModule.employeeViewDetails}-view-profile-button`}
+              data-cy={`${testModule}-${testSubModule}-view-profile-button`}
               aria-label="View Profile Button"
               variant="outlined"
               color="secondary"
@@ -70,7 +73,7 @@ const ViewEmployeePage: React.FC = () => {
           )}
           <WithRolesLayout allowedRoles={[UserRole.administrator]} userRoles={userRoles}>
             <Button
-              data-cy={`${Module.employeeManagement}-${SubModule.employeeViewDetails}-view-action-button`}
+              data-cy={`${testModule}-${testSubModule}-view-action-button`}
               aria-label="Edit Employee Button"
               variant="contained"
               color="primary"

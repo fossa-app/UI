@@ -1,8 +1,11 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import { ViewDetailProps } from '../view-details.model';
+import { ViewDetailFieldProps } from '../view-details.model';
+import { useViewDetailsContext } from '../ViewDetailsContext';
 
-const SectionDetail = <T,>({ module, subModule, ...props }: ViewDetailProps<T>) => {
+const SectionDetail = <T,>({ ...props }: ViewDetailFieldProps<T>) => {
+  const { module, subModule } = useViewDetailsContext();
+
   return (
     <Typography
       data-cy={`${module}-${subModule}-view-details-section-${props.name}`}

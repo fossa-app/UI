@@ -1,6 +1,6 @@
 import { BRANCH_FIELDS } from 'shared/constants';
 import { Branch, BranchDTO, Company, Country, TimeZone } from 'shared/models';
-import { FieldProps, FieldOption } from 'components/UI/Form';
+import { FormFieldProps, FieldOption } from 'components/UI/Form';
 import { mapCountryToFieldOption } from './company.helpers';
 
 export const mapBranch = (
@@ -72,10 +72,10 @@ export const mapBranches = (
 };
 
 export const mapBranchFieldOptionsToFieldOptions = (
-  fields: FieldProps<Branch>[],
+  fields: FormFieldProps<Branch>[],
   timeZones?: TimeZone[],
   countries?: Country[]
-): FieldProps<Branch>[] => {
+): FormFieldProps<Branch>[] => {
   return fields.map((field) => ({
     ...field,
     ...(field.name === BRANCH_FIELDS.timeZoneId.field &&
@@ -110,9 +110,9 @@ export const getFullAddress = (address?: Branch['address']): Branch['fullAddress
 };
 
 export const getBranchManagementDetailsByAddressFormSchema = (
-  schema: FieldProps<Branch>[],
+  schema: FormFieldProps<Branch>[],
   noPhysicalAddress: boolean
-): FieldProps<Branch>[] => {
+): FormFieldProps<Branch>[] => {
   if (noPhysicalAddress) {
     const addressFields = [
       `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
