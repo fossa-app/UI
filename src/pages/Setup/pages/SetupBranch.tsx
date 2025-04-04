@@ -19,6 +19,7 @@ import {
   mapDisabledFields,
   mapBranchFieldOptionsToFieldOptions,
   deepCopyObject,
+  hasAllowedRole,
 } from 'shared/helpers';
 import { BRANCH_SETUP_DETAILS_FORM_SCHEMA, BRANCH_DETAILS_FORM_DEFAULT_VALUES, MESSAGES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
@@ -55,7 +56,7 @@ const SetupBranchPage: React.FC = () => {
     () =>
       BRANCH_SETUP_DETAILS_FORM_SCHEMA.actions.map((action) =>
         action.name === FormActionName.submit
-          ? { ...action, disabled: !userRoles?.some((role) => action.roles?.includes(role)), loading: updateStatus === 'loading' }
+          ? { ...action, disabled: !hasAllowedRole(action.roles, userRoles), loading: updateStatus === 'loading' }
           : action
       ),
     [userRoles, updateStatus]

@@ -3,7 +3,7 @@ import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompany, createCompany, selectIsUserAdmin, selectUserRoles, selectSystemCountries } from 'store/features';
 import { Company, CompanyDTO } from 'shared/models';
-import { deepCopyObject, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
+import { deepCopyObject, hasAllowedRole, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
 import { COMPANY_DETAILS_FORM_DEFAULT_VALUES, COMPANY_SETUP_DETAILS_FORM_SCHEMA, MESSAGES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
@@ -27,7 +27,7 @@ const SetupCompanyPage: React.FC = () => {
     () =>
       COMPANY_SETUP_DETAILS_FORM_SCHEMA.actions.map((action) =>
         action.name === FormActionName.submit
-          ? { ...action, disabled: !userRoles?.some((role) => action.roles?.includes(role)), loading: updateStatus === 'loading' }
+          ? { ...action, disabled: !hasAllowedRole(action.roles, userRoles), loading: updateStatus === 'loading' }
           : action
       ),
     [userRoles, updateStatus]

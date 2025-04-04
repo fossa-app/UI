@@ -1,13 +1,13 @@
 import * as React from 'react';
+import { hasAllowedRole } from 'shared/helpers';
 import { UserRole } from 'shared/models';
 
 interface WithRolesLayoutProps {
   allowedRoles?: UserRole[];
   userRoles?: UserRole[];
-  children: React.ReactNode;
 }
 
-const WithRolesLayout: React.FC<WithRolesLayoutProps> = ({ allowedRoles, userRoles, children }) => {
+const WithRolesLayout: React.FC<React.PropsWithChildren<WithRolesLayoutProps>> = ({ allowedRoles, userRoles, children }) => {
   if (!allowedRoles) {
     return <>{children}</>;
   }
@@ -16,9 +16,7 @@ const WithRolesLayout: React.FC<WithRolesLayoutProps> = ({ allowedRoles, userRol
     return null;
   }
 
-  const hasAllowedRole = userRoles?.some((role) => allowedRoles.includes(role));
-
-  return hasAllowedRole ? <>{children}</> : null;
+  return hasAllowedRole(allowedRoles, userRoles) ? <>{children}</> : null;
 };
 
 export default WithRolesLayout;

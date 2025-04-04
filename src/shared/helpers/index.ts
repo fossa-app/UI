@@ -13,4 +13,5 @@ export * from './branch.helpers';
 export * from './employee.helpers';
 export * from './license.helpers';
 export * from './error.helpers';
+export * from './role.helpers';
 export * from './scrollbar-styles';
