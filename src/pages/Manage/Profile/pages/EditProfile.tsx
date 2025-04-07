@@ -6,6 +6,7 @@ import { editProfile, resetProfileFetchStatus, selectProfile } from 'store/featu
 import { EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, PROFILE_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
 import { Employee } from 'shared/models';
 import { deepCopyObject, mapProfileDTO } from 'shared/helpers';
+import { useOnFormSubmitEffect } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
 
@@ -15,7 +16,7 @@ const testSubModule = PROFILE_DETAILS_FORM_SCHEMA.subModule;
 const EditProfilePage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: profile, error, updateStatus } = useAppSelector(selectProfile);
+  const { data: profile, error, updateStatus = 'idle' } = useAppSelector(selectProfile);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
   const defaultValues: Employee = profile || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
 
@@ -31,6 +32,11 @@ const EditProfilePage: React.FC = () => {
     setFormSubmitted(false);
     navigateToViewProfile();
   }, [navigateToViewProfile]);
+
+  const handleSuccess = React.useCallback(() => {
+    dispatch(resetProfileFetchStatus());
+    navigateToViewProfile();
+  }, [dispatch, navigateToViewProfile]);
 
   const actions = React.useMemo(
     () =>
@@ -54,13 +60,7 @@ const EditProfilePage: React.FC = () => {
     setFormSubmitted(true);
   };
 
-  // TODO: move this logic to PageLayout
-  React.useEffect(() => {
-    if (updateStatus === 'succeeded' && formSubmitted) {
-      dispatch(resetProfileFetchStatus());
-      navigateToViewProfile();
-    }
-  }, [updateStatus, formSubmitted, navigateToViewProfile, dispatch]);
+  useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
 
   return (
     <PageLayout module={testModule} subModule={testSubModule} pageTitle="Edit Profile">

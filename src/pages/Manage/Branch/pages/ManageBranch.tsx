@@ -24,6 +24,7 @@ import {
   mapBranchFieldOptionsToFieldOptions,
   deepCopyObject,
 } from 'shared/helpers';
+import { useOnFormSubmitEffect } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormFieldProps, FormActionName } from 'components/UI/Form';
 
@@ -39,7 +40,7 @@ const ManageBranchPage: React.FC = () => {
   const companyTimeZones = useAppSelector(selectCompanyTimeZones);
   const { data: company } = useAppSelector(selectCompany);
   const countries = useAppSelector(selectSystemCountries);
-  const { data: branch, error, fetchStatus, updateStatus } = useAppSelector(selectBranch);
+  const { data: branch, error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectBranch);
   const [formSubmitted, setFormSubmitted] = React.useState(false);
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
   const [fields, setFields] = React.useState<FormFieldProps<Branch>[]>([]);
@@ -68,6 +69,11 @@ const ManageBranchPage: React.FC = () => {
     dispatch(resetBranch());
     navigate(ROUTES.branches.path);
   }, [navigate, dispatch]);
+
+  const handleSuccess = React.useCallback(() => {
+    dispatch(resetBranch());
+    navigate(ROUTES.branches.path);
+  }, [dispatch, navigate]);
 
   const actions = React.useMemo(
     () =>
@@ -101,13 +107,7 @@ const ManageBranchPage: React.FC = () => {
     }
   }, [id, dispatch]);
 
-  // TODO: move this logic to PageLayout
-  React.useEffect(() => {
-    if (updateStatus === 'succeeded' && formSubmitted) {
-      dispatch(resetBranch());
-      navigate(ROUTES.branches.path);
-    }
-  }, [updateStatus, formSubmitted, navigate, dispatch]);
+  useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
 
   React.useEffect(() => {
     if (!id || (id && branch && noPhysicalAddress !== undefined)) {

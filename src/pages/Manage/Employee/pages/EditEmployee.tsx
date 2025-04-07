@@ -14,6 +14,7 @@ import {
 import { EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
 import { Branch, Employee } from 'shared/models';
 import { deepCopyObject, mapBranchToFieldOption, mapEmployeeDTO } from 'shared/helpers';
+import { useOnFormSubmitEffect } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
 
@@ -24,7 +25,7 @@ const EditEmployeePage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  const { data: employee, error, fetchStatus, updateStatus } = useAppSelector(selectEmployee);
+  const { data: employee, error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectEmployee);
   const { data: branches, fetchStatus: searchedBranchesStatus } = useAppSelector(selectSearchedBranches);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
   const defaultValues: Employee = employee || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
@@ -58,6 +59,11 @@ const EditEmployeePage: React.FC = () => {
 
   const handleCancel = React.useCallback(() => {
     dispatch(resetEmployee());
+    navigate(ROUTES.employees.path);
+  }, [dispatch, navigate]);
+
+  const handleSuccess = React.useCallback(() => {
+    dispatch(resetEmployeesFetchStatus());
     navigate(ROUTES.employees.path);
   }, [dispatch, navigate]);
 
@@ -97,13 +103,7 @@ const EditEmployeePage: React.FC = () => {
     }
   }, [id, dispatch]);
 
-  // TODO: move this logic to PageLayout
-  React.useEffect(() => {
-    if (updateStatus === 'succeeded' && formSubmitted) {
-      dispatch(resetEmployeesFetchStatus());
-      navigate(ROUTES.employees.path);
-    }
-  }, [updateStatus, formSubmitted, navigate, dispatch]);
+  useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
 
   React.useEffect(() => {
     return () => {

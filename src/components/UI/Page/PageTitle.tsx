@@ -25,7 +25,7 @@ export const PageTitle: React.FC<React.PropsWithChildren<PageTitleProps>> = ({
   const { module, subModule } = context;
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} {...props}>
+    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', height: '100%' }} {...props}>
       {withBackButton && (
         <IconButton
           aria-label="Navigate Back"
