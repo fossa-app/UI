@@ -31,7 +31,7 @@ const PageLayout: React.FC<React.PropsWithChildren<PageLayoutProps>> = ({
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, ...props.sx }} {...props}>
-      <Page module={module} subModule={subModule}>
+      <Page module={module} subModule={subModule} sx={{ minHeight: 48 }}>
         <PageTitle withBackButton={withBackButton} onBackButtonClick={onBackButtonClick}>
           {pageTitle}
         </PageTitle>

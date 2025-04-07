@@ -14,6 +14,7 @@ import {
 import { COMPANY_DETAILS_FORM_DEFAULT_VALUES, COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA, MESSAGES, ROUTES } from 'shared/constants';
 import { Company, CompanyDTO } from 'shared/models';
 import { deepCopyObject, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
+import { useOnFormSubmitEffect } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
 
@@ -26,7 +27,7 @@ const EditCompanyPage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const userRoles = useAppSelector(selectUserRoles);
   const countries = useAppSelector(selectSystemCountries);
-  const { data: company, error, fetchStatus, updateStatus } = useAppSelector(selectCompany);
+  const { data: company, error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectCompany);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
 
   const handleSubmit = (data: Omit<CompanyDTO, 'id'>) => {
@@ -42,6 +43,11 @@ const EditCompanyPage: React.FC = () => {
     setFormSubmitted(false);
     navigateToViewCompany();
   }, [navigateToViewCompany]);
+
+  const handleSuccess = React.useCallback(() => {
+    dispatch(resetBranchesFetchStatus());
+    navigateToViewCompany();
+  }, [dispatch, navigateToViewCompany]);
 
   const fields = React.useMemo(
     () => mapCountriesToFieldOptions(mapDisabledFields(COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, userRoles), countries),
@@ -67,13 +73,7 @@ const EditCompanyPage: React.FC = () => {
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
   }, [error?.errors]);
 
-  // TODO: move this logic to PageLayout
-  React.useEffect(() => {
-    if (updateStatus === 'succeeded' && formSubmitted) {
-      dispatch(resetBranchesFetchStatus());
-      navigateToViewCompany();
-    }
-  }, [updateStatus, formSubmitted, navigateToViewCompany, dispatch]);
+  useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
 
   React.useEffect(() => {
     return () => {
