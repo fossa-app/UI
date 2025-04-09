@@ -6,13 +6,23 @@ import { ViewDetailFieldProps } from './view-details.model';
 import { useViewDetailsContext } from './ViewDetailsContext';
 import Detail from './details';
 
-type ViewDetailsContentProps<T> = {
+type WithFields<T> = {
   fields: ViewDetailFieldProps<T>[];
   values?: T;
   noValuesTemplate?: React.ReactElement;
+  children?: never;
 };
 
-const ViewDetailsContent = <T,>({ fields, values, noValuesTemplate }: ViewDetailsContentProps<T>) => {
+type WithChildren = {
+  children: React.ReactNode;
+  fields?: never;
+  values?: never;
+  noValuesTemplate?: never;
+};
+
+type ViewDetailsContentProps<T> = WithFields<T> | WithChildren;
+
+const ViewDetailsContent = <T,>({ fields, values, noValuesTemplate, children }: ViewDetailsContentProps<T>) => {
   const context = useViewDetailsContext();
 
   if (!context) {
@@ -23,26 +33,30 @@ const ViewDetailsContent = <T,>({ fields, values, noValuesTemplate }: ViewDetail
 
   return (
     <AccordionDetails sx={{ minHeight: 150, overflowY: 'auto' }}>
-      {!loading &&
-        !values &&
-        (noValuesTemplate ?? (
-          <Page module={module} subModule={subModule} sx={{ margin: 0 }}>
-            <PageSubtitle>No Detail Found</PageSubtitle>
-          </Page>
-        ))}
-      <Grid container spacing={4}>
-        {fields.map((field) => {
-          if (loading || !values) {
-            return null;
-          }
+      {fields ? (
+        <>
+          {!loading &&
+            !values &&
+            (noValuesTemplate ?? (
+              <Page module={module} subModule={subModule} sx={{ margin: 0 }}>
+                <PageSubtitle>No Detail Found</PageSubtitle>
+              </Page>
+            ))}
+          <Grid container spacing={4}>
+            {fields.map((field) => {
+              if (loading || !values) return null;
 
-          return (
-            <Grid key={field.name} {...field.grid}>
-              <Detail values={values} {...field} />
-            </Grid>
-          );
-        })}
-      </Grid>
+              return (
+                <Grid key={field.name} {...field.grid}>
+                  <Detail values={values} {...field} />
+                </Grid>
+              );
+            })}
+          </Grid>
+        </>
+      ) : (
+        children
+      )}
     </AccordionDetails>
   );
 };

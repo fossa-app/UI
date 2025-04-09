@@ -70,6 +70,22 @@ export const BRANCH_FIELDS: BranchFieldConfig = {
     field: 'companyId',
     name: 'Company ID',
   },
+  geoAddress: {
+    field: 'geoAddress',
+    name: 'Geo Address',
+    label: {
+      field: 'label',
+      name: 'Label',
+    },
+    lat: {
+      field: 'lat',
+      name: 'Latitude',
+    },
+    lng: {
+      field: 'lng',
+      name: 'Longitute',
+    },
+  },
 };
 
 export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {

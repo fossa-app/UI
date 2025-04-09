@@ -3,9 +3,16 @@ import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Branch, BranchDTO, ErrorResponseDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
+import { Branch, BranchDTO, ErrorResponseDTO, ErrorResponse, PaginatedResponse, PaginationParams, GeoAddress } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
-import { mapBranch, mapBranches, mapError, prepareQueryParams, prepareCommaSeparatedQueryParamsByKey } from 'shared/helpers';
+import {
+  mapBranch,
+  mapBranches,
+  mapError,
+  prepareQueryParams,
+  prepareCommaSeparatedQueryParamsByKey,
+  getFullAddress,
+} from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
 
 interface BranchState {
@@ -103,15 +110,24 @@ export const fetchBranchesByIds = createAsyncThunk<PaginatedResponse<BranchDTO> 
 
 export const fetchBranchById = createAsyncThunk<Branch, { id: string; skipState: boolean }, { rejectValue: ErrorResponseDTO }>(
   'branch/fetchBranchById',
-  async ({ id }, { getState, rejectWithValue }) => {
+  async ({ id }, { getState, dispatch, rejectWithValue }) => {
     try {
       const { data } = await axios.get<BranchDTO>(`${ENDPOINTS.branches}/${id}`);
       const state = getState() as RootState;
       const timeZones = state.license.system.data?.entitlements.timeZones || [];
       const countries = state.license.system.data?.entitlements.countries || [];
       const companyCountryCode = state.company.company.data!.countryCode;
+      const countryName = countries.find((country) => country.code === data.address?.countryCode)?.name;
+      const fullAddress = data.address ? getFullAddress({ ...data.address, countryName }) : '';
+      const geoAddress = await dispatch(fetchGeoAddress(fullAddress)).unwrap();
 
-      return mapBranch(data, timeZones, companyCountryCode, countries);
+      return mapBranch({
+        branch: data,
+        timeZones,
+        companyCountryCode,
+        countries,
+        geoAddress,
+      });
     } catch (error) {
       return rejectWithValue(error as ErrorResponseDTO);
     }
@@ -186,6 +202,38 @@ export const deleteBranch = createAsyncThunk<void, BranchDTO['id'], { state: Roo
     }
   }
 );
+
+// TODO: move to a separate slice
+export const fetchGeoAddress = createAsyncThunk<GeoAddress | undefined, string | undefined>('location/geocodeAddress', async (address) => {
+  if (!address) {
+    return;
+  }
+
+  try {
+    const response = await axios.get('https://nominatim.openstreetmap.org/search', {
+      params: {
+        q: address,
+        format: 'json',
+        limit: 1,
+      },
+      headers: { 'Accept-Language': 'en' },
+    });
+
+    if (response.data?.length > 0) {
+      const { lat, lon, display_name } = response.data[0];
+
+      return {
+        lat: Number(parseFloat(lat).toFixed(7)),
+        lng: Number(parseFloat(lon).toFixed(7)),
+        label: display_name,
+      };
+    }
+
+    return;
+  } catch {
+    return;
+  }
+});
 
 const branchSlice = createSlice({
   name: 'branch',

@@ -5,21 +5,25 @@ import { useFormContext } from './FormContext';
 import { FormActionProps } from './form.model';
 import FormAction from './actions';
 
-type FormActionsProps = {
-  actions?: FormActionProps[];
-  generalValidationMessage?: string;
-  children?: React.ReactNode;
+type WithActions = {
+  actions: FormActionProps[];
+  children?: never;
 };
 
-const FormActions: React.FC<FormActionsProps> = ({ actions, generalValidationMessage, children }) => {
+type WithChildren = {
+  children: React.ReactNode;
+  actions?: never;
+};
+
+type FormActionsProps = (WithActions | WithChildren) & {
+  generalValidationMessage?: string;
+};
+
+const FormActions: React.FC<FormActionsProps> = ({ actions, children, generalValidationMessage }) => {
   const context = useFormContext();
 
   if (!context) {
     throw new Error('FormActions must be used within a Form component using FormContext.');
-  }
-
-  if (actions?.length && children) {
-    throw new Error('FormActions cannot accept both "actions" and "children". Provide only one.');
   }
 
   const { module, subModule } = context;

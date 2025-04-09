@@ -166,6 +166,36 @@ describe('Branch View Tests', () => {
         getTestSelectorByModule(Module.shared, SubModule.notFound, 'navigate-home-button').should('exist').click();
         cy.url().should('include', '/manage/company');
       });
+
+      it('should display branch location details if the branch has correct address', () => {
+        interceptFetchBranchByIdRequest('222222222223', 'fetchBranchByIdRequest', 'branches-multiple');
+        cy.visit('/manage/branches/view/222222222223');
+
+        verifyTextFields(Module.branchManagement, SubModule.branchLocationDetails, {
+          'view-details-header': 'Branch Location',
+        });
+        getTestSelectorByModule(Module.branchManagement, SubModule.branchLocationDetails, 'page-subtitle').should('not.exist');
+        cy.get('.leaflet-container').should('exist');
+        cy.get('.leaflet-marker-icon').should('exist').click();
+
+        cy.get('.leaflet-popup-content')
+          .should('exist')
+          .and('have.text', '3211, Dewert Lane, Salt Lake, Honolulu, Honolulu County, Hawaii, 96818, United States');
+      });
+
+      it('should display a fallback message if the branch address is incorrect', () => {
+        interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdRequest', 'branches-multiple');
+        cy.visit('/manage/branches/view/222222222222');
+
+        verifyTextFields(Module.branchManagement, SubModule.branchLocationDetails, {
+          'view-details-header': 'Branch Location',
+        });
+        getTestSelectorByModule(Module.branchManagement, SubModule.branchLocationDetails, 'page-subtitle')
+          .should('exist')
+          .and('have.text', 'Location data is unavailable.');
+        cy.get('.leaflet-container').should('not.exist');
+        cy.get('.leaflet-popup-content').should('not.exist');
+      });
     });
   });
 

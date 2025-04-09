@@ -4,8 +4,17 @@ import { useViewDetailsContext } from './ViewDetailsContext';
 import { ViewDetailActionProps } from './view-details.model';
 import ViewDetailAction from './actions';
 
-type ViewDetailsActionsProps = ({ actions: ViewDetailActionProps[]; children?: never } | { children: React.ReactNode; actions?: never }) &
-  AccordionActionsProps;
+type WithActions = {
+  actions: ViewDetailActionProps[];
+  children?: never;
+};
+
+type WithChildren = {
+  children: React.ReactNode;
+  actions?: never;
+};
+
+type ViewDetailsActionsProps = (WithActions | WithChildren) & AccordionActionsProps;
 
 const ViewDetailsActions: React.FC<ViewDetailsActionsProps> = ({ actions, children, ...props }) => {
   const context = useViewDetailsContext();
