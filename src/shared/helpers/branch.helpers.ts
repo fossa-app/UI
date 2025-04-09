@@ -1,14 +1,21 @@
 import { BRANCH_FIELDS } from 'shared/constants';
-import { Branch, BranchDTO, Company, Country, TimeZone } from 'shared/models';
+import { Branch, BranchDTO, Company, Country, GeoAddress, TimeZone } from 'shared/models';
 import { FormFieldProps, FieldOption } from 'components/UI/Form';
 import { mapCountryToFieldOption } from './company.helpers';
 
-export const mapBranch = (
-  branch: BranchDTO,
-  timeZones: TimeZone[],
-  companyCountryCode: Company['countryCode'],
-  countries: Country[]
-): Branch => {
+export const mapBranch = ({
+  branch,
+  timeZones,
+  companyCountryCode,
+  countries,
+  geoAddress,
+}: {
+  branch: BranchDTO;
+  timeZones: TimeZone[];
+  companyCountryCode: Company['countryCode'];
+  countries: Country[];
+  geoAddress?: GeoAddress;
+}): Branch => {
   const branchTimeZoneCountryCode = timeZones.find((timeZone) => timeZone.id === branch.timeZoneId)?.countryCode;
   const { address } = branch;
   const countryName = countries.find((country) => country.code === address?.countryCode)?.name;
@@ -26,6 +33,7 @@ export const mapBranch = (
       : null,
     noPhysicalAddress: !address,
     fullAddress: address ? getFullAddress({ ...address, countryName }) : '',
+    ...(geoAddress && { geoAddress }),
   };
 };
 
@@ -68,7 +76,14 @@ export const mapBranches = (
   companyCountryCode: Company['countryCode'],
   countries: Country[]
 ): Branch[] => {
-  return branches.map((branch) => mapBranch(branch, timeZones, companyCountryCode, countries));
+  return branches.map((branch) =>
+    mapBranch({
+      branch,
+      timeZones,
+      companyCountryCode,
+      countries,
+    })
+  );
 };
 
 export const mapBranchFieldOptionsToFieldOptions = (

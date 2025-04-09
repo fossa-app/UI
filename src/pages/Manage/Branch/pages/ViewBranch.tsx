@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
+import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchBranchById, resetBranch, selectBranch, selectUserRoles } from 'store/features';
 import { Module, SubModule } from 'shared/models';
@@ -7,6 +8,7 @@ import { BRANCH_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
 import { hasAllowedRole } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
 import ViewDetails, { ViewDetailActionName } from 'components/UI/ViewDetails';
+import MapView from 'components/UI/Map';
 
 const testModule = Module.branchManagement;
 const testSubModule = SubModule.branchViewDetails;
@@ -66,11 +68,28 @@ const ViewBranchPage: React.FC = () => {
       displayNotFoundPage={fetchStatus === 'failed' && !branch}
       onBackButtonClick={navigateBack}
     >
-      <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>
-        <ViewDetails.Header>{BRANCH_VIEW_DETAILS_SCHEMA.title}</ViewDetails.Header>
-        <ViewDetails.Content fields={BRANCH_VIEW_DETAILS_SCHEMA.fields} values={branch} />
-        <ViewDetails.Actions actions={actions!}></ViewDetails.Actions>
-      </ViewDetails>
+      <Grid container spacing={5}>
+        <Grid size={12}>
+          <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>
+            <ViewDetails.Header>{BRANCH_VIEW_DETAILS_SCHEMA.title}</ViewDetails.Header>
+            <ViewDetails.Content fields={BRANCH_VIEW_DETAILS_SCHEMA.fields} values={branch} />
+            <ViewDetails.Actions actions={actions!}></ViewDetails.Actions>
+          </ViewDetails>
+        </Grid>
+        <Grid size={12}>
+          <ViewDetails module={Module.branchManagement} subModule={SubModule.branchLocationDetails} loading={loading}>
+            <ViewDetails.Header>Branch Location</ViewDetails.Header>
+            <ViewDetails.Content>
+              <MapView
+                module={Module.branchManagement}
+                subModule={SubModule.branchLocationDetails}
+                loading={loading}
+                geoAddress={branch?.geoAddress}
+              />
+            </ViewDetails.Content>
+          </ViewDetails>
+        </Grid>
+      </Grid>
     </PageLayout>
   );
 };

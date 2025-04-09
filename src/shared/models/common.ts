@@ -23,3 +23,9 @@ export interface TimeZone {
   countryCode: Country['code'];
   currentOffset: string;
 }
+
+export interface GeoAddress {
+  lat: number;
+  lng: number;
+  label: string;
+}
