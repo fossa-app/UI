@@ -111,14 +111,21 @@ export const mapTimeZoneToFieldOption = (timeZone: TimeZone): FieldOption => {
   };
 };
 
-export const getFullAddress = (address?: Branch['address']): Branch['fullAddress'] => {
+export const getFullAddress = (address?: Branch['address'], includeLine2 = true): Branch['fullAddress'] => {
   if (!address) {
     return '';
   }
 
   const { line1, line2, city, subdivision, postalCode, countryName } = address;
 
-  return [line1 && `${line1},`, line2 && `${line2},`, city && `${city},`, subdivision, postalCode && `${postalCode},`, countryName]
+  return [
+    line1 && `${line1},`,
+    includeLine2 && line2 && `${line2},`,
+    city && `${city},`,
+    subdivision,
+    postalCode && `${postalCode},`,
+    countryName,
+  ]
     .filter(Boolean)
     .join(' ')
     .trim();

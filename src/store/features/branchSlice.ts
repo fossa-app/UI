@@ -118,7 +118,7 @@ export const fetchBranchById = createAsyncThunk<Branch, { id: string; skipState:
       const countries = state.license.system.data?.entitlements.countries || [];
       const companyCountryCode = state.company.company.data!.countryCode;
       const countryName = countries.find((country) => country.code === data.address?.countryCode)?.name;
-      const fullAddress = data.address ? getFullAddress({ ...data.address, countryName }) : '';
+      const fullAddress = data.address ? getFullAddress({ ...data.address, countryName }, false) : '';
       const geoAddress = await dispatch(fetchGeoAddress(fullAddress)).unwrap();
 
       return mapBranch({

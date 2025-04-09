@@ -184,8 +184,8 @@ describe('Branch View Tests', () => {
       });
 
       it('should display a fallback message if the branch address is incorrect', () => {
-        interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdRequest', 'branches-multiple');
-        cy.visit('/manage/branches/view/222222222222');
+        interceptFetchBranchByIdRequest('222222222226', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
+        cy.visit('/manage/branches/view/222222222226');
 
         verifyTextFields(Module.branchManagement, SubModule.branchLocationDetails, {
           'view-details-header': 'Branch Location',

@@ -50,6 +50,20 @@
       "name": "Berlin Branch",
       "timeZoneId": "Europe/Berlin",
       "address": null
+    },
+    {
+      "id": 222222222226,
+      "companyId": 111111111111,
+      "name": "Wrong Location Branch",
+      "timeZoneId": "Europe/Warsaw",
+      "address": {
+        "line1": "ul. Bobra, nr 69",
+        "line2": "lok. 66",
+        "city": "Szczecin",
+        "subdivision": "ZACHODNIOPOMORSKIE",
+        "postalCode": "09-999",
+        "countryCode": "PL"
+      }
     }
   ],
   "totalItems": 2,
