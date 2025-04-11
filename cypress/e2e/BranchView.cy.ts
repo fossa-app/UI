@@ -17,6 +17,7 @@ const testBranchFields = () => {
     'view-details-header': 'Branch Details',
     'view-details-section-basicInfo': 'Basic Information',
     'view-details-section-address': 'Address Information',
+    'view-details-section-geoAddress': 'Location Information',
     'view-details-label-name': 'Branch Name',
     'view-details-value-name': 'New York Branch',
     'view-details-label-timeZoneName': 'TimeZone',
@@ -171,10 +172,7 @@ describe('Branch View Tests', () => {
         interceptFetchBranchByIdRequest('222222222223', 'fetchBranchByIdRequest', 'branches-multiple');
         cy.visit('/manage/branches/view/222222222223');
 
-        verifyTextFields(Module.branchManagement, SubModule.branchLocationDetails, {
-          'view-details-header': 'Branch Location',
-        });
-        getTestSelectorByModule(Module.branchManagement, SubModule.branchLocationDetails, 'page-subtitle').should('not.exist');
+        getTestSelectorByModule(Module.branchManagement, SubModule.branchLocationDetails, 'default-location').should('not.exist');
         cy.get('.leaflet-container').should('exist');
         cy.get('.leaflet-marker-icon').should('exist').click();
 
@@ -187,12 +185,9 @@ describe('Branch View Tests', () => {
         interceptFetchBranchByIdRequest('222222222226', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
         cy.visit('/manage/branches/view/222222222226');
 
-        verifyTextFields(Module.branchManagement, SubModule.branchLocationDetails, {
-          'view-details-header': 'Branch Location',
-        });
-        getTestSelectorByModule(Module.branchManagement, SubModule.branchLocationDetails, 'page-subtitle')
+        getTestSelectorByModule(Module.branchManagement, SubModule.branchLocationDetails, 'default-location')
           .should('exist')
-          .and('have.text', 'Location data is unavailable.');
+          .and('have.text', 'Branch location data is unavailable.');
         cy.get('.leaflet-container').should('not.exist');
         cy.get('.leaflet-popup-content').should('not.exist');
       });
