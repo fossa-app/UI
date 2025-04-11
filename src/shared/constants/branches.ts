@@ -3,6 +3,7 @@ import { FormActionType, FormFieldType, FormActionName, FormProps } from 'compon
 import { Action, Column } from 'components/UI/Table';
 import { ViewDetailActionName, ViewDetailActionType, ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
 import { renderBranchField } from 'pages/Manage/Branch/components/BranchField';
+import { renderBranchMapField } from 'pages/Manage/Branch/components/BranchMapField';
 import { ACTION_FIELD, ACTION_FIELDS } from './common';
 
 export const BRANCH_FIELDS: BranchFieldConfig = {
@@ -367,6 +368,19 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewDetailProps<Branch> = {
           field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
           tooltip: 'Invalid Postal Code',
         }),
+    },
+    {
+      name: BRANCH_FIELDS.geoAddress.field,
+      label: 'Location Information',
+      type: ViewDetailType.section,
+      grid: { size: { xs: 12 } },
+    },
+    {
+      name: `${BRANCH_FIELDS.geoAddress.field}.${BRANCH_FIELDS.geoAddress.label.field}`,
+      label: '',
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 8 } },
+      renderDetailField: (branch) => renderBranchMapField({ branch }),
     },
   ],
   actions: [
