@@ -26,6 +26,7 @@ export const ROUTES: AppRoute = {
     name: 'Set Employee',
     path: `/setup/${SetupStep.EMPLOYEE}`,
   },
+  // TODO: rename to flows
   manage: {
     name: 'Manage',
     path: '/manage',

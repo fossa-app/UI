@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ROUTES } from 'shared/constants';
+import RouteTitle from 'components/RouteTitle';
 import RootPage from 'pages/Root';
 import ProtectedPage from 'pages/Protected';
 import SetupPage from 'pages/Setup/Setup';
 import ManagePage from 'pages/Manage/Manage';
+import FlowsPage from 'pages/Manage/Flows';
 import { createLazyComponent } from './lazy-loaded-component';
 
 // Lazy loaded pages
@@ -92,7 +94,12 @@ const router = createBrowserRouter(
               children: [
                 {
                   index: true,
-                  element: <Navigate to={ROUTES.company.path} replace />,
+                  element: (
+                    <>
+                      <RouteTitle title="Flows" />
+                      <FlowsPage />
+                    </>
+                  ),
                 },
                 {
                   path: ROUTES.company.path,

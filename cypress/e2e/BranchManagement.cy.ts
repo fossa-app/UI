@@ -178,7 +178,7 @@ describe('Branch Management Tests', () => {
 
     getTestSelectorByModule(Module.shared, SubModule.notFound, 'page-title').should('exist').and('contain.text', 'Page Not Found');
     getTestSelectorByModule(Module.shared, SubModule.notFound, 'navigate-home-button').should('exist').click();
-    cy.url().should('include', '/manage/company');
+    cy.url().should('include', '/manage');
   });
 
   it('should reset the form and be navigated back to branch table page if the cancel button is clicked', () => {

@@ -165,7 +165,7 @@ describe('Branch View Tests', () => {
 
         getTestSelectorByModule(Module.shared, SubModule.notFound, 'page-title').should('exist').and('contain.text', 'Page Not Found');
         getTestSelectorByModule(Module.shared, SubModule.notFound, 'navigate-home-button').should('exist').click();
-        cy.url().should('include', '/manage/company');
+        cy.url().should('include', '/manage');
       });
 
       it('should display branch location details if the branch has correct address', () => {
@@ -187,7 +187,7 @@ describe('Branch View Tests', () => {
 
         getTestSelectorByModule(Module.branchManagement, SubModule.branchLocationDetails, 'default-location')
           .should('exist')
-          .and('have.text', 'Branch location data is unavailable.');
+          .and('have.text', 'Branch location map is unavailable.');
         cy.get('.leaflet-container').should('not.exist');
         cy.get('.leaflet-popup-content').should('not.exist');
       });
