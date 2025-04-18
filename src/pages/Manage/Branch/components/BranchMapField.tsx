@@ -10,7 +10,7 @@ interface RenderBranchMapFieldProps {
 export const renderBranchMapField = ({ branch }: RenderBranchMapFieldProps) => {
   const noLocationTemplate = (
     <Typography data-cy={`${Module.branchManagement}-${SubModule.branchLocationDetails}-default-location`} variant="body1" color="error">
-      Branch location data is unavailable.
+      Branch location map is unavailable.
     </Typography>
   );
 

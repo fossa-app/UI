@@ -2,7 +2,7 @@ export * from './endpoints';
 export * from './routes';
 export * from './configs';
 export * from './colors';
-export * from './menu-items';
+export * from './flows';
 export * from './employees';
 export * from './branches';
 export * from './company';

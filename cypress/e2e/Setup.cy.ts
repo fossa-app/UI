@@ -158,7 +158,7 @@ describe('Setup Flow Tests', () => {
         cy.url().should('include', '/setup/employee');
       });
 
-      it('should be able to navigate to the company page if employee creation succeeded', () => {
+      it('should be able to navigate to the flows page if the employee creation succeeded', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileFailedRequest();
@@ -188,7 +188,7 @@ describe('Setup Flow Tests', () => {
         cy.wait('@fetchProfileRequest');
 
         getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('not.have.attr', 'disabled');
-        cy.url().should('include', '/manage/company');
+        cy.url().should('include', '/manage');
       });
 
       it('should not be able to navigate to company page by clicking the company logo if the employee is in a draft status', () => {
@@ -204,7 +204,7 @@ describe('Setup Flow Tests', () => {
         cy.url().should('include', '/setup/employee');
       });
 
-      it('should navigate to the company page if company, branch and employee data exist', () => {
+      it('should navigate to the flows page if the company, branch and employee data exist', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileRequest();
@@ -215,7 +215,7 @@ describe('Setup Flow Tests', () => {
         cy.wait('@fetchProfileRequest');
 
         getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('not.have.attr', 'disabled');
-        cy.url().should('include', '/manage/company');
+        cy.url().should('include', '/manage');
       });
     });
   });
@@ -564,7 +564,7 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', '/setup/employee');
     });
 
-    it('should navigate to the company page at once if the branch creation succeeded and the employee had been created before', () => {
+    it('should navigate to the flows page at once if the branch creation succeeded and the employee had been created before', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
       interceptCreateBranchRequest();
@@ -587,7 +587,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchProfileRequest');
 
       getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('not.have.attr', 'disabled');
-      cy.url().should('include', '/manage/company');
+      cy.url().should('include', '/manage');
     });
   });
 });

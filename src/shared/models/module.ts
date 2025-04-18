@@ -1,4 +1,5 @@
 export enum Module {
+  manage = 'manage',
   companySetup = 'companySetup',
   branchSetup = 'branchSetup',
   employeeSetup = 'employeeSetup',
@@ -10,6 +11,7 @@ export enum Module {
 }
 
 export enum SubModule {
+  flows = 'flows',
   companyDetails = 'companyDetails',
   companyViewDetails = 'companyViewDetails',
   companyLicenseViewDetails = 'companyLicenseViewDetails',
