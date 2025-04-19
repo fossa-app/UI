@@ -123,6 +123,11 @@ export const selectNavigationMenuItem = (menuItem: string) => {
   getTestSelectorByModule(Module.shared, SubModule.menu, `menu-item-${menuItem}`).click();
 };
 
+export const clickFlowGroup = (flowName: string, subFlowName: string) => {
+  getTestSelectorByModule(Module.manage, SubModule.flows, `flow-group-${flowName}`).click();
+  getTestSelectorByModule(Module.manage, SubModule.flows, `flow-item-${subFlowName}`).click();
+};
+
 export const uploadTestFile = (selector: string, fixtureName: string, fileType = 'application/octet-stream') => {
   cy.fixture(fixtureName, 'binary').then((fileContent) => {
     const blob = Cypress.Blob.binaryStringToBlob(fileContent, fileType);

@@ -1,6 +1,6 @@
 import { Module, SubModule } from 'shared/models';
 import { ROUTES } from 'shared/constants';
-import { getTestSelectorByModule } from '../support/helpers';
+import { clickFlowGroup, getTestSelectorByModule } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -45,14 +45,14 @@ describe('Flows Tests', () => {
 
         getTestSelectorByModule(Module.manage, SubModule.flows, 'page-title').should('have.text', 'Flows');
         getTestSelectorByModule(Module.manage, SubModule.flows, 'page-subtitle').should('have.text', 'Manage Flows');
-        getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-item', true).should('have.length', 4);
-        getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-item-Company').should('exist');
-        getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-item-Branches').should('exist');
-        getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-item-Employees').should('exist');
-        getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-item-Profile').should('exist');
+        getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-group', true).should('have.length', 4);
+        getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-group-Company').should('exist').and('have.text', 'Company');
+        getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-group-Branches').should('exist').and('have.text', 'Branches');
+        getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-group-Employees').should('exist').and('have.text', 'Employees');
+        getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-group-Profile').should('exist').and('have.text', 'Profile');
       });
 
-      it('should navigate correctly from the flows page', () => {
+      it('should navigate correctly by urls from the flows page', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileRequest();
@@ -62,6 +62,34 @@ describe('Flows Tests', () => {
           cy.visit(route);
           cy.url().should('include', route);
         });
+      });
+
+      it('should navigate correctly manually from the flows page', () => {
+        interceptFetchCompanyRequest();
+        interceptFetchBranchesRequest();
+        interceptFetchProfileRequest();
+        cy.visit(ROUTES.flows.path);
+
+        clickFlowGroup('Company', 'View Company');
+
+        cy.url().should('include', ROUTES.viewCompany.path);
+        cy.visit(ROUTES.flows.path);
+
+        clickFlowGroup('Branches', 'Branches');
+
+        cy.url().should('include', ROUTES.branches.path);
+
+        cy.visit(ROUTES.flows.path);
+
+        clickFlowGroup('Employees', 'Employees');
+
+        cy.url().should('include', ROUTES.employees.path);
+
+        cy.visit(ROUTES.flows.path);
+
+        clickFlowGroup('Profile', 'View Profile');
+
+        cy.url().should('include', ROUTES.viewProfile.path);
       });
     });
   });

@@ -29,4 +29,9 @@ export interface RouteItem {
   icon?: SvgIcon;
 }
 
+export interface Flow extends RouteItem {
+  enabled?: boolean;
+  subFlows?: Flow[];
+}
+
 export type AppRoute = { [key in RouteKey]: RouteItem };
