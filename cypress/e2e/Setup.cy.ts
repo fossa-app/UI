@@ -1,4 +1,5 @@
-import { Module, SubModule } from '../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
   clickField,
@@ -188,7 +189,7 @@ describe('Setup Flow Tests', () => {
         cy.wait('@fetchProfileRequest');
 
         getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('not.have.attr', 'disabled');
-        cy.url().should('include', '/manage');
+        cy.url().should('include', ROUTES.flows.path);
       });
 
       it('should not be able to navigate to company page by clicking the company logo if the employee is in a draft status', () => {
@@ -215,7 +216,7 @@ describe('Setup Flow Tests', () => {
         cy.wait('@fetchProfileRequest');
 
         getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('not.have.attr', 'disabled');
-        cy.url().should('include', '/manage');
+        cy.url().should('include', ROUTES.flows.path);
       });
     });
   });
@@ -587,7 +588,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@fetchProfileRequest');
 
       getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('not.have.attr', 'disabled');
-      cy.url().should('include', '/manage');
+      cy.url().should('include', ROUTES.flows.path);
     });
   });
 });

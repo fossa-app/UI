@@ -26,61 +26,60 @@ export const ROUTES: AppRoute = {
     name: 'Set Employee',
     path: `/setup/${SetupStep.EMPLOYEE}`,
   },
-  // TODO: rename to flows
-  manage: {
-    name: 'Manage',
-    path: '/manage',
+  flows: {
+    name: 'Flows',
+    path: '/flows',
   },
   company: {
     name: 'Company',
-    path: '/manage/company',
+    path: '/flows/company',
   },
   editCompany: {
     name: 'Edit Company',
-    path: '/manage/company/edit',
+    path: '/flows/company/edit',
   },
   viewCompany: {
     name: 'View Company',
-    path: '/manage/company/view',
+    path: '/flows/company/view',
   },
   branches: {
     name: 'Branches',
-    path: '/manage/branches',
+    path: '/flows/branches',
   },
   employees: {
     name: 'Employees',
-    path: '/manage/employees',
+    path: '/flows/employees',
   },
   newBranch: {
     name: 'Create Branch',
-    path: '/manage/branches/new',
+    path: '/flows/branches/new',
   },
   editBranch: {
     name: 'Edit Branch',
-    path: '/manage/branches/edit/:id',
+    path: '/flows/branches/edit/:id',
   },
   viewBranch: {
     name: 'View Branch',
-    path: '/manage/branches/view/:id',
+    path: '/flows/branches/view/:id',
   },
   profile: {
     name: 'Profile',
-    path: '/manage/profile',
+    path: '/flows/profile',
   },
   viewProfile: {
     name: 'View Profile',
-    path: '/manage/profile/view',
+    path: '/flows/profile/view',
   },
   editProfile: {
     name: 'Edit Profile',
-    path: '/manage/profile/edit',
+    path: '/flows/profile/edit',
   },
   viewEmployee: {
     name: 'View Employee',
-    path: '/manage/employees/view/:id',
+    path: '/flows/employees/view/:id',
   },
   editEmployee: {
     name: 'Edit Employee',
-    path: '/manage/employees/edit/:id',
+    path: '/flows/employees/edit/:id',
   },
 };

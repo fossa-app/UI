@@ -1,4 +1,5 @@
 import { Module, SubModule } from 'shared/models';
+import { ROUTES } from 'shared/constants';
 import { getLinearLoader, getTestSelectorByModule, uploadTestFile, verifyTextFields } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
@@ -46,7 +47,7 @@ describe('License Tests', () => {
         interceptFetchProfileRequest();
         interceptFetchCompanyLicenseFailedRequest();
         interceptUploadCompanyLicenseFailedRequest();
-        cy.visit('/manage/company');
+        cy.visit(ROUTES.company.path);
 
         getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text')
           .should('exist')
@@ -78,7 +79,7 @@ describe('License Tests', () => {
         interceptFetchProfileRequest();
         interceptFetchCompanyLicenseFailedRequest();
         interceptUploadCompanyLicenseFailedRequest();
-        cy.visit('/manage/company');
+        cy.visit(ROUTES.company.path);
 
         getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button')
           .should('exist')
@@ -91,7 +92,7 @@ describe('License Tests', () => {
         interceptFetchProfileRequest();
         interceptFetchCompanyLicenseFailedRequest();
         interceptUploadCompanyLicenseFailedRequest();
-        cy.visit('/manage/company');
+        cy.visit(ROUTES.company.path);
 
         getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-dialog').should('not.exist');
         getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button').click();
@@ -140,7 +141,7 @@ describe('License Tests', () => {
         interceptFetchProfileRequest();
         interceptFetchCompanyLicenseFailedRequest();
         interceptUploadCompanyLicenseFailedRequest();
-        cy.visit('/manage/company');
+        cy.visit(ROUTES.company.path);
 
         getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button').click();
         uploadTestFile('input#file-upload-input', 'valid-company-license.lic');
@@ -196,7 +197,7 @@ describe('License Tests', () => {
         interceptFetchBranchesRequest();
         interceptFetchProfileRequest();
         interceptFetchCompanyLicenseRequest();
-        cy.visit('/manage/company');
+        cy.visit(ROUTES.company.path);
 
         getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button').should('not.exist');
         getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text').should('exist').and('have.text', 'TCL');

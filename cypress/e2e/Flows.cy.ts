@@ -41,7 +41,7 @@ describe('Flows Tests', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileRequest();
-        cy.visit('/manage');
+        cy.visit(ROUTES.flows.path);
 
         getTestSelectorByModule(Module.manage, SubModule.flows, 'page-title').should('have.text', 'Flows');
         getTestSelectorByModule(Module.manage, SubModule.flows, 'page-subtitle').should('have.text', 'Manage Flows');
@@ -56,7 +56,7 @@ describe('Flows Tests', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileRequest();
-        cy.visit('/manage');
+        cy.visit(ROUTES.flows.path);
 
         flowRoutes.forEach((route) => {
           cy.visit(route);

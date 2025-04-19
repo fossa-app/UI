@@ -64,7 +64,7 @@ const router = createBrowserRouter(
           children: [
             {
               index: true,
-              element: <Navigate to={ROUTES.manage.path} replace />,
+              element: <Navigate to={ROUTES.flows.path} replace />,
             },
             {
               path: ROUTES.setup.path,
@@ -89,14 +89,14 @@ const router = createBrowserRouter(
               ],
             },
             {
-              path: ROUTES.manage.path,
+              path: ROUTES.flows.path,
               element: <ManagePage />,
               children: [
                 {
                   index: true,
                   element: (
                     <>
-                      <RouteTitle title="Flows" />
+                      <RouteTitle title={ROUTES.flows.name} />
                       <FlowsPage />
                     </>
                   ),
