@@ -1,4 +1,5 @@
-import { Module, SubModule } from '../../src/shared/models';
+import { Module, SubModule } from 'shared/models';
+import { ROUTES } from 'shared/constants';
 import {
   clearBranchDetailsForm,
   fillBranchDetailsForm,
@@ -49,10 +50,10 @@ describe('Branch Management Tests', () => {
   });
 
   it('should display an empty form on branch creation page', () => {
-    cy.visit('/manage/branches/new');
+    cy.visit(ROUTES.newBranch.path);
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').should('not.have.value');
 
-    cy.visit('/manage/branches');
+    cy.visit(ROUTES.branches.path);
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').should('not.have.value');
@@ -60,7 +61,7 @@ describe('Branch Management Tests', () => {
 
   it('should display validation messages if the form is invalid', () => {
     interceptCreateBranchFailedRequest();
-    cy.visit('/manage/branches');
+    cy.visit(ROUTES.branches.path);
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
@@ -121,7 +122,7 @@ describe('Branch Management Tests', () => {
 
   it('should not be able to create new branch if the form is invalid or branch creation failed', () => {
     interceptCreateBranchFailedRequest();
-    cy.visit('/manage/branches');
+    cy.visit(ROUTES.branches.path);
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'page-title').should('have.text', 'Create Branch');
@@ -133,12 +134,12 @@ describe('Branch Management Tests', () => {
     cy.wait('@createBranchFailedRequest');
 
     getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error').should('exist').and('contain.text', 'Failed to create a Branch');
-    cy.url().should('include', '/manage/branches/new');
+    cy.url().should('include', ROUTES.newBranch.path);
   });
 
   it('should be able to create new branch and be navigated back to branch table page if the form is valid and branch creation succeeded', () => {
     interceptCreateBranchRequest();
-    cy.visit('/manage/branches');
+    cy.visit(ROUTES.branches.path);
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 1);
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
@@ -165,7 +166,7 @@ describe('Branch Management Tests', () => {
     cy.wait('@createBranchRequest');
     cy.wait('@fetchMultipleBranchesRequest');
 
-    cy.url().should('include', '/manage/branches');
+    cy.url().should('include', ROUTES.branches.path);
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 2);
     getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
       .should('exist')
@@ -174,16 +175,16 @@ describe('Branch Management Tests', () => {
 
   it('should display not found page if the branch was not found', () => {
     interceptFetchBranchByIdFailedRequest('222222222224');
-    cy.visit('/manage/branches/edit/222222222224');
+    cy.visit(`${ROUTES.branches.path}/edit/222222222224`);
 
     getTestSelectorByModule(Module.shared, SubModule.notFound, 'page-title').should('exist').and('contain.text', 'Page Not Found');
     getTestSelectorByModule(Module.shared, SubModule.notFound, 'navigate-home-button').should('exist').click();
-    cy.url().should('include', '/manage');
+    cy.url().should('include', ROUTES.flows.path);
   });
 
   it('should reset the form and be navigated back to branch table page if the cancel button is clicked', () => {
     interceptFetchBranchByIdRequest('222222222222');
-    cy.visit('/manage/branches');
+    cy.visit(ROUTES.branches.path);
 
     selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
 
@@ -204,7 +205,7 @@ describe('Branch Management Tests', () => {
     });
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-cancel-button').should('exist').click();
 
-    cy.url().should('include', '/manage/branches');
+    cy.url().should('include', ROUTES.branches.path);
     getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
 
     selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
@@ -226,7 +227,7 @@ describe('Branch Management Tests', () => {
   it('should not be able to edit the branch if the form is invalid or branch updating failed', () => {
     interceptEditBranchFailedRequest('222222222222');
     interceptFetchBranchByIdRequest('222222222222');
-    cy.visit('/manage/branches');
+    cy.visit(ROUTES.branches.path);
 
     selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
 
@@ -262,13 +263,13 @@ describe('Branch Management Tests', () => {
     cy.wait('@editBranchFailedRequest');
 
     getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error').should('exist').and('contain.text', 'Failed to update the Branch');
-    cy.url().should('include', '/manage/branches/edit/222222222222');
+    cy.url().should('include', `${ROUTES.branches.path}/edit/222222222222`);
   });
 
   it('should display async validation messages if the branch update failed with validation errors', () => {
     interceptEditBranchFailedWithErrorRequest('222222222222');
     interceptFetchBranchByIdRequest('222222222222');
-    cy.visit('/manage/branches');
+    cy.visit(ROUTES.branches.path);
 
     selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
 
@@ -286,13 +287,13 @@ describe('Branch Management Tests', () => {
         message: `Postal Code '*****' for Country 'US - [United States]' is invalid.`,
       },
     ]);
-    cy.url().should('include', '/manage/branches/edit/222222222222');
+    cy.url().should('include', `${ROUTES.branches.path}/edit/222222222222`);
   });
 
   it('should be able to edit the branch and be navigated back to branch table page if the form is valid and branch updating succeeded', () => {
     interceptEditBranchRequest('222222222222');
     interceptFetchBranchByIdRequest('222222222222');
-    cy.visit('/manage/branches');
+    cy.visit(ROUTES.branches.path);
 
     selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
 
@@ -329,7 +330,7 @@ describe('Branch Management Tests', () => {
       { alias: 'fetchMultipleUpdatedBranchesRequest', fixture: 'branches-multiple-updated' }
     );
 
-    cy.url().should('include', '/manage/branches');
+    cy.url().should('include', ROUTES.branches.path);
     getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
 
     cy.wait('@fetchMultipleUpdatedBranchesRequest');
@@ -355,24 +356,24 @@ describe('Branch Management Tests', () => {
       { alias: 'fetchMultipleBranchesRequest', fixture: 'branches' }
     );
     interceptFetchBranchByIdRequest('222222222222');
-    cy.visit('/manage/branches');
+    cy.visit(ROUTES.branches.path);
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'page-title-back-button').click();
 
-    cy.url().should('include', '/manage/branches');
+    cy.url().should('include', ROUTES.branches.path);
 
-    cy.visit('/manage/branches');
+    cy.visit(ROUTES.branches.path);
     selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'page-title-back-button').click();
 
-    cy.url().should('include', '/manage/branches');
+    cy.url().should('include', ROUTES.branches.path);
     getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
   });
 
   it('should reset the branch after editing and navigating back', () => {
     interceptFetchBranchByIdRequest('222222222222');
-    cy.visit('/manage/branches');
+    cy.visit(ROUTES.branches.path);
 
     selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
 
@@ -392,7 +393,7 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'page-title-back-button').click();
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
-    cy.url().should('include', '/manage/branches/new');
+    cy.url().should('include', ROUTES.newBranch.path);
     // TODO: flaky part
     verifyInputFields(Module.branchManagement, SubModule.branchDetails, {
       'form-field-name': '',
@@ -413,7 +414,7 @@ describe('Branch Management Tests', () => {
     );
     interceptFetchBranchByIdRequest('222222222222', 'fetchFirstBranchByIdRequest', 'branches-multiple');
     interceptFetchBranchByIdRequest('222222222223', 'fetchSecondBranchByIdRequest', 'branches-multiple');
-    cy.visit('/manage/branches');
+    cy.visit(ROUTES.branches.path);
 
     selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
 
@@ -449,7 +450,7 @@ describe('Branch Management Tests', () => {
       { pageNumber: 1, pageSize: 10, search: '' },
       { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
     );
-    cy.visit('/manage/employees');
+    cy.visit(ROUTES.employees.path);
 
     cy.wait('@fetchMultipleEmployeesRequest');
 
@@ -459,7 +460,7 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'page-title-back-button').click();
     selectNavigationMenuItem('Branches');
 
-    cy.url().should('include', '/manage/branches');
+    cy.url().should('include', ROUTES.branches.path);
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
@@ -477,7 +478,7 @@ describe('Branch Management Tests', () => {
 
   it('should fetch and display the branch form details by id when refreshing the page', () => {
     interceptFetchBranchByIdRequest('222222222222');
-    cy.visit('/manage/branches/edit/222222222222');
+    cy.visit(`${ROUTES.branches.path}/edit/222222222222`);
 
     cy.reload();
 
@@ -498,7 +499,7 @@ describe('Branch Management Tests', () => {
 
   it('should not display the loader if the request resolves quickly', () => {
     interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdQuickRequest', 'branches', 200, 50);
-    cy.visit('/manage/branches/edit/222222222222');
+    cy.visit(`${ROUTES.branches.path}/edit/222222222222`);
 
     getLinearLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('not.exist');
     cy.wait('@fetchBranchByIdQuickRequest');
@@ -506,7 +507,7 @@ describe('Branch Management Tests', () => {
 
   it('should display 2 countries if the company country is different than the branch address country', () => {
     interceptFetchBranchByIdRequest('222222222224', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
-    cy.visit('/manage/branches/edit/222222222224');
+    cy.visit(`${ROUTES.branches.path}/edit/222222222224`);
 
     cy.wait('@fetchBranchByIdRequest');
 
@@ -521,7 +522,7 @@ describe('Branch Management Tests', () => {
 
   it('should display only available timezones for selected company country', () => {
     interceptFetchBranchByIdRequest('222222222222');
-    cy.visit('/manage/branches/edit/222222222222');
+    cy.visit(`${ROUTES.branches.path}/edit/222222222222`);
 
     cy.wait('@fetchBranchByIdRequest');
 
@@ -537,7 +538,7 @@ describe('Branch Management Tests', () => {
 
   it('should display company timezones and the branch timezone if the company timezone is different than the branch address timezone', () => {
     interceptFetchBranchByIdRequest('222222222224', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
-    cy.visit('/manage/branches/edit/222222222224');
+    cy.visit(`${ROUTES.branches.path}/edit/222222222224`);
 
     cy.wait('@fetchBranchByIdRequest');
 
@@ -561,7 +562,7 @@ describe('Branch Management Tests', () => {
 
   it('should show and hide address fields correctly', () => {
     interceptFetchBranchByIdRequest('222222222222');
-    cy.visit('/manage/branches/edit/222222222222');
+    cy.visit(`${ROUTES.branches.path}/edit/222222222222`);
 
     cy.wait('@fetchBranchByIdRequest');
 
@@ -597,7 +598,7 @@ describe('Branch Management Tests', () => {
     ]);
 
     interceptFetchBranchByIdRequest('222222222225', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
-    cy.visit('/manage/branches/edit/222222222225');
+    cy.visit(`${ROUTES.branches.path}/edit/222222222225`);
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-noPhysicalAddress').should(
       'have.class',

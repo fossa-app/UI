@@ -1,4 +1,5 @@
-import { Module, SubModule } from '../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
   getLinearLoader,
@@ -83,11 +84,11 @@ describe('Employee Management Tests', () => {
         interceptFetchEmployeeByIdRequest('333333333335');
         interceptFetchBranchByIdRequest('222222222222');
         interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
-        cy.visit('/manage/employees');
+        cy.visit(ROUTES.employees.path);
 
         selectAction(Module.employeeManagement, SubModule.employeeTable, 'view', '333333333335');
 
-        cy.url().should('include', '/manage/employees/view/333333333335');
+        cy.url().should('include', `${ROUTES.employees.path}/view/333333333335`);
         getLinearLoader(Module.employeeManagement, SubModule.employeeViewDetails, 'view-details').should('exist');
 
         interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 100 });
@@ -104,11 +105,11 @@ describe('Employee Management Tests', () => {
         interceptFetchEmployeeByIdRequest('333333333333', 'fetchEmployeeByIdRequest', 'employees-multiple');
         interceptFetchBranchByIdRequest('222222222222');
         interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
-        cy.visit('/manage/employees');
+        cy.visit(ROUTES.employees.path);
 
         selectAction(Module.employeeManagement, SubModule.employeeTable, 'view', '333333333333');
 
-        cy.url().should('include', '/manage/employees/view/333333333333');
+        cy.url().should('include', `${ROUTES.employees.path}/view/333333333333`);
         getLinearLoader(Module.employeeManagement, SubModule.employeeViewDetails, 'view-details').should('exist');
 
         interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 100 });
@@ -116,7 +117,7 @@ describe('Employee Management Tests', () => {
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'view-profile-button').should('exist').click();
 
-        cy.url().should('include', '/manage/profile/view');
+        cy.url().should('include', ROUTES.viewProfile.path);
       });
     });
   });
@@ -130,13 +131,13 @@ describe('Employee Management Tests', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
       interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
-      cy.visit('/manage/employees');
+      cy.visit(ROUTES.employees.path);
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-firstName')
         .find('p')
         .click();
 
-      cy.url().should('include', '/manage/employees/view/333333333335');
+      cy.url().should('include', `${ROUTES.employees.path}/view/333333333335`);
 
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100 },
@@ -145,12 +146,12 @@ describe('Employee Management Tests', () => {
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'page-title-back-button').click();
 
-      cy.url().should('include', '/manage/employees');
+      cy.url().should('include', ROUTES.employees.path);
 
       selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'page-title-back-button').click();
 
-      cy.url().should('include', '/manage/employees');
+      cy.url().should('include', ROUTES.employees.path);
     });
 
     it('should reset the form and navigate to employee table page if the cancel button is clicked', () => {
@@ -161,11 +162,11 @@ describe('Employee Management Tests', () => {
         { pageNumber: 1, pageSize: 100, search: '*' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
-      cy.visit('/manage/employees');
+      cy.visit(ROUTES.employees.path);
 
       selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
 
-      cy.url().should('include', '/manage/employees/edit/333333333335');
+      cy.url().should('include', `${ROUTES.employees.path}/edit/333333333335`);
 
       cy.wait('@fetchEmployeeByIdRequest');
       cy.wait('@fetchBranchByIdRequest');
@@ -186,7 +187,7 @@ describe('Employee Management Tests', () => {
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-cancel-button').should('exist').click();
 
-      cy.url().should('include', '/manage/employees');
+      cy.url().should('include', ROUTES.employees.path);
 
       selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
 
@@ -204,7 +205,7 @@ describe('Employee Management Tests', () => {
       interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
       interceptFetchEmployeeByIdRequest('333333333334', 'fetchFirstEmployeeByIdRequest', 'employees-multiple');
       interceptFetchEmployeeByIdRequest('333333333335', 'fetchSecondEmployeeByIdRequest', 'employees-multiple');
-      cy.visit('/manage/employees');
+      cy.visit(ROUTES.employees.path);
 
       selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333334');
       cy.wait('@fetchFirstEmployeeByIdRequest');
@@ -237,7 +238,7 @@ describe('Employee Management Tests', () => {
         { pageNumber: 1, pageSize: 100 },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
-      cy.visit('/manage/employees/edit/333333333335');
+      cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
       cy.wait('@fetchEmployeeByIdRequest');
 
@@ -259,7 +260,7 @@ describe('Employee Management Tests', () => {
         { pageNumber: 1, pageSize: 100, search: '*' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-updated' }
       );
-      cy.visit('/manage/employees/edit/333333333335');
+      cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
       cy.wait('@fetchEmployeeByIdRequest');
       cy.wait('@fetchBranchByIdRequest');
@@ -288,7 +289,7 @@ describe('Employee Management Tests', () => {
           message: `'Hawaii Branch' has been removed. Please choose different branch.`,
         },
       ]);
-      cy.url().should('include', '/manage/employees/edit/333333333335');
+      cy.url().should('include', `${ROUTES.employees.path}/edit/333333333335`);
     });
 
     it('should be able to edit the employee and be navigated to employee table page if the employee updating succeeded', () => {
@@ -300,7 +301,7 @@ describe('Employee Management Tests', () => {
         { pageNumber: 1, pageSize: 100, search: '*' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
-      cy.visit('/manage/employees');
+      cy.visit(ROUTES.employees.path);
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-firstName')
@@ -343,7 +344,7 @@ describe('Employee Management Tests', () => {
       );
       interceptFetchBranchesByIdsRequest({ ids: [222222222223] }, { alias: 'fetchBranchesByIdsRequest', fixture: 'branches-multiple' });
 
-      cy.url().should('include', '/manage/employees');
+      cy.url().should('include', ROUTES.employees.path);
       getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
 
       cy.wait('@fetchMultipleEmployeesUpdatedRequest');
@@ -370,7 +371,7 @@ describe('Employee Management Tests', () => {
     it('should fetch and display the employee view details by id when refreshing the page', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
-      cy.visit('/manage/employees/view/333333333335');
+      cy.visit(`${ROUTES.employees.path}/view/333333333335`);
 
       cy.reload();
 
@@ -387,7 +388,7 @@ describe('Employee Management Tests', () => {
         { pageNumber: 1, pageSize: 100 },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
-      cy.visit('/manage/employees/edit/333333333335');
+      cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
       cy.reload();
 
@@ -405,7 +406,7 @@ describe('Employee Management Tests', () => {
         { pageNumber: 1, pageSize: 100, search: '*' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
-      cy.visit('/manage/employees/edit/333333333335');
+      cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
       cy.wait('@fetchEmployeeByIdRequest');
       cy.wait('@fetchBranchByIdRequest');

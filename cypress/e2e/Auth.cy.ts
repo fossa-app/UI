@@ -1,4 +1,5 @@
-import { Module, SubModule } from '../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import { getTestSelectorByModule } from '../support/helpers';
 import {
   interceptFetchClientRequest,
@@ -30,14 +31,14 @@ describe('Authentication Flow Tests', () => {
 
   it('should not be able to manually navigate to secured pages if not authenticated', () => {
     const securedRoutes = [
-      '/setup/company',
-      '/setup/branch',
-      '/setup/employee',
-      '/manage/company',
-      '/manage/branches',
-      '/manage/branches/new',
-      '/manage/branches/edit/1',
-      '/manage/employees',
+      ROUTES.setCompany.path,
+      ROUTES.setBranch.path,
+      ROUTES.setEmployee.path,
+      ROUTES.company.path,
+      ROUTES.branches.path,
+      ROUTES.newBranch.path,
+      `${ROUTES.branches.path}/edit/1`,
+      ROUTES.employees.path,
     ];
 
     securedRoutes.forEach((route) => {

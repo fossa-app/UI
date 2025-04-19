@@ -1,4 +1,5 @@
-import { Module, SubModule } from '../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
   getLinearLoader,
@@ -92,11 +93,11 @@ describe('Company Management Tests', () => {
       });
 
       it('should be able to navigate and view the company page', () => {
-        cy.visit('/manage/company');
+        cy.visit(ROUTES.company.path);
 
         selectNavigationMenuItem('Company');
 
-        cy.url().should('include', '/manage/company/view');
+        cy.url().should('include', ROUTES.viewCompany.path);
         verifyTextFields(Module.companyManagement, SubModule.companyViewDetails, {
           'view-details-header': 'Company Details',
           'view-details-section-basicInfo': 'Basic Information',
@@ -111,14 +112,14 @@ describe('Company Management Tests', () => {
       });
 
       it('should be able to view the company license details', () => {
-        cy.visit('/manage/company/view');
+        cy.visit(ROUTES.viewCompany.path);
         interceptFetchCompanyLicenseRequest();
 
         testCompaLicenseFields();
       });
 
       it('should display a default template if the company license has not been uploaded', () => {
-        cy.visit('/manage/company/view');
+        cy.visit(ROUTES.viewCompany.path);
         interceptFetchCompanyLicenseFailedRequest();
 
         verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
@@ -139,13 +140,13 @@ describe('Company Management Tests', () => {
     });
 
     it('should not be able to navigate to the edit company page', () => {
-      cy.visit('/manage/company/view');
+      cy.visit(ROUTES.viewCompany.path);
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('not.exist');
 
-      cy.visit('/manage/company/edit');
+      cy.visit(ROUTES.editCompany.path);
 
-      cy.url().should('include', '/manage/company/view');
+      cy.url().should('include', ROUTES.viewCompany.path);
     });
   });
 
@@ -156,11 +157,11 @@ describe('Company Management Tests', () => {
     });
 
     it('should reset the form and navigate to view company page if the cancel button is clicked', () => {
-      cy.visit('/manage/company/view');
+      cy.visit(ROUTES.viewCompany.path);
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('exist').click();
 
-      cy.url().should('include', '/manage/company/edit');
+      cy.url().should('include', ROUTES.editCompany.path);
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name').find('input').clear();
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name')
@@ -169,7 +170,7 @@ describe('Company Management Tests', () => {
       selectOption(Module.companyManagement, SubModule.companyDetails, 'countryCode', 'UA');
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-cancel-button').should('exist').click();
 
-      cy.url().should('include', '/manage/company/view');
+      cy.url().should('include', ROUTES.viewCompany.path);
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').click();
 
@@ -184,11 +185,11 @@ describe('Company Management Tests', () => {
     // TODO: flaky test
     it('should not be able to edit the company if the form is invalid or company updating failed', () => {
       interceptEditCompanyFailedRequest();
-      cy.visit('/manage/company/view');
+      cy.visit(ROUTES.viewCompany.path);
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('exist').click();
 
-      cy.url().should('include', '/manage/company/edit');
+      cy.url().should('include', ROUTES.editCompany.path);
 
       cy.wait('@fetchCompanyRequest');
 
@@ -218,7 +219,7 @@ describe('Company Management Tests', () => {
 
     it('should display async validation messages if the company update failed with validation errors', () => {
       interceptEditCompanyFailedWithErrorRequest();
-      cy.visit('/manage/company/edit');
+      cy.visit(ROUTES.editCompany.path);
 
       cy.wait('@fetchCompanyRequest');
 
@@ -239,16 +240,16 @@ describe('Company Management Tests', () => {
           message: `Company 'Good Omens Updated' already exists in the system.`,
         },
       ]);
-      cy.url().should('include', '/manage/company/edit');
+      cy.url().should('include', ROUTES.editCompany.path);
     });
 
     it('should be able to edit the company and be navigated to view company page if the form is valid and company updating succeeded', () => {
       interceptEditCompanyRequest();
-      cy.visit('/manage/company/view');
+      cy.visit(ROUTES.viewCompany.path);
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('exist').click();
 
-      cy.url().should('include', '/manage/company/edit');
+      cy.url().should('include', ROUTES.editCompany.path);
 
       cy.wait('@fetchCompanyRequest');
 
@@ -270,7 +271,7 @@ describe('Company Management Tests', () => {
       cy.wait('@editCompanyRequest');
       cy.wait('@fetchUpdatedCompanyRequest');
 
-      cy.url().should('include', '/manage/company/view');
+      cy.url().should('include', ROUTES.viewCompany.path);
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-value-name').should(
         'have.text',
         'Good Omens Updated'

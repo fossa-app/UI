@@ -18,7 +18,7 @@ const CallbackPage = () => {
 
     try {
       await userManager.signinRedirectCallback();
-      navigate(ROUTES.manage.path);
+      navigate(ROUTES.flows.path);
     } catch {
       navigate(ROUTES.login.path);
     }

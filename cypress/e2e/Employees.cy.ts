@@ -1,4 +1,5 @@
-import { Module, SubModule } from '../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   getLinearLoader,
   getTablePaginationDisplayedRows,
@@ -30,7 +31,7 @@ describe('Employees Tests', () => {
     interceptFetchCompanyRequest();
     interceptFetchBranchesRequest();
     interceptFetchProfileRequest();
-    cy.visit('/manage/employees');
+    cy.visit(ROUTES.employees.path);
   });
 
   const roles = [
@@ -309,14 +310,14 @@ describe('Employees Tests', () => {
         interceptFetchEmployeeByIdRequest('333333333335');
         interceptFetchBranchByIdRequest('222222222222');
 
-        cy.visit('/manage/employees/view/333333333335');
+        cy.visit(`${ROUTES.employees.path}/view/333333333335`);
 
-        cy.url().should('include', '/manage/employees/view/333333333335');
+        cy.url().should('include', `${ROUTES.employees.path}/view/333333333335`);
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'page-title-back-button').click();
         selectAction(Module.employeeManagement, SubModule.employeeTable, 'view', '333333333335');
 
-        cy.url().should('include', '/manage/employees/view/333333333335');
+        cy.url().should('include', `${ROUTES.employees.path}/view/333333333335`);
       });
     });
   });
@@ -332,9 +333,9 @@ describe('Employees Tests', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
 
-      cy.visit('/manage/employees/edit/333333333335');
+      cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
-      cy.url().should('include', '/manage/company');
+      cy.url().should('include', ROUTES.company.path);
     });
   });
 
@@ -350,16 +351,16 @@ describe('Employees Tests', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
 
-      cy.visit('/manage/employees/edit/333333333335');
+      cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
-      cy.url().should('include', '/manage/employees/edit/333333333335');
+      cy.url().should('include', `${ROUTES.employees.path}/edit/333333333335`);
 
-      cy.visit('/manage/employees');
+      cy.visit(ROUTES.employees.path);
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'actions-menu-icon-333333333335').click();
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'action-edit-333333333335').click();
 
-      cy.url().should('include', '/manage/employees/edit/333333333335');
+      cy.url().should('include', `${ROUTES.employees.path}/edit/333333333335`);
     });
   });
 });

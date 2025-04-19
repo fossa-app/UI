@@ -26,7 +26,7 @@ const SetupPage: React.FC = () => {
     } else if (step === SetupStep.EMPLOYEE) {
       navigate(ROUTES.setEmployee.path);
     } else if (step === SetupStep.COMPLETED && status !== 'failed') {
-      navigate(ROUTES.manage.path);
+      navigate(ROUTES.flows.path);
     }
   }, [step, status, navigate]);
 

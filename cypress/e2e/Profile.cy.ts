@@ -1,4 +1,5 @@
-import { Module, SubModule } from '../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
   getLinearLoader,
@@ -57,19 +58,19 @@ describe('Profile Tests', () => {
 
         cy.url().should('include', '/setup/employee');
 
-        cy.visit('/manage/profile/view');
+        cy.visit(ROUTES.viewProfile.path);
 
         cy.url().should('include', '/setup/employee');
       });
 
       it('should navigate to view profile page if the employee exists when clicking the profile menu item', () => {
         interceptFetchProfileRequest();
-        cy.visit('/manage/company/view');
+        cy.visit(ROUTES.viewCompany.path);
 
         cy.wait('@fetchProfileRequest');
         openUserProfile();
 
-        cy.url().should('include', '/manage/profile/view');
+        cy.url().should('include', ROUTES.viewProfile.path);
         verifyTextFields(Module.profile, SubModule.profileViewDetails, {
           'view-details-header': 'Profile Details',
           'view-details-section-basicInfo': 'Basic Information',
@@ -85,11 +86,11 @@ describe('Profile Tests', () => {
 
       it('should reset the form and navigate to view profile page if the cancel button is clicked', () => {
         interceptFetchProfileRequest();
-        cy.visit('/manage/profile/view');
+        cy.visit(ROUTES.viewProfile.path);
 
         getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-action-button').click();
 
-        cy.url().should('include', '/manage/profile/edit');
+        cy.url().should('include', ROUTES.editProfile.path);
 
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName').find('input').clear();
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName').find('input').type('Aziraphale');
@@ -99,7 +100,7 @@ describe('Profile Tests', () => {
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').type('Aziraphale User Fell');
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-cancel-button').should('exist').click();
 
-        cy.url().should('include', '/manage/profile/view');
+        cy.url().should('include', ROUTES.viewProfile.path);
 
         getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-action-button').click();
 
@@ -119,7 +120,7 @@ describe('Profile Tests', () => {
       it('should not be able to edit the profile if the form is invalid or employee updating failed', () => {
         interceptFetchProfileRequest();
         interceptEditProfileFailedRequest();
-        cy.visit('/manage/profile/view');
+        cy.visit(ROUTES.viewProfile.path);
 
         cy.wait('@fetchProfileRequest');
 
@@ -161,7 +162,7 @@ describe('Profile Tests', () => {
       it('should display async validation messages if the profile update failed with validation errors', () => {
         interceptFetchProfileRequest();
         interceptEditProfileFailedWithErrorRequest();
-        cy.visit('/manage/profile/edit');
+        cy.visit(ROUTES.editProfile.path);
 
         cy.wait('@fetchProfileRequest');
 
@@ -183,17 +184,17 @@ describe('Profile Tests', () => {
             message: `'First Name' and 'Last Name' cannot be the same.`,
           },
         ]);
-        cy.url().should('include', '/manage/profile/edit');
+        cy.url().should('include', ROUTES.editProfile.path);
       });
 
       it('should be able to edit the profile and be navigated to view profile page if the form is valid and employee updating succeeded', () => {
         interceptFetchProfileRequest();
         interceptEditProfileRequest();
-        cy.visit('/manage/profile/view');
+        cy.visit(ROUTES.viewProfile.path);
 
         getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-action-button').click();
 
-        cy.url().should('include', '/manage/profile/edit');
+        cy.url().should('include', ROUTES.editProfile.path);
 
         cy.wait('@fetchProfileRequest');
 
@@ -215,7 +216,7 @@ describe('Profile Tests', () => {
         cy.wait('@editProfileRequest');
         cy.wait('@fetchUpdatedProfileRequest');
 
-        cy.url().should('include', '/manage/profile/view');
+        cy.url().should('include', ROUTES.viewProfile.path);
         getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-value-firstName').should(
           'have.text',
           'Anthony'
@@ -235,7 +236,7 @@ describe('Profile Tests', () => {
 
       it('should render the danger zone on the view profile page', () => {
         interceptFetchProfileRequest();
-        cy.visit('/manage/profile/view');
+        cy.visit(ROUTES.viewProfile.path);
 
         cy.wait('@fetchProfileRequest');
 
@@ -258,7 +259,7 @@ describe('Profile Tests', () => {
 
       it('should display the delete confirmation popup when delete profile button is clicked', () => {
         interceptFetchProfileRequest();
-        cy.visit('/manage/profile/view');
+        cy.visit(ROUTES.viewProfile.path);
 
         cy.wait('@fetchProfileRequest');
 

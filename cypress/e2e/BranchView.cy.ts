@@ -1,4 +1,5 @@
-import { Module, SubModule } from '../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import { getLinearLoader, getTestSelectorByModule, selectAction, verifyInputFields, verifyTextFields } from '../support/helpers';
 import {
   interceptEditBranchRequest,
@@ -67,7 +68,7 @@ describe('Branch View Tests', () => {
       it('should be able to view the branch and navigate back', () => {
         interceptEditBranchRequest('222222222222');
         interceptFetchBranchByIdRequest('222222222222');
-        cy.visit('/manage/branches');
+        cy.visit(ROUTES.branches.path);
 
         selectAction(Module.branchManagement, SubModule.branchTable, 'view', '222222222222');
 
@@ -82,13 +83,13 @@ describe('Branch View Tests', () => {
 
         getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'page-title-back-button').click();
 
-        cy.url().should('include', '/manage/branches');
+        cy.url().should('include', ROUTES.branches.path);
         getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
       });
 
       it('should fetch and display the branch view details by id when refreshing the page', () => {
         interceptFetchBranchByIdRequest('222222222222');
-        cy.visit('/manage/branches/view/222222222222');
+        cy.visit(`${ROUTES.branches.path}/view/222222222222`);
 
         cy.reload();
 
@@ -103,7 +104,7 @@ describe('Branch View Tests', () => {
 
       it('should not display the loader if the request resolves quickly', () => {
         interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdQuickRequest', 'branches', 200, 50);
-        cy.visit('/manage/branches/view/222222222222');
+        cy.visit(`${ROUTES.branches.path}/view/222222222222`);
 
         getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('not.exist');
 
@@ -115,7 +116,7 @@ describe('Branch View Tests', () => {
       it('should mark the fields as invalid if the company country is different than the branch address country', () => {
         interceptFetchCompanyRequest('fetchUpdatedCompanyRequest', 'company-updated');
         interceptFetchBranchByIdRequest('222222222222');
-        cy.visit('/manage/branches/view/222222222222');
+        cy.visit(`${ROUTES.branches.path}/view/222222222222`);
 
         cy.wait('@fetchUpdatedCompanyRequest');
         cy.wait('@fetchBranchByIdRequest');
@@ -139,7 +140,7 @@ describe('Branch View Tests', () => {
 
       it('should display default values if there is no address provided', () => {
         interceptFetchBranchByIdRequest('222222222225', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
-        cy.visit('/manage/branches/view/222222222225');
+        cy.visit(`${ROUTES.branches.path}/view/222222222225`);
 
         cy.wait('@fetchBranchByIdRequest');
 
@@ -161,16 +162,16 @@ describe('Branch View Tests', () => {
 
       it('should display not found page if the branch was not found', () => {
         interceptFetchBranchByIdFailedRequest('222222222224');
-        cy.visit('/manage/branches/view/222222222224');
+        cy.visit(`${ROUTES.branches.path}/view/222222222224`);
 
         getTestSelectorByModule(Module.shared, SubModule.notFound, 'page-title').should('exist').and('contain.text', 'Page Not Found');
         getTestSelectorByModule(Module.shared, SubModule.notFound, 'navigate-home-button').should('exist').click();
-        cy.url().should('include', '/manage');
+        cy.url().should('include', ROUTES.flows.path);
       });
 
       it('should display branch location details if the branch has correct address', () => {
         interceptFetchBranchByIdRequest('222222222223', 'fetchBranchByIdRequest', 'branches-multiple');
-        cy.visit('/manage/branches/view/222222222223');
+        cy.visit(`${ROUTES.branches.path}/view/222222222223`);
 
         getTestSelectorByModule(Module.branchManagement, SubModule.branchLocationDetails, 'default-location').should('not.exist');
         cy.get('.leaflet-container').should('exist');
@@ -183,7 +184,7 @@ describe('Branch View Tests', () => {
 
       it('should display a fallback message if the branch address is incorrect', () => {
         interceptFetchBranchByIdRequest('222222222226', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
-        cy.visit('/manage/branches/view/222222222226');
+        cy.visit(`${ROUTES.branches.path}/view/222222222226`);
 
         getTestSelectorByModule(Module.branchManagement, SubModule.branchLocationDetails, 'default-location')
           .should('exist')
@@ -201,7 +202,7 @@ describe('Branch View Tests', () => {
 
     it('should not render the Edit branch button', () => {
       interceptFetchBranchByIdRequest('222222222222');
-      cy.visit('/manage/branches/view/222222222222');
+      cy.visit(`${ROUTES.branches.path}/view/222222222222`);
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-action-button').should('not.exist');
     });
@@ -214,7 +215,7 @@ describe('Branch View Tests', () => {
 
     it('should reset the branch after viewing and navigating back', () => {
       interceptFetchBranchByIdRequest('222222222222');
-      cy.visit('/manage/branches');
+      cy.visit(ROUTES.branches.path);
 
       selectAction(Module.branchManagement, SubModule.branchTable, 'view', '222222222222');
 
@@ -225,7 +226,7 @@ describe('Branch View Tests', () => {
       getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'page-title-back-button').click();
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
 
-      cy.url().should('include', '/manage/branches/new');
+      cy.url().should('include', ROUTES.newBranch.path);
       // TODO: flaky part
       verifyInputFields(Module.branchManagement, SubModule.branchDetails, {
         'form-field-name': '',
@@ -241,15 +242,15 @@ describe('Branch View Tests', () => {
 
     it('should render the Edit branch button', () => {
       interceptFetchBranchByIdRequest('222222222222');
-      cy.visit('/manage/branches/view/222222222222');
+      cy.visit(`${ROUTES.branches.path}/view/222222222222`);
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-action-button').should('exist').click();
 
-      cy.url().should('include', '/manage/branches/edit/222222222222');
+      cy.url().should('include', `${ROUTES.branches.path}/edit/222222222222`);
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-cancel-button').should('exist').click();
 
-      cy.url().should('include', '/manage/branches');
+      cy.url().should('include', ROUTES.branches.path);
     });
   });
 });

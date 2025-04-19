@@ -1,4 +1,5 @@
-import { Module, SubModule } from '../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
   clickField,
@@ -27,7 +28,7 @@ import {
   interceptFetchBranchesByIdsRequest,
 } from '../support/interceptors';
 
-const branchAdminRoutes = ['/manage/branches/new', '/manage/branches/edit/222222222222'];
+const branchAdminRoutes = [ROUTES.newBranch.path, `${ROUTES.branches.path}/edit/222222222222`];
 
 describe('Branches Tests', () => {
   beforeEach(() => {
@@ -36,7 +37,7 @@ describe('Branches Tests', () => {
     interceptFetchCompanyLicenseFailedRequest();
     interceptFetchCompanyRequest();
     interceptFetchProfileRequest();
-    cy.visit('/manage/branches');
+    cy.visit(ROUTES.branches.path);
   });
 
   const roles = [
@@ -251,7 +252,7 @@ describe('Branches Tests', () => {
 
           branchAdminRoutes.forEach((route) => {
             cy.visit(route);
-            cy.url().should('include', isAdminRole ? route : '/manage/company');
+            cy.url().should('include', isAdminRole ? route : ROUTES.company.path);
           });
         });
 
@@ -259,7 +260,7 @@ describe('Branches Tests', () => {
           interceptFetchBranchesRequest();
           interceptFetchBranchByIdRequest('222222222222');
 
-          cy.visit('/manage/branches');
+          cy.visit(ROUTES.branches.path);
 
           getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').should(
             tableLayoutActionButtonExists ? 'exist' : 'not.exist'
@@ -276,7 +277,7 @@ describe('Branches Tests', () => {
           );
           getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'action-view-222222222222').click();
 
-          cy.url().should('include', '/manage/branches/view/222222222222');
+          cy.url().should('include', `${ROUTES.branches.path}/view/222222222222`);
         });
 
         it('should display branch management buttons', () => {
@@ -306,7 +307,7 @@ describe('Branches Tests', () => {
             { pageNumber: 1, pageSize: 10, search: '' },
             { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-countries' }
           );
-          cy.visit('/manage/branches');
+          cy.visit(ROUTES.branches.path);
 
           getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222224-timeZoneName')
             .find('p')
@@ -319,11 +320,11 @@ describe('Branches Tests', () => {
         it('should be able to navigate to the branch view page by clicking the branch name cell', () => {
           interceptFetchBranchesRequest();
           interceptFetchBranchByIdRequest('222222222222');
-          cy.visit('/manage/branches');
+          cy.visit(ROUTES.branches.path);
 
           getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222222-name').click();
 
-          cy.url().should('include', '/manage/branches/view/222222222222');
+          cy.url().should('include', `${ROUTES.branches.path}/view/222222222222`);
         });
 
         it('should reset the search state when the clear icon is clicked', () => {
@@ -354,7 +355,7 @@ describe('Branches Tests', () => {
             { pageNumber: 1, pageSize: 10, search: '' },
             { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-countries' }
           );
-          cy.visit('/manage/branches');
+          cy.visit(ROUTES.branches.path);
 
           getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-cell-222222222224-timeZoneName')
             .find('p')
@@ -369,7 +370,7 @@ describe('Branches Tests', () => {
             { pageNumber: 1, pageSize: 10, search: '' },
             { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-countries' }
           );
-          cy.visit('/manage/branches');
+          cy.visit(ROUTES.branches.path);
 
           cy.wait('@fetchMultipleBranchesRequest');
 
@@ -426,7 +427,7 @@ describe('Branches Tests', () => {
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
       cy.url().should('include', branchAdminRoutes[0]);
 
-      cy.visit('/manage/branches');
+      cy.visit(ROUTES.branches.path);
 
       selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
       cy.url().should('include', branchAdminRoutes[1]);
@@ -437,7 +438,7 @@ describe('Branches Tests', () => {
         { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
-      cy.visit('/manage/branches');
+      cy.visit(ROUTES.branches.path);
 
       interceptDeleteBranchFailedRequest('222222222223');
       selectAction(Module.branchManagement, SubModule.branchTable, 'delete', '222222222223');
@@ -456,7 +457,7 @@ describe('Branches Tests', () => {
         { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
       );
-      cy.visit('/manage/branches');
+      cy.visit(ROUTES.branches.path);
 
       interceptDeleteBranchRequest('222222222223');
       selectAction(Module.branchManagement, SubModule.branchTable, 'delete', '222222222223');
