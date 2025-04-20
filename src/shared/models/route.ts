@@ -1,4 +1,4 @@
-import { SvgIcon } from './icon';
+import { IconType, SvgIcon } from './icon';
 
 export enum RouteKey {
   login = 'login',
@@ -29,9 +29,28 @@ export interface RouteItem {
   icon?: SvgIcon;
 }
 
-export interface Flow extends RouteItem {
-  enabled?: boolean;
+export interface Flow {
+  name: string;
+  path: string;
+  disabled?: boolean;
+  icon?: SvgIcon;
   subFlows?: Flow[];
 }
+
+export type FlowsMap = {
+  [key in RouteKey]?: {
+    name: string;
+    path: string;
+    icon?: IconType;
+    subFlows?: {
+      [subKey in RouteKey]?: {
+        name: string;
+        path: string;
+        icon?: IconType;
+        disabled?: boolean;
+      };
+    };
+  };
+};
 
 export type AppRoute = { [key in RouteKey]: RouteItem };

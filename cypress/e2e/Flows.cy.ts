@@ -1,22 +1,23 @@
 import { Module, SubModule } from 'shared/models';
 import { ROUTES } from 'shared/constants';
-import { clickFlowGroupMultipleSubFlows, getTestSelectorByModule } from '../support/helpers';
+import { checkIsFlowDisabled, clickFlowGroupMultipleSubFlows, getTestSelectorByModule } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
-  interceptFetchCompanyLicenseFailedRequest,
+  interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
 } from '../support/interceptors';
 
-const flowRoutes = [ROUTES.viewCompany.path, ROUTES.branches.path, ROUTES.employees.path, ROUTES.viewProfile.path];
+const enabledFlowRoutes = [ROUTES.viewCompany.path, ROUTES.branches.path, ROUTES.employees.path, ROUTES.viewProfile.path];
+const disabledFlowRoutes = [ROUTES.setCompany.path, ROUTES.setBranch.path, ROUTES.setEmployee.path];
 
 describe('Flows Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
-    interceptFetchCompanyLicenseFailedRequest();
+    interceptFetchCompanyLicenseRequest();
     cy.loginMock();
   });
 
@@ -36,6 +37,8 @@ describe('Flows Tests', () => {
       beforeEach(() => {
         loginMock();
       });
+
+      // TODO: create separate test sets for different cases, e.g. onboarding started/completed
 
       it('should render the flows page', () => {
         interceptFetchCompanyRequest();
@@ -58,9 +61,21 @@ describe('Flows Tests', () => {
         interceptFetchProfileRequest();
         cy.visit(ROUTES.flows.path);
 
-        flowRoutes.forEach((route) => {
+        enabledFlowRoutes.forEach((route) => {
           cy.visit(route);
           cy.url().should('include', route);
+        });
+      });
+
+      it('should not be able to navigate by urls from the flows page if the subflow is disabled', () => {
+        interceptFetchCompanyRequest();
+        interceptFetchBranchesRequest();
+        interceptFetchProfileRequest();
+        cy.visit(ROUTES.flows.path);
+
+        disabledFlowRoutes.forEach((route) => {
+          cy.visit(route);
+          cy.url().should('include', ROUTES.flows.path);
         });
       });
 
@@ -94,6 +109,20 @@ describe('Flows Tests', () => {
         getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-group-Employees').click();
 
         cy.url().should('include', ROUTES.employees.path);
+      });
+
+      it('should display correct enabled and disabled flows', () => {
+        interceptFetchCompanyRequest();
+        interceptFetchBranchesRequest();
+        interceptFetchProfileRequest();
+        cy.visit(ROUTES.flows.path);
+
+        checkIsFlowDisabled('Company', 'Set Company', true);
+        checkIsFlowDisabled('Company', 'View Company', false);
+        checkIsFlowDisabled('Branches', 'Set Branch', true);
+        checkIsFlowDisabled('Branches', 'Branches', false);
+        checkIsFlowDisabled('Profile', 'Set Employee', true);
+        checkIsFlowDisabled('Profile', 'View Profile', false);
       });
     });
   });

@@ -1,72 +1,68 @@
-import BusinessIcon from '@mui/icons-material/Business';
-import StoreIcon from '@mui/icons-material/Store';
-import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
-import PersonIcon from '@mui/icons-material/Person';
-import { Flow } from 'shared/models';
+import { FlowsMap, IconType, RouteKey } from 'shared/models';
 import { ROUTES } from './routes';
 
-export const ALL_FLOWS: Flow[] = [
-  {
+export const FLOWS_MAP: FlowsMap = {
+  [RouteKey.company]: {
     name: ROUTES.company.name,
     path: ROUTES.company.path,
-    icon: StoreIcon,
-    subFlows: [
-      {
+    icon: IconType.company,
+    subFlows: {
+      [RouteKey.setCompany]: {
         name: ROUTES.setCompany.name,
         path: ROUTES.setCompany.path,
-        icon: StoreIcon,
+        icon: IconType.assign,
       },
-      {
+      [RouteKey.viewCompany]: {
         name: ROUTES.viewCompany.name,
         path: ROUTES.viewCompany.path,
-        icon: StoreIcon,
+        icon: IconType.company,
       },
-    ],
+    },
   },
-  {
+  [RouteKey.branches]: {
     name: ROUTES.branches.name,
     path: ROUTES.branches.path,
-    icon: BusinessIcon,
-    subFlows: [
-      {
+    icon: IconType.branch,
+    subFlows: {
+      [RouteKey.setBranch]: {
         name: ROUTES.setBranch.name,
         path: ROUTES.setBranch.path,
-        icon: BusinessIcon,
+        icon: IconType.assign,
       },
-      {
+      [RouteKey.branches]: {
         name: ROUTES.branches.name,
         path: ROUTES.branches.path,
-        icon: BusinessIcon,
+        icon: IconType.branch,
       },
-    ],
+    },
   },
-  {
+  [RouteKey.employees]: {
     name: ROUTES.employees.name,
     path: ROUTES.employees.path,
-    icon: EmojiPeopleIcon,
-    subFlows: [
-      {
+    icon: IconType.employee,
+    subFlows: {
+      [RouteKey.employees]: {
         name: ROUTES.employees.name,
         path: ROUTES.employees.path,
-        icon: EmojiPeopleIcon,
+        icon: IconType.employee,
       },
-    ],
+    },
   },
-  {
+  [RouteKey.profile]: {
     name: ROUTES.profile.name,
     path: ROUTES.profile.path,
-    icon: PersonIcon,
-    subFlows: [
-      {
+    icon: IconType.profile,
+    subFlows: {
+      [RouteKey.setEmployee]: {
         name: ROUTES.setEmployee.name,
         path: ROUTES.setEmployee.path,
-        icon: PersonIcon,
+        icon: IconType.assign,
       },
-      {
+      [RouteKey.viewProfile]: {
         name: ROUTES.viewProfile.name,
         path: ROUTES.viewProfile.path,
-        icon: PersonIcon,
+        icon: IconType.profile,
       },
-    ],
+    },
   },
-];
+};

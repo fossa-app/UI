@@ -7,5 +7,6 @@ export * from './companySlice';
 export * from './branchSlice';
 export * from './employeeSlice';
 export * from './profileSlice';
+export * from './flowSlice';
 export * from './messageSlice';
 export * from './appLoadingSlice';
