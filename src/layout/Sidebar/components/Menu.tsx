@@ -3,9 +3,10 @@ import { useLocation } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
-import { ALL_FLOWS } from 'shared/constants';
+import { useAppSelector } from 'store';
+import { selectFlows } from 'store/features';
 import { Module, SubModule } from 'shared/models';
-import { getTestSelectorByModule } from 'shared/helpers';
+import { convertFlowsMapToArray, getTestSelectorByModule } from 'shared/helpers';
 import FlowItem from 'components/Flow/FlowItem';
 
 interface MenuProps {
@@ -15,6 +16,8 @@ interface MenuProps {
 const Menu: React.FC<MenuProps> = ({ onCloseSideBar }) => {
   const theme = useTheme();
   const location = useLocation();
+  const flowsMap = useAppSelector(selectFlows);
+  const flows = React.useMemo(() => convertFlowsMapToArray(flowsMap), [flowsMap]);
 
   const getButtonStyles = (isActive: boolean) => ({
     color: isActive ? theme.palette.primary.main : theme.palette.info.contrastText,
@@ -23,7 +26,7 @@ const Menu: React.FC<MenuProps> = ({ onCloseSideBar }) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <List>
-        {ALL_FLOWS.map((item) => {
+        {flows.map((item) => {
           const { subFlows, ...rest } = item;
           const isActive = location.pathname.includes(item.path);
           const buttonStyles = getButtonStyles(isActive);

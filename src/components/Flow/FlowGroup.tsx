@@ -92,7 +92,7 @@ const FlowGroup: React.FC<FlowGroupProps> = ({
                 key={subFlow.name}
                 data-cy={`${module}-${subModule}-flow-item-${subFlow.name}`}
                 {...subFlow}
-                buttonProps={{ ...buttonProps, sx: { display: 'flex', alignItems: 'center' } }}
+                buttonProps={{ ...buttonProps, disabled: !!subFlow.disabled, sx: { display: 'flex', alignItems: 'center' } }}
                 iconProps={{ ...iconProps, sx: { ...iconProps?.sx, color, minWidth: 'auto', mr: 1 } }}
                 textProps={{ ...textProps, sx: { ...textProps?.sx, color, flexGrow: 1 }, slotProps: { primary: { fontSize: '0.875rem' } } }}
                 onPostNavigate={onPostNavigate}

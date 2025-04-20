@@ -1,14 +1,14 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import LoadingButton from 'components/UI/LoadingButton';
-import { BUTTON_ICONS } from 'shared/constants';
+import { ICONS } from 'shared/constants';
 import { FormActionProps, FormActionType } from '../form.model';
 import { useFormContext } from '../FormContext';
 
 const FormAction: React.FC<FormActionProps> = (props: FormActionProps) => {
   const { module, subModule } = useFormContext();
   const { actionType, endIcon, ...buttonProps } = props;
-  const Icon = endIcon ? BUTTON_ICONS[endIcon as keyof typeof BUTTON_ICONS] : null;
+  const Icon = endIcon ? ICONS[endIcon as keyof typeof ICONS] : null;
   const ariaLabel = props['aria-label'];
 
   switch (props?.actionType) {

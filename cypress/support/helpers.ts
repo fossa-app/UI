@@ -128,6 +128,16 @@ export const clickFlowGroupMultipleSubFlows = (flowName: string, subFlowName: st
   getTestSelectorByModule(Module.manage, SubModule.flows, `flow-item-${subFlowName}`).click();
 };
 
+export const checkIsFlowDisabled = (flowName: string, subFlowName: string, isDisabled: boolean) => {
+  getTestSelectorByModule(Module.manage, SubModule.flows, `flow-group-${flowName}`).click();
+
+  if (isDisabled) {
+    getTestSelectorByModule(Module.manage, SubModule.flows, `flow-item-${subFlowName}`).should('have.attr', 'disabled');
+  } else {
+    getTestSelectorByModule(Module.manage, SubModule.flows, `flow-item-${subFlowName}`).should('not.have.attr', 'disabled');
+  }
+};
+
 export const uploadTestFile = (selector: string, fixtureName: string, fileType = 'application/octet-stream') => {
   cy.fixture(fixtureName, 'binary').then((fileContent) => {
     const blob = Cypress.Blob.binaryStringToBlob(fileContent, fileType);
