@@ -1,6 +1,6 @@
 import { Module, SubModule } from 'shared/models';
 import { ROUTES } from 'shared/constants';
-import { clickFlowGroup, getTestSelectorByModule } from '../support/helpers';
+import { clickFlowGroupMultipleSubFlows, getTestSelectorByModule } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -70,26 +70,30 @@ describe('Flows Tests', () => {
         interceptFetchProfileRequest();
         cy.visit(ROUTES.flows.path);
 
-        clickFlowGroup('Company', 'View Company');
+        clickFlowGroupMultipleSubFlows('Company', 'View Company');
 
         cy.url().should('include', ROUTES.viewCompany.path);
         cy.visit(ROUTES.flows.path);
 
-        clickFlowGroup('Branches', 'Branches');
+        clickFlowGroupMultipleSubFlows('Branches', 'Branches');
 
         cy.url().should('include', ROUTES.branches.path);
-
         cy.visit(ROUTES.flows.path);
 
-        clickFlowGroup('Employees', 'Employees');
-
-        cy.url().should('include', ROUTES.employees.path);
-
-        cy.visit(ROUTES.flows.path);
-
-        clickFlowGroup('Profile', 'View Profile');
+        clickFlowGroupMultipleSubFlows('Profile', 'View Profile');
 
         cy.url().should('include', ROUTES.viewProfile.path);
+      });
+
+      it('should navigate manually at once if the flow does not have multiple subflows', () => {
+        interceptFetchCompanyRequest();
+        interceptFetchBranchesRequest();
+        interceptFetchProfileRequest();
+        cy.visit(ROUTES.flows.path);
+
+        getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-group-Employees').click();
+
+        cy.url().should('include', ROUTES.employees.path);
       });
     });
   });
