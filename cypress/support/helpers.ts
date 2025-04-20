@@ -123,7 +123,7 @@ export const selectNavigationMenuItem = (menuItem: string) => {
   getTestSelectorByModule(Module.shared, SubModule.menu, `menu-item-${menuItem}`).click();
 };
 
-export const clickFlowGroup = (flowName: string, subFlowName: string) => {
+export const clickFlowGroupMultipleSubFlows = (flowName: string, subFlowName: string) => {
   getTestSelectorByModule(Module.manage, SubModule.flows, `flow-group-${flowName}`).click();
   getTestSelectorByModule(Module.manage, SubModule.flows, `flow-item-${subFlowName}`).click();
 };

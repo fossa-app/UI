@@ -10,24 +10,38 @@ type FlowItemProps = {
   buttonProps?: ListItemButtonProps;
   iconProps?: ListItemIconProps;
   textProps?: ListItemTextProps;
+  component?: React.ElementType;
+  children?: React.ReactNode;
   onPostNavigate?: (path: RouteItem['path']) => void;
 } & RouteItem &
   ListItemProps;
 
-const FlowItem: React.FC<FlowItemProps> = ({ name, icon, path, buttonProps, iconProps, textProps, onPostNavigate, ...props }) => (
+const FlowItem: React.FC<FlowItemProps> = ({
+  name,
+  icon,
+  path,
+  buttonProps,
+  iconProps,
+  textProps,
+  component = Link,
+  children,
+  onPostNavigate,
+  ...props
+}) => (
   <ListItem {...props} disablePadding key={name}>
     <ListItemButton
       aria-label={name}
-      component={Link}
+      component={component}
+      to={component === Link ? path : undefined}
+      onClick={component === Link ? () => onPostNavigate?.(path) : buttonProps?.onClick}
       {...buttonProps}
       sx={{ ...buttonProps?.sx }}
-      to={path}
-      onClick={() => onPostNavigate?.(path)}
     >
       <ListItemIcon {...iconProps} sx={{ ...iconProps?.sx }}>
-        {icon && React.createElement(icon)}
+        {icon && React.createElement(icon, { sx: iconProps?.sx })}
       </ListItemIcon>
       <ListItemText primary={name} {...textProps} sx={{ ...textProps?.sx }} />
+      {children}
     </ListItemButton>
   </ListItem>
 );
