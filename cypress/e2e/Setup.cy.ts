@@ -32,7 +32,7 @@ import {
   interceptCreateCompanyFailedWithErrorRequest,
 } from '../support/interceptors';
 
-const setupRoutes = ['/setup/company', '/setup/branch', '/setup/employee'];
+const setupRoutes = [ROUTES.setCompany.path, ROUTES.setBranch.path, ROUTES.setEmployee.path];
 
 describe('Setup Flow Tests', () => {
   beforeEach(() => {
@@ -68,11 +68,11 @@ describe('Setup Flow Tests', () => {
 
       it('should navigate to company setup page and no other setup page if there is no company', () => {
         interceptFetchCompanyFailedRequest();
-        cy.visit('/setup/company');
+        cy.visit(ROUTES.setup.path);
 
         cy.wait('@fetchCompanyFailedRequest');
 
-        cy.url().should('include', '/setup/company');
+        cy.url().should('include', ROUTES.setCompany.path);
 
         if (isAdminRole) {
           getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-general-validation-message').should('not.exist');
@@ -88,7 +88,7 @@ describe('Setup Flow Tests', () => {
 
         setupRoutes.forEach((route) => {
           cy.visit(route);
-          cy.url().should('include', '/setup/company');
+          cy.url().should('include', ROUTES.setCompany.path);
         });
       });
 
@@ -96,9 +96,9 @@ describe('Setup Flow Tests', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesFailedRequest();
         interceptFetchProfileFailedRequest();
-        cy.visit('/setup/branch');
+        cy.visit(ROUTES.setup.path);
 
-        cy.url().should('include', '/setup/branch');
+        cy.url().should('include', ROUTES.setBranch.path);
 
         if (isAdminRole) {
           getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-general-validation-message').should('not.exist');
@@ -114,7 +114,7 @@ describe('Setup Flow Tests', () => {
 
         setupRoutes.forEach((route) => {
           cy.visit(route);
-          cy.url().should('include', '/setup/branch');
+          cy.url().should('include', ROUTES.setBranch.path);
         });
       });
 
@@ -122,13 +122,13 @@ describe('Setup Flow Tests', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileFailedRequest();
-        cy.visit('/setup/employee');
+        cy.visit(ROUTES.setup.path);
 
         cy.wait('@fetchCompanyRequest');
         cy.wait('@fetchBranchesRequest');
         cy.wait('@fetchProfileFailedRequest');
 
-        cy.url().should('include', '/setup/employee');
+        cy.url().should('include', ROUTES.setEmployee.path);
         getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('not.have.attr', 'disabled');
         getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-general-validation-message').should('not.exist');
         getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-action-button').should('contain.text', 'Finish');
@@ -136,7 +136,7 @@ describe('Setup Flow Tests', () => {
 
         setupRoutes.forEach((route) => {
           cy.visit(route);
-          cy.url().should('include', '/setup/employee');
+          cy.url().should('include', ROUTES.setEmployee.path);
         });
       });
 
@@ -145,18 +145,18 @@ describe('Setup Flow Tests', () => {
         interceptFetchBranchesRequest();
         interceptFetchProfileFailedRequest();
         interceptCreateProfileFailedRequest();
-        cy.visit('/setup');
+        cy.visit(ROUTES.setup.path);
 
         cy.wait('@fetchProfileFailedRequest');
 
-        cy.url().should('include', '/setup/employee');
+        cy.url().should('include', ROUTES.setEmployee.path);
 
         clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
 
         cy.wait('@createProfileFailedRequest');
 
         getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
-        cy.url().should('include', '/setup/employee');
+        cy.url().should('include', ROUTES.setEmployee.path);
       });
 
       it('should be able to navigate to the flows page if the employee creation succeeded', () => {
@@ -164,11 +164,11 @@ describe('Setup Flow Tests', () => {
         interceptFetchBranchesRequest();
         interceptFetchProfileFailedRequest();
         interceptCreateProfileRequest();
-        cy.visit('/setup');
+        cy.visit(ROUTES.setup.path);
 
         cy.wait('@fetchProfileFailedRequest');
 
-        cy.url().should('include', '/setup/employee');
+        cy.url().should('include', ROUTES.setEmployee.path);
         getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-header').should('have.text', 'Employee Details');
         getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-section-field-basicInfo').should(
           'have.text',
@@ -192,24 +192,24 @@ describe('Setup Flow Tests', () => {
         cy.url().should('include', ROUTES.flows.path);
       });
 
-      it('should not be able to navigate to company page by clicking the company logo if the employee is in a draft status', () => {
+      it('should be able to navigate to company page by clicking the company logo if the company is created', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileFailedRequest();
-        cy.visit('/setup/employee');
+        cy.visit(ROUTES.setEmployee.path);
 
         cy.wait('@fetchProfileFailedRequest');
 
         getTestSelectorByModule(Module.shared, SubModule.header, 'company-logo').should('exist').click();
 
-        cy.url().should('include', '/setup/employee');
+        cy.url().should('include', ROUTES.viewCompany.path);
       });
 
       it('should navigate to the flows page if the company, branch and employee data exist', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileRequest();
-        cy.visit('/setup');
+        cy.visit(ROUTES.setup.path);
 
         cy.wait('@fetchCompanyRequest');
         cy.wait('@fetchBranchesRequest');
@@ -229,7 +229,7 @@ describe('Setup Flow Tests', () => {
     it('should display validation messages if the company creation form is invalid', () => {
       interceptFetchCompanyFailedRequest();
       interceptCreateCompanyFailedRequest();
-      cy.visit('/setup');
+      cy.visit(ROUTES.setup.path);
 
       cy.wait('@fetchCompanyFailedRequest');
 
@@ -257,11 +257,11 @@ describe('Setup Flow Tests', () => {
     it('should not be able to navigate to branch setup step if company creation failed', () => {
       interceptFetchCompanyFailedRequest();
       interceptCreateCompanyFailedRequest();
-      cy.visit('/setup');
+      cy.visit(ROUTES.setup.path);
 
       cy.wait('@fetchCompanyFailedRequest');
 
-      cy.url().should('include', '/setup/company');
+      cy.url().should('include', ROUTES.setCompany.path);
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('Test Company');
       selectOption(Module.companySetup, SubModule.companyDetails, 'countryCode', 'UA');
@@ -269,13 +269,13 @@ describe('Setup Flow Tests', () => {
 
       cy.wait('@createCompanyFailedRequest');
 
-      cy.url().should('include', '/setup/company');
+      cy.url().should('include', ROUTES.setCompany.path);
     });
 
     it('should display async validation messages if the company create failed with validation errors', () => {
       interceptFetchCompanyFailedRequest();
       interceptCreateCompanyFailedWithErrorRequest();
-      cy.visit('/setup');
+      cy.visit(ROUTES.setup.path);
 
       cy.wait('@fetchCompanyFailedRequest');
 
@@ -292,18 +292,18 @@ describe('Setup Flow Tests', () => {
           message: `Company 'Good Omens Updated' already exists in the system.`,
         },
       ]);
-      cy.url().should('include', '/setup/company');
+      cy.url().should('include', ROUTES.setCompany.path);
     });
 
     it('should be able to navigate to branch setup step if company creation succeeded', () => {
       interceptFetchCompanyFailedRequest();
       interceptCreateCompanyRequest();
       interceptFetchBranchesFailedRequest();
-      cy.visit('/setup');
+      cy.visit(ROUTES.setup.path);
 
       cy.wait('@fetchCompanyFailedRequest');
 
-      cy.url().should('include', '/setup/company');
+      cy.url().should('include', ROUTES.setCompany.path);
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-header').should('have.text', 'Company Details');
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-section-field-basicInfo').should(
         'have.text',
@@ -321,7 +321,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@createCompanyRequest');
       cy.wait('@fetchCompanyRequest');
 
-      cy.url().should('include', '/setup/branch');
+      cy.url().should('include', ROUTES.setBranch.path);
       getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
       getTestSelectorByModule(Module.shared, SubModule.header, 'company-logo').should('exist').and('have.text', 'Good Omens');
     });
@@ -329,7 +329,7 @@ describe('Setup Flow Tests', () => {
     it('should display only available timezones for selected company country', () => {
       interceptFetchCompanyFailedRequest();
       interceptCreateCompanyRequest();
-      cy.visit('/setup/company');
+      cy.visit(ROUTES.setCompany.path);
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('US Company');
       selectOption(Module.companySetup, SubModule.companyDetails, 'countryCode', 'US');
@@ -340,7 +340,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@createCompanyRequest');
       cy.wait('@fetchCompanyRequest');
 
-      cy.url().should('include', '/setup/branch');
+      cy.url().should('include', ROUTES.setBranch.path);
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-timeZoneId').click();
 
       verifyOptions(Module.branchSetup, SubModule.branchDetails, 'form-field-timeZoneId-option', [
@@ -355,7 +355,7 @@ describe('Setup Flow Tests', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
       interceptCreateBranchFailedRequest();
-      cy.visit('/setup');
+      cy.visit(ROUTES.setup.path);
 
       cy.wait('@fetchBranchesFailedRequest');
 
@@ -420,7 +420,7 @@ describe('Setup Flow Tests', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
       interceptCreateBranchFailedWithErrorRequest();
-      cy.visit('/setup');
+      cy.visit(ROUTES.setup.path);
 
       cy.wait('@fetchBranchesFailedRequest');
 
@@ -447,18 +447,18 @@ describe('Setup Flow Tests', () => {
           message: `Postal Code '*****' for Country 'US - [United States]' is invalid.`,
         },
       ]);
-      cy.url().should('include', '/setup/branch');
+      cy.url().should('include', ROUTES.setBranch.path);
     });
 
     it('should not be able to navigate to employee setup step if branch creation failed', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
       interceptCreateBranchFailedRequest();
-      cy.visit('/setup');
+      cy.visit(ROUTES.setup.path);
 
       cy.wait('@fetchBranchesFailedRequest');
 
-      cy.url().should('include', '/setup/branch');
+      cy.url().should('include', ROUTES.setBranch.path);
 
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type('Test Branch');
       selectOption(Module.branchSetup, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
@@ -467,7 +467,7 @@ describe('Setup Flow Tests', () => {
 
       cy.wait('@createBranchFailedRequest');
 
-      cy.url().should('include', '/setup/branch');
+      cy.url().should('include', ROUTES.setBranch.path);
     });
 
     it('should be able to navigate to employee setup step if branch creation succeeded', () => {
@@ -475,11 +475,11 @@ describe('Setup Flow Tests', () => {
       interceptFetchBranchesFailedRequest();
       interceptCreateBranchRequest();
       interceptFetchProfileFailedRequest();
-      cy.visit('/setup');
+      cy.visit(ROUTES.setup.path);
 
       cy.wait('@fetchBranchesFailedRequest');
 
-      cy.url().should('include', '/setup/branch');
+      cy.url().should('include', ROUTES.setBranch.path);
       verifyTextFields(Module.branchSetup, SubModule.branchDetails, {
         'form-header': 'Branch Details',
         'form-section-field-basicInfo': 'Basic Information',
@@ -496,7 +496,7 @@ describe('Setup Flow Tests', () => {
       cy.wait('@createBranchRequest');
       cy.wait('@fetchBranchesRequest');
 
-      cy.url().should('include', '/setup/employee');
+      cy.url().should('include', ROUTES.setEmployee.path);
       getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
       getTestSelectorByModule(Module.employeeSetup, SubModule.employeeDetails, 'form-field-firstName')
         .find('input')
@@ -514,7 +514,7 @@ describe('Setup Flow Tests', () => {
       interceptFetchBranchesRequest();
       interceptFetchProfileFailedRequest();
       interceptCreateProfileFailedRequest();
-      cy.visit('/setup');
+      cy.visit(ROUTES.setup.path);
 
       cy.wait('@fetchProfileFailedRequest');
 
@@ -538,7 +538,7 @@ describe('Setup Flow Tests', () => {
       interceptFetchBranchesRequest();
       interceptFetchProfileFailedRequest();
       interceptCreateProfileFailedWithErrorRequest();
-      cy.visit('/setup');
+      cy.visit(ROUTES.setup.path);
 
       cy.wait('@fetchProfileFailedRequest');
 
@@ -562,7 +562,7 @@ describe('Setup Flow Tests', () => {
           message: `'First Name' and 'Last Name' cannot be the same.`,
         },
       ]);
-      cy.url().should('include', '/setup/employee');
+      cy.url().should('include', ROUTES.setEmployee.path);
     });
 
     it('should navigate to the flows page at once if the branch creation succeeded and the employee had been created before', () => {
@@ -570,11 +570,11 @@ describe('Setup Flow Tests', () => {
       interceptFetchBranchesFailedRequest();
       interceptCreateBranchRequest();
       interceptFetchProfileRequest();
-      cy.visit('/setup');
+      cy.visit(ROUTES.setup.path);
 
       cy.wait('@fetchBranchesFailedRequest');
 
-      cy.url().should('include', '/setup/branch');
+      cy.url().should('include', ROUTES.setBranch.path);
 
       interceptFetchBranchesRequest();
 

@@ -51,16 +51,16 @@ describe('Profile Tests', () => {
 
       it('should not be able to navigate to profile page if the employee is in a draft status', () => {
         interceptFetchProfileFailedRequest();
-        cy.visit('/setup/employee');
+        cy.visit(ROUTES.setEmployee.path);
 
         cy.wait('@fetchProfileFailedRequest');
         openUserProfile();
 
-        cy.url().should('include', '/setup/employee');
+        cy.url().should('include', ROUTES.flows.path);
 
         cy.visit(ROUTES.viewProfile.path);
 
-        cy.url().should('include', '/setup/employee');
+        cy.url().should('include', ROUTES.flows.path);
       });
 
       it('should navigate to view profile page if the employee exists when clicking the profile menu item', () => {

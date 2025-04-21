@@ -67,7 +67,7 @@ describe('License Tests', () => {
 
       it('should not display default company license if setup has not completed', () => {
         interceptUploadCompanyLicenseFailedRequest();
-        cy.visit('/setup');
+        cy.visit(ROUTES.setup.path);
 
         getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button').should('not.exist');
         getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text').should('not.exist');

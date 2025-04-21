@@ -1,4 +1,4 @@
-import { AppRoute, SetupStep } from 'shared/models';
+import { AppRoute } from 'shared/models';
 
 // TODO: use relative routes instead
 export const ROUTES: AppRoute = {
@@ -10,29 +10,21 @@ export const ROUTES: AppRoute = {
     name: 'Callback',
     path: '/callback',
   },
-  setup: {
-    name: 'Setup',
-    path: '/setup',
-  },
-  setCompany: {
-    name: 'Set Company',
-    path: `/setup/${SetupStep.COMPANY}`,
-  },
-  setBranch: {
-    name: 'Set Branch',
-    path: `/setup/${SetupStep.BRANCH}`,
-  },
-  setEmployee: {
-    name: 'Set Employee',
-    path: `/setup/${SetupStep.EMPLOYEE}`,
-  },
   flows: {
     name: 'Flows',
     path: '/flows',
   },
+  setup: {
+    name: 'Setup',
+    path: '/flows/setup',
+  },
   company: {
     name: 'Company',
     path: '/flows/company',
+  },
+  setCompany: {
+    name: 'Company Onboarding',
+    path: '/flows/setup/company',
   },
   editCompany: {
     name: 'Edit Company',
@@ -46,9 +38,9 @@ export const ROUTES: AppRoute = {
     name: 'Branches',
     path: '/flows/branches',
   },
-  employees: {
-    name: 'Employees',
-    path: '/flows/employees',
+  setBranch: {
+    name: 'Set Branch',
+    path: `/flows/setup/branch`,
   },
   newBranch: {
     name: 'Create Branch',
@@ -66,6 +58,11 @@ export const ROUTES: AppRoute = {
     name: 'Profile',
     path: '/flows/profile',
   },
+  setEmployee: {
+    name: 'Employee Onboarding',
+    path: '/flows/setup/employee',
+  },
+  // TODO: add offboardEmployee route, rename setCompany to onnboardCompany
   viewProfile: {
     name: 'View Profile',
     path: '/flows/profile/view',
@@ -73,6 +70,10 @@ export const ROUTES: AppRoute = {
   editProfile: {
     name: 'Edit Profile',
     path: '/flows/profile/edit',
+  },
+  employees: {
+    name: 'Employees',
+    path: '/flows/employees',
   },
   viewEmployee: {
     name: 'View Employee',

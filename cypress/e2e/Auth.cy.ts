@@ -22,7 +22,7 @@ describe('Authentication Flow Tests', () => {
   });
 
   it('should render the Login page', () => {
-    cy.visit('/login');
+    cy.visit(ROUTES.login.path);
 
     cy.get('[data-cy="login-form-title"]').should('exist').contains('Login');
     cy.get('[data-cy="login-button"]').should('exist').contains('Login');
@@ -43,7 +43,7 @@ describe('Authentication Flow Tests', () => {
 
     securedRoutes.forEach((route) => {
       cy.visit(route);
-      cy.url().should('include', '/login');
+      cy.url().should('include', ROUTES.login.path);
     });
   });
 
@@ -51,7 +51,7 @@ describe('Authentication Flow Tests', () => {
     interceptLoginRequest();
     interceptFetchCompanyFailedRequest();
     interceptOpenidConfigurationRequest();
-    cy.visit('/login');
+    cy.visit(ROUTES.login.path);
 
     cy.wait('@fetchClientRequest');
 
@@ -68,9 +68,9 @@ describe('Authentication Flow Tests', () => {
     interceptOpenidConfigurationRequest();
     interceptFetchCompanyFailedRequest();
     cy.loginMock();
-    cy.visit('/setup');
+    cy.visit(ROUTES.flows.path);
 
-    cy.url().should('include', '/setup');
+    cy.url().should('include', ROUTES.flows.path);
     getTestSelectorByModule(Module.shared, SubModule.header, 'profile-menu').should('exist');
     getTestSelectorByModule(Module.shared, SubModule.header, 'profile-avatar').click();
 
@@ -82,9 +82,9 @@ describe('Authentication Flow Tests', () => {
     interceptOpenidConfigurationRequest();
     interceptFetchCompanyFailedRequest();
     cy.loginMock(true);
-    cy.visit('/setup');
+    cy.visit(ROUTES.flows.path);
 
-    cy.url().should('include', '/setup');
+    cy.url().should('include', ROUTES.flows.path);
     getTestSelectorByModule(Module.shared, SubModule.header, 'profile-avatar').click();
     getTestSelectorByModule(Module.shared, SubModule.header, 'profile-name').should('exist').and('have.text', 'Hi, Admin');
   });
@@ -95,7 +95,7 @@ describe('Authentication Flow Tests', () => {
     interceptFetchCompanyFailedRequest();
     interceptLogoutRequest();
     cy.loginMock();
-    cy.visit('/setup');
+    cy.visit(ROUTES.flows.path);
 
     getTestSelectorByModule(Module.shared, SubModule.header, 'profile-avatar').click();
     getTestSelectorByModule(Module.shared, SubModule.header, 'logout-button').click();
@@ -104,7 +104,7 @@ describe('Authentication Flow Tests', () => {
     cy.wait('@openidConfigurationRequest');
     cy.wait('@logoutRequest');
 
-    cy.url().should('include', '/login');
+    cy.url().should('include', ROUTES.login.path);
     getTestSelectorByModule(Module.shared, SubModule.header, 'profile-menu').should('not.exist');
   });
 

@@ -46,8 +46,8 @@ export type FlowsMap = {
       [subKey in RouteKey]?: {
         name: string;
         path: string;
-        icon?: IconType;
         disabled?: boolean;
+        icon?: IconType;
       };
     };
   };

@@ -68,10 +68,10 @@ describe('Branches Tests', () => {
           loginMock();
         });
 
-        it('should be navigated to branch setup page if there are no branches', () => {
+        it('should be navigated to the flows page if there are no branches', () => {
           interceptFetchBranchesFailedRequest();
 
-          cy.url().should('include', '/setup/branch');
+          cy.url().should('include', ROUTES.flows.path);
         });
 
         it('should not display the linear loader if fetching branches is in progress, it is a part of fetchSetupData', () => {

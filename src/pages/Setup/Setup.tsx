@@ -1,38 +1,28 @@
 import * as React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import { useAppDispatch, useAppSelector } from 'store';
-import { fetchSetupData, selectStep } from 'store/features';
+import { useAppSelector } from 'store';
+import { selectStep } from 'store/features';
 import { SetupStep } from 'shared/models';
 import { ROUTES } from 'shared/constants';
-import CircularLoader from 'components/UI/CircularLoader';
 
 const SetupPage: React.FC = () => {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { data: step, status } = useAppSelector(selectStep);
 
   React.useEffect(() => {
-    if (status === 'idle') {
-      dispatch(fetchSetupData());
-    }
-  }, [status, dispatch]);
+    const currentPath = location.pathname;
 
-  React.useEffect(() => {
-    if (step === SetupStep.COMPANY) {
+    if (step === SetupStep.COMPANY && currentPath !== ROUTES.setCompany.path) {
       navigate(ROUTES.setCompany.path);
-    } else if (step === SetupStep.BRANCH) {
+    } else if (step === SetupStep.BRANCH && currentPath !== ROUTES.setBranch.path) {
       navigate(ROUTES.setBranch.path);
-    } else if (step === SetupStep.EMPLOYEE) {
+    } else if (step === SetupStep.EMPLOYEE && currentPath !== ROUTES.setEmployee.path) {
       navigate(ROUTES.setEmployee.path);
-    } else if (step === SetupStep.COMPLETED && status !== 'failed') {
+    } else if (step === SetupStep.COMPLETED) {
       navigate(ROUTES.flows.path);
     }
   }, [step, status, navigate]);
-
-  if (status === 'loading') {
-    return <CircularLoader />;
-  }
 
   return (
     <Box sx={{ display: 'flex', flexGrow: 1, width: { md: 744, xs: '100%' }, margin: '0 auto' }}>

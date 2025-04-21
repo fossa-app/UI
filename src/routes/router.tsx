@@ -67,28 +67,6 @@ const router = createBrowserRouter(
               element: <Navigate to={ROUTES.flows.path} replace />,
             },
             {
-              path: ROUTES.setup.path,
-              element: <SetupPage />,
-              children: [
-                {
-                  index: true,
-                  element: <Navigate to={ROUTES.setCompany.path} replace />,
-                },
-                {
-                  path: ROUTES.setCompany.path,
-                  element: SetupCompanyPage,
-                },
-                {
-                  path: ROUTES.setBranch.path,
-                  element: SetupBranchPage,
-                },
-                {
-                  path: ROUTES.setEmployee.path,
-                  element: SetupEmployeePage,
-                },
-              ],
-            },
-            {
               path: ROUTES.flows.path,
               element: <ManagePage />,
               children: [
@@ -100,6 +78,29 @@ const router = createBrowserRouter(
                       <FlowsPage />
                     </>
                   ),
+                },
+                {
+                  // TODO: check, when setup is not completed and manually navigating to a non-existing route (e.g. /flows/setup/branches), it redirects to '/company/view' page
+                  path: ROUTES.setup.path,
+                  element: <SetupPage />,
+                  children: [
+                    {
+                      index: true,
+                      element: <Navigate to={ROUTES.setCompany.path} replace />,
+                    },
+                    {
+                      path: ROUTES.setCompany.path,
+                      element: SetupCompanyPage,
+                    },
+                    {
+                      path: ROUTES.setBranch.path,
+                      element: SetupBranchPage,
+                    },
+                    {
+                      path: ROUTES.setEmployee.path,
+                      element: SetupEmployeePage,
+                    },
+                  ],
                 },
                 {
                   path: ROUTES.company.path,

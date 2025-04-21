@@ -16,7 +16,7 @@ const ManagePage: React.FC = () => {
     if (status === 'idle') {
       dispatch(fetchSetupData());
     } else if (status === 'failed') {
-      navigate(ROUTES.setup.path);
+      navigate(ROUTES.flows.path);
     }
   }, [status, dispatch, navigate]);
 
@@ -26,12 +26,8 @@ const ManagePage: React.FC = () => {
     }
   }, [companyLicenseStatus, dispatch]);
 
-  if (status === 'loading') {
+  if (status === 'idle' || status === 'loading') {
     return <CircularLoader />;
-  }
-
-  if (status === 'idle' || status === 'failed') {
-    return null;
   }
 
   return (
