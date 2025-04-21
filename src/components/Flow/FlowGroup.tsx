@@ -37,7 +37,7 @@ const FlowGroup: React.FC<FlowGroupProps> = ({
   const theme = useTheme();
   const color = theme.palette.primary.main;
   const [expanded, setExpanded] = React.useState(false);
-  const hasMultipleSubflows = subFlows.length > 1;
+  const hasSubFlow = subFlows.length > 0;
 
   const handleToggle = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -55,16 +55,16 @@ const FlowGroup: React.FC<FlowGroupProps> = ({
         name={name}
         icon={icon}
         path={path}
-        component={hasMultipleSubflows ? 'div' : Link}
+        component={hasSubFlow ? 'div' : Link}
         buttonProps={{
           ...buttonProps,
-          onClick: hasMultipleSubflows ? handleToggle : handlePostNavigate,
           sx: {
             ...buttonProps?.sx,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
           },
+          onClick: hasSubFlow ? handleToggle : handlePostNavigate,
         }}
         iconProps={{
           ...iconProps,
@@ -77,14 +77,14 @@ const FlowGroup: React.FC<FlowGroupProps> = ({
       >
         <IconButton
           size="large"
-          sx={{ p: 0, visibility: hasMultipleSubflows ? 'visible' : 'hidden' }}
-          onClick={hasMultipleSubflows ? handleToggle : undefined}
+          sx={{ p: 0, visibility: hasSubFlow ? 'visible' : 'hidden' }}
+          onClick={hasSubFlow ? handleToggle : undefined}
         >
           {expanded ? <ExpandLessIcon color="primary" /> : <ExpandMoreIcon color="primary" />}
         </IconButton>
       </FlowItem>
 
-      {hasMultipleSubflows && (
+      {hasSubFlow && (
         <Collapse unmountOnExit in={expanded} timeout="auto">
           <List sx={{ p: 0 }}>
             {subFlows.map((subFlow) => (

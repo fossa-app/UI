@@ -24,11 +24,6 @@ export const FLOWS_MAP: FlowsMap = {
     path: ROUTES.branches.path,
     icon: IconType.branch,
     subFlows: {
-      [RouteKey.setBranch]: {
-        name: ROUTES.setBranch.name,
-        path: ROUTES.setBranch.path,
-        icon: IconType.assign,
-      },
       [RouteKey.branches]: {
         name: ROUTES.branches.name,
         path: ROUTES.branches.path,

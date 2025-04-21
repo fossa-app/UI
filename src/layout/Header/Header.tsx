@@ -5,6 +5,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
 import { openSideBar, selectAppConfig, selectCompany, selectProfile, selectStep, toggleAppTheme } from 'store/features';
@@ -39,10 +40,6 @@ const Header: React.FC = () => {
   };
 
   const handleCompanyClick = () => {
-    if (profile?.isDraft) {
-      return;
-    }
-
     navigate(ROUTES.viewCompany.path);
   };
 
@@ -52,6 +49,10 @@ const Header: React.FC = () => {
     }
 
     dispatch(openSideBar());
+  };
+
+  const navigateFlowsPage = () => {
+    navigate(ROUTES.flows.path);
   };
 
   return (
@@ -70,6 +71,19 @@ const Header: React.FC = () => {
               <MenuIcon />
             </IconButton>
           </Grid>
+          {profile && (
+            <Grid size="auto">
+              <IconButton
+                data-cy={getTestSelectorByModule(Module.shared, SubModule.header, 'flows-icon')}
+                aria-label="Flows"
+                edge="end"
+                color="inherit"
+                onClick={navigateFlowsPage}
+              >
+                <AccountTreeIcon />
+              </IconButton>
+            </Grid>
+          )}
           <Grid size="grow">
             {companyName && (
               <Typography

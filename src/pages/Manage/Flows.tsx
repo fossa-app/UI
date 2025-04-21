@@ -20,6 +20,7 @@ const FlowsPage: React.FC = () => {
         <PageTitle>Flows</PageTitle>
         <PageSubtitle>Manage Flows</PageSubtitle>
       </Page>
+      {/* TODO: check if need to disable flows based on role - YES */}
       <Grid container spacing={4} sx={{ justifyContent: 'center', mt: 4 }}>
         {flows.map((item) => (
           <Grid size={{ xs: 12, sm: 6, md: 3, lg: 2 }} key={item.name}>

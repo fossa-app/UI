@@ -22,22 +22,36 @@ const flowSlice = createSlice({
     builder
       .addCase(fetchCompany.rejected, (state) => {
         state.flows.company!.subFlows!.setCompany!.disabled = false;
+        state.flows.company!.subFlows!.viewCompany!.disabled = true;
+        state.flows.branches!.subFlows!.branches!.disabled = true;
+        state.flows.employees!.subFlows!.employees!.disabled = true;
+        state.flows.profile!.subFlows!.setEmployee!.disabled = true;
+        state.flows.profile!.subFlows!.viewProfile!.disabled = true;
       })
       .addCase(fetchCompany.fulfilled, (state) => {
-        state.flows.company!.subFlows!.setCompany!.disabled = true;
+        state.flows.employees!.subFlows!.employees!.disabled = true;
         state.flows.company!.subFlows!.viewCompany!.disabled = false;
       })
       .addCase(fetchBranches.rejected, (state) => {
-        state.flows.branches!.subFlows!.setBranch!.disabled = false;
+        state.flows.branches!.subFlows!.branches!.disabled = true;
+        state.flows.employees!.subFlows!.employees!.disabled = true;
+        state.flows.profile!.subFlows!.setEmployee!.disabled = true;
+        state.flows.profile!.subFlows!.viewProfile!.disabled = true;
       })
       .addCase(fetchBranches.fulfilled, (state) => {
-        state.flows.branches!.subFlows!.setBranch!.disabled = true;
+        state.flows.company!.subFlows!.setCompany!.disabled = true;
         state.flows.branches!.subFlows!.branches!.disabled = false;
+        state.flows.employees!.subFlows!.employees!.disabled = true;
       })
       .addCase(fetchProfile.rejected, (state) => {
+        state.flows.company!.subFlows!.setCompany!.disabled = true;
+        state.flows.employees!.subFlows!.employees!.disabled = true;
         state.flows.profile!.subFlows!.setEmployee!.disabled = false;
+        state.flows.profile!.subFlows!.viewProfile!.disabled = true;
       })
       .addCase(fetchProfile.fulfilled, (state) => {
+        state.flows.company!.subFlows!.setCompany!.disabled = true;
+        state.flows.employees!.subFlows!.employees!.disabled = false;
         state.flows.profile!.subFlows!.setEmployee!.disabled = true;
         state.flows.profile!.subFlows!.viewProfile!.disabled = false;
       });
