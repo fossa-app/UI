@@ -10,7 +10,8 @@ import Collapse from '@mui/material/Collapse';
 import { useTheme } from '@mui/material/styles';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Flow, Module, SubModule } from 'shared/models';
+import { Flow, Module, SubModule, UserRole } from 'shared/models';
+import { hasAllowedRole } from 'shared/helpers';
 import FlowItem from './FlowItem';
 
 interface FlowGroupProps extends Flow {
@@ -19,6 +20,7 @@ interface FlowGroupProps extends Flow {
   buttonProps?: ListItemButtonProps;
   iconProps?: ListItemIconProps;
   textProps?: ListItemTextProps;
+  roles?: UserRole[];
   onPostNavigate?: (path: Flow['path']) => void;
 }
 
@@ -32,12 +34,25 @@ const FlowGroup: React.FC<FlowGroupProps> = ({
   buttonProps,
   iconProps,
   textProps,
+  roles,
   onPostNavigate,
 }) => {
   const theme = useTheme();
   const color = theme.palette.primary.main;
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(true);
   const hasSubFlow = subFlows.length > 0;
+
+  // TODO: MUI element does not set disabled attribute
+  const isSubFlowDisabled = React.useCallback(
+    (subFlow: Flow) => {
+      const disabled = !!subFlow.disabled;
+      const hasRoles = !!subFlow.roles?.length;
+      const roleNotAllowed = hasRoles && !hasAllowedRole(subFlow.roles, roles);
+
+      return disabled || roleNotAllowed;
+    },
+    [roles]
+  );
 
   const handleToggle = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -77,6 +92,7 @@ const FlowGroup: React.FC<FlowGroupProps> = ({
       >
         <IconButton
           size="large"
+          data-cy={`${module}-${subModule}-subFlows-toggle-icon-${name}`}
           sx={{ p: 0, visibility: hasSubFlow ? 'visible' : 'hidden' }}
           onClick={hasSubFlow ? handleToggle : undefined}
         >
@@ -86,13 +102,13 @@ const FlowGroup: React.FC<FlowGroupProps> = ({
 
       {hasSubFlow && (
         <Collapse unmountOnExit in={expanded} timeout="auto">
-          <List sx={{ p: 0 }}>
+          <List sx={{ p: 0 }} data-cy={`${module}-${subModule}-subFlows-container-${name}`}>
             {subFlows.map((subFlow) => (
               <FlowItem
                 key={subFlow.name}
                 data-cy={`${module}-${subModule}-flow-item-${subFlow.name}`}
                 {...subFlow}
-                buttonProps={{ ...buttonProps, disabled: !!subFlow.disabled, sx: { display: 'flex', alignItems: 'center' } }}
+                buttonProps={{ ...buttonProps, disabled: isSubFlowDisabled(subFlow), sx: { display: 'flex', alignItems: 'center' } }}
                 iconProps={{ ...iconProps, sx: { ...iconProps?.sx, color, minWidth: 'auto', mr: 1 } }}
                 textProps={{ ...textProps, sx: { ...textProps?.sx, color, flexGrow: 1 }, slotProps: { primary: { fontSize: '0.875rem' } } }}
                 onPostNavigate={onPostNavigate}

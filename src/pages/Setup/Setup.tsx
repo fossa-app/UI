@@ -13,12 +13,12 @@ const SetupPage: React.FC = () => {
   React.useEffect(() => {
     const currentPath = location.pathname;
 
-    if (step === SetupStep.COMPANY && currentPath !== ROUTES.setCompany.path) {
-      navigate(ROUTES.setCompany.path);
+    if (step === SetupStep.COMPANY && currentPath !== ROUTES.companyOnboarding.path) {
+      navigate(ROUTES.companyOnboarding.path);
     } else if (step === SetupStep.BRANCH && currentPath !== ROUTES.setBranch.path) {
       navigate(ROUTES.setBranch.path);
-    } else if (step === SetupStep.EMPLOYEE && currentPath !== ROUTES.setEmployee.path) {
-      navigate(ROUTES.setEmployee.path);
+    } else if (step === SetupStep.EMPLOYEE && currentPath !== ROUTES.employeeOnbarding.path) {
+      navigate(ROUTES.employeeOnbarding.path);
     } else if (step === SetupStep.COMPLETED) {
       navigate(ROUTES.flows.path);
     }

@@ -51,7 +51,7 @@ describe('Profile Tests', () => {
 
       it('should not be able to navigate to profile page if the employee is in a draft status', () => {
         interceptFetchProfileFailedRequest();
-        cy.visit(ROUTES.setEmployee.path);
+        cy.visit(ROUTES.employeeOnbarding.path);
 
         cy.wait('@fetchProfileFailedRequest');
         openUserProfile();

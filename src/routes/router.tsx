@@ -12,9 +12,9 @@ import { createLazyComponent } from './lazy-loaded-component';
 // Lazy loaded pages
 const LoginPage = createLazyComponent(() => import('pages/Login'), { title: ROUTES.login.name });
 const CallbackPage = createLazyComponent(() => import('pages/Callback'), { title: ROUTES.callback.name });
-const SetupCompanyPage = createLazyComponent(() => import('pages/Setup/pages/SetupCompany'), { title: ROUTES.setCompany.name });
+const SetupCompanyPage = createLazyComponent(() => import('pages/Setup/pages/SetupCompany'), { title: ROUTES.companyOnboarding.name });
 const SetupBranchPage = createLazyComponent(() => import('pages/Setup/pages/SetupBranch'), { title: ROUTES.setBranch.name });
-const SetupEmployeePage = createLazyComponent(() => import('pages/Setup/pages/SetupEmployee'), { title: ROUTES.setEmployee.name });
+const SetupEmployeePage = createLazyComponent(() => import('pages/Setup/pages/SetupEmployee'), { title: ROUTES.employeeOnbarding.name });
 const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
 const CompanyPage = createLazyComponent(() => import('pages/Manage/Company/Company'));
 const EditCompanyPage = createLazyComponent(() => import('pages/Manage/Company/pages/EditCompany'), {
@@ -86,10 +86,10 @@ const router = createBrowserRouter(
                   children: [
                     {
                       index: true,
-                      element: <Navigate to={ROUTES.setCompany.path} replace />,
+                      element: <Navigate to={ROUTES.companyOnboarding.path} replace />,
                     },
                     {
-                      path: ROUTES.setCompany.path,
+                      path: ROUTES.companyOnboarding.path,
                       element: SetupCompanyPage,
                     },
                     {
@@ -97,7 +97,7 @@ const router = createBrowserRouter(
                       element: SetupBranchPage,
                     },
                     {
-                      path: ROUTES.setEmployee.path,
+                      path: ROUTES.employeeOnbarding.path,
                       element: SetupEmployeePage,
                     },
                   ],

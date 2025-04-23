@@ -22,9 +22,14 @@ export const ROUTES: AppRoute = {
     name: 'Company',
     path: '/flows/company',
   },
-  setCompany: {
+  companyOnboarding: {
     name: 'Company Onboarding',
+    // TODO: rename to /flows/onboard/company
     path: '/flows/setup/company',
+  },
+  companyOffboarding: {
+    name: 'Company Offboarding',
+    path: '/flows/offboard/company',
   },
   editCompany: {
     name: 'Edit Company',
@@ -58,11 +63,14 @@ export const ROUTES: AppRoute = {
     name: 'Profile',
     path: '/flows/profile',
   },
-  setEmployee: {
+  employeeOnbarding: {
     name: 'Employee Onboarding',
     path: '/flows/setup/employee',
   },
-  // TODO: add offboardEmployee route, rename setCompany to onnboardCompany
+  employeeOffboarding: {
+    name: 'Employee Offboarding',
+    path: '/flows/offboard/employee',
+  },
   viewProfile: {
     name: 'View Profile',
     path: '/flows/profile/view',

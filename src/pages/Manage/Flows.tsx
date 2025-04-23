@@ -1,9 +1,10 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid2';
 import { useAppSelector } from 'store';
-import { selectFlows } from 'store/features';
+import { selectFlows, selectUserRoles } from 'store/features';
 import { Module, SubModule } from 'shared/models';
 import { convertFlowsMapToArray } from 'shared/helpers';
+import { APP_CONFIG } from 'shared/constants';
 import Page, { PageSubtitle, PageTitle } from 'components/UI/Page';
 import FlowGroup from 'components/Flow/FlowGroup';
 
@@ -12,6 +13,7 @@ const testSubModule = SubModule.flows;
 
 const FlowsPage: React.FC = () => {
   const flowsMap = useAppSelector(selectFlows);
+  const userRoles = useAppSelector(selectUserRoles);
   const flows = React.useMemo(() => convertFlowsMapToArray(flowsMap), [flowsMap]);
 
   return (
@@ -20,11 +22,10 @@ const FlowsPage: React.FC = () => {
         <PageTitle>Flows</PageTitle>
         <PageSubtitle>Manage Flows</PageSubtitle>
       </Page>
-      {/* TODO: check if need to disable flows based on role - YES */}
-      <Grid container spacing={4} sx={{ justifyContent: 'center', mt: 4 }}>
+      <Grid container spacing={4} sx={{ mt: 4, mx: 'auto' }}>
         {flows.map((item) => (
-          <Grid size={{ xs: 12, sm: 6, md: 3, lg: 2 }} key={item.name}>
-            <FlowGroup {...item} module={testModule} subModule={testSubModule} />
+          <Grid size="auto" key={item.name} sx={{ width: { xs: '100%', sm: `calc((${APP_CONFIG.containerWidth}px / 4) - 12px)` } }}>
+            <FlowGroup {...item} roles={userRoles} module={testModule} subModule={testSubModule} />
           </Grid>
         ))}
       </Grid>
