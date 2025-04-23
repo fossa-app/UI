@@ -10,6 +10,7 @@ export enum IconType {
   employee = 'employee',
   profile = 'profile',
   assign = 'assign',
+  remove = 'remove',
 }
 
 export type SvgIcon = OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;

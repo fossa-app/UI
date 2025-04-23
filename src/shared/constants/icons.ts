@@ -6,6 +6,7 @@ import StoreIcon from '@mui/icons-material/Store';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import PersonIcon from '@mui/icons-material/Person';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import { IconType, SvgIcon } from 'shared/models';
 
 export const ICONS: Record<IconType, SvgIcon> = {
@@ -17,4 +18,5 @@ export const ICONS: Record<IconType, SvgIcon> = {
   [IconType.employee]: EmojiPeopleIcon,
   [IconType.profile]: PersonIcon,
   [IconType.assign]: AssignmentTurnedInIcon,
+  [IconType.remove]: RemoveCircleIcon,
 };

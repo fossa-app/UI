@@ -1,12 +1,15 @@
 import { IconType, SvgIcon } from './icon';
+import { UserRole } from './user';
 
 export enum RouteKey {
   login = 'login',
   callback = 'callback',
   setup = 'setup',
-  setCompany = 'setCompany',
+  companyOnboarding = 'companyOnboarding',
+  companyOffboarding = 'companyOffboarding',
   setBranch = 'setBranch',
-  setEmployee = 'setEmployee',
+  employeeOnbarding = 'employeeOnbarding',
+  employeeOffboarding = 'employeeOffboarding',
   flows = 'flows',
   company = 'company',
   editCompany = 'editCompany',
@@ -35,6 +38,7 @@ export interface Flow {
   disabled?: boolean;
   icon?: SvgIcon;
   subFlows?: Flow[];
+  roles?: UserRole[];
 }
 
 export type FlowsMap = {
@@ -48,6 +52,7 @@ export type FlowsMap = {
         path: string;
         disabled?: boolean;
         icon?: IconType;
+        roles?: UserRole[];
       };
     };
   };

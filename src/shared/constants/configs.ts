@@ -19,6 +19,7 @@ export const APP_CONFIG = {
   },
   searchDebounceTime: 300,
   emptyValue: '-',
+  containerWidth: 1156,
 };
 
 export const MESSAGES = {

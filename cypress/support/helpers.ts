@@ -123,19 +123,28 @@ export const selectNavigationMenuItem = (menuItem: string) => {
   getTestSelectorByModule(Module.shared, SubModule.menu, `menu-item-${menuItem}`).click();
 };
 
-export const clickFlowGroupMultipleSubFlows = (flowName: string, subFlowName: string) => {
+export const clickFlow = (flowName: string) => {
   getTestSelectorByModule(Module.manage, SubModule.flows, `flow-group-${flowName}`).click();
+};
+
+export const clickSubFlow = (subFlowName: string) => {
   getTestSelectorByModule(Module.manage, SubModule.flows, `flow-item-${subFlowName}`).click();
 };
 
-export const checkIsFlowDisabled = (flowName: string, subFlowName: string, isDisabled: boolean) => {
-  getTestSelectorByModule(Module.manage, SubModule.flows, `flow-group-${flowName}`).click();
+export const clickFlowsIcon = () => {
+  getTestSelectorByModule(Module.shared, SubModule.header, 'flows-icon').click();
+};
 
-  if (isDisabled) {
-    getTestSelectorByModule(Module.manage, SubModule.flows, `flow-item-${subFlowName}`).should('have.attr', 'disabled');
-  } else {
-    getTestSelectorByModule(Module.manage, SubModule.flows, `flow-item-${subFlowName}`).should('not.have.attr', 'disabled');
-  }
+export const checkIsSubFlowDisabled = (subFlowName: string, isDisabled: boolean) => {
+  const selector = getTestSelectorByModule(Module.manage, SubModule.flows, `flow-item-${subFlowName}`);
+
+  selector.should(isDisabled ? 'have.attr' : 'not.have.attr', 'disabled');
+};
+
+export const checkIsSubFlowHasDisabledAttribute = (subFlowName: string, isDisabled: boolean) => {
+  const selector = `[data-cy="${Module.manage}-${SubModule.flows}-flow-item-${subFlowName}"] a`;
+
+  cy.get(selector).should(isDisabled ? 'have.attr' : 'not.have.attr', 'aria-disabled', 'true');
 };
 
 export const uploadTestFile = (selector: string, fixtureName: string, fileType = 'application/octet-stream') => {

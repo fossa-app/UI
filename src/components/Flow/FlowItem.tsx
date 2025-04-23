@@ -27,23 +27,22 @@ const FlowItem: React.FC<FlowItemProps> = ({
   children,
   onPostNavigate,
   ...props
-}) => (
-  <ListItem {...props} disablePadding key={name}>
-    <ListItemButton
-      aria-label={name}
-      component={component}
-      to={component === Link ? path : undefined}
-      onClick={component === Link ? () => onPostNavigate?.(path) : buttonProps?.onClick}
-      {...buttonProps}
-      sx={{ ...buttonProps?.sx }}
-    >
-      <ListItemIcon {...iconProps} sx={{ ...iconProps?.sx }}>
-        {icon && React.createElement(icon, { sx: iconProps?.sx })}
-      </ListItemIcon>
-      <ListItemText primary={name} {...textProps} sx={{ ...textProps?.sx }} />
-      {children}
-    </ListItemButton>
-  </ListItem>
-);
+}) => {
+  return (
+    <ListItem {...props} disablePadding key={name}>
+      <ListItemButton
+        aria-label={name}
+        component={component}
+        to={component === Link ? path : undefined}
+        onClick={component === Link ? () => onPostNavigate?.(path) : buttonProps?.onClick}
+        {...buttonProps}
+      >
+        <ListItemIcon {...iconProps}>{icon && React.createElement(icon, { sx: iconProps?.sx })}</ListItemIcon>
+        <ListItemText primary={name} {...textProps} />
+        {children}
+      </ListItemButton>
+    </ListItem>
+  );
+};
 
 export default FlowItem;

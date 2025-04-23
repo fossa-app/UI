@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchCompanyLicense, fetchSetupData, selectCompanyLicense, selectStep } from 'store/features';
-import { ROUTES } from 'shared/constants';
+import { APP_CONFIG, ROUTES } from 'shared/constants';
 import CircularLoader from 'components/UI/CircularLoader';
 
 const ManagePage: React.FC = () => {
@@ -31,7 +31,9 @@ const ManagePage: React.FC = () => {
   }
 
   return (
-    <Box sx={{ width: { lg: 1156, xs: '100%' }, margin: '0 auto', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+    <Box
+      sx={{ width: { lg: APP_CONFIG.containerWidth, xs: '100%' }, margin: '0 auto', display: 'flex', flexDirection: 'column', flexGrow: 1 }}
+    >
       <Outlet />
     </Box>
   );
