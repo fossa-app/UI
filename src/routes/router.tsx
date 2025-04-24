@@ -80,7 +80,6 @@ const router = createBrowserRouter(
                   ),
                 },
                 {
-                  // TODO: check, when setup is not completed and manually navigating to a non-existing route (e.g. /flows/setup/branches), it redirects to '/company/view' page
                   path: ROUTES.setup.path,
                   element: <SetupPage />,
                   children: [
@@ -99,6 +98,10 @@ const router = createBrowserRouter(
                     {
                       path: ROUTES.employeeOnbarding.path,
                       element: SetupEmployeePage,
+                    },
+                    {
+                      path: '*',
+                      element: <Navigate to={ROUTES.flows.path} replace />,
                     },
                   ],
                 },
@@ -160,7 +163,6 @@ const router = createBrowserRouter(
                     },
                   ],
                 },
-
                 {
                   path: ROUTES.profile.path,
                   element: ProfilePage,
