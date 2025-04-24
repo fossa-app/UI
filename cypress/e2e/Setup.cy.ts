@@ -140,7 +140,7 @@ describe('Setup Flow Tests', () => {
         });
       });
 
-      it('should not be able to navigate to the company page if employee creation failed', () => {
+      it('should not be able to navigate to the profile page if employee creation failed', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileFailedRequest();
@@ -192,7 +192,7 @@ describe('Setup Flow Tests', () => {
         cy.url().should('include', ROUTES.flows.path);
       });
 
-      it('should be able to navigate to company page by clicking the company logo if the company is created', () => {
+      it('should be able to navigate to company page by clicking the company logo if the company has been created', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileFailedRequest();
@@ -329,7 +329,7 @@ describe('Setup Flow Tests', () => {
     it('should display only available timezones for selected company country', () => {
       interceptFetchCompanyFailedRequest();
       interceptCreateCompanyRequest();
-      cy.visit(ROUTES.companyOnboarding.path);
+      cy.visit(ROUTES.setup.path);
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('US Company');
       selectOption(Module.companySetup, SubModule.companyDetails, 'countryCode', 'US');
@@ -589,6 +589,54 @@ describe('Setup Flow Tests', () => {
 
       getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('not.have.attr', 'disabled');
       cy.url().should('include', ROUTES.flows.path);
+    });
+
+    it('should not be able to navigate to the Company setup page from the Branch setup page by the browser back button if the Company has already been created', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptFetchProfileRequest();
+      cy.visit(ROUTES.setup.path);
+
+      cy.url().should('include', ROUTES.setBranch.path);
+      cy.go('back');
+
+      cy.url().should('include', ROUTES.setBranch.path);
+    });
+
+    it('should not be able to navigate to the Branch setup page from the Employee setup page by the browser back button if the Branch has already been created', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesRequest();
+      interceptFetchProfileFailedRequest();
+      cy.visit(ROUTES.setup.path);
+
+      cy.url().should('include', ROUTES.employeeOnbarding.path);
+      cy.go('back');
+
+      cy.url().should('include', ROUTES.employeeOnbarding.path);
+    });
+
+    it('should be redirected to the Branch setup flow if that flow is not completed and manually navigating to a non-existing route', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptFetchProfileFailedRequest();
+      cy.visit(ROUTES.setup.path);
+
+      cy.url().should('include', ROUTES.setBranch.path);
+      cy.visit('/flows/setup/wrongUrl');
+
+      cy.url().should('include', ROUTES.setBranch.path);
+    });
+
+    it('should be redirected to the Employee setup flow if that flow is not completed and manually navigating to a non-existing route', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesRequest();
+      interceptFetchProfileFailedRequest();
+      cy.visit(ROUTES.setup.path);
+
+      cy.url().should('include', ROUTES.employeeOnbarding.path);
+      cy.visit('/flows/setup/wrongUrl');
+
+      cy.url().should('include', ROUTES.employeeOnbarding.path);
     });
   });
 });
