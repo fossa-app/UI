@@ -12,6 +12,7 @@ const testSubModule = SubModule.license;
 interface LicenseProps {
   isAdmin: boolean;
   setupCompleted: boolean;
+  loading: boolean;
   company?: CompanyLicense['terms']['licensee'];
   system?: SystemLicense['terms']['licensee'];
   onCompanyLicenseClick: () => void;
@@ -21,10 +22,15 @@ const License: React.FC<LicenseProps> = ({
   isAdmin,
   company,
   setupCompleted,
+  loading,
   system = { shortName: 'Unlicensed System', longName: '' },
   onCompanyLicenseClick,
 }) => {
   const renderCompanyLicense = () => {
+    if (loading) {
+      return null;
+    }
+
     if (company) {
       return (
         <Tooltip title={company.longName}>

@@ -200,6 +200,11 @@ describe('License Tests', () => {
         cy.visit(ROUTES.company.path);
 
         getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button').should('not.exist');
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text').should('not.exist');
+
+        cy.wait('@fetchCompanyLicenseRequest');
+
+        getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button').should('not.exist');
         getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text').should('exist').and('have.text', 'TCL');
 
         getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text').trigger('mouseover');
