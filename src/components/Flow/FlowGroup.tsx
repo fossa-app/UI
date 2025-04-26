@@ -64,7 +64,7 @@ const FlowGroup: React.FC<FlowGroupProps> = ({
   };
 
   return (
-    <Paper elevation={3} sx={{ aspectRatio: '1/1' }}>
+    <Paper elevation={3}>
       <FlowItem
         data-cy={`${module}-${subModule}-flow-group-${name}`}
         name={name}

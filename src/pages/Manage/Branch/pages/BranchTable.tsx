@@ -50,7 +50,6 @@ const BranchTablePage: React.FC = () => {
             dispatch(setBranchesPagination({ pageNumber: page.pageNumber! - 1 }));
           }
           dispatch(deleteBranch(branch.id));
-          // TODO: need to disable the Branches subflow
           break;
       }
     },
