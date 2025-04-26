@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
   const dispatch = useAppDispatch();
   const isAdmin = useAppSelector(selectIsUserAdmin);
   const { data: system } = useAppSelector(selectSystemLicense);
-  const { data: company, updateStatus } = useAppSelector(selectCompanyLicense);
+  const { data: company, fetchStatus, updateStatus } = useAppSelector(selectCompanyLicense);
   const { status: stepStatus } = useAppSelector(selectStep);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const setupCompleted = stepStatus === 'succeeded';
@@ -57,6 +57,7 @@ const Footer: React.FC = () => {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Environment kind={system?.entitlements.environmentKind} name={system?.entitlements.environmentName} />
                 <License
+                  loading={fetchStatus === 'idle' || fetchStatus === 'loading'}
                   isAdmin={isAdmin}
                   system={system?.terms.licensee}
                   company={company?.terms.licensee}
