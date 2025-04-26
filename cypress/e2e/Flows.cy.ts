@@ -9,12 +9,14 @@ import {
   clickFlowsIcon,
   clickSubFlow,
   getTestSelectorByModule,
+  selectAction,
   selectOption,
 } from '../support/helpers';
 import {
   interceptCreateBranchRequest,
   interceptCreateCompanyRequest,
   interceptCreateProfileRequest,
+  interceptDeleteBranchRequest,
   interceptFetchBranchesFailedRequest,
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -71,11 +73,11 @@ describe('Flows Tests', () => {
 
           checkIsSubFlowHasDisabledAttribute('Company Onboarding', !isAdminRole);
           checkIsSubFlowDisabled('View Company', false);
+          checkIsSubFlowDisabled('Company Offboarding', true);
           checkIsSubFlowDisabled('Branches', true);
           checkIsSubFlowDisabled('Employees', true);
           checkIsSubFlowDisabled('Employee Onboarding', true);
           checkIsSubFlowDisabled('View Profile', true);
-          checkIsSubFlowDisabled('Company Offboarding', true);
           checkIsSubFlowDisabled('Employee Offboarding', true);
         });
 
@@ -86,11 +88,11 @@ describe('Flows Tests', () => {
 
           checkIsSubFlowDisabled('Company Onboarding', true);
           checkIsSubFlowDisabled('View Company', false);
+          checkIsSubFlowDisabled('Company Offboarding', true);
           checkIsSubFlowDisabled('Branches', false);
           checkIsSubFlowDisabled('Employees', true);
           checkIsSubFlowDisabled('Employee Onboarding', false);
           checkIsSubFlowDisabled('View Profile', true);
-          checkIsSubFlowDisabled('Company Offboarding', true);
           checkIsSubFlowDisabled('Employee Offboarding', true);
         });
       });
@@ -208,11 +210,11 @@ describe('Flows Tests', () => {
         it('should display correct enabled and disabled subFlows', () => {
           checkIsSubFlowDisabled('Company Onboarding', true);
           checkIsSubFlowDisabled('View Company', false);
+          checkIsSubFlowDisabled('Company Offboarding', true);
           checkIsSubFlowDisabled('Branches', false);
           checkIsSubFlowDisabled('Employees', false);
           checkIsSubFlowDisabled('Employee Onboarding', true);
           checkIsSubFlowDisabled('View Profile', false);
-          checkIsSubFlowDisabled('Company Offboarding', true);
           checkIsSubFlowDisabled('Employee Offboarding', true);
         });
 
@@ -226,16 +228,50 @@ describe('Flows Tests', () => {
     });
   });
 
-  describe('Onboarding Not Completed Tests For Admin', () => {
-    it('should display correct enabled and disabled subFlows when in different setup flows for Admin', () => {
+  describe('Onboarding Not Completed Tests Admin Role', () => {
+    beforeEach(() => {
       cy.loginMock(true);
+      cy.visit(ROUTES.flows.path);
+    });
+
+    it('should disable the Branches subFlow and enable the Company Onboarding subFlow if the last branch has been deleted', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesRequest();
+      interceptFetchProfileFailedRequest();
+      interceptDeleteBranchRequest('222222222222');
+
+      clickSubFlow('Branches');
+      cy.url().should('include', ROUTES.branches.path);
+
+      selectAction(Module.branchManagement, SubModule.branchTable, 'delete', '222222222222');
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetchNoBranchesRequest', fixture: 'branches-empty' });
+      cy.wait('@deleteBranchRequest');
+      cy.wait('@fetchBranchesRequest');
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 0);
+      clickFlowsIcon();
+
+      cy.url().should('include', ROUTES.flows.path);
+      checkIsSubFlowDisabled('Company Onboarding', false);
+      checkIsSubFlowDisabled('View Company', false);
+      checkIsSubFlowDisabled('Company Offboarding', true);
+      checkIsSubFlowDisabled('Branches', true);
+      checkIsSubFlowDisabled('Employees', true);
+      checkIsSubFlowDisabled('Employee Onboarding', false);
+      checkIsSubFlowDisabled('View Profile', true);
+      checkIsSubFlowDisabled('Employee Offboarding', true);
+
+      clickSubFlow('Company Onboarding');
+
+      cy.url().should('include', ROUTES.setBranch.path);
+    });
+
+    it('should display correct enabled and disabled subFlows when in different setup flows', () => {
       interceptFetchCompanyFailedRequest();
       interceptFetchBranchesFailedRequest();
       interceptCreateCompanyRequest();
       interceptCreateBranchRequest();
       interceptCreateProfileRequest();
-
-      cy.visit(ROUTES.flows.path);
 
       clickSubFlow('Company Onboarding');
       cy.url().should('include', ROUTES.companyOnboarding.path);
@@ -253,11 +289,11 @@ describe('Flows Tests', () => {
       cy.url().should('include', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', false);
       checkIsSubFlowDisabled('View Company', false);
+      checkIsSubFlowDisabled('Company Offboarding', true);
       checkIsSubFlowDisabled('Branches', true);
       checkIsSubFlowDisabled('Employees', true);
       checkIsSubFlowDisabled('Employee Onboarding', true);
       checkIsSubFlowDisabled('View Profile', true);
-      checkIsSubFlowDisabled('Company Offboarding', true);
       checkIsSubFlowDisabled('Employee Offboarding', true);
 
       clickSubFlow('Company Onboarding');
@@ -279,11 +315,11 @@ describe('Flows Tests', () => {
       cy.url().should('include', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', true);
       checkIsSubFlowDisabled('View Company', false);
+      checkIsSubFlowDisabled('Company Offboarding', true);
       checkIsSubFlowDisabled('Branches', false);
       checkIsSubFlowDisabled('Employees', true);
       checkIsSubFlowDisabled('Employee Onboarding', false);
       checkIsSubFlowDisabled('View Profile', true);
-      checkIsSubFlowDisabled('Company Offboarding', true);
       checkIsSubFlowDisabled('Employee Offboarding', true);
 
       clickSubFlow('Employee Onboarding');
@@ -297,11 +333,11 @@ describe('Flows Tests', () => {
       cy.url().should('include', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', true);
       checkIsSubFlowDisabled('View Company', false);
+      checkIsSubFlowDisabled('Company Offboarding', true);
       checkIsSubFlowDisabled('Branches', false);
       checkIsSubFlowDisabled('Employees', false);
       checkIsSubFlowDisabled('Employee Onboarding', true);
       checkIsSubFlowDisabled('View Profile', false);
-      checkIsSubFlowDisabled('Company Offboarding', true);
       checkIsSubFlowDisabled('Employee Offboarding', true);
     });
   });

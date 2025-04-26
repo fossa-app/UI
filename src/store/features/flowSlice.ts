@@ -37,9 +37,9 @@ const flowSlice = createSlice({
         state.flows.profile!.subFlows!.employeeOnbarding!.disabled = true;
         state.flows.profile!.subFlows!.viewProfile!.disabled = true;
       })
-      .addCase(fetchBranches.fulfilled, (state) => {
-        state.flows.company!.subFlows!.companyOnboarding!.disabled = true;
-        state.flows.branches!.subFlows!.branches!.disabled = false;
+      .addCase(fetchBranches.fulfilled, (state, action) => {
+        state.flows.company!.subFlows!.companyOnboarding!.disabled = !!action.payload?.items?.length;
+        state.flows.branches!.subFlows!.branches!.disabled = !action.payload?.items?.length;
       })
       .addCase(fetchProfile.rejected, (state) => {
         state.flows.company!.subFlows!.companyOnboarding!.disabled = true;

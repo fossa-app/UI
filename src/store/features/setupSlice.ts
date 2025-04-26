@@ -52,8 +52,8 @@ const setupSlice = createSlice({
       .addCase(fetchBranches.rejected, (state) => {
         state.step.status = 'failed';
       })
-      .addCase(fetchBranches.fulfilled, (state) => {
-        state.step.data = SetupStep.EMPLOYEE;
+      .addCase(fetchBranches.fulfilled, (state, action) => {
+        state.step.data = action.payload?.items?.length ? SetupStep.EMPLOYEE : SetupStep.BRANCH;
       })
       .addCase(fetchProfile.rejected, (state) => {
         state.step.status = 'failed';
