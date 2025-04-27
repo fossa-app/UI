@@ -68,7 +68,7 @@ describe('Setup Flow Tests', () => {
 
       it('should navigate to company setup page and no other setup page if there is no company', () => {
         interceptFetchCompanyFailedRequest();
-        cy.visit(ROUTES.setup.path);
+        cy.visit(ROUTES.onboarding.path);
 
         cy.wait('@fetchCompanyFailedRequest');
 
@@ -96,7 +96,7 @@ describe('Setup Flow Tests', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesFailedRequest();
         interceptFetchProfileFailedRequest();
-        cy.visit(ROUTES.setup.path);
+        cy.visit(ROUTES.onboarding.path);
 
         cy.url().should('include', ROUTES.setBranch.path);
 
@@ -122,7 +122,7 @@ describe('Setup Flow Tests', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileFailedRequest();
-        cy.visit(ROUTES.setup.path);
+        cy.visit(ROUTES.onboarding.path);
 
         cy.wait('@fetchCompanyRequest');
         cy.wait('@fetchBranchesRequest');
@@ -145,7 +145,7 @@ describe('Setup Flow Tests', () => {
         interceptFetchBranchesRequest();
         interceptFetchProfileFailedRequest();
         interceptCreateProfileFailedRequest();
-        cy.visit(ROUTES.setup.path);
+        cy.visit(ROUTES.onboarding.path);
 
         cy.wait('@fetchProfileFailedRequest');
 
@@ -164,7 +164,7 @@ describe('Setup Flow Tests', () => {
         interceptFetchBranchesRequest();
         interceptFetchProfileFailedRequest();
         interceptCreateProfileRequest();
-        cy.visit(ROUTES.setup.path);
+        cy.visit(ROUTES.onboarding.path);
 
         cy.wait('@fetchProfileFailedRequest');
 
@@ -209,7 +209,7 @@ describe('Setup Flow Tests', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileRequest();
-        cy.visit(ROUTES.setup.path);
+        cy.visit(ROUTES.onboarding.path);
 
         cy.wait('@fetchCompanyRequest');
         cy.wait('@fetchBranchesRequest');
@@ -229,7 +229,7 @@ describe('Setup Flow Tests', () => {
     it('should display validation messages if the company creation form is invalid', () => {
       interceptFetchCompanyFailedRequest();
       interceptCreateCompanyFailedRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       cy.wait('@fetchCompanyFailedRequest');
 
@@ -254,10 +254,10 @@ describe('Setup Flow Tests', () => {
         .and('have.text', 'The Company Name must not exceed 50 characters.');
     });
 
-    it('should not be able to navigate to branch setup step if company creation failed', () => {
+    it('should not be able to navigate to branch setup step if the company creation failed', () => {
       interceptFetchCompanyFailedRequest();
       interceptCreateCompanyFailedRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       cy.wait('@fetchCompanyFailedRequest');
 
@@ -272,10 +272,10 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', ROUTES.companyOnboarding.path);
     });
 
-    it('should display async validation messages if the company create failed with validation errors', () => {
+    it('should display async validation messages if the company creation failed with validation errors', () => {
       interceptFetchCompanyFailedRequest();
       interceptCreateCompanyFailedWithErrorRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       cy.wait('@fetchCompanyFailedRequest');
 
@@ -295,11 +295,11 @@ describe('Setup Flow Tests', () => {
       cy.url().should('include', ROUTES.companyOnboarding.path);
     });
 
-    it('should be able to navigate to branch setup step if company creation succeeded', () => {
+    it('should be able to navigate to branch setup step if the company creation succeeded', () => {
       interceptFetchCompanyFailedRequest();
       interceptCreateCompanyRequest();
       interceptFetchBranchesFailedRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       cy.wait('@fetchCompanyFailedRequest');
 
@@ -329,7 +329,7 @@ describe('Setup Flow Tests', () => {
     it('should display only available timezones for selected company country', () => {
       interceptFetchCompanyFailedRequest();
       interceptCreateCompanyRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('US Company');
       selectOption(Module.companySetup, SubModule.companyDetails, 'countryCode', 'US');
@@ -355,7 +355,7 @@ describe('Setup Flow Tests', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
       interceptCreateBranchFailedRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       cy.wait('@fetchBranchesFailedRequest');
 
@@ -420,7 +420,7 @@ describe('Setup Flow Tests', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
       interceptCreateBranchFailedWithErrorRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       cy.wait('@fetchBranchesFailedRequest');
 
@@ -454,7 +454,7 @@ describe('Setup Flow Tests', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
       interceptCreateBranchFailedRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       cy.wait('@fetchBranchesFailedRequest');
 
@@ -475,7 +475,7 @@ describe('Setup Flow Tests', () => {
       interceptFetchBranchesFailedRequest();
       interceptCreateBranchRequest();
       interceptFetchProfileFailedRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       cy.wait('@fetchBranchesFailedRequest');
 
@@ -514,7 +514,7 @@ describe('Setup Flow Tests', () => {
       interceptFetchBranchesRequest();
       interceptFetchProfileFailedRequest();
       interceptCreateProfileFailedRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       cy.wait('@fetchProfileFailedRequest');
 
@@ -538,7 +538,7 @@ describe('Setup Flow Tests', () => {
       interceptFetchBranchesRequest();
       interceptFetchProfileFailedRequest();
       interceptCreateProfileFailedWithErrorRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       cy.wait('@fetchProfileFailedRequest');
 
@@ -570,7 +570,7 @@ describe('Setup Flow Tests', () => {
       interceptFetchBranchesFailedRequest();
       interceptCreateBranchRequest();
       interceptFetchProfileRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       cy.wait('@fetchBranchesFailedRequest');
 
@@ -595,7 +595,7 @@ describe('Setup Flow Tests', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
       interceptFetchProfileRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       cy.url().should('include', ROUTES.setBranch.path);
       cy.go('back');
@@ -607,7 +607,7 @@ describe('Setup Flow Tests', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
       interceptFetchProfileFailedRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       cy.url().should('include', ROUTES.employeeOnbarding.path);
       cy.go('back');
@@ -619,10 +619,10 @@ describe('Setup Flow Tests', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesFailedRequest();
       interceptFetchProfileFailedRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       cy.url().should('include', ROUTES.setBranch.path);
-      cy.visit('/flows/setup/wrongUrl');
+      cy.visit('/flows/onboarding/wrongUrl');
 
       cy.url().should('include', ROUTES.setBranch.path);
     });
@@ -631,10 +631,10 @@ describe('Setup Flow Tests', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
       interceptFetchProfileFailedRequest();
-      cy.visit(ROUTES.setup.path);
+      cy.visit(ROUTES.onboarding.path);
 
       cy.url().should('include', ROUTES.employeeOnbarding.path);
-      cy.visit('/flows/setup/wrongUrl');
+      cy.visit('/flows/onboarding/wrongUrl');
 
       cy.url().should('include', ROUTES.employeeOnbarding.path);
     });

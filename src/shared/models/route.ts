@@ -4,7 +4,7 @@ import { UserRole } from './user';
 export enum RouteKey {
   login = 'login',
   callback = 'callback',
-  setup = 'setup',
+  onboarding = 'onboarding',
   companyOnboarding = 'companyOnboarding',
   companyOffboarding = 'companyOffboarding',
   setBranch = 'setBranch',

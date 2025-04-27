@@ -41,7 +41,7 @@ describe('License Tests', () => {
         cy.loginMock();
       });
 
-      it('should display a text with no action if setup has completed and no company license is uploaded', () => {
+      it('should display a text with no action if the onboarding has completed and no company license is uploaded', () => {
         interceptFetchCompanyRequest();
         interceptFetchBranchesRequest();
         interceptFetchProfileRequest();
@@ -65,9 +65,9 @@ describe('License Tests', () => {
         cy.loginMock(true);
       });
 
-      it('should not display default company license if setup has not completed', () => {
+      it('should not display default company license if the onboarding has not completed', () => {
         interceptUploadCompanyLicenseFailedRequest();
-        cy.visit(ROUTES.setup.path);
+        cy.visit(ROUTES.onboarding.path);
 
         getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button').should('not.exist');
         getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text').should('not.exist');

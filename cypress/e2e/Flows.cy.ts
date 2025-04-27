@@ -234,7 +234,7 @@ describe('Flows Tests', () => {
       cy.visit(ROUTES.flows.path);
     });
 
-    it('should disable the Branches subFlow and enable the Company Onboarding subFlow if the last branch has been deleted', () => {
+    it('should display correct enabled and disabled subFlows if the last branch has been deleted', () => {
       interceptFetchCompanyRequest();
       interceptFetchBranchesRequest();
       interceptFetchProfileFailedRequest();
@@ -257,7 +257,7 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Company Offboarding', true);
       checkIsSubFlowDisabled('Branches', true);
       checkIsSubFlowDisabled('Employees', true);
-      checkIsSubFlowDisabled('Employee Onboarding', false);
+      checkIsSubFlowDisabled('Employee Onboarding', true);
       checkIsSubFlowDisabled('View Profile', true);
       checkIsSubFlowDisabled('Employee Offboarding', true);
 
@@ -266,7 +266,7 @@ describe('Flows Tests', () => {
       cy.url().should('include', ROUTES.setBranch.path);
     });
 
-    it('should display correct enabled and disabled subFlows when in different setup flows', () => {
+    it('should display correct enabled and disabled subFlows when in different onboarding flows', () => {
       interceptFetchCompanyFailedRequest();
       interceptFetchBranchesFailedRequest();
       interceptCreateCompanyRequest();

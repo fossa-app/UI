@@ -40,6 +40,7 @@ const flowSlice = createSlice({
       .addCase(fetchBranches.fulfilled, (state, action) => {
         state.flows.company!.subFlows!.companyOnboarding!.disabled = !!action.payload?.items?.length;
         state.flows.branches!.subFlows!.branches!.disabled = !action.payload?.items?.length;
+        state.flows.profile!.subFlows!.employeeOnbarding!.disabled = !action.payload?.items?.length;
       })
       .addCase(fetchProfile.rejected, (state) => {
         state.flows.company!.subFlows!.companyOnboarding!.disabled = true;
