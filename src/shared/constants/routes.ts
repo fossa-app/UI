@@ -14,9 +14,9 @@ export const ROUTES: AppRoute = {
     name: 'Flows',
     path: '/flows',
   },
-  setup: {
-    name: 'Setup',
-    path: '/flows/setup',
+  onboarding: {
+    name: 'Onboarding',
+    path: '/flows/onboarding',
   },
   company: {
     name: 'Company',
@@ -24,12 +24,11 @@ export const ROUTES: AppRoute = {
   },
   companyOnboarding: {
     name: 'Company Onboarding',
-    // TODO: rename to /flows/onboard/company
-    path: '/flows/setup/company',
+    path: '/flows/onboarding/company',
   },
   companyOffboarding: {
     name: 'Company Offboarding',
-    path: '/flows/offboard/company',
+    path: '/flows/offboarding/company',
   },
   editCompany: {
     name: 'Edit Company',
@@ -45,7 +44,7 @@ export const ROUTES: AppRoute = {
   },
   setBranch: {
     name: 'Set Branch',
-    path: `/flows/setup/branch`,
+    path: `/flows/onboarding/branch`,
   },
   newBranch: {
     name: 'Create Branch',
@@ -65,11 +64,11 @@ export const ROUTES: AppRoute = {
   },
   employeeOnbarding: {
     name: 'Employee Onboarding',
-    path: '/flows/setup/employee',
+    path: '/flows/onboarding/employee',
   },
   employeeOffboarding: {
     name: 'Employee Offboarding',
-    path: '/flows/offboard/employee',
+    path: '/flows/offboarding/employee',
   },
   viewProfile: {
     name: 'View Profile',

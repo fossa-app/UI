@@ -5,14 +5,13 @@ import { selectStep } from 'store/features';
 import { SetupStep } from 'shared/models';
 import { ROUTES } from 'shared/constants';
 
-const SetupPage: React.FC = () => {
+const OnboardingPage: React.FC = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { data: step } = useAppSelector(selectStep);
 
   React.useEffect(() => {
     // TODO: check, when the company has not been created and manually navigating to ROUTES.companyOnboarding.path, it redirects to the flows page
-    // Create route guard for each setup flow, use the step fail status to allow navigation
     if (step === SetupStep.COMPANY && pathname !== ROUTES.companyOnboarding.path) {
       navigate(ROUTES.companyOnboarding.path);
     } else if (step === SetupStep.BRANCH && pathname !== ROUTES.setBranch.path) {
@@ -27,4 +26,4 @@ const SetupPage: React.FC = () => {
   return <Outlet />;
 };
 
-export default SetupPage;
+export default OnboardingPage;

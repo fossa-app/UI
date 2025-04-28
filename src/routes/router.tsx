@@ -1,20 +1,24 @@
 import * as React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ROUTES } from 'shared/constants';
-import RouteTitle from 'components/RouteTitle';
 import RootPage from 'pages/Root';
 import ProtectedPage from 'pages/Protected';
-import SetupPage from 'pages/Setup/Setup';
 import ManagePage from 'pages/Manage/Manage';
 import FlowsPage from 'pages/Manage/Flows';
+import OnboardingPage from 'pages/Manage/Onboarding/Onboarding';
+import RouteTitle from 'components/RouteTitle';
 import { createLazyComponent } from './lazy-loaded-component';
 
 // Lazy loaded pages
 const LoginPage = createLazyComponent(() => import('pages/Login'), { title: ROUTES.login.name });
 const CallbackPage = createLazyComponent(() => import('pages/Callback'), { title: ROUTES.callback.name });
-const SetupCompanyPage = createLazyComponent(() => import('pages/Setup/pages/SetupCompany'), { title: ROUTES.companyOnboarding.name });
-const SetupBranchPage = createLazyComponent(() => import('pages/Setup/pages/SetupBranch'), { title: ROUTES.setBranch.name });
-const SetupEmployeePage = createLazyComponent(() => import('pages/Setup/pages/SetupEmployee'), { title: ROUTES.employeeOnbarding.name });
+const SetupCompanyPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/SetupCompany'), {
+  title: ROUTES.companyOnboarding.name,
+});
+const SetupBranchPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/SetupBranch'), { title: ROUTES.setBranch.name });
+const SetupEmployeePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/SetupEmployee'), {
+  title: ROUTES.employeeOnbarding.name,
+});
 const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
 const CompanyPage = createLazyComponent(() => import('pages/Manage/Company/Company'));
 const EditCompanyPage = createLazyComponent(() => import('pages/Manage/Company/pages/EditCompany'), {
@@ -80,8 +84,8 @@ const router = createBrowserRouter(
                   ),
                 },
                 {
-                  path: ROUTES.setup.path,
-                  element: <SetupPage />,
+                  path: ROUTES.onboarding.path,
+                  element: <OnboardingPage />,
                   children: [
                     {
                       index: true,
