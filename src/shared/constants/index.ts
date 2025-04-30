@@ -7,4 +7,5 @@ export * from './employees';
 export * from './branches';
 export * from './company';
 export * from './icons';
+export * from './departments';
 export * from './common';

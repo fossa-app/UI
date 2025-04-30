@@ -24,6 +24,10 @@ export enum RouteKey {
   editProfile = 'editProfile',
   editEmployee = 'editEmployee',
   viewEmployee = 'viewEmployee',
+  departments = 'departments',
+  newDepartment = 'newDepartment',
+  editDepartment = 'editDepartment',
+  viewDepartment = 'viewDepartment',
 }
 
 export interface RouteItem {

@@ -108,7 +108,7 @@ export const fetchBranchesByIds = createAsyncThunk<PaginatedResponse<BranchDTO> 
   }
 );
 
-export const fetchBranchById = createAsyncThunk<Branch, { id: string; skipState: boolean }, { rejectValue: ErrorResponseDTO }>(
+export const fetchBranchById = createAsyncThunk<Branch, { id: string; skipState?: boolean }, { rejectValue: ErrorResponseDTO }>(
   'branch/fetchBranchById',
   async ({ id }, { getState, dispatch, rejectWithValue }) => {
     try {
@@ -245,11 +245,11 @@ const branchSlice = createSlice({
     resetBranchesPagination(state) {
       state.branches.page = initialState.branches.page;
     },
-    resetBranch(state) {
-      state.branch = initialState.branch as WritableDraft<StateEntity<Branch>>;
-    },
     resetBranchesFetchStatus(state) {
       state.branches.fetchStatus = initialState.branches.fetchStatus;
+    },
+    resetBranch(state) {
+      state.branch = initialState.branch as WritableDraft<StateEntity<Branch>>;
     },
   },
   extraReducers: (builder) => {

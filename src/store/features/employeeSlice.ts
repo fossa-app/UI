@@ -14,7 +14,14 @@ import {
   PaginationParams,
 } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
-import { mapEmployee, mapEmployees, prepareQueryParams, getEmployeesAssignedBranchIds, mapError } from 'shared/helpers';
+import {
+  mapEmployee,
+  mapEmployees,
+  prepareQueryParams,
+  getEmployeesAssignedBranchIds,
+  mapError,
+  prepareCommaSeparatedQueryParamsByKey,
+} from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
 import { fetchBranchById, fetchBranchesByIds } from './branchSlice';
 
@@ -38,9 +45,9 @@ const initialState: EmployeeState = {
 
 export const fetchEmployees = createAsyncThunk<
   PaginatedResponse<Employee> | undefined,
-  Partial<PaginationParams>,
+  [Partial<PaginationParams>, boolean?],
   { rejectValue: ErrorResponseDTO }
->('employee/fetchEmployees', async ({ pageNumber, pageSize, search }, { dispatch, rejectWithValue }) => {
+>('employee/fetchEmployees', async ([{ pageNumber, pageSize, search }, shouldFetchBranches = true], { dispatch, rejectWithValue }) => {
   try {
     const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
     const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
@@ -49,7 +56,7 @@ export const fetchEmployees = createAsyncThunk<
       const assignedBranchIds = getEmployeesAssignedBranchIds(data.items);
       let branches: PaginatedResponse<BranchDTO> | undefined;
 
-      if (assignedBranchIds.length) {
+      if (shouldFetchBranches && assignedBranchIds.length) {
         branches = await dispatch(fetchBranchesByIds(assignedBranchIds)).unwrap();
       }
 
@@ -66,23 +73,42 @@ export const fetchEmployees = createAsyncThunk<
   }
 });
 
-export const fetchEmployeeById = createAsyncThunk<Employee, string, { rejectValue: ErrorResponseDTO }>(
-  'employee/fetchEmployeeById',
-  async (id, { dispatch, rejectWithValue }) => {
-    try {
-      const { data } = await axios.get<EmployeeDTO>(`${ENDPOINTS.employees}/${id}`);
-      let branch: Branch | undefined;
+export const fetchEmployeeById = createAsyncThunk<
+  Employee,
+  { id: string; skipState?: boolean; shouldFetchBranch?: boolean },
+  { rejectValue: ErrorResponseDTO }
+>('employee/fetchEmployeeById', async ({ id, shouldFetchBranch = true }, { dispatch, rejectWithValue }) => {
+  try {
+    const { data } = await axios.get<EmployeeDTO>(`${ENDPOINTS.employees}/${id}`);
+    let branch: Branch | undefined;
 
-      if (data.assignedBranchId) {
-        branch = await dispatch(fetchBranchById({ id: String(data.assignedBranchId), skipState: true })).unwrap();
-      }
-
-      return mapEmployee(data, undefined, branch);
-    } catch (error) {
-      return rejectWithValue(error as ErrorResponseDTO);
+    if (data.assignedBranchId && shouldFetchBranch) {
+      branch = await dispatch(fetchBranchById({ id: String(data.assignedBranchId), skipState: true })).unwrap();
     }
+
+    return mapEmployee(data, undefined, branch);
+  } catch (error) {
+    return rejectWithValue(error as ErrorResponseDTO);
   }
-);
+});
+
+export const fetchEmployeesByIds = createAsyncThunk<
+  PaginatedResponse<EmployeeDTO> | undefined,
+  number[],
+  { rejectValue: ErrorResponseDTO }
+>('employee/fetchEmployeesByIds', async (ids, { rejectWithValue }) => {
+  try {
+    const queryParams = prepareCommaSeparatedQueryParamsByKey('id', ids);
+    const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
+
+    return data;
+  } catch (error) {
+    return rejectWithValue({
+      ...(error as ErrorResponseDTO),
+      title: MESSAGES.error.employee.notFound,
+    });
+  }
+});
 
 export const editEmployee = createAsyncThunk<
   void,
@@ -140,16 +166,30 @@ const employeeSlice = createSlice({
         state.employees.page!.totalPages = action.payload?.totalPages;
         state.employees.fetchStatus = 'succeeded';
       })
-      .addCase(fetchEmployeeById.pending, (state) => {
+      .addCase(fetchEmployeeById.pending, (state, action) => {
+        if (action.meta.arg.skipState) {
+          return;
+        }
+
         state.employee.fetchStatus = 'loading';
       })
-      .addCase(fetchEmployeeById.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchEmployeeById.rejected, (state, action) => {
+        if (action.meta.arg.skipState) {
+          return;
+        }
+
+        state.employee.data = undefined;
         state.employee.fetchStatus = 'failed';
         state.employee.error = action.payload;
       })
-      .addCase(fetchEmployeeById.fulfilled, (state, action: PayloadAction<Employee | undefined>) => {
+      .addCase(fetchEmployeeById.fulfilled, (state, action) => {
+        if (action.meta.arg.skipState) {
+          return;
+        }
+
         state.employee.data = action.payload;
         state.employee.fetchStatus = 'succeeded';
+        state.employee.error = undefined;
       })
       .addCase(editEmployee.pending, (state) => {
         state.employee.updateStatus = 'loading';

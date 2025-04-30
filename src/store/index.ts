@@ -9,6 +9,7 @@ import authReducer from './features/authSlice';
 import setupReducer from './features/setupSlice';
 import companyReducer from './features/companySlice';
 import branchReducer from './features/branchSlice';
+import departmentReducer from './features/departmentSlice';
 import employeeReducer from './features/employeeSlice';
 import profileReducer from './features/profileSlice';
 import flowReducer from './features/flowSlice';
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   setup: setupReducer,
   company: companyReducer,
   branch: branchReducer,
+  department: departmentReducer,
   employee: employeeReducer,
   profile: profileReducer,
   flow: flowReducer,

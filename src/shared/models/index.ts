@@ -9,5 +9,6 @@ export * from './company';
 export * from './branch';
 export * from './employee';
 export * from './icon';
+export * from './department';
 export * from './common';
 export * from './module';

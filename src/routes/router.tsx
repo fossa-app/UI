@@ -47,6 +47,21 @@ const EditBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pag
 const ProfilePage = createLazyComponent(() => import('pages/Manage/Profile/Profile'), { title: ROUTES.profile.name });
 const EditProfilePage = createLazyComponent(() => import('pages/Manage/Profile/pages/EditProfile'), { title: ROUTES.editProfile.name });
 const ViewProfilePage = createLazyComponent(() => import('pages/Manage/Profile/pages/ViewProfile'), { title: ROUTES.viewProfile.name });
+const DepartmentPage = createLazyComponent(() => import('pages/Manage/Department/Department'));
+const DepartmentTablePage = createLazyComponent(() => import('pages/Manage/Department/pages/DepartmentTable'), {
+  title: ROUTES.departments.name,
+});
+const ViewDepartmentPage = createLazyComponent(() => import('pages/Manage/Department/pages/ViewDepartment'), {
+  title: ROUTES.viewDepartment.name,
+});
+const CreateDepartmentPage = createLazyComponent(() => import('pages/Manage/Department/pages/ManageDepartment'), {
+  title: ROUTES.newDepartment.name,
+  isAdminRoute: true,
+});
+const EditDepartmentPage = createLazyComponent(() => import('pages/Manage/Department/pages/ManageDepartment'), {
+  title: ROUTES.editDepartment.name,
+  isAdminRoute: true,
+});
 
 const router = createBrowserRouter(
   [
@@ -182,6 +197,28 @@ const router = createBrowserRouter(
                     {
                       path: ROUTES.editProfile.path,
                       element: EditProfilePage,
+                    },
+                  ],
+                },
+                {
+                  path: ROUTES.departments.path,
+                  element: DepartmentPage,
+                  children: [
+                    {
+                      index: true,
+                      element: DepartmentTablePage,
+                    },
+                    {
+                      path: ROUTES.newDepartment.path,
+                      element: CreateDepartmentPage,
+                    },
+                    {
+                      path: ROUTES.editDepartment.path,
+                      element: EditDepartmentPage,
+                    },
+                    {
+                      path: ROUTES.viewDepartment.path,
+                      element: ViewDepartmentPage,
                     },
                   ],
                 },

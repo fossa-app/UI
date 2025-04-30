@@ -15,4 +15,5 @@ export * from './license.helpers';
 export * from './error.helpers';
 export * from './role.helpers';
 export * from './flow.helpers';
+export * from './department.helpers';
 export * from './scrollbar-styles';

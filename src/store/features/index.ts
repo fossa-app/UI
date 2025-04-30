@@ -5,6 +5,7 @@ export * from './authSlice';
 export * from './setupSlice';
 export * from './companySlice';
 export * from './branchSlice';
+export * from './departmentSlice';
 export * from './employeeSlice';
 export * from './profileSlice';
 export * from './flowSlice';

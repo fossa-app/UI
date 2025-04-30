@@ -90,4 +90,20 @@ export const ROUTES: AppRoute = {
     name: 'Edit Employee',
     path: '/flows/employees/edit/:id',
   },
+  departments: {
+    name: 'Departments',
+    path: '/flows/departments',
+  },
+  newDepartment: {
+    name: 'Create Department',
+    path: '/flows/departments/new',
+  },
+  editDepartment: {
+    name: 'Edit Department',
+    path: '/flows/departments/edit/:id',
+  },
+  viewDepartment: {
+    name: 'View Department',
+    path: '/flows/departments/view/:id',
+  },
 };
