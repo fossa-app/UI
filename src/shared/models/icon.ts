@@ -9,6 +9,7 @@ export enum IconType {
   branch = 'branch',
   employee = 'employee',
   profile = 'profile',
+  department = 'department',
   assign = 'assign',
   remove = 'remove',
 }

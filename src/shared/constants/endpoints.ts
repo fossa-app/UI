@@ -5,6 +5,7 @@ export const ENDPOINTS = {
   companyLicense: 'License/Company',
   company: 'Company',
   branches: 'Branches',
+  departments: 'Departments',
   employee: 'Employee',
   employees: 'Employees',
 };

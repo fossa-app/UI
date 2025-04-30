@@ -39,6 +39,18 @@ export const FLOWS_MAP: FlowsMap = {
       },
     },
   },
+  [RouteKey.departments]: {
+    name: ROUTES.departments.name,
+    path: ROUTES.departments.path,
+    icon: IconType.department,
+    subFlows: {
+      [RouteKey.departments]: {
+        name: ROUTES.departments.name,
+        path: ROUTES.departments.path,
+        icon: IconType.department,
+      },
+    },
+  },
   [RouteKey.employees]: {
     name: ROUTES.employees.name,
     path: ROUTES.employees.path,

@@ -99,7 +99,7 @@ const EditEmployeePage: React.FC = () => {
 
   React.useEffect(() => {
     if (id) {
-      dispatch(fetchEmployeeById(id));
+      dispatch(fetchEmployeeById({ id }));
     }
   }, [id, dispatch]);
 

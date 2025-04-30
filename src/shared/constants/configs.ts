@@ -53,6 +53,12 @@ export const MESSAGES = {
       update: 'Failed to update the Branch 😞',
       delete: 'Failed to delete the Branch 😞',
     },
+    departments: {
+      notFound: 'Department not found 😞',
+      create: 'Failed to create a Department 😞',
+      update: 'Failed to update the Department 😞',
+      delete: 'Failed to delete the Department 😞',
+    },
     employee: {
       notFound: 'Employee not found 😞',
       create: 'Failed to create an Employee 😞',
@@ -75,6 +81,11 @@ export const MESSAGES = {
       create: 'Branch has been successfully created 😊',
       update: 'Branch has been successfully updated 😊',
       delete: 'Branch has been successfully deleted 😊',
+    },
+    departments: {
+      create: 'Department has been successfully created 😊',
+      update: 'Department has been successfully updated 😊',
+      delete: 'Department has been successfully deleted 😊',
     },
     employee: {
       create: 'Employee has been successfully created 😊',

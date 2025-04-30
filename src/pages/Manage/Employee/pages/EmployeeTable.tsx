@@ -88,7 +88,7 @@ const EmployeeTablePage: React.FC = () => {
 
   React.useEffect(() => {
     if (fetchStatus === 'idle') {
-      dispatch(fetchEmployees(page));
+      dispatch(fetchEmployees([page]));
     }
   }, [fetchStatus, page, dispatch]);
 
