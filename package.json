@@ -62,7 +62,7 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/redux-mock-store": "^1.0.6",
-    "@typescript-eslint/eslint-plugin": "^8.29.0",
+    "@typescript-eslint/eslint-plugin": "^8.31.1",
     "@typescript-eslint/parser": "^8.29.0",
     "@vitejs/plugin-react-swc": "^3.8.1",
     "cypress": "^13.17.0",
