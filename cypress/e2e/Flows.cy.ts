@@ -259,7 +259,7 @@ describe('Flows Tests', () => {
       cy.url().should('include', ROUTES.branches.path);
 
       selectAction(Module.branchManagement, SubModule.branchTable, 'delete', '222222222222');
-      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetchNoBranchesRequest', fixture: 'branches-empty' });
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetchNoBranchesRequest', fixture: 'branch/branches-empty' });
       cy.wait('@deleteBranchRequest');
       cy.wait('@fetchBranchesRequest');
 

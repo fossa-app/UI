@@ -1,0 +1,9 @@
+{
+  "type": "https://httpstatuses.io/422",
+  "title": "One or more validation errors occurred.",
+  "status": 422,
+  "errors": {
+    "ParentDepartmentId": ["Parent department must be in the same tenant and cannot be self-referential"]
+  },
+  "traceId": "00-d38bd33c23bb5b3b0e97db06bd36c93c-907d613b5d440a26-01"
+}

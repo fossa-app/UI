@@ -1,4 +1,4 @@
-import { Branch, Module, SubModule } from '../../src/shared/models';
+import { Branch, Department, Module, SubModule } from '../../src/shared/models';
 
 export const getTestSelectorByModule = (module: Module, subModule: SubModule, selector: string, isPattern = false) => {
   return isPattern ? cy.get(`[data-cy*="${module}-${subModule}-${selector}"]`) : cy.get(`[data-cy="${module}-${subModule}-${selector}"]`);
@@ -70,6 +70,24 @@ export const clearBranchDetailsForm = (module: Module, subModule: SubModule) => 
   getTestSelectorByModule(module, subModule, 'form-field-address.city').find('input').clear();
   getTestSelectorByModule(module, subModule, 'form-field-address.subdivision').find('input').clear();
   getTestSelectorByModule(module, subModule, 'form-field-address.postalCode').find('input').clear();
+};
+
+export const fillDepartmentDetailsForm = (department: Partial<Department>) => {
+  if (department.name) {
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-name').type(department.name);
+  }
+
+  if (department.parentDepartmentId) {
+    selectOption(Module.departmentManagement, SubModule.departmentDetails, 'parentDepartmentId', String(department.parentDepartmentId));
+  }
+
+  if (department.managerId) {
+    selectOption(Module.departmentManagement, SubModule.departmentDetails, 'managerId', String(department.managerId));
+  }
+};
+
+export const clearDepartmentDetailsForm = () => {
+  getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-name').find('input').clear();
 };
 
 export const verifyTextFields = (module: Module, subModule: SubModule, fieldValues: { [key: string]: string }) => {

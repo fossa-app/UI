@@ -8,7 +8,7 @@ import {
   openUserProfile,
   verifyFormValidationMessages,
   verifyTextFields,
-} from '../support/helpers';
+} from '../../support/helpers';
 import {
   interceptEditProfileFailedRequest,
   interceptEditProfileFailedWithErrorRequest,
@@ -20,7 +20,7 @@ import {
   interceptFetchProfileFailedRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
-} from '../support/interceptors';
+} from '../../support/interceptors';
 
 describe('Profile Tests', () => {
   beforeEach(() => {
@@ -205,7 +205,7 @@ describe('Profile Tests', () => {
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').clear();
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').type('Anthony User Crowley');
 
-        interceptFetchProfileRequest('fetchUpdatedProfileRequest', 'employee-updated');
+        interceptFetchProfileRequest('fetchUpdatedProfileRequest', 'employee/employee-updated');
 
         clickActionButton(Module.profile, SubModule.profileDetails);
 

@@ -18,7 +18,7 @@ import {
   verifyTextFields,
   selectAction,
   selectNavigationMenuItem,
-} from '../support/helpers';
+} from '../../support/helpers';
 import {
   interceptCreateBranchFailedRequest,
   interceptCreateBranchRequest,
@@ -36,7 +36,7 @@ import {
   interceptFetchEmployeesRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
-} from '../support/interceptors';
+} from '../../support/interceptors';
 
 describe('Branch Management Tests', () => {
   beforeEach(() => {
@@ -161,7 +161,7 @@ describe('Branch Management Tests', () => {
 
     interceptFetchBranchesRequest(
       { pageNumber: 1, pageSize: 10, search: '' },
-      { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+      { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
     );
     cy.wait('@createBranchRequest');
     cy.wait('@fetchMultipleBranchesRequest');
@@ -327,7 +327,7 @@ describe('Branch Management Tests', () => {
     cy.wait('@editBranchRequest');
     interceptFetchBranchesRequest(
       { pageNumber: 1, pageSize: 10, search: '' },
-      { alias: 'fetchMultipleUpdatedBranchesRequest', fixture: 'branches-multiple-updated' }
+      { alias: 'fetchMultipleUpdatedBranchesRequest', fixture: 'branch/branches-multiple-updated' }
     );
 
     cy.url().should('include', ROUTES.branches.path);
@@ -353,7 +353,7 @@ describe('Branch Management Tests', () => {
   it('should be able to navigate back when the back button is clicked', () => {
     interceptFetchBranchesRequest(
       { pageNumber: 1, pageSize: 10, search: '' },
-      { alias: 'fetchMultipleBranchesRequest', fixture: 'branches' }
+      { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches' }
     );
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit(ROUTES.branches.path);
@@ -410,10 +410,10 @@ describe('Branch Management Tests', () => {
   it('should reset the form when navigating between different branches', () => {
     interceptFetchBranchesRequest(
       { pageNumber: 1, pageSize: 10, search: '' },
-      { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+      { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
     );
-    interceptFetchBranchByIdRequest('222222222222', 'fetchFirstBranchByIdRequest', 'branches-multiple');
-    interceptFetchBranchByIdRequest('222222222223', 'fetchSecondBranchByIdRequest', 'branches-multiple');
+    interceptFetchBranchByIdRequest('222222222222', 'fetchFirstBranchByIdRequest', 'branch/branches-multiple');
+    interceptFetchBranchByIdRequest('222222222223', 'fetchSecondBranchByIdRequest', 'branch/branches-multiple');
     cy.visit(ROUTES.branches.path);
 
     selectAction(Module.branchManagement, SubModule.branchTable, 'edit', '222222222222');
@@ -444,11 +444,11 @@ describe('Branch Management Tests', () => {
     interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
     interceptFetchEmployeesRequest(
       { pageNumber: 1, pageSize: 10 },
-      { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+      { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
     );
     interceptFetchBranchesRequest(
       { pageNumber: 1, pageSize: 10, search: '' },
-      { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+      { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
     );
     cy.visit(ROUTES.employees.path);
 
@@ -498,7 +498,7 @@ describe('Branch Management Tests', () => {
   });
 
   it('should not display the loader if the request resolves quickly', () => {
-    interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdQuickRequest', 'branches', 200, 50);
+    interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdQuickRequest', 'branch/branches', 200, 50);
     cy.visit(`${ROUTES.branches.path}/edit/222222222222`);
 
     getLinearLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('not.exist');
@@ -506,7 +506,7 @@ describe('Branch Management Tests', () => {
   });
 
   it('should display 2 countries if the company country is different than the branch address country', () => {
-    interceptFetchBranchByIdRequest('222222222224', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
+    interceptFetchBranchByIdRequest('222222222224', 'fetchBranchByIdRequest', 'branch/branches-multiple-different-countries');
     cy.visit(`${ROUTES.branches.path}/edit/222222222224`);
 
     cy.wait('@fetchBranchByIdRequest');
@@ -537,7 +537,7 @@ describe('Branch Management Tests', () => {
   });
 
   it('should display company timezones and the branch timezone if the company timezone is different than the branch address timezone', () => {
-    interceptFetchBranchByIdRequest('222222222224', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
+    interceptFetchBranchByIdRequest('222222222224', 'fetchBranchByIdRequest', 'branch/branches-multiple-different-countries');
     cy.visit(`${ROUTES.branches.path}/edit/222222222224`);
 
     cy.wait('@fetchBranchByIdRequest');
@@ -597,7 +597,7 @@ describe('Branch Management Tests', () => {
       'form-field-address.countryCode',
     ]);
 
-    interceptFetchBranchByIdRequest('222222222225', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
+    interceptFetchBranchByIdRequest('222222222225', 'fetchBranchByIdRequest', 'branch/branches-multiple-different-countries');
     cy.visit(`${ROUTES.branches.path}/edit/222222222225`);
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-noPhysicalAddress').should(

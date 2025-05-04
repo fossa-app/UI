@@ -48,7 +48,7 @@ const ProfilePage = createLazyComponent(() => import('pages/Manage/Profile/Profi
 const EditProfilePage = createLazyComponent(() => import('pages/Manage/Profile/pages/EditProfile'), { title: ROUTES.editProfile.name });
 const ViewProfilePage = createLazyComponent(() => import('pages/Manage/Profile/pages/ViewProfile'), { title: ROUTES.viewProfile.name });
 const DepartmentPage = createLazyComponent(() => import('pages/Manage/Department/Department'));
-const DepartmentTablePage = createLazyComponent(() => import('pages/Manage/Department/pages/DepartmentTable'), {
+const DepartmentCatalogPage = createLazyComponent(() => import('pages/Manage/Department/pages/DepartmentCatalog'), {
   title: ROUTES.departments.name,
 });
 const ViewDepartmentPage = createLazyComponent(() => import('pages/Manage/Department/pages/ViewDepartment'), {
@@ -206,7 +206,7 @@ const router = createBrowserRouter(
                   children: [
                     {
                       index: true,
-                      element: DepartmentTablePage,
+                      element: DepartmentCatalogPage,
                     },
                     {
                       path: ROUTES.newDepartment.path,

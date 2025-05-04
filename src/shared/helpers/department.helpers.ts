@@ -67,9 +67,15 @@ export const mapEmployeeToFieldOption = (employee: Employee): FieldOption => {
 };
 
 export const getDepartmentsManagerIds = (departments: DepartmentDTO[]): number[] => {
-  return departments.filter(({ managerId }) => managerId).map(({ managerId }) => managerId) as number[];
+  const ids = departments.filter(({ managerId }) => managerId).map(({ managerId }) => managerId as number);
+
+  return Array.from(new Set(ids));
 };
 
 export const getParentDepartmentsIds = (departments: DepartmentDTO[]): number[] => {
-  return departments.filter(({ parentDepartmentId }) => parentDepartmentId).map(({ parentDepartmentId }) => parentDepartmentId) as number[];
+  const ids = departments
+    .filter(({ parentDepartmentId }) => parentDepartmentId)
+    .map(({ parentDepartmentId }) => parentDepartmentId as number);
+
+  return Array.from(new Set(ids));
 };

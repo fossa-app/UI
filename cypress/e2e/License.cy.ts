@@ -111,11 +111,11 @@ describe('License Tests', () => {
           .should('exist')
           .and('have.text', 'File is not selected');
 
-        uploadTestFile('input#file-upload-input', 'invalid-company-license.lic');
+        uploadTestFile('input#file-upload-input', 'license/invalid-company-license.lic');
 
         getTestSelectorByModule(Module.shared, SubModule.upload, 'file-upload-selected-file-name').should(
           'have.text',
-          'invalid-company-license.lic'
+          'license/invalid-company-license.lic'
         );
 
         interceptUploadCompanyLicenseFailedRequest();
@@ -144,11 +144,11 @@ describe('License Tests', () => {
         cy.visit(ROUTES.company.path);
 
         getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-button').click();
-        uploadTestFile('input#file-upload-input', 'valid-company-license.lic');
+        uploadTestFile('input#file-upload-input', 'license/valid-company-license.lic');
 
         getTestSelectorByModule(Module.shared, SubModule.upload, 'file-upload-selected-file-name').should(
           'have.text',
-          'valid-company-license.lic'
+          'license/valid-company-license.lic'
         );
 
         interceptUploadCompanyLicenseRequest();
@@ -189,6 +189,8 @@ describe('License Tests', () => {
           'view-details-value-entitlements.maximumBranchCount': '10',
           'view-details-label-entitlements.maximumEmployeeCount': 'Maximum Employee Count',
           'view-details-value-entitlements.maximumEmployeeCount': '100',
+          'view-details-label-entitlements.maximumDepartmentCount': 'Maximum Department Count',
+          'view-details-value-entitlements.maximumDepartmentCount': '20',
         });
       });
 

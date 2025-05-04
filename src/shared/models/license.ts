@@ -22,6 +22,7 @@ export interface CompanyLicense extends License {
     companyId: number;
     maximumBranchCount: number;
     maximumEmployeeCount: number;
+    maximumDepartmentCount: number;
   };
 }
 export interface SystemLicense extends License {

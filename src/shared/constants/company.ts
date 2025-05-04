@@ -83,6 +83,10 @@ export const COMPANY_LICENSE_FIELDS: CompanyLicenseFieldConfig = {
       field: 'maximumEmployeeCount',
       name: 'Maximum Employee Count',
     },
+    maximumDepartmentCount: {
+      field: 'maximumDepartmentCount',
+      name: 'Maximum Department Count',
+    },
   },
 };
 
@@ -253,13 +257,19 @@ export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewDetailProps<CompanyLicense
       name: `${COMPANY_LICENSE_FIELDS.entitlements.field}.${COMPANY_LICENSE_FIELDS.entitlements.maximumBranchCount.field}`,
       label: COMPANY_LICENSE_FIELDS.entitlements.maximumBranchCount.name,
       type: ViewDetailType.labelValue,
-      grid: { size: { xs: 12, md: 6 } },
+      grid: { size: { xs: 12, md: 4 } },
     },
     {
       name: `${COMPANY_LICENSE_FIELDS.entitlements.field}.${COMPANY_LICENSE_FIELDS.entitlements.maximumEmployeeCount.field}`,
       label: COMPANY_LICENSE_FIELDS.entitlements.maximumEmployeeCount.name,
       type: ViewDetailType.labelValue,
-      grid: { size: { xs: 12, md: 6 } },
+      grid: { size: { xs: 12, md: 4 } },
+    },
+    {
+      name: `${COMPANY_LICENSE_FIELDS.entitlements.field}.${COMPANY_LICENSE_FIELDS.entitlements.maximumDepartmentCount.field}`,
+      label: COMPANY_LICENSE_FIELDS.entitlements.maximumDepartmentCount.name,
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 4 } },
     },
   ],
 };

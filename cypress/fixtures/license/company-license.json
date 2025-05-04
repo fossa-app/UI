@@ -14,6 +14,7 @@
   "entitlements": {
     "companyId": 111111111111,
     "maximumBranchCount": 10,
-    "maximumEmployeeCount": 100
+    "maximumEmployeeCount": 100,
+    "maximumDepartmentCount": 20
   }
 }
