@@ -1,0 +1,32 @@
+{
+  "pageNumber": 1,
+  "pageSize": 10,
+  "items": [
+    {
+      "id": 444444444444,
+      "name": "Production",
+      "parentDepartmentId": null,
+      "managerId": 333333333335
+    },
+    {
+      "id": 444444444445,
+      "name": "Line Production",
+      "parentDepartmentId": 444444444444,
+      "managerId": 333333333335
+    },
+    {
+      "id": 444444444446,
+      "name": "Unit Production",
+      "parentDepartmentId": 444444444444,
+      "managerId": 333333333334
+    },
+    {
+      "id": 444444444447,
+      "name": "Costume Updated",
+      "parentDepartmentId": 444444444446,
+      "managerId": 333333333335
+    }
+  ],
+  "totalItems": 4,
+  "totalPages": 1
+}

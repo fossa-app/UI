@@ -8,7 +8,7 @@ import {
   search,
   selectAction,
   selectNavigationMenuItem,
-} from '../support/helpers';
+} from '../../support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -21,7 +21,7 @@ import {
   interceptFetchSystemLicenseRequest,
   interceptFetchBranchByIdRequest,
   interceptFetchBranchesByIdsRequest,
-} from '../support/interceptors';
+} from '../../support/interceptors';
 
 describe('Employees Tests', () => {
   beforeEach(() => {
@@ -81,7 +81,7 @@ describe('Employees Tests', () => {
       it('should not display the loader if the request resolves quickly', () => {
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10 },
-          { alias: 'fetchEmployeesQuickRequest', fixture: 'employees', statusCode: 200, delay: 50 }
+          { alias: 'fetchEmployeesQuickRequest', fixture: 'employee/employees', statusCode: 200, delay: 50 }
         );
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('not.exist');
@@ -90,7 +90,7 @@ describe('Employees Tests', () => {
       it('should render employees table if there are fetched employees', () => {
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10 },
-          { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+          { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
         );
         interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
 
@@ -158,7 +158,7 @@ describe('Employees Tests', () => {
       it('should send correct request when the search changes', () => {
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10 },
-          { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+          { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
         );
         interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
 
@@ -170,7 +170,7 @@ describe('Employees Tests', () => {
 
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10, search: 'Anthony' },
-          { alias: 'fetchSearchedEmployeesRequest', fixture: 'employees' }
+          { alias: 'fetchSearchedEmployeesRequest', fixture: 'employee/employees' }
         );
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
@@ -182,7 +182,7 @@ describe('Employees Tests', () => {
 
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10, search: 'Joe' },
-          { alias: 'fetchSearchedNoEmployeesRequest', fixture: 'employees-empty' }
+          { alias: 'fetchSearchedNoEmployeesRequest', fixture: 'employee/employees-empty' }
         );
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
@@ -194,7 +194,7 @@ describe('Employees Tests', () => {
 
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10 },
-          { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+          { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
         );
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
@@ -206,11 +206,11 @@ describe('Employees Tests', () => {
       it('should reset the search state when the clear icon is clicked', () => {
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10 },
-          { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+          { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
         );
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10, search: 'Anthony' },
-          { alias: 'fetchSearchedEmployeesRequest', fixture: 'employees' }
+          { alias: 'fetchSearchedEmployeesRequest', fixture: 'employee/employees' }
         );
         interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
 
@@ -232,7 +232,7 @@ describe('Employees Tests', () => {
       it('should display correct employees and branches when searching employees and navigating to branches', () => {
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10 },
-          { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+          { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
         );
         interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
 
@@ -245,7 +245,7 @@ describe('Employees Tests', () => {
 
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10, search: 'Test' },
-          { alias: 'fetchSearchedNoEmployeesRequest', fixture: 'employees-empty' }
+          { alias: 'fetchSearchedNoEmployeesRequest', fixture: 'employee/employees-empty' }
         );
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
@@ -258,7 +258,7 @@ describe('Employees Tests', () => {
 
         interceptFetchBranchesRequest(
           { pageNumber: 1, pageSize: 10 },
-          { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+          { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
         );
 
         getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
@@ -272,7 +272,7 @@ describe('Employees Tests', () => {
 
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10 },
-          { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+          { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
         );
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');

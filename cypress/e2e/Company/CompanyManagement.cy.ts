@@ -10,7 +10,7 @@ import {
   verifyFormValidationMessages,
   verifyNotExist,
   verifyTextFields,
-} from '../support/helpers';
+} from '../../support/helpers';
 import {
   interceptEditCompanyFailedRequest,
   interceptEditCompanyFailedWithErrorRequest,
@@ -22,7 +22,7 @@ import {
   interceptFetchCompanyRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
-} from '../support/interceptors';
+} from '../../support/interceptors';
 
 const testCompaLicenseFields = () => {
   verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
@@ -41,6 +41,8 @@ const testCompaLicenseFields = () => {
     'view-details-value-entitlements.maximumBranchCount': '10',
     'view-details-label-entitlements.maximumEmployeeCount': 'Maximum Employee Count',
     'view-details-value-entitlements.maximumEmployeeCount': '100',
+    'view-details-label-entitlements.maximumDepartmentCount': 'Maximum Department Count',
+    'view-details-value-entitlements.maximumDepartmentCount': '20',
   });
 };
 
@@ -60,6 +62,8 @@ const testCompaLicenseFieldsNotExist = () => {
     'view-details-value-entitlements.maximumBranchCount',
     'view-details-label-entitlements.maximumEmployeeCount',
     'view-details-value-entitlements.maximumEmployeeCount',
+    'view-details-label-entitlements.maximumDepartmentCount',
+    'view-details-value-entitlements.maximumDepartmentCount',
   ]);
 };
 
@@ -260,7 +264,7 @@ describe('Company Management Tests', () => {
 
       selectOption(Module.companyManagement, SubModule.companyDetails, 'countryCode', 'CA');
 
-      interceptFetchCompanyRequest('fetchUpdatedCompanyRequest', 'company-updated');
+      interceptFetchCompanyRequest('fetchUpdatedCompanyRequest', 'company/company-updated');
 
       clickActionButton(Module.companyManagement, SubModule.companyDetails);
 

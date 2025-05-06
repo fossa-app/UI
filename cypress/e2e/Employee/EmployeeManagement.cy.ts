@@ -8,7 +8,7 @@ import {
   verifyFormValidationMessages,
   verifyInputFields,
   verifyTextFields,
-} from '../support/helpers';
+} from '../../support/helpers';
 import {
   interceptEditEmployeeFailedRequest,
   interceptEditEmployeeRequest,
@@ -23,7 +23,7 @@ import {
   interceptFetchBranchByIdRequest,
   interceptFetchBranchesByIdsRequest,
   interceptEditEmployeeFailedWithErrorRequest,
-} from '../support/interceptors';
+} from '../../support/interceptors';
 
 const testEmployeeViewFields = () => {
   verifyTextFields(Module.employeeManagement, SubModule.employeeViewDetails, {
@@ -65,7 +65,7 @@ describe('Employee Management Tests', () => {
     interceptFetchProfileRequest();
     interceptFetchEmployeesRequest(
       { pageNumber: 1, pageSize: 10 },
-      { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+      { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
     );
   });
 
@@ -102,7 +102,7 @@ describe('Employee Management Tests', () => {
       });
 
       it('should render the profile button and be able to navigate to profile page if the employee is the current user', () => {
-        interceptFetchEmployeeByIdRequest('333333333333', 'fetchEmployeeByIdRequest', 'employees-multiple');
+        interceptFetchEmployeeByIdRequest('333333333333', 'fetchEmployeeByIdRequest', 'employee/employees-multiple');
         interceptFetchBranchByIdRequest('222222222222');
         interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
         cy.visit(ROUTES.employees.path);
@@ -141,7 +141,7 @@ describe('Employee Management Tests', () => {
 
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100 },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
       );
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'page-title-back-button').click();
@@ -160,7 +160,7 @@ describe('Employee Management Tests', () => {
       interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100, search: '*' },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
       );
       cy.visit(ROUTES.employees.path);
 
@@ -199,12 +199,12 @@ describe('Employee Management Tests', () => {
     it('should reset the form when navigating between different employees', () => {
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100, search: '*' },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
       );
       interceptFetchBranchByIdRequest('222222222222');
       interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
-      interceptFetchEmployeeByIdRequest('333333333334', 'fetchFirstEmployeeByIdRequest', 'employees-multiple');
-      interceptFetchEmployeeByIdRequest('333333333335', 'fetchSecondEmployeeByIdRequest', 'employees-multiple');
+      interceptFetchEmployeeByIdRequest('333333333334', 'fetchFirstEmployeeByIdRequest', 'employee/employees-multiple');
+      interceptFetchEmployeeByIdRequest('333333333335', 'fetchSecondEmployeeByIdRequest', 'employee/employees-multiple');
       cy.visit(ROUTES.employees.path);
 
       selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333334');
@@ -236,7 +236,7 @@ describe('Employee Management Tests', () => {
       interceptEditEmployeeFailedRequest('333333333335');
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100 },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
       );
       cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
@@ -258,7 +258,7 @@ describe('Employee Management Tests', () => {
       interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100, search: '*' },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-updated' }
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple-updated' }
       );
       cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
@@ -299,7 +299,7 @@ describe('Employee Management Tests', () => {
       interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100, search: '*' },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
       );
       cy.visit(ROUTES.employees.path);
 
@@ -340,9 +340,12 @@ describe('Employee Management Tests', () => {
 
       interceptFetchEmployeesRequest(
         { pageNumber: 1, pageSize: 10 },
-        { alias: 'fetchMultipleEmployeesUpdatedRequest', fixture: 'employees-multiple-updated' }
+        { alias: 'fetchMultipleEmployeesUpdatedRequest', fixture: 'employee/employees-multiple-updated' }
       );
-      interceptFetchBranchesByIdsRequest({ ids: [222222222223] }, { alias: 'fetchBranchesByIdsRequest', fixture: 'branches-multiple' });
+      interceptFetchBranchesByIdsRequest(
+        { ids: [222222222223] },
+        { alias: 'fetchBranchesByIdsRequest', fixture: 'branch/branches-multiple' }
+      );
 
       cy.url().should('include', ROUTES.employees.path);
       getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
@@ -386,7 +389,7 @@ describe('Employee Management Tests', () => {
       interceptFetchBranchByIdRequest('222222222222');
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100 },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
       );
       cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
@@ -404,7 +407,7 @@ describe('Employee Management Tests', () => {
       interceptEditEmployeeRequest('333333333335');
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100, search: '*' },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
       );
       cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 

@@ -11,7 +11,7 @@ import {
   selectAction,
   selectNavigationMenuItem,
   selectOption,
-} from '../support/helpers';
+} from '../../support/helpers';
 import {
   interceptCreateBranchRequest,
   interceptDeleteBranchFailedRequest,
@@ -26,7 +26,7 @@ import {
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
   interceptFetchBranchesByIdsRequest,
-} from '../support/interceptors';
+} from '../../support/interceptors';
 
 const branchAdminRoutes = [ROUTES.newBranch.path, `${ROUTES.branches.path}/edit/222222222222`];
 
@@ -88,7 +88,7 @@ describe('Branches Tests', () => {
         it('should not display the loader if the request resolves quickly', () => {
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: '' },
-            { alias: 'fetchBranchesQuickRequest', fixture: 'branches', statusCode: 200, delay: 50 }
+            { alias: 'fetchBranchesQuickRequest', fixture: 'branch/branches', statusCode: 200, delay: 50 }
           );
 
           getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
@@ -148,7 +148,7 @@ describe('Branches Tests', () => {
         it('should send correct request when search changes', () => {
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: '' },
-            { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+            { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
           );
 
           cy.wait('@fetchMultipleBranchesRequest');
@@ -159,7 +159,7 @@ describe('Branches Tests', () => {
 
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: 'New' },
-            { alias: 'fetchSearchedBranchesRequest', fixture: 'branches' }
+            { alias: 'fetchSearchedBranchesRequest', fixture: 'branch/branches' }
           );
 
           getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
@@ -170,7 +170,7 @@ describe('Branches Tests', () => {
 
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: 'Old' },
-            { alias: 'fetchSearchedNoBranchesRequest', fixture: 'branches-empty' }
+            { alias: 'fetchSearchedNoBranchesRequest', fixture: 'branch/branches-empty' }
           );
 
           getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
@@ -181,7 +181,7 @@ describe('Branches Tests', () => {
 
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: '' },
-            { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+            { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
           );
 
           getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
@@ -192,7 +192,7 @@ describe('Branches Tests', () => {
         it('should display correct branches and employees when searching branches and navigating to employees', () => {
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10 },
-            { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+            { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
           );
           interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
 
@@ -205,7 +205,7 @@ describe('Branches Tests', () => {
 
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: 'Test' },
-            { alias: 'fetchSearchedNoBranchesRequest', fixture: 'branches-empty' }
+            { alias: 'fetchSearchedNoBranchesRequest', fixture: 'branch/branches-empty' }
           );
 
           getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
@@ -218,7 +218,7 @@ describe('Branches Tests', () => {
 
           interceptFetchEmployeesRequest(
             { pageNumber: 1, pageSize: 10 },
-            { alias: 'fetchMultipleEmployeesRequest', fixture: 'employees-multiple' }
+            { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
           );
 
           getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
@@ -234,7 +234,7 @@ describe('Branches Tests', () => {
 
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10 },
-            { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+            { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
           );
 
           getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('exist');
@@ -305,7 +305,7 @@ describe('Branches Tests', () => {
         it('should mark the timeZone as invalid if it is an invalid company timeZone', () => {
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: '' },
-            { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-countries' }
+            { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple-different-countries' }
           );
           cy.visit(ROUTES.branches.path);
 
@@ -330,11 +330,11 @@ describe('Branches Tests', () => {
         it('should reset the search state when the clear icon is clicked', () => {
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: '' },
-            { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+            { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
           );
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: 'New' },
-            { alias: 'fetchSearchedBranchesRequest', fixture: 'branches' }
+            { alias: 'fetchSearchedBranchesRequest', fixture: 'branch/branches' }
           );
 
           getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'search-branches').find('input').type('New');
@@ -353,7 +353,7 @@ describe('Branches Tests', () => {
         it('should mark the fields as invalid if the company country is different than the branch address country', () => {
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: '' },
-            { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-countries' }
+            { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple-different-countries' }
           );
           cy.visit(ROUTES.branches.path);
 
@@ -368,7 +368,7 @@ describe('Branches Tests', () => {
         it('should display default values if there is no address provided', () => {
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: '' },
-            { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple-different-countries' }
+            { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple-different-countries' }
           );
           cy.visit(ROUTES.branches.path);
 
@@ -392,7 +392,7 @@ describe('Branches Tests', () => {
       interceptFetchBranchesRequest();
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 10, search: 'New' },
-        { alias: 'fetchSearchedBranchesRequest', fixture: 'branches' }
+        { alias: 'fetchSearchedBranchesRequest', fixture: 'branch/branches' }
       );
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'search-branches').find('input').type('New');
@@ -410,7 +410,7 @@ describe('Branches Tests', () => {
 
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 10, search: '' },
-        { alias: 'fetchMultipleUpdatedBranchesRequest', fixture: 'branches-multiple-updated' }
+        { alias: 'fetchMultipleUpdatedBranchesRequest', fixture: 'branch/branches-multiple-updated' }
       );
 
       cy.wait('@createBranchRequest');
@@ -436,7 +436,7 @@ describe('Branches Tests', () => {
     it('should not be able to delete a branch if the branch deletion failed', () => {
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 10, search: '' },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
       );
       cy.visit(ROUTES.branches.path);
 
@@ -455,7 +455,7 @@ describe('Branches Tests', () => {
     it('should be able to delete a branch if the branch deletion succeeded', () => {
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 10, search: '' },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branches-multiple' }
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
       );
       cy.visit(ROUTES.branches.path);
 

@@ -1,0 +1,525 @@
+import { Module, SubModule } from 'shared/models';
+import { ROUTES } from 'shared/constants';
+import {
+  getLinearLoader,
+  getLoadingButtonLoadingIcon,
+  getTestSelectorByModule,
+  verifyInputFields,
+  verifyFormValidationMessages,
+  clickActionButton,
+  verifyNotExist,
+  verifyTextFields,
+  selectAction,
+  fillDepartmentDetailsForm,
+  clearDepartmentDetailsForm,
+} from '../../support/helpers';
+import {
+  interceptCreateDepartmentFailedRequest,
+  interceptCreateDepartmentRequest,
+  interceptEditDepartmentFailedRequest,
+  interceptEditDepartmentFailedWithErrorRequest,
+  interceptEditDepartmentRequest,
+  interceptFetchBranchesRequest,
+  interceptFetchClientRequest,
+  interceptFetchCompanyLicenseFailedRequest,
+  interceptFetchCompanyRequest,
+  interceptFetchDepartmentByIdFailedRequest,
+  interceptFetchDepartmentByIdRequest,
+  interceptFetchDepartmentsByIdsRequest,
+  interceptFetchDepartmentsRequest,
+  interceptFetchEmployeeByIdRequest,
+  interceptFetchEmployeesByIdsRequest,
+  interceptFetchEmployeesRequest,
+  interceptFetchProfileRequest,
+  interceptFetchSystemLicenseRequest,
+} from '../../support/interceptors';
+
+const testDepartmentEmptyInputFields = () => {
+  verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
+    'form-field-name': '',
+    'form-field-parentDepartmentId': '',
+    'form-field-managerId': '',
+  });
+};
+
+const testDepartmentInputFields = () => {
+  verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
+    'form-field-name': 'Line Production',
+    'form-field-parentDepartmentId': '444444444444',
+    'form-field-managerId': '333333333335',
+  });
+};
+
+describe('Department Management Tests', () => {
+  beforeEach(() => {
+    interceptFetchClientRequest();
+    interceptFetchSystemLicenseRequest();
+    interceptFetchCompanyLicenseFailedRequest();
+    interceptFetchCompanyRequest();
+    interceptFetchBranchesRequest();
+    interceptFetchProfileRequest();
+    cy.loginMock(true);
+  });
+
+  it('should display an empty form on department creation page', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchEmployeesRequest();
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchDepartmentByIdRequest('444444444444');
+    interceptFetchEmployeeByIdRequest('333333333335');
+    cy.visit(ROUTES.newDepartment.path);
+
+    testDepartmentEmptyInputFields();
+
+    cy.visit(ROUTES.departments.path);
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
+
+    testDepartmentEmptyInputFields();
+  });
+
+  it('should display validation messages if the form is invalid', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchEmployeesRequest();
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchDepartmentByIdRequest('444444444444');
+    interceptFetchEmployeeByIdRequest('333333333335');
+    interceptCreateDepartmentFailedRequest();
+    cy.visit(ROUTES.departments.path);
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
+
+    clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
+
+    verifyFormValidationMessages(Module.departmentManagement, SubModule.departmentDetails, [
+      { field: 'form-field-name-validation', message: 'Department Name is required' },
+      { field: 'form-field-managerId-validation', message: 'Manager is required' },
+    ]);
+
+    fillDepartmentDetailsForm({
+      name: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long department name',
+      parentDepartmentId: 444444444446,
+      managerId: 333333333335,
+    });
+    clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
+
+    verifyFormValidationMessages(Module.departmentManagement, SubModule.departmentDetails, [
+      { field: 'form-field-name-validation', message: 'The Department Name must not exceed 50 characters.' },
+    ]);
+
+    clearDepartmentDetailsForm();
+    fillDepartmentDetailsForm({
+      name: 'Valid Name',
+    });
+    clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
+
+    verifyNotExist(Module.departmentManagement, SubModule.departmentDetails, [
+      'form-field-name-validation',
+      'form-field-parentDepartmentId-validation',
+      'form-field-managerId-validation',
+    ]);
+  });
+
+  it('should not be able to create a new department if department creation failed', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchEmployeesRequest();
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchDepartmentByIdRequest('444444444444');
+    interceptFetchEmployeeByIdRequest('333333333335');
+    interceptCreateDepartmentFailedRequest();
+    cy.visit(ROUTES.departments.path);
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'page-title').should(
+      'have.text',
+      'Create Department'
+    );
+
+    fillDepartmentDetailsForm({
+      name: 'New Department',
+      parentDepartmentId: 444444444446,
+      managerId: 333333333335,
+    });
+    clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
+    cy.wait('@createDepartmentFailedRequest');
+
+    getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
+      .should('exist')
+      .and('contain.text', 'Failed to create a Department');
+    cy.url().should('include', ROUTES.newDepartment.path);
+  });
+
+  it('should be able to create a new department and be navigated back to department catalog page if the form is valid and the department creation succeeded', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334] });
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 10 },
+      { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
+    );
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchDepartmentByIdRequest('444444444444');
+    interceptFetchEmployeeByIdRequest('333333333335');
+    interceptCreateDepartmentRequest();
+    cy.visit(ROUTES.departments.path);
+
+    cy.wait('@fetchDepartmentsRequest');
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should('have.length', 4);
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
+
+    fillDepartmentDetailsForm({
+      name: 'Set Design',
+      parentDepartmentId: 444444444446,
+      managerId: 333333333333,
+    });
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-action-button').should('contain.text', 'Save');
+    interceptFetchDepartmentsRequest(
+      { pageNumber: 1, pageSize: 10, search: '' },
+      { alias: 'fetchCreatedDepartmentsRequest', fixture: 'department/departments-created' }
+    );
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444, 444444444446] });
+    clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
+
+    cy.wait('@createDepartmentRequest');
+    cy.wait('@fetchCreatedDepartmentsRequest');
+
+    cy.url().should('include', ROUTES.departments.path);
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should('have.length', 5);
+    getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
+      .should('exist')
+      .and('contain.text', 'Department has been successfully created');
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-cell-444444444448-name').should(
+      'have.text',
+      'Set Design'
+    );
+  });
+
+  it('should display not found page if the department was not found', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesRequest();
+    interceptFetchDepartmentByIdFailedRequest('444444444443');
+    interceptFetchEmployeeByIdRequest('333333333333');
+    cy.visit(`${ROUTES.departments.path}/edit/444444444443`);
+
+    getTestSelectorByModule(Module.shared, SubModule.notFound, 'page-title').should('exist').and('contain.text', 'Page Not Found');
+    getTestSelectorByModule(Module.shared, SubModule.notFound, 'navigate-home-button').should('exist').click();
+    cy.url().should('include', ROUTES.flows.path);
+  });
+
+  it('should reset the form and be navigated back to the department catalog page if the cancel button is clicked', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesRequest();
+    interceptFetchDepartmentByIdRequest('444444444444');
+    interceptFetchEmployeeByIdRequest('333333333335');
+    cy.visit(ROUTES.departments.path);
+
+    selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444444');
+
+    cy.wait('@fetchDepartmentByIdRequest');
+
+    clearDepartmentDetailsForm();
+    fillDepartmentDetailsForm({
+      name: 'Department Name',
+      parentDepartmentId: 444444444446,
+      managerId: 333333333335,
+    });
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-cancel-button').should('exist').click();
+
+    cy.url().should('include', ROUTES.departments.path);
+    getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('not.exist');
+
+    selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444444');
+
+    cy.wait('@fetchDepartmentByIdRequest');
+
+    verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
+      'form-field-name': 'Production',
+      'form-field-parentDepartmentId': '',
+      'form-field-managerId': '333333333335',
+    });
+  });
+
+  it('should not be able to edit the department if the form is invalid or department updating failed', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 10 },
+      { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
+    );
+    interceptFetchDepartmentByIdRequest('444444444447');
+    interceptFetchEmployeeByIdRequest('333333333333');
+    interceptEditDepartmentFailedRequest('444444444447');
+    cy.visit(ROUTES.departments.path);
+
+    selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444447');
+
+    cy.wait('@fetchDepartmentByIdRequest');
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'page-title').should('have.text', 'Edit Department');
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-name')
+      .find('input')
+      .should('have.value', 'Costume');
+
+    clearDepartmentDetailsForm();
+    clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-name-validation')
+      .should('exist')
+      .and('have.text', 'Department Name is required');
+
+    clearDepartmentDetailsForm();
+    fillDepartmentDetailsForm({
+      name: 'Set Design',
+      managerId: 333333333333,
+    });
+    clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
+
+    cy.wait('@editDepartmentFailedRequest');
+
+    getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
+      .should('exist')
+      .and('contain.text', 'Failed to update the Department');
+    cy.url().should('include', `${ROUTES.departments.path}/edit/444444444447`);
+  });
+
+  it('should display async validation messages if the department update failed with validation errors', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 10 },
+      { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
+    );
+    interceptFetchDepartmentByIdRequest('444444444446');
+    interceptFetchDepartmentByIdRequest('444444444444');
+    interceptFetchEmployeeByIdRequest('333333333335');
+    interceptFetchEmployeeByIdRequest('333333333334');
+    interceptEditDepartmentFailedWithErrorRequest('444444444446');
+    cy.visit(ROUTES.departments.path);
+
+    selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444446');
+
+    cy.wait('@fetchDepartmentByIdRequest');
+
+    fillDepartmentDetailsForm({
+      parentDepartmentId: 444444444446,
+    });
+    clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
+
+    getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
+      .should('exist')
+      .and('contain.text', 'Failed to update the Department');
+    verifyFormValidationMessages(Module.departmentManagement, SubModule.departmentDetails, [
+      {
+        field: 'form-field-parentDepartmentId-validation',
+        message: 'Parent department must be in the same tenant and cannot be self-referential',
+      },
+    ]);
+    cy.url().should('include', `${ROUTES.departments.path}/edit/444444444446`);
+  });
+
+  it('should be able to edit the department and be navigated back to the department catalog page if the form is valid and department updating succeeded', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 10 },
+      { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
+    );
+    interceptFetchDepartmentByIdRequest('444444444447');
+    interceptFetchEmployeeByIdRequest('333333333333');
+    interceptEditDepartmentRequest('444444444447');
+    cy.visit(ROUTES.departments.path);
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should('have.length', 4);
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-cell-444444444447-name')
+      .should('exist')
+      .and('have.text', 'Costume');
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-cell-444444444447-parentDepartmentName')
+      .should('exist')
+      .and('have.text', '-');
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-cell-444444444447-managerName')
+      .should('exist')
+      .and('have.text', 'Gabriel Admin Archangel');
+    selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444447');
+
+    getLinearLoader(Module.departmentManagement, SubModule.departmentDetails, 'form').should('exist');
+    verifyTextFields(Module.departmentManagement, SubModule.departmentDetails, {
+      'form-header': 'Department Details',
+      'form-section-field-basicInfo': 'Basic Information',
+    });
+
+    cy.wait('@fetchDepartmentByIdRequest');
+
+    clearDepartmentDetailsForm();
+    fillDepartmentDetailsForm({
+      name: 'Costume Updated',
+      parentDepartmentId: 444444444446,
+      managerId: 333333333335,
+    });
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334] });
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444, 444444444446] });
+    interceptFetchDepartmentsRequest(
+      { pageNumber: 1, pageSize: 10, search: '' },
+      { alias: 'fetchUpdatedDepartmentsRequest', fixture: 'department/departments-updated' }
+    );
+    clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-action-button').should('have.attr', 'disabled');
+    getLoadingButtonLoadingIcon(Module.departmentManagement, SubModule.departmentDetails, 'form-action-button').should('be.visible');
+
+    cy.wait('@editDepartmentRequest');
+
+    cy.url().should('include', ROUTES.departments.path);
+    getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
+
+    cy.wait('@fetchUpdatedDepartmentsRequest');
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should('have.length', 4);
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-cell-444444444447-name')
+      .should('exist')
+      .and('have.text', 'Costume Updated');
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-cell-444444444447-parentDepartmentName')
+      .should('exist')
+      .and('have.text', 'Unit Production');
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-cell-444444444447-managerName')
+      .should('exist')
+      .and('have.text', 'Anthony User Crowley');
+    getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
+      .should('exist')
+      .and('contain.text', 'Department has been successfully updated');
+  });
+
+  it('should be able to navigate back when the back button is clicked', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesRequest();
+    interceptFetchDepartmentByIdRequest('444444444444');
+    interceptFetchEmployeeByIdRequest('333333333335');
+    cy.visit(ROUTES.departments.path);
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'page-title-back-button').click();
+
+    cy.url().should('include', ROUTES.departments.path);
+
+    selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444444');
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'page-title-back-button').click();
+
+    cy.url().should('include', ROUTES.departments.path);
+    getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('not.exist');
+  });
+
+  it('should reset the department after editing and navigating back', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 10 },
+      { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
+    );
+    interceptFetchDepartmentByIdRequest('444444444447');
+    interceptFetchEmployeeByIdRequest('333333333333');
+    cy.visit(ROUTES.departments.path);
+
+    selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444447');
+
+    cy.wait('@fetchDepartmentByIdRequest');
+
+    verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
+      'form-field-name': 'Costume',
+      'form-field-parentDepartmentId': '',
+      'form-field-managerId': '333333333333',
+    });
+
+    // TODO: flaky test, waiting solves the issue
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(200);
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'page-title-back-button').click();
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
+
+    cy.url().should('include', ROUTES.newDepartment.path);
+    testDepartmentEmptyInputFields();
+  });
+
+  it('should reset the form when navigating between different departments', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 10 },
+      { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
+    );
+    interceptFetchDepartmentByIdRequest('444444444444');
+    interceptFetchDepartmentByIdRequest('444444444446', 'fetchFirstDepartmentByIdRequest');
+    interceptFetchDepartmentByIdRequest('444444444447', 'fetchSecondDepartmentByIdRequest');
+    interceptFetchEmployeeByIdRequest('333333333333');
+    interceptFetchEmployeeByIdRequest('333333333334');
+    interceptFetchEmployeeByIdRequest('333333333335');
+    interceptEditDepartmentRequest('444444444447');
+    cy.visit(ROUTES.departments.path);
+
+    selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444446');
+
+    cy.wait('@fetchFirstDepartmentByIdRequest');
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-cancel-button').click();
+
+    selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444447');
+
+    cy.wait('@fetchSecondDepartmentByIdRequest');
+
+    verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
+      'form-field-name': 'Costume',
+      'form-field-parentDepartmentId': '',
+      'form-field-managerId': '333333333333',
+    });
+  });
+
+  it('should fetch and display the department form details by id when refreshing the page', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 10 },
+      { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
+    );
+    interceptFetchDepartmentByIdRequest('444444444444');
+    interceptFetchDepartmentByIdRequest('444444444445');
+    interceptFetchEmployeeByIdRequest('333333333335');
+    cy.visit(`${ROUTES.departments.path}/edit/444444444445`);
+
+    cy.wait('@fetchDepartmentByIdRequest');
+
+    testDepartmentInputFields();
+    cy.reload();
+
+    getLinearLoader(Module.departmentManagement, SubModule.departmentDetails, 'form').should('exist');
+    cy.wait('@fetchDepartmentByIdRequest');
+
+    testDepartmentInputFields();
+  });
+
+  it('should not display the loader if the request resolves quickly', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchEmployeeByIdRequest('333333333335');
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchDepartmentByIdRequest('444444444444', 'fetchDepartmentByIdQuickRequest', 'department/departments', 200, 50);
+    cy.visit(`${ROUTES.departments.path}/edit/444444444444`);
+
+    getLinearLoader(Module.departmentManagement, SubModule.departmentDetails, 'form').should('not.exist');
+    cy.wait('@fetchDepartmentByIdQuickRequest');
+  });
+});

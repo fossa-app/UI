@@ -1,6 +1,6 @@
 import { ROUTES } from 'shared/constants';
 import { Module, SubModule } from 'shared/models';
-import { getLinearLoader, getTestSelectorByModule, selectAction, verifyInputFields, verifyTextFields } from '../support/helpers';
+import { getLinearLoader, getTestSelectorByModule, selectAction, verifyInputFields, verifyTextFields } from '../../support/helpers';
 import {
   interceptEditBranchRequest,
   interceptFetchBranchByIdFailedRequest,
@@ -11,7 +11,7 @@ import {
   interceptFetchCompanyRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
-} from '../support/interceptors';
+} from '../../support/interceptors';
 
 const testBranchFields = () => {
   verifyTextFields(Module.branchManagement, SubModule.branchViewDetails, {
@@ -91,19 +91,20 @@ describe('Branch View Tests', () => {
         interceptFetchBranchByIdRequest('222222222222');
         cy.visit(`${ROUTES.branches.path}/view/222222222222`);
 
+        cy.wait('@fetchBranchByIdRequest');
+
+        testBranchFields();
+
         cy.reload();
 
         getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
         cy.wait('@fetchBranchByIdRequest');
 
-        getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-value-name').should(
-          'have.text',
-          'New York Branch'
-        );
+        testBranchFields();
       });
 
       it('should not display the loader if the request resolves quickly', () => {
-        interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdQuickRequest', 'branches', 200, 50);
+        interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdQuickRequest', 'branch/branches', 200, 50);
         cy.visit(`${ROUTES.branches.path}/view/222222222222`);
 
         getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('not.exist');
@@ -114,7 +115,7 @@ describe('Branch View Tests', () => {
       });
 
       it('should mark the fields as invalid if the company country is different than the branch address country', () => {
-        interceptFetchCompanyRequest('fetchUpdatedCompanyRequest', 'company-updated');
+        interceptFetchCompanyRequest('fetchUpdatedCompanyRequest', 'company/company-updated');
         interceptFetchBranchByIdRequest('222222222222');
         cy.visit(`${ROUTES.branches.path}/view/222222222222`);
 
@@ -139,7 +140,7 @@ describe('Branch View Tests', () => {
       });
 
       it('should display default values if there is no address provided', () => {
-        interceptFetchBranchByIdRequest('222222222225', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
+        interceptFetchBranchByIdRequest('222222222225', 'fetchBranchByIdRequest', 'branch/branches-multiple-different-countries');
         cy.visit(`${ROUTES.branches.path}/view/222222222225`);
 
         cy.wait('@fetchBranchByIdRequest');
@@ -170,7 +171,7 @@ describe('Branch View Tests', () => {
       });
 
       it('should display branch location details if the branch has correct address', () => {
-        interceptFetchBranchByIdRequest('222222222223', 'fetchBranchByIdRequest', 'branches-multiple');
+        interceptFetchBranchByIdRequest('222222222223', 'fetchBranchByIdRequest', 'branch/branches-multiple');
         cy.visit(`${ROUTES.branches.path}/view/222222222223`);
 
         getTestSelectorByModule(Module.branchManagement, SubModule.branchLocationDetails, 'default-location').should('not.exist');
@@ -183,7 +184,7 @@ describe('Branch View Tests', () => {
       });
 
       it('should display a fallback message if the branch address is incorrect', () => {
-        interceptFetchBranchByIdRequest('222222222226', 'fetchBranchByIdRequest', 'branches-multiple-different-countries');
+        interceptFetchBranchByIdRequest('222222222226', 'fetchBranchByIdRequest', 'branch/branches-multiple-different-countries');
         cy.visit(`${ROUTES.branches.path}/view/222222222226`);
 
         getTestSelectorByModule(Module.branchManagement, SubModule.branchLocationDetails, 'default-location')

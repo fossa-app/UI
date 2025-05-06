@@ -30,9 +30,9 @@ import { useSearch } from 'components/Search';
 import { renderPrimaryLinkText } from 'components/UI/PrimaryLinkText';
 
 const testModule = Module.departmentManagement;
-const testSubModule = SubModule.departmentTable;
+const testSubModule = SubModule.departmentCatalog;
 
-const DepartmentTablePage: React.FC = () => {
+const DepartmentCatalogPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const {
@@ -174,4 +174,4 @@ const DepartmentTablePage: React.FC = () => {
   );
 };
 
-export default DepartmentTablePage;
+export default DepartmentCatalogPage;
