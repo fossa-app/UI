@@ -117,7 +117,7 @@ describe('Profile Tests', () => {
           .should('have.value', 'Gabriel Admin Archangel');
       });
 
-      it('should not be able to edit the profile if the form is invalid or employee updating failed', () => {
+      it('should not be able to edit the profile if the form is invalid or employee update failed', () => {
         interceptFetchProfileRequest();
         interceptEditProfileFailedRequest();
         cy.visit(ROUTES.viewProfile.path);
@@ -187,7 +187,7 @@ describe('Profile Tests', () => {
         cy.url().should('include', ROUTES.editProfile.path);
       });
 
-      it('should be able to edit the profile and be navigated to view profile page if the form is valid and employee updating succeeded', () => {
+      it('should be able to edit the profile and be navigated to view profile page if the form is valid and employee update succeeded', () => {
         interceptFetchProfileRequest();
         interceptEditProfileRequest();
         cy.visit(ROUTES.viewProfile.path);

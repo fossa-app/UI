@@ -77,7 +77,7 @@ describe('Flows Tests', () => {
           checkIsSubFlowDisabled('Branches', true);
           checkIsSubFlowDisabled('Departments', false);
           checkIsSubFlowDisabled('Employees', true);
-          checkIsSubFlowDisabled('Employee Onboarding', true);
+          checkIsSubFlowDisabled('Employee Onboarding', false);
           checkIsSubFlowDisabled('View Profile', true);
           checkIsSubFlowDisabled('Employee Offboarding', true);
         });
@@ -162,7 +162,7 @@ describe('Flows Tests', () => {
         });
 
         it('should not be able to navigate by urls from the flows page if the subflow is disabled', () => {
-          [ROUTES.companyOnboarding.path, ROUTES.setBranch.path, ROUTES.employeeOnbarding.path].forEach((route) => {
+          [ROUTES.setupCompany.path, ROUTES.setupBranch.path, ROUTES.setupEmployee.path].forEach((route) => {
             cy.visit(route);
             cy.url().should('include', ROUTES.flows.path);
           });
@@ -273,13 +273,13 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Branches', true);
       checkIsSubFlowDisabled('Departments', false);
       checkIsSubFlowDisabled('Employees', true);
-      checkIsSubFlowDisabled('Employee Onboarding', true);
+      checkIsSubFlowDisabled('Employee Onboarding', false);
       checkIsSubFlowDisabled('View Profile', true);
       checkIsSubFlowDisabled('Employee Offboarding', true);
 
       clickSubFlow('Company Onboarding');
 
-      cy.url().should('include', ROUTES.setBranch.path);
+      cy.url().should('include', ROUTES.setupBranch.path);
     });
 
     it('should display correct enabled and disabled subFlows when in different onboarding flows', () => {
@@ -290,7 +290,7 @@ describe('Flows Tests', () => {
       interceptCreateProfileRequest();
 
       clickSubFlow('Company Onboarding');
-      cy.url().should('include', ROUTES.companyOnboarding.path);
+      cy.url().should('include', ROUTES.setupCompany.path);
 
       getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('Good Omens');
       selectOption(Module.companySetup, SubModule.companyDetails, 'countryCode', 'US');
@@ -299,7 +299,7 @@ describe('Flows Tests', () => {
       cy.wait('@createCompanyRequest');
       cy.wait('@fetchCompanyRequest');
 
-      cy.url().should('include', ROUTES.setBranch.path);
+      cy.url().should('include', ROUTES.setupBranch.path);
       clickFlowsIcon();
 
       cy.url().should('include', ROUTES.flows.path);
@@ -309,25 +309,20 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Branches', true);
       checkIsSubFlowDisabled('Departments', false);
       checkIsSubFlowDisabled('Employees', true);
-      checkIsSubFlowDisabled('Employee Onboarding', true);
+      checkIsSubFlowDisabled('Employee Onboarding', false);
       checkIsSubFlowDisabled('View Profile', true);
       checkIsSubFlowDisabled('Employee Offboarding', true);
 
       clickSubFlow('Company Onboarding');
-      cy.url().should('include', ROUTES.setBranch.path);
+      cy.url().should('include', ROUTES.setupBranch.path);
 
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type('America/New_York');
       selectOption(Module.branchSetup, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
       clickField(Module.branchSetup, SubModule.branchDetails, 'form-field-noPhysicalAddress');
       clickActionButton(Module.branchSetup, SubModule.branchDetails);
       interceptFetchBranchesRequest();
-      interceptFetchProfileFailedRequest();
       cy.wait('@createBranchRequest');
       cy.wait('@fetchBranchesRequest');
-      cy.wait('@fetchProfileFailedRequest');
-
-      cy.url().should('include', ROUTES.employeeOnbarding.path);
-      clickFlowsIcon();
 
       cy.url().should('include', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', true);
@@ -341,7 +336,7 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Employee Offboarding', true);
 
       clickSubFlow('Employee Onboarding');
-      cy.url().should('include', ROUTES.employeeOnbarding.path);
+      cy.url().should('include', ROUTES.setupEmployee.path);
 
       interceptFetchProfileRequest();
       clickActionButton(Module.employeeSetup, SubModule.employeeDetails);

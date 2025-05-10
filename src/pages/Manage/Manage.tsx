@@ -1,24 +1,19 @@
 import * as React from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchCompanyLicense, fetchSetupData, selectCompanyLicense, selectStep } from 'store/features';
-import { APP_CONFIG, ROUTES } from 'shared/constants';
+import { fetchCompanyLicense, fetchSetupData, selectCompanyLicense, selectSetupLoading } from 'store/features';
+import { APP_CONFIG } from 'shared/constants';
 import CircularLoader from 'components/UI/CircularLoader';
 
 const ManagePage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const { status } = useAppSelector(selectStep);
+  const loading = useAppSelector(selectSetupLoading);
   const { fetchStatus: companyLicenseStatus } = useAppSelector(selectCompanyLicense);
 
   React.useEffect(() => {
-    if (status === 'idle') {
-      dispatch(fetchSetupData());
-    } else if (status === 'failed') {
-      navigate(ROUTES.flows.path);
-    }
-  }, [status, dispatch, navigate]);
+    dispatch(fetchSetupData());
+  }, [dispatch]);
 
   React.useEffect(() => {
     if (companyLicenseStatus === 'idle') {
@@ -26,7 +21,7 @@ const ManagePage: React.FC = () => {
     }
   }, [companyLicenseStatus, dispatch]);
 
-  if (status === 'idle' || status === 'loading') {
+  if (loading) {
     return <CircularLoader />;
   }
 

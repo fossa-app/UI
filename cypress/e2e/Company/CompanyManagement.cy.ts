@@ -187,7 +187,7 @@ describe('Company Management Tests', () => {
     });
 
     // TODO: flaky test
-    it('should not be able to edit the company if the form is invalid or company updating failed', () => {
+    it('should not be able to edit the company if the form is invalid or company update failed', () => {
       interceptEditCompanyFailedRequest();
       cy.visit(ROUTES.viewCompany.path);
 
@@ -247,7 +247,7 @@ describe('Company Management Tests', () => {
       cy.url().should('include', ROUTES.editCompany.path);
     });
 
-    it('should be able to edit the company and be navigated to view company page if the form is valid and company updating succeeded', () => {
+    it('should be able to edit the company and be navigated to view company page if the form is valid and company update succeeded', () => {
       interceptEditCompanyRequest();
       cy.visit(ROUTES.viewCompany.path);
 

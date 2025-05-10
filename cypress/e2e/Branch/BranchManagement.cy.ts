@@ -224,7 +224,7 @@ describe('Branch Management Tests', () => {
     });
   });
 
-  it('should not be able to edit the branch if the form is invalid or branch updating failed', () => {
+  it('should not be able to edit the branch if the form is invalid or branch update failed', () => {
     interceptEditBranchFailedRequest('222222222222');
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit(ROUTES.branches.path);
@@ -290,7 +290,7 @@ describe('Branch Management Tests', () => {
     cy.url().should('include', `${ROUTES.branches.path}/edit/222222222222`);
   });
 
-  it('should be able to edit the branch and be navigated back to branch table page if the form is valid and branch updating succeeded', () => {
+  it('should be able to edit the branch and be navigated back to branch table page if the form is valid and branch update succeeded', () => {
     interceptEditBranchRequest('222222222222');
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit(ROUTES.branches.path);

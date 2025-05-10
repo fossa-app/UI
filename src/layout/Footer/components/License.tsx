@@ -11,7 +11,7 @@ const testSubModule = SubModule.license;
 
 interface LicenseProps {
   isAdmin: boolean;
-  setupCompleted: boolean;
+  onboardingCompleted: boolean;
   loading: boolean;
   company?: CompanyLicense['terms']['licensee'];
   system?: SystemLicense['terms']['licensee'];
@@ -21,7 +21,7 @@ interface LicenseProps {
 const License: React.FC<LicenseProps> = ({
   isAdmin,
   company,
-  setupCompleted,
+  onboardingCompleted,
   loading,
   system = { shortName: 'Unlicensed System', longName: '' },
   onCompanyLicenseClick,
@@ -45,7 +45,7 @@ const License: React.FC<LicenseProps> = ({
       );
     }
 
-    if (setupCompleted && !company) {
+    if (onboardingCompleted && !company) {
       return isAdmin ? (
         <Button
           data-cy={getTestSelectorByModule(testModule, testSubModule, 'company-license-button')}
