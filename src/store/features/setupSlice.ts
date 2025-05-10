@@ -7,11 +7,16 @@ import { fetchBranches } from './branchSlice';
 import { fetchProfile } from './profileSlice';
 
 interface SetupState {
-  step: StateEntity<SetupStep>;
+  companyOnboarding: StateEntity<SetupStep>;
+  employeeOnboarding: StateEntity<SetupStep>;
 }
 
 const initialState: SetupState = {
-  step: {
+  companyOnboarding: {
+    data: SetupStep.COMPANY,
+    status: 'idle',
+  },
+  employeeOnboarding: {
     data: SetupStep.COMPANY,
     status: 'idle',
   },
@@ -20,52 +25,71 @@ const initialState: SetupState = {
 export const fetchSetupData = createAsyncThunk<void, void, { rejectValue: ErrorResponseDTO }>(
   'setup/fetchSetupData',
   async (_, { dispatch }) => {
-    const companyResponse = await dispatch(fetchCompany(true)).unwrap();
+    try {
+      const companyResponse = await dispatch(fetchCompany(true)).unwrap();
 
-    if (companyResponse) {
-      const branchesResponse = await dispatch(fetchBranches([APP_CONFIG.table.defaultPagination, true])).unwrap();
+      if (companyResponse) {
+        try {
+          await dispatch(fetchBranches([APP_CONFIG.table.defaultPagination, true])).unwrap();
+        } catch (error) {
+          console.log(error);
+        }
 
-      if (branchesResponse?.items.length) {
-        await dispatch(fetchProfile()).unwrap();
+        try {
+          await dispatch(fetchProfile()).unwrap();
+        } catch (error) {
+          console.log(error);
+        }
       }
+    } catch {
+      dispatch({ type: 'setup/setOnboardingFailed' });
     }
   }
 );
 
+// TODO: rename to onboardingSlice
 const setupSlice = createSlice({
   name: 'setup',
   initialState,
-  reducers: {},
+  reducers: {
+    setOnboardingFailed(state) {
+      state.companyOnboarding.status = 'failed';
+      state.employeeOnboarding.status = 'failed';
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCompany.pending, (state, action) => {
-        if (action.meta.arg) {
-          state.step.status = 'loading';
-        }
-      })
       .addCase(fetchCompany.rejected, (state) => {
-        state.step.status = 'failed';
+        state.companyOnboarding.status = 'failed';
       })
       .addCase(fetchCompany.fulfilled, (state) => {
-        state.step.data = SetupStep.BRANCH;
+        state.companyOnboarding.data = SetupStep.BRANCH;
+        state.employeeOnboarding.data = SetupStep.EMPLOYEE;
       })
       .addCase(fetchBranches.rejected, (state) => {
-        state.step.status = 'failed';
+        state.companyOnboarding.status = 'failed';
       })
       .addCase(fetchBranches.fulfilled, (state, action) => {
-        state.step.data = action.payload?.items?.length ? SetupStep.EMPLOYEE : SetupStep.BRANCH;
+        state.companyOnboarding.status = 'succeeded';
+        state.companyOnboarding.data = action.payload?.items?.length ? SetupStep.COMPLETED : SetupStep.BRANCH;
       })
       .addCase(fetchProfile.rejected, (state) => {
-        state.step.status = 'failed';
-        state.step.data = SetupStep.EMPLOYEE;
+        state.employeeOnboarding.status = 'failed';
+        state.employeeOnboarding.data = SetupStep.EMPLOYEE;
       })
       .addCase(fetchProfile.fulfilled, (state) => {
-        state.step.status = 'succeeded';
-        state.step.data = SetupStep.COMPLETED;
+        state.employeeOnboarding.status = 'succeeded';
+        state.employeeOnboarding.data = SetupStep.COMPLETED;
       });
   },
 });
 
-export const selectStep = (state: RootState) => state.setup.step;
+export const selectCompanyOnboardingStep = (state: RootState) => state.setup.companyOnboarding;
+export const selectEmployeeOnboardingStep = (state: RootState) => state.setup.employeeOnboarding;
+export const selectOnboardingCompleted = (state: RootState) =>
+  state.setup.companyOnboarding.status === 'succeeded' && state.setup.employeeOnboarding.status === 'succeeded';
+export const selectSetupLoading = (state: RootState) =>
+  !['succeeded', 'failed'].includes(state.setup.companyOnboarding.status ?? '') ||
+  !['succeeded', 'failed'].includes(state.setup.employeeOnboarding.status ?? '');
 
 export default setupSlice.reducer;

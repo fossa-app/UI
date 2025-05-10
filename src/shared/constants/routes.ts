@@ -30,6 +30,10 @@ export const ROUTES: AppRoute = {
     name: 'Company Offboarding',
     path: '/flows/offboarding/company',
   },
+  setupCompany: {
+    name: 'Setup Company',
+    path: '/flows/onboarding/company/setupCompany',
+  },
   editCompany: {
     name: 'Edit Company',
     path: '/flows/company/edit',
@@ -42,9 +46,9 @@ export const ROUTES: AppRoute = {
     name: 'Branches',
     path: '/flows/branches',
   },
-  setBranch: {
-    name: 'Set Branch',
-    path: `/flows/onboarding/branch`,
+  setupBranch: {
+    name: 'Setup Branch',
+    path: `/flows/onboarding/company/setupBranch`,
   },
   newBranch: {
     name: 'Create Branch',
@@ -69,6 +73,10 @@ export const ROUTES: AppRoute = {
   employeeOffboarding: {
     name: 'Employee Offboarding',
     path: '/flows/offboarding/employee',
+  },
+  setupEmployee: {
+    name: 'Setup Employee',
+    path: '/flows/onboarding/employee/setupEmployee',
   },
   viewProfile: {
     name: 'View Profile',

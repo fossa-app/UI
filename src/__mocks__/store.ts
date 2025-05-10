@@ -12,7 +12,8 @@ const initialMockState: DeepPartial<RootState> = {
     isDarkTheme: false,
   },
   setup: {
-    step: {},
+    companyOnboarding: {},
+    employeeOnboarding: {},
   },
   license: {
     system: {},

@@ -8,7 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
-import { openSideBar, selectAppConfig, selectCompany, selectProfile, selectStep, toggleAppTheme } from 'store/features';
+import { openSideBar, selectAppConfig, selectCompany, selectProfile, selectOnboardingCompleted, toggleAppTheme } from 'store/features';
 import { getTestSelectorByModule, getUserManager } from 'shared/helpers';
 import { ROUTES, SEARCH_PORTAL_ID } from 'shared/constants';
 import { Module, SubModule } from 'shared/models';
@@ -22,10 +22,9 @@ const Header: React.FC = () => {
   const { isDarkTheme } = useAppSelector(selectAppConfig);
   const { data: company } = useAppSelector(selectCompany);
   const { data: profile } = useAppSelector(selectProfile);
-  const { status } = useAppSelector(selectStep);
+  const onboardingCompleted = useAppSelector(selectOnboardingCompleted);
   const userManager = getUserManager();
   const companyName = company?.name ?? '';
-  const setupCompleted = status === 'succeeded';
 
   const handleThemeChange = () => {
     dispatch(toggleAppTheme(!isDarkTheme));
@@ -44,7 +43,7 @@ const Header: React.FC = () => {
   };
 
   const showSideBar = () => {
-    if (!setupCompleted) {
+    if (!onboardingCompleted) {
       return;
     }
 
@@ -63,7 +62,7 @@ const Header: React.FC = () => {
             <IconButton
               data-cy={getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon')}
               aria-label="Menu"
-              disabled={!setupCompleted}
+              disabled={!onboardingCompleted}
               edge="end"
               color="inherit"
               onClick={showSideBar}

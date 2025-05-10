@@ -5,7 +5,13 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectCompanyLicense, selectIsUserAdmin, selectStep, selectSystemLicense, uploadCompanyLicense } from 'store/features';
+import {
+  selectCompanyLicense,
+  selectIsUserAdmin,
+  selectOnboardingCompleted,
+  selectSystemLicense,
+  uploadCompanyLicense,
+} from 'store/features';
 import { getTestSelectorByModule } from 'shared/helpers';
 import { Module, SubModule } from 'shared/models';
 import Logo from 'components/UI/Logo';
@@ -18,9 +24,8 @@ const Footer: React.FC = () => {
   const isAdmin = useAppSelector(selectIsUserAdmin);
   const { data: system } = useAppSelector(selectSystemLicense);
   const { data: company, fetchStatus, updateStatus } = useAppSelector(selectCompanyLicense);
-  const { status: stepStatus } = useAppSelector(selectStep);
+  const onboardingCompleted = useAppSelector(selectOnboardingCompleted);
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const setupCompleted = stepStatus === 'succeeded';
 
   const handleCompanyLicenseClick = () => {
     setDialogOpen(true);
@@ -61,7 +66,7 @@ const Footer: React.FC = () => {
                   isAdmin={isAdmin}
                   system={system?.terms.licensee}
                   company={company?.terms.licensee}
-                  setupCompleted={setupCompleted}
+                  onboardingCompleted={onboardingCompleted}
                   onCompanyLicenseClick={handleCompanyLicenseClick}
                 />
               </Box>

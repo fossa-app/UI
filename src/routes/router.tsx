@@ -1,22 +1,27 @@
 import * as React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ROUTES } from 'shared/constants';
+import RouteTitle from 'components/RouteTitle';
 import RootPage from 'pages/Root';
 import ProtectedPage from 'pages/Protected';
 import ManagePage from 'pages/Manage/Manage';
 import FlowsPage from 'pages/Manage/Flows';
+// TODO: lazy load the OnboardingPage
 import OnboardingPage from 'pages/Manage/Onboarding/Onboarding';
-import RouteTitle from 'components/RouteTitle';
+import CompanyOnboarding from 'pages/Manage/Onboarding/pages/Company/CompanyOnboarding';
+import EmployeeOnboarding from 'pages/Manage/Onboarding/pages/Employee/EmployeeOnboarding';
 import { createLazyComponent } from './lazy-loaded-component';
 
 // Lazy loaded pages
 const LoginPage = createLazyComponent(() => import('pages/Login'), { title: ROUTES.login.name });
 const CallbackPage = createLazyComponent(() => import('pages/Callback'), { title: ROUTES.callback.name });
-const SetupCompanyPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/SetupCompany'), {
+const SetupCompanyPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/SetupCompany'), {
   title: ROUTES.companyOnboarding.name,
 });
-const SetupBranchPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/SetupBranch'), { title: ROUTES.setBranch.name });
-const SetupEmployeePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/SetupEmployee'), {
+const SetupBranchPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/SetupBranch'), {
+  title: ROUTES.setupBranch.name,
+});
+const SetupEmployeePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Employee/SetupEmployee'), {
   title: ROUTES.employeeOnbarding.name,
 });
 const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
@@ -108,15 +113,31 @@ const router = createBrowserRouter(
                     },
                     {
                       path: ROUTES.companyOnboarding.path,
-                      element: SetupCompanyPage,
-                    },
-                    {
-                      path: ROUTES.setBranch.path,
-                      element: SetupBranchPage,
+                      element: <CompanyOnboarding />,
+                      children: [
+                        {
+                          index: true,
+                          element: <Navigate to={ROUTES.setupCompany.path} replace />,
+                        },
+                        {
+                          path: ROUTES.setupCompany.path,
+                          element: SetupCompanyPage,
+                        },
+                        {
+                          path: ROUTES.setupBranch.path,
+                          element: SetupBranchPage,
+                        },
+                      ],
                     },
                     {
                       path: ROUTES.employeeOnbarding.path,
-                      element: SetupEmployeePage,
+                      element: <EmployeeOnboarding />,
+                      children: [
+                        {
+                          path: ROUTES.setupEmployee.path,
+                          element: SetupEmployeePage,
+                        },
+                      ],
                     },
                     {
                       path: '*',

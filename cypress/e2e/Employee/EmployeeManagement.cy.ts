@@ -230,7 +230,7 @@ describe('Employee Management Tests', () => {
       testEmployeeFormFields();
     });
 
-    it('should not be able to edit the employee if the employee updating failed', () => {
+    it('should not be able to edit the employee if the employee update failed', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
       interceptEditEmployeeFailedRequest('333333333335');
@@ -292,7 +292,7 @@ describe('Employee Management Tests', () => {
       cy.url().should('include', `${ROUTES.employees.path}/edit/333333333335`);
     });
 
-    it('should be able to edit the employee and be navigated to employee table page if the employee updating succeeded', () => {
+    it('should be able to edit the employee and be navigated to employee table page if the employee update succeeded', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
       interceptEditEmployeeRequest('333333333335');
