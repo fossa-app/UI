@@ -70,7 +70,7 @@ describe('Branch View Tests', () => {
         interceptFetchBranchByIdRequest('222222222222');
         cy.visit(ROUTES.branches.path);
 
-        selectAction(Module.branchManagement, SubModule.branchTable, 'view', '222222222222');
+        selectAction(Module.branchManagement, SubModule.branchCatalog, 'view', '222222222222');
 
         getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
 
@@ -84,7 +84,7 @@ describe('Branch View Tests', () => {
         getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'page-title-back-button').click();
 
         cy.url().should('include', ROUTES.branches.path);
-        getLinearLoader(Module.branchManagement, SubModule.branchTable, 'table').should('not.exist');
+        getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('not.exist');
       });
 
       it('should fetch and display the branch view details by id when refreshing the page', () => {
@@ -218,14 +218,14 @@ describe('Branch View Tests', () => {
       interceptFetchBranchByIdRequest('222222222222');
       cy.visit(ROUTES.branches.path);
 
-      selectAction(Module.branchManagement, SubModule.branchTable, 'view', '222222222222');
+      selectAction(Module.branchManagement, SubModule.branchCatalog, 'view', '222222222222');
 
       cy.wait('@fetchBranchByIdRequest');
 
       testBranchFields();
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'page-title-back-button').click();
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-layout-action-button').click();
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-layout-action-button').click();
 
       cy.url().should('include', ROUTES.newBranch.path);
       // TODO: flaky part

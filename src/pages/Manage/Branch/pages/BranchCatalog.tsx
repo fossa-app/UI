@@ -23,9 +23,9 @@ import { useSearch } from 'components/Search';
 import { renderPrimaryLinkText } from 'components/UI/PrimaryLinkText';
 
 const testModule = Module.branchManagement;
-const testSubModule = SubModule.branchTable;
+const testSubModule = SubModule.branchCatalog;
 
-const BranchTablePage: React.FC = () => {
+const BranchCatalogPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { fetchStatus, data: branches, page = APP_CONFIG.table.defaultPagination as PaginationParams } = useAppSelector(selectBranches);
@@ -157,4 +157,4 @@ const BranchTablePage: React.FC = () => {
   );
 };
 
-export default BranchTablePage;
+export default BranchCatalogPage;

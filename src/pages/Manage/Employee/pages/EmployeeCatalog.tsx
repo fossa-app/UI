@@ -21,9 +21,9 @@ import ActionsMenu from 'components/UI/Table/ActionsMenu';
 import { renderPrimaryLinkText } from 'components/UI/PrimaryLinkText';
 
 const testModule = Module.employeeManagement;
-const testSubModule = SubModule.employeeTable;
+const testSubModule = SubModule.employeeCatalog;
 
-const EmployeeTablePage: React.FC = () => {
+const EmployeeCatalogPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { fetchStatus, data: employees, page = APP_CONFIG.table.defaultPagination as PaginationParams } = useAppSelector(selectEmployees);
@@ -139,4 +139,4 @@ const EmployeeTablePage: React.FC = () => {
   );
 };
 
-export default EmployeeTablePage;
+export default EmployeeCatalogPage;

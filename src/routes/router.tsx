@@ -32,14 +32,16 @@ const EditCompanyPage = createLazyComponent(() => import('pages/Manage/Company/p
 });
 const ViewCompanyPage = createLazyComponent(() => import('pages/Manage/Company/pages/ViewCompany'), { title: ROUTES.viewCompany.name });
 const EmployeePage = createLazyComponent(() => import('pages/Manage/Employee/Employee'));
-const EmployeeTablePage = createLazyComponent(() => import('pages/Manage/Employee/pages/EmployeeTable'), { title: ROUTES.employees.name });
+const EmployeeCatalogPage = createLazyComponent(() => import('pages/Manage/Employee/pages/EmployeeCatalog'), {
+  title: ROUTES.employees.name,
+});
 const EditEmployeePage = createLazyComponent(() => import('pages/Manage/Employee/pages/EditEmployee'), {
   title: ROUTES.editEmployee.name,
   isAdminRoute: true,
 });
 const ViewEmployeePage = createLazyComponent(() => import('pages/Manage/Employee/pages/ViewEmployee'), { title: ROUTES.viewEmployee.name });
 const BranchPage = createLazyComponent(() => import('pages/Manage/Branch/Branch'));
-const BranchTablePage = createLazyComponent(() => import('pages/Manage/Branch/pages/BranchTable'), { title: ROUTES.branches.name });
+const BranchCatalogPage = createLazyComponent(() => import('pages/Manage/Branch/pages/BranchCatalog'), { title: ROUTES.branches.name });
 const ViewBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/ViewBranch'), { title: ROUTES.viewBranch.name });
 const CreateBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/ManageBranch'), {
   title: ROUTES.newBranch.name,
@@ -169,7 +171,7 @@ const router = createBrowserRouter(
                   children: [
                     {
                       index: true,
-                      element: BranchTablePage,
+                      element: BranchCatalogPage,
                     },
                     {
                       path: ROUTES.newBranch.path,
@@ -191,7 +193,7 @@ const router = createBrowserRouter(
                   children: [
                     {
                       index: true,
-                      element: EmployeeTablePage,
+                      element: EmployeeCatalogPage,
                     },
                     {
                       path: ROUTES.editEmployee.path,

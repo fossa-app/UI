@@ -86,7 +86,7 @@ describe('Employee Management Tests', () => {
         interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
         cy.visit(ROUTES.employees.path);
 
-        selectAction(Module.employeeManagement, SubModule.employeeTable, 'view', '333333333335');
+        selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'view', '333333333335');
 
         cy.url().should('include', `${ROUTES.employees.path}/view/333333333335`);
         getLinearLoader(Module.employeeManagement, SubModule.employeeViewDetails, 'view-details').should('exist');
@@ -107,7 +107,7 @@ describe('Employee Management Tests', () => {
         interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
         cy.visit(ROUTES.employees.path);
 
-        selectAction(Module.employeeManagement, SubModule.employeeTable, 'view', '333333333333');
+        selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'view', '333333333333');
 
         cy.url().should('include', `${ROUTES.employees.path}/view/333333333333`);
         getLinearLoader(Module.employeeManagement, SubModule.employeeViewDetails, 'view-details').should('exist');
@@ -133,7 +133,7 @@ describe('Employee Management Tests', () => {
       interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
       cy.visit(ROUTES.employees.path);
 
-      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-firstName')
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-firstName')
         .find('p')
         .click();
 
@@ -148,13 +148,13 @@ describe('Employee Management Tests', () => {
 
       cy.url().should('include', ROUTES.employees.path);
 
-      selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
+      selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'edit', '333333333335');
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'page-title-back-button').click();
 
       cy.url().should('include', ROUTES.employees.path);
     });
 
-    it('should reset the form and navigate to employee table page if the cancel button is clicked', () => {
+    it('should reset the form and navigate to employee catalog page if the cancel button is clicked', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
       interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
@@ -164,7 +164,7 @@ describe('Employee Management Tests', () => {
       );
       cy.visit(ROUTES.employees.path);
 
-      selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
+      selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'edit', '333333333335');
 
       cy.url().should('include', `${ROUTES.employees.path}/edit/333333333335`);
 
@@ -189,7 +189,7 @@ describe('Employee Management Tests', () => {
 
       cy.url().should('include', ROUTES.employees.path);
 
-      selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
+      selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'edit', '333333333335');
 
       verifyInputFields(Module.employeeManagement, SubModule.employeeDetails, {
         'form-field-assignedBranchId-input': 'New York Branch',
@@ -207,7 +207,7 @@ describe('Employee Management Tests', () => {
       interceptFetchEmployeeByIdRequest('333333333335', 'fetchSecondEmployeeByIdRequest', 'employee/employees-multiple');
       cy.visit(ROUTES.employees.path);
 
-      selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333334');
+      selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'edit', '333333333334');
       cy.wait('@fetchFirstEmployeeByIdRequest');
 
       verifyTextFields(Module.employeeManagement, SubModule.employeeDetails, {
@@ -223,7 +223,7 @@ describe('Employee Management Tests', () => {
       });
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-cancel-button').click();
-      selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
+      selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'edit', '333333333335');
 
       cy.wait('@fetchSecondEmployeeByIdRequest');
 
@@ -292,7 +292,7 @@ describe('Employee Management Tests', () => {
       cy.url().should('include', `${ROUTES.employees.path}/edit/333333333335`);
     });
 
-    it('should be able to edit the employee and be navigated to employee table page if the employee update succeeded', () => {
+    it('should be able to edit the employee and be navigated to employee catalog page if the employee update succeeded', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
       interceptEditEmployeeRequest('333333333335');
@@ -303,22 +303,22 @@ describe('Employee Management Tests', () => {
       );
       cy.visit(ROUTES.employees.path);
 
-      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
-      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-firstName')
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 3);
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-firstName')
         .find('p')
         .should('exist')
         .and('have.text', 'Anthony');
-      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-lastName')
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-lastName')
         .should('exist')
         .and('have.text', 'Crowley');
-      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-fullName')
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-fullName')
         .should('exist')
         .and('have.text', 'Anthony User Crowley');
-      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-assignedBranchName')
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedBranchName')
         .should('exist')
         .and('have.text', 'New York Branch');
 
-      selectAction(Module.employeeManagement, SubModule.employeeTable, 'edit', '333333333335');
+      selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'edit', '333333333335');
 
       cy.wait('@fetchEmployeeByIdRequest');
       cy.wait('@fetchBranchByIdRequest');
@@ -348,22 +348,22 @@ describe('Employee Management Tests', () => {
       );
 
       cy.url().should('include', ROUTES.employees.path);
-      getLinearLoader(Module.employeeManagement, SubModule.employeeTable, 'table').should('exist');
+      getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
 
       cy.wait('@fetchMultipleEmployeesUpdatedRequest');
 
-      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-row', true).should('have.length', 3);
-      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-firstName')
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 3);
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-firstName')
         .find('p')
         .should('exist')
         .and('have.text', 'Anthony');
-      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-lastName')
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-lastName')
         .should('exist')
         .and('have.text', 'Crowley');
-      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-fullName')
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-fullName')
         .should('exist')
         .and('have.text', 'Anthony User Crowley');
-      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeTable, 'table-body-cell-333333333335-assignedBranchName')
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedBranchName')
         .should('exist')
         .and('have.text', 'Hawaii Branch');
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
