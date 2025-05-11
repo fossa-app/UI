@@ -10,6 +10,7 @@ import {
   verifyOptions,
   verifyFormValidationMessages,
   verifyTextFields,
+  clickSubFlow,
 } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
@@ -644,6 +645,106 @@ describe('Onboarding Flow Tests', () => {
       cy.visit('/flows/onboarding/wrongUrl');
 
       cy.url().should('include', ROUTES.flows.path);
+    });
+
+    it('should display correct steps in the stepper when in different onboarding flows', () => {
+      interceptFetchCompanyFailedRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptCreateCompanyRequest();
+      interceptCreateBranchRequest();
+      interceptCreateProfileRequest();
+      cy.visit(ROUTES.flows.path);
+
+      clickSubFlow('Company Onboarding');
+      cy.url().should('include', ROUTES.setupCompany.path);
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper', true).should('have.length', 2);
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-company').should('exist');
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-company')
+        .find('.MuiStepLabel-root')
+        .should('not.have.class', 'Mui-disabled');
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-company')
+        .find('.MuiStepLabel-label')
+        .should('have.text', 'Create Company');
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-branch').should('exist');
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-branch')
+        .find('.MuiStepLabel-root')
+        .should('have.class', 'Mui-disabled');
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-branch')
+        .find('.MuiStepLabel-label')
+        .should('have.text', 'Create Branch');
+      getTestSelectorByModule(Module.onboarding, SubModule.employeeOnboarding, 'stepper-employee').should('not.exist');
+
+      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('Good Omens');
+      selectOption(Module.companySetup, SubModule.companyDetails, 'countryCode', 'US');
+      clickActionButton(Module.companySetup, SubModule.companyDetails);
+      interceptFetchCompanyRequest();
+      cy.wait('@createCompanyRequest');
+      cy.wait('@fetchCompanyRequest');
+
+      cy.url().should('include', ROUTES.setupBranch.path);
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper', true).should('have.length', 2);
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-company').should('exist');
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-company')
+        .find('.MuiStepLabel-root')
+        .should('not.have.class', 'Mui-disabled');
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-branch').should('exist');
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-branch')
+        .find('.MuiStepLabel-root')
+        .should('not.have.class', 'Mui-disabled');
+      getTestSelectorByModule(Module.onboarding, SubModule.employeeOnboarding, 'stepper-employee').should('not.exist');
+      cy.url().should('include', ROUTES.setupBranch.path);
+
+      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type('America/New_York');
+      selectOption(Module.branchSetup, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
+      clickField(Module.branchSetup, SubModule.branchDetails, 'form-field-noPhysicalAddress');
+      clickActionButton(Module.branchSetup, SubModule.branchDetails);
+      interceptFetchBranchesRequest();
+      cy.wait('@createBranchRequest');
+      cy.wait('@fetchBranchesRequest');
+
+      cy.url().should('include', ROUTES.flows.path);
+
+      clickSubFlow('Employee Onboarding');
+      cy.url().should('include', ROUTES.setupEmployee.path);
+
+      getTestSelectorByModule(Module.onboarding, SubModule.employeeOnboarding, 'stepper', true).should('have.length', 1);
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-company').should('not.exist');
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-branch').should('not.exist');
+      getTestSelectorByModule(Module.onboarding, SubModule.employeeOnboarding, 'stepper-employee').should('exist');
+      getTestSelectorByModule(Module.onboarding, SubModule.employeeOnboarding, 'stepper-employee')
+        .find('.MuiStepLabel-root')
+        .should('not.have.class', 'Mui-disabled');
+      getTestSelectorByModule(Module.onboarding, SubModule.employeeOnboarding, 'stepper-employee')
+        .find('.MuiStepLabel-label')
+        .should('have.text', 'Create Employee');
+
+      interceptFetchProfileRequest();
+      clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
+      cy.wait('@createProfileRequest');
+      cy.wait('@fetchProfileRequest');
+
+      cy.url().should('include', ROUTES.flows.path);
+    });
+
+    it('should display correct steps in the stepper if the company has already been created', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptFetchProfileFailedRequest();
+      cy.visit(ROUTES.flows.path);
+
+      clickSubFlow('Company Onboarding');
+
+      cy.url().should('include', ROUTES.setupBranch.path);
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper', true).should('have.length', 2);
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-company').should('exist');
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-company')
+        .find('.MuiStepLabel-root')
+        .should('not.have.class', 'Mui-disabled');
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-branch').should('exist');
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-branch')
+        .find('.MuiStepLabel-root')
+        .should('not.have.class', 'Mui-disabled');
+      getTestSelectorByModule(Module.onboarding, SubModule.employeeOnboarding, 'stepper-employee').should('not.exist');
     });
   });
 });

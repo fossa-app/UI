@@ -5,7 +5,6 @@ import { createProfile, selectUser, selectProfile } from 'store/features';
 import { Employee } from 'shared/models';
 import { EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import { deepCopyObject, mapProfileDTO, mapUserProfileToEmployee } from 'shared/helpers';
-import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
 
 const testModule = EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA.module;
@@ -39,22 +38,20 @@ const SetupEmployeePage: React.FC = () => {
   };
 
   return (
-    <PageLayout module={testModule} subModule={testSubModule} pageTitle="Create Employee">
-      <Form<Employee>
-        module={testModule}
-        subModule={testSubModule}
-        defaultValues={EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES}
-        values={employeeData}
-        errors={errors}
-        onSubmit={handleSubmit}
-      >
-        <Form.Header>{EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA.title}</Form.Header>
+    <Form<Employee>
+      module={testModule}
+      subModule={testSubModule}
+      defaultValues={EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES}
+      values={employeeData}
+      errors={errors}
+      onSubmit={handleSubmit}
+    >
+      <Form.Header>{EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA.title}</Form.Header>
 
-        <Form.Content fields={EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA.fields} />
+      <Form.Content fields={EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA.fields} />
 
-        <Form.Actions actions={actions}></Form.Actions>
-      </Form>
-    </PageLayout>
+      <Form.Actions actions={actions}></Form.Actions>
+    </Form>
   );
 };
 

@@ -4,3 +4,8 @@ export enum OnboardingStep {
   EMPLOYEE = 'employee',
   COMPLETED = 'completed',
 }
+
+export interface OnboardingStepOption {
+  name: OnboardingStep;
+  label: string;
+}

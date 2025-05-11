@@ -22,7 +22,6 @@ import {
   hasAllowedRole,
 } from 'shared/helpers';
 import { BRANCH_SETUP_DETAILS_FORM_SCHEMA, BRANCH_DETAILS_FORM_DEFAULT_VALUES, MESSAGES } from 'shared/constants';
-import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
 
 const testModule = BRANCH_SETUP_DETAILS_FORM_SCHEMA.module;
@@ -83,25 +82,20 @@ const SetupBranchPage: React.FC = () => {
   };
 
   return (
-    <PageLayout module={testModule} subModule={testSubModule} pageTitle="Create Branch">
-      <Form<Branch>
-        module={testModule}
-        subModule={testSubModule}
-        defaultValues={BRANCH_DETAILS_FORM_DEFAULT_VALUES}
-        errors={errors}
-        onChange={handleChange}
-        onSubmit={handleSubmit}
-      >
-        <Form.Header>{BRANCH_SETUP_DETAILS_FORM_SCHEMA.title}</Form.Header>
+    <Form<Branch>
+      module={testModule}
+      subModule={testSubModule}
+      defaultValues={BRANCH_DETAILS_FORM_DEFAULT_VALUES}
+      errors={errors}
+      onChange={handleChange}
+      onSubmit={handleSubmit}
+    >
+      <Form.Header>{BRANCH_SETUP_DETAILS_FORM_SCHEMA.title}</Form.Header>
 
-        <Form.Content fields={fields} />
+      <Form.Content fields={fields} />
 
-        <Form.Actions
-          actions={actions}
-          generalValidationMessage={isUserAdmin ? undefined : MESSAGES.error.general.permission}
-        ></Form.Actions>
-      </Form>
-    </PageLayout>
+      <Form.Actions actions={actions} generalValidationMessage={isUserAdmin ? undefined : MESSAGES.error.general.permission}></Form.Actions>
+    </Form>
   );
 };
 
