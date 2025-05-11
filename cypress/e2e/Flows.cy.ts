@@ -258,12 +258,12 @@ describe('Flows Tests', () => {
       clickSubFlow('Branches');
       cy.url().should('include', ROUTES.branches.path);
 
-      selectAction(Module.branchManagement, SubModule.branchTable, 'delete', '222222222222');
+      selectAction(Module.branchManagement, SubModule.branchCatalog, 'delete', '222222222222');
       interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetchNoBranchesRequest', fixture: 'branch/branches-empty' });
       cy.wait('@deleteBranchRequest');
       cy.wait('@fetchBranchesRequest');
 
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchTable, 'table-body-row', true).should('have.length', 0);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 0);
       clickFlowsIcon();
 
       cy.url().should('include', ROUTES.flows.path);
