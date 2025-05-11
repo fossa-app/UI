@@ -4,7 +4,7 @@ import { toggleAppTheme } from 'store/features';
 import { setMockState, mockDispatch, resetMockState } from '../store';
 import { getUserManager } from '../oidc-client-mock';
 import { MockRouterWrapper } from '../test-utils';
-import { SetupStep } from 'shared/models';
+import { OnboardingStep } from 'shared/models';
 import Header from 'layout/Header';
 
 describe('Header Component', () => {
@@ -16,9 +16,9 @@ describe('Header Component', () => {
           data: undefined,
         },
       },
-      setup: {
-        companyOnboarding: { data: SetupStep.COMPLETED, status: 'succeeded' },
-        employeeOnboarding: { data: SetupStep.COMPLETED, status: 'succeeded' },
+      onboarding: {
+        company: { data: OnboardingStep.COMPLETED, status: 'succeeded' },
+        employee: { data: OnboardingStep.COMPLETED, status: 'succeeded' },
       },
       appConfig: { isDarkTheme: true },
       company: { company: { data: { name: 'Test', countryCode: 'UA' } } },

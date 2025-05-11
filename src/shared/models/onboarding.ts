@@ -1,4 +1,4 @@
-export enum SetupStep {
+export enum OnboardingStep {
   COMPANY = 'company',
   BRANCH = 'branch',
   EMPLOYEE = 'employee',
