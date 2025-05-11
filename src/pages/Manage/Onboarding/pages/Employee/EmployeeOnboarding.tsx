@@ -1,18 +1,22 @@
 import * as React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import Box from '@mui/material/Box';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Typography from '@mui/material/Typography';
 import { useAppSelector } from 'store';
 import { selectEmployeeOnboardingStep } from 'store/features';
-import { OnboardingStep } from 'shared/models';
-import { ROUTES } from 'shared/constants';
+import { Module, OnboardingStep, SubModule } from 'shared/models';
+import { EMPLOYEE_ONBOARDING_STEPS, ROUTES } from 'shared/constants';
 
 const EmployeeOnboarding: React.FC = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { data: step } = useAppSelector(selectEmployeeOnboardingStep);
+  const [activeStep, setActiveStep] = React.useState(0);
 
   React.useEffect(() => {
-    // TODO: check, when the company has not been created and manually navigating to ROUTES.companyOnboarding.path, it redirects to the ROUTES.viewCompany.path
-    // TODO: check, when on any setup page, after refresh it redirects to the flows page
     if (step === OnboardingStep.EMPLOYEE && pathname !== ROUTES.setupEmployee.path) {
       navigate(ROUTES.setupEmployee.path);
     } else if (step !== OnboardingStep.EMPLOYEE) {
@@ -20,7 +24,28 @@ const EmployeeOnboarding: React.FC = () => {
     }
   }, [step, pathname, navigate]);
 
-  return <Outlet />;
+  React.useEffect(() => {
+    const currentStep = EMPLOYEE_ONBOARDING_STEPS.findIndex(({ name }) => name === step);
+
+    if (currentStep !== -1) {
+      setActiveStep(currentStep);
+    }
+  }, [step]);
+
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: 5 }}>
+      <Stepper activeStep={activeStep} sx={{ justifyContent: 'center' }}>
+        {EMPLOYEE_ONBOARDING_STEPS.map(({ name, label }) => (
+          <Step key={label} data-cy={`${Module.onboarding}-${SubModule.employeeOnboarding}-stepper-${name}`}>
+            <StepLabel>
+              <Typography variant="h6">{label}</Typography>
+            </StepLabel>
+          </Step>
+        ))}
+      </Stepper>
+      <Outlet />
+    </Box>
+  );
 };
 
 export default EmployeeOnboarding;

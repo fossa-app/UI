@@ -5,7 +5,6 @@ import { selectCompany, createCompany, selectIsUserAdmin, selectUserRoles, selec
 import { Company, CompanyDTO } from 'shared/models';
 import { deepCopyObject, hasAllowedRole, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
 import { COMPANY_DETAILS_FORM_DEFAULT_VALUES, COMPANY_SETUP_DETAILS_FORM_SCHEMA, MESSAGES } from 'shared/constants';
-import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
 
 const testModule = COMPANY_SETUP_DETAILS_FORM_SCHEMA.module;
@@ -42,24 +41,19 @@ const SetupCompanyPage: React.FC = () => {
   };
 
   return (
-    <PageLayout module={testModule} subModule={testSubModule} pageTitle="Create Company">
-      <Form<Company>
-        module={testModule}
-        subModule={testSubModule}
-        defaultValues={COMPANY_DETAILS_FORM_DEFAULT_VALUES}
-        errors={errors}
-        onSubmit={handleSubmit}
-      >
-        <Form.Header>{COMPANY_SETUP_DETAILS_FORM_SCHEMA.title}</Form.Header>
+    <Form<Company>
+      module={testModule}
+      subModule={testSubModule}
+      defaultValues={COMPANY_DETAILS_FORM_DEFAULT_VALUES}
+      errors={errors}
+      onSubmit={handleSubmit}
+    >
+      <Form.Header>{COMPANY_SETUP_DETAILS_FORM_SCHEMA.title}</Form.Header>
 
-        <Form.Content fields={fields} />
+      <Form.Content fields={fields} />
 
-        <Form.Actions
-          actions={actions}
-          generalValidationMessage={isUserAdmin ? undefined : MESSAGES.error.general.permission}
-        ></Form.Actions>
-      </Form>
-    </PageLayout>
+      <Form.Actions actions={actions} generalValidationMessage={isUserAdmin ? undefined : MESSAGES.error.general.permission}></Form.Actions>
+    </Form>
   );
 };
 
