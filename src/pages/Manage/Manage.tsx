@@ -2,17 +2,17 @@ import * as React from 'react';
 import { Outlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchCompanyLicense, fetchSetupData, selectCompanyLicense, selectSetupLoading } from 'store/features';
+import { fetchCompanyLicense, fetchOnboardingData, selectCompanyLicense, selectOnboardingLoading } from 'store/features';
 import { APP_CONFIG } from 'shared/constants';
 import CircularLoader from 'components/UI/CircularLoader';
 
 const ManagePage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const loading = useAppSelector(selectSetupLoading);
+  const loading = useAppSelector(selectOnboardingLoading);
   const { fetchStatus: companyLicenseStatus } = useAppSelector(selectCompanyLicense);
 
   React.useEffect(() => {
-    dispatch(fetchSetupData());
+    dispatch(fetchOnboardingData());
   }, [dispatch]);
 
   React.useEffect(() => {

@@ -4,7 +4,7 @@ export * from './license';
 export * from './status';
 export * from './response';
 export * from './user';
-export * from './setup';
+export * from './onboarding';
 export * from './company';
 export * from './branch';
 export * from './employee';

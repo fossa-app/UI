@@ -35,8 +35,7 @@ import {
 const companyOnboardingRoutes = [ROUTES.setupCompany.path, ROUTES.setupBranch.path];
 const employeeOnboardingRoutes = [ROUTES.setupEmployee.path];
 
-// TODO: rename to Onboarding
-describe('Setup Flow Tests', () => {
+describe('Onboarding Flow Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
