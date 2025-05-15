@@ -21,6 +21,9 @@ const SetupCompanyPage = createLazyComponent(() => import('pages/Manage/Onboardi
 const SetupBranchPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/SetupBranch'), {
   title: ROUTES.setupBranch.name,
 });
+const SetupCompanyLicensePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/SetupCompanyLicense'), {
+  title: ROUTES.setupCompanyLicense.name,
+});
 const SetupEmployeePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Employee/SetupEmployee'), {
   title: ROUTES.employeeOnbarding.name,
 });
@@ -126,6 +129,10 @@ const router = createBrowserRouter(
                           element: SetupCompanyPage,
                         },
                         {
+                          path: ROUTES.setupCompanyLicense.path,
+                          element: SetupCompanyLicensePage,
+                        },
+                        {
                           path: ROUTES.setupBranch.path,
                           element: SetupBranchPage,
                         },
@@ -135,6 +142,10 @@ const router = createBrowserRouter(
                       path: ROUTES.employeeOnbarding.path,
                       element: <EmployeeOnboarding />,
                       children: [
+                        {
+                          index: true,
+                          element: <Navigate to={ROUTES.setupEmployee.path} replace />,
+                        },
                         {
                           path: ROUTES.setupEmployee.path,
                           element: SetupEmployeePage,

@@ -256,10 +256,10 @@ export const BRANCH_SETUP_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
   actions: [
     {
       actionType: FormActionType.loadingButton,
-      label: 'Next',
+      label: 'Finish',
       name: FormActionName.submit,
       loadingPosition: 'end',
-      endIcon: IconType.next,
+      endIcon: IconType.done,
       type: 'submit',
       roles: [UserRole.administrator],
       'aria-label': 'Create Branch Button',

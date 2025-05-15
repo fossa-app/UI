@@ -168,6 +168,36 @@ export const COMPANY_SETUP_DETAILS_FORM_SCHEMA: FormProps<Company> = {
   ],
 };
 
+export const COMPANY_LICENSE_SETUP_DETAILS_FORM_SCHEMA: FormProps<CompanyLicense> = {
+  module: Module.companyLicenseSetup,
+  subModule: SubModule.companyLicenseDetails,
+  title: 'Company License Details',
+  fields: [
+    {
+      type: FormFieldType.fileUpload,
+      name: 'licenseFile',
+      label: 'Upload Company License',
+      roles: [UserRole.administrator],
+      grid: { size: { xs: 12 } },
+      rules: {
+        required: { value: true, message: 'Company License is required' },
+      },
+    },
+  ],
+  actions: [
+    {
+      actionType: FormActionType.loadingButton,
+      label: 'Next',
+      name: FormActionName.submit,
+      loadingPosition: 'end',
+      endIcon: IconType.next,
+      type: 'submit',
+      roles: [UserRole.administrator],
+      'aria-label': 'Upload Company License Button',
+    },
+  ],
+};
+
 export const COMPANY_VIEW_DETAILS_SCHEMA: ViewDetailProps<Company> = {
   module: Module.companyManagement,
   subModule: SubModule.companyViewDetails,

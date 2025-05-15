@@ -27,6 +27,7 @@ export enum RouteKey {
   editEmployee = 'editEmployee',
   viewEmployee = 'viewEmployee',
   departments = 'departments',
+  setupCompanyLicense = 'setupCompanyLicense',
   newDepartment = 'newDepartment',
   editDepartment = 'editDepartment',
   viewDepartment = 'viewDepartment',

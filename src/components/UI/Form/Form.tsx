@@ -13,7 +13,7 @@ import FormActions from './FormActions';
 type FormProps<T extends FieldValues> = React.PropsWithChildren<{
   module: Module;
   subModule: SubModule;
-  defaultValues: DefaultValues<T>;
+  defaultValues?: DefaultValues<T>;
   values?: T;
   errors?: FieldErrors<T>;
   loading?: boolean;

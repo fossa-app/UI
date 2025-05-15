@@ -11,7 +11,6 @@ const SectionField: React.FC<SectionFieldProps> = ({ name, label, ...props }) =>
     formState: { errors },
   } = reactHookFormContext();
   const { module, subModule } = useFormContext();
-
   const error = get(errors, name) as FieldError;
 
   return (

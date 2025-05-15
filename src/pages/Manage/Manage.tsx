@@ -2,24 +2,17 @@ import * as React from 'react';
 import { Outlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchCompanyLicense, fetchOnboardingData, selectCompanyLicense, selectOnboardingLoading } from 'store/features';
+import { fetchOnboardingData, selectOnboardingLoading } from 'store/features';
 import { APP_CONFIG } from 'shared/constants';
 import CircularLoader from 'components/UI/CircularLoader';
 
 const ManagePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector(selectOnboardingLoading);
-  const { fetchStatus: companyLicenseStatus } = useAppSelector(selectCompanyLicense);
 
   React.useEffect(() => {
     dispatch(fetchOnboardingData());
   }, [dispatch]);
-
-  React.useEffect(() => {
-    if (companyLicenseStatus === 'idle') {
-      dispatch(fetchCompanyLicense());
-    }
-  }, [companyLicenseStatus, dispatch]);
 
   if (loading) {
     return <CircularLoader />;

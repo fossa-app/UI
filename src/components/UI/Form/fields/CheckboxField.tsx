@@ -14,7 +14,6 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({ name, label, ...props }) 
     control,
   } = reactHookFormContext();
   const { module, subModule } = useFormContext();
-
   const error = get(errors, name) as FieldError;
   const checked = useWatch({ control, name });
 

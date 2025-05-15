@@ -14,7 +14,6 @@ const SwitchField: React.FC<SwitchFieldProps> = ({ name, label, ...props }) => {
     setValue,
   } = reactHookFormContext();
   const { module, subModule } = useFormContext();
-
   const error = get(errors, name) as FieldError;
 
   return (

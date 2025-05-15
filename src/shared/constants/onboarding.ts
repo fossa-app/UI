@@ -1,8 +1,9 @@
 import { OnboardingStep, OnboardingStepOption } from 'shared/models';
 
 export const COMPANY_ONBOARDING_STEPS: OnboardingStepOption[] = [
-  { name: OnboardingStep.COMPANY, label: 'Create Company' },
-  { name: OnboardingStep.BRANCH, label: 'Create Branch' },
+  { name: OnboardingStep.company, label: 'Create Company' },
+  { name: OnboardingStep.companyLicense, label: 'Upload Company License' },
+  { name: OnboardingStep.branch, label: 'Create Branch' },
 ];
 
-export const EMPLOYEE_ONBOARDING_STEPS: OnboardingStepOption[] = [{ name: OnboardingStep.EMPLOYEE, label: 'Create Employee' }];
+export const EMPLOYEE_ONBOARDING_STEPS: OnboardingStepOption[] = [{ name: OnboardingStep.employee, label: 'Create Employee' }];

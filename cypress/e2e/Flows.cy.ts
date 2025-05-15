@@ -11,6 +11,7 @@ import {
   getTestSelectorByModule,
   selectAction,
   selectOption,
+  uploadTestFile,
 } from '../support/helpers';
 import {
   interceptCreateBranchRequest,
@@ -21,6 +22,7 @@ import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
   interceptFetchCompanyFailedRequest,
+  interceptFetchCompanyLicenseFailedRequest,
   interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
   interceptFetchProfileFailedRequest,
@@ -28,6 +30,7 @@ import {
   interceptFetchSystemLicenseRequest,
   interceptLogoutRequest,
   interceptOpenidConfigurationRequest,
+  interceptUploadCompanyLicenseRequest,
 } from '../support/interceptors';
 
 describe('Flows Tests', () => {
@@ -75,14 +78,14 @@ describe('Flows Tests', () => {
           checkIsSubFlowDisabled('View Company', false);
           checkIsSubFlowDisabled('Company Offboarding', true);
           checkIsSubFlowDisabled('Branches', true);
-          checkIsSubFlowDisabled('Departments', false);
+          checkIsSubFlowDisabled('Departments', true);
           checkIsSubFlowDisabled('Employees', true);
           checkIsSubFlowDisabled('Employee Onboarding', false);
           checkIsSubFlowDisabled('View Profile', true);
           checkIsSubFlowDisabled('Employee Offboarding', true);
         });
 
-        it('should display correct enabled and disabled subFlows if the Company Onboarding has completed', () => {
+        it('should display correct enabled and disabled subFlows if the Company Onboarding has been completed', () => {
           interceptFetchCompanyRequest();
           interceptFetchBranchesRequest();
           interceptFetchProfileFailedRequest();
@@ -90,8 +93,8 @@ describe('Flows Tests', () => {
           checkIsSubFlowDisabled('Company Onboarding', true);
           checkIsSubFlowDisabled('View Company', false);
           checkIsSubFlowDisabled('Company Offboarding', true);
-          checkIsSubFlowDisabled('Branches', false);
-          checkIsSubFlowDisabled('Departments', false);
+          checkIsSubFlowDisabled('Branches', true);
+          checkIsSubFlowDisabled('Departments', true);
           checkIsSubFlowDisabled('Employees', true);
           checkIsSubFlowDisabled('Employee Onboarding', false);
           checkIsSubFlowDisabled('View Profile', true);
@@ -251,8 +254,9 @@ describe('Flows Tests', () => {
 
     it('should display correct enabled and disabled subFlows if the last branch has been deleted', () => {
       interceptFetchCompanyRequest();
+      interceptFetchCompanyLicenseRequest();
       interceptFetchBranchesRequest();
-      interceptFetchProfileFailedRequest();
+      interceptFetchProfileRequest();
       interceptDeleteBranchRequest('222222222222');
 
       clickSubFlow('Branches');
@@ -261,7 +265,7 @@ describe('Flows Tests', () => {
       selectAction(Module.branchManagement, SubModule.branchCatalog, 'delete', '222222222222');
       interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetchNoBranchesRequest', fixture: 'branch/branches-empty' });
       cy.wait('@deleteBranchRequest');
-      cy.wait('@fetchBranchesRequest');
+      cy.wait('@fetchNoBranchesRequest');
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 0);
       clickFlowsIcon();
@@ -270,11 +274,11 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Company Onboarding', false);
       checkIsSubFlowDisabled('View Company', false);
       checkIsSubFlowDisabled('Company Offboarding', true);
-      checkIsSubFlowDisabled('Branches', true);
+      checkIsSubFlowDisabled('Branches', false);
       checkIsSubFlowDisabled('Departments', false);
-      checkIsSubFlowDisabled('Employees', true);
-      checkIsSubFlowDisabled('Employee Onboarding', false);
-      checkIsSubFlowDisabled('View Profile', true);
+      checkIsSubFlowDisabled('Employees', false);
+      checkIsSubFlowDisabled('Employee Onboarding', true);
+      checkIsSubFlowDisabled('View Profile', false);
       checkIsSubFlowDisabled('Employee Offboarding', true);
 
       clickSubFlow('Company Onboarding');
@@ -284,8 +288,10 @@ describe('Flows Tests', () => {
 
     it('should display correct enabled and disabled subFlows when in different onboarding flows', () => {
       interceptFetchCompanyFailedRequest();
+      interceptFetchCompanyLicenseFailedRequest();
       interceptFetchBranchesFailedRequest();
       interceptCreateCompanyRequest();
+      interceptUploadCompanyLicenseRequest();
       interceptCreateBranchRequest();
       interceptCreateProfileRequest();
 
@@ -299,7 +305,7 @@ describe('Flows Tests', () => {
       cy.wait('@createCompanyRequest');
       cy.wait('@fetchCompanyRequest');
 
-      cy.url().should('include', ROUTES.setupBranch.path);
+      cy.url().should('include', ROUTES.setupCompanyLicense.path);
       clickFlowsIcon();
 
       cy.url().should('include', ROUTES.flows.path);
@@ -307,13 +313,43 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('View Company', false);
       checkIsSubFlowDisabled('Company Offboarding', true);
       checkIsSubFlowDisabled('Branches', true);
-      checkIsSubFlowDisabled('Departments', false);
+      checkIsSubFlowDisabled('Departments', true);
       checkIsSubFlowDisabled('Employees', true);
       checkIsSubFlowDisabled('Employee Onboarding', false);
       checkIsSubFlowDisabled('View Profile', true);
       checkIsSubFlowDisabled('Employee Offboarding', true);
 
       clickSubFlow('Company Onboarding');
+      cy.url().should('include', ROUTES.setupCompanyLicense.path);
+
+      getTestSelectorByModule(Module.companyLicenseSetup, SubModule.companyLicenseDetails, 'form-field-licenseFile-file-upload').click();
+      uploadTestFile('input#file-upload-input', 'company/valid-company-license.lic');
+      getTestSelectorByModule(Module.companyLicenseSetup, SubModule.companyLicenseDetails, 'file-upload-selected-file-name').should(
+        'have.text',
+        'company/valid-company-license.lic'
+      );
+      interceptFetchCompanyLicenseRequest();
+      clickActionButton(Module.companyLicenseSetup, SubModule.companyLicenseDetails);
+      cy.wait('@uploadCompanyLicenseRequest');
+      cy.wait('@fetchCompanyLicenseRequest');
+
+      cy.url().should('include', ROUTES.setupBranch.path);
+
+      clickFlowsIcon();
+
+      cy.url().should('include', ROUTES.flows.path);
+      checkIsSubFlowDisabled('Company Onboarding', false);
+      checkIsSubFlowDisabled('View Company', false);
+      checkIsSubFlowDisabled('Company Offboarding', true);
+      checkIsSubFlowDisabled('Branches', true);
+      checkIsSubFlowDisabled('Departments', true);
+      checkIsSubFlowDisabled('Employees', true);
+      checkIsSubFlowDisabled('Employee Onboarding', false);
+      checkIsSubFlowDisabled('View Profile', true);
+      checkIsSubFlowDisabled('Employee Offboarding', true);
+
+      clickSubFlow('Company Onboarding');
+
       cy.url().should('include', ROUTES.setupBranch.path);
 
       getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type('America/New_York');
@@ -328,8 +364,8 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Company Onboarding', true);
       checkIsSubFlowDisabled('View Company', false);
       checkIsSubFlowDisabled('Company Offboarding', true);
-      checkIsSubFlowDisabled('Branches', false);
-      checkIsSubFlowDisabled('Departments', false);
+      checkIsSubFlowDisabled('Branches', true);
+      checkIsSubFlowDisabled('Departments', true);
       checkIsSubFlowDisabled('Employees', true);
       checkIsSubFlowDisabled('Employee Onboarding', false);
       checkIsSubFlowDisabled('View Profile', true);

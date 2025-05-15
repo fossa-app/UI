@@ -15,7 +15,6 @@ const SelectField: React.FC<SelectFieldProps> = ({ label, name, options, ...prop
     control,
   } = reactHookFormContext();
   const { module, subModule } = useFormContext();
-
   const value = useWatch({ control, name });
   const error = get(errors, name) as FieldError;
   const isValueAvailable = options.some((option) => option.value === String(value));
