@@ -3,9 +3,7 @@ import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   createBranch,
-  fetchCompanyLicense,
   selectBranch,
-  selectCompanyLicense,
   selectIsUserAdmin,
   selectCompanyTimeZones,
   selectUserRoles,
@@ -33,7 +31,6 @@ const SetupBranchPage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { data: company } = useAppSelector(selectCompany);
   const { updateStatus, error } = useAppSelector(selectBranch);
-  const { status: companyLicenseStatus } = useAppSelector(selectCompanyLicense);
   const companyTimeZones = useAppSelector(selectCompanyTimeZones);
   const countries = useAppSelector(selectSystemCountries);
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
@@ -64,12 +61,6 @@ const SetupBranchPage: React.FC = () => {
   const errors = React.useMemo(() => {
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
   }, [error?.errors]);
-
-  React.useEffect(() => {
-    if (companyLicenseStatus === 'idle') {
-      dispatch(fetchCompanyLicense());
-    }
-  }, [companyLicenseStatus, dispatch]);
 
   const handleSubmit = (formValue: Branch) => {
     const submitData = mapBranchDTO(formValue);

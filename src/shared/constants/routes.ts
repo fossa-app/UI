@@ -102,6 +102,10 @@ export const ROUTES: AppRoute = {
     name: 'Departments',
     path: '/flows/departments',
   },
+  setupCompanyLicense: {
+    name: 'Setup Company License',
+    path: '/flows/onboarding/company/setupCompanyLicense',
+  },
   newDepartment: {
     name: 'Create Department',
     path: '/flows/departments/new',

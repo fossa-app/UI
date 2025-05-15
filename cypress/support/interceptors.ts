@@ -79,7 +79,7 @@ export const interceptEditCompanyFailedWithErrorRequest = (
 };
 
 export const interceptFetchCompanyLicenseRequest = () => {
-  cy.fixture('license/company-license').then((companyLicense) => {
+  cy.fixture('company/company-license').then((companyLicense) => {
     cy.interceptWithAuth('GET', `${serverBaseUrl}/License/Company`, companyLicense, 'fetchCompanyLicenseRequest');
   });
 };

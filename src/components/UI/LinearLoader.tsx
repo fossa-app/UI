@@ -7,7 +7,7 @@ type LinearLoaderProps = {
   delay?: number;
 } & BackdropProps;
 
-const LinearLoader: React.FC<LinearLoaderProps> = ({ open, delay = 100, ...props }) => {
+const LinearLoader: React.FC<LinearLoaderProps> = ({ open, delay = 150, ...props }) => {
   const [showLoader, setShowLoader] = React.useState(false);
 
   React.useEffect(() => {

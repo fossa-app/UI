@@ -13,7 +13,6 @@ const InputField: React.FC<InputFieldProps> = ({ name, ...props }) => {
   } = reactHookFormContext();
 
   const { module, subModule } = useFormContext();
-
   const error = get(errors, name) as FieldError;
 
   return (

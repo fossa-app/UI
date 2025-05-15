@@ -16,7 +16,6 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ label, name, opti
     control,
   } = reactHookFormContext();
   const { module, subModule } = useFormContext();
-
   const error = get(errors, name) as FieldError;
 
   const getValue = (field: ControllerRenderProps<FieldValues, string>) => {

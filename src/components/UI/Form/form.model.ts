@@ -10,6 +10,7 @@ import { GridBaseProps } from '@mui/material/Grid2';
 import { TypographyProps } from '@mui/material/Typography';
 import { Module, SubModule, UserRole } from 'shared/models';
 import { LoadingButtonProps } from '../LoadingButton';
+import { FileUploadProps } from '../FileUpload';
 
 type Validate<T> = {
   [key: string]: (value: T) => boolean | string | Promise<boolean | string>;
@@ -28,6 +29,7 @@ export enum FormFieldType {
   checkbox = 'checkbox',
   switch = 'switch',
   labelValue = 'labelValue',
+  fileUpload = 'fileUpload',
 }
 
 export enum FormActionType {
@@ -97,6 +99,12 @@ export type SwitchFieldProps = BaseFormFieldProps & {
   label: string;
 } & SwitchProps;
 
+export type FileUploadFieldProps = BaseFormFieldProps & {
+  type: FormFieldType.fileUpload;
+  accept?: string;
+  onFileSelect?: (file: File) => void;
+} & Partial<FileUploadProps>;
+
 export type FormFieldProps<T> = { renderField?: (item?: T) => React.ReactNode } & (
   | SectionFieldProps
   | LabelValueFieldProps
@@ -105,6 +113,7 @@ export type FormFieldProps<T> = { renderField?: (item?: T) => React.ReactNode } 
   | SelectFieldProps
   | CheckboxFieldProps
   | SwitchFieldProps
+  | FileUploadFieldProps
 );
 
 type FormActionButtonProps = FormBaseActionProps & {

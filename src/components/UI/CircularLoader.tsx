@@ -6,7 +6,7 @@ interface CircularLoaderProps {
   delay?: number;
 }
 
-const CircularLoader: React.FC<CircularLoaderProps> = ({ delay = 150 }) => {
+const CircularLoader: React.FC<CircularLoaderProps> = ({ delay = 200 }) => {
   const [showLoader, setShowLoader] = React.useState(false);
 
   React.useEffect(() => {

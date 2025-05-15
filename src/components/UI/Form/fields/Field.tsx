@@ -7,6 +7,7 @@ import CheckboxField from './CheckboxField';
 import SectionField from './SectionField';
 import LabelValueField from './LabelValueField';
 import SwitchField from './SwitchField';
+import FileUploadField from './FileUploadField';
 
 const Field = <T,>(props: FormFieldProps<T>) => {
   switch (props.type) {
@@ -24,6 +25,8 @@ const Field = <T,>(props: FormFieldProps<T>) => {
       return <SectionField {...props} />;
     case FormFieldType.labelValue:
       return <LabelValueField {...props} />;
+    case FormFieldType.fileUpload:
+      return <FileUploadField {...props} />;
     default:
       throw new Error('Invalid Form Field Type');
   }

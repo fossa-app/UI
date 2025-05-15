@@ -17,10 +17,10 @@ const EmployeeOnboarding: React.FC = () => {
   const [activeStep, setActiveStep] = React.useState(0);
 
   React.useEffect(() => {
-    if (step === OnboardingStep.EMPLOYEE && pathname !== ROUTES.setupEmployee.path) {
-      navigate(ROUTES.setupEmployee.path);
-    } else if (step !== OnboardingStep.EMPLOYEE) {
-      navigate(ROUTES.flows.path);
+    if (step === OnboardingStep.employee && pathname !== ROUTES.setupEmployee.path) {
+      navigate(ROUTES.setupEmployee.path, { replace: true });
+    } else if (step !== OnboardingStep.employee) {
+      navigate(ROUTES.flows.path, { replace: true });
     }
   }, [step, pathname, navigate]);
 

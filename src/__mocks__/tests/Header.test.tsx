@@ -17,8 +17,8 @@ describe('Header Component', () => {
         },
       },
       onboarding: {
-        company: { data: OnboardingStep.COMPLETED, status: 'succeeded' },
-        employee: { data: OnboardingStep.COMPLETED, status: 'succeeded' },
+        company: { data: OnboardingStep.completed, status: 'succeeded' },
+        employee: { data: OnboardingStep.completed, status: 'succeeded' },
       },
       appConfig: { isDarkTheme: true },
       company: { company: { data: { name: 'Test', countryCode: 'UA' } } },

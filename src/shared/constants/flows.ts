@@ -51,7 +51,7 @@ export const FLOWS_MAP: FlowsMap = {
         name: ROUTES.departments.name,
         path: ROUTES.departments.path,
         icon: IconType.department,
-        disabled: false,
+        disabled: true,
       },
     },
   },
