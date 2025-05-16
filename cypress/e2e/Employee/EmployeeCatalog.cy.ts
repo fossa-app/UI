@@ -23,7 +23,7 @@ import {
   interceptFetchBranchesByIdsRequest,
 } from '../../support/interceptors';
 
-describe('Employees Tests', () => {
+describe('Employee Catalog Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();

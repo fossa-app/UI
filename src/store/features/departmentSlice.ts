@@ -50,18 +50,27 @@ const initialState: DepartmentState = {
   },
 };
 
-const fetchDepartmentRecursive = async (id: string, dispatch: ThunkDispatch<unknown, unknown, UnknownAction>): Promise<Department> => {
+const fetchDepartmentRecursive = async (
+  id: string,
+  dispatch: ThunkDispatch<unknown, unknown, UnknownAction>,
+  isDepartmentManager = true
+): Promise<Department> => {
   const { data } = await axios.get<DepartmentDTO>(`${ENDPOINTS.departments}/${id}`);
-
   let parentDepartment: Department | undefined;
   let employee: EmployeeDTO | undefined;
 
-  if (data.parentDepartmentId) {
-    parentDepartment = await dispatch(fetchDepartmentById({ id: String(data.parentDepartmentId), skipState: true })).unwrap();
+  if (isDepartmentManager && data.managerId) {
+    employee = await dispatch(
+      fetchEmployeeById({
+        id: String(data.managerId),
+        skipState: true,
+        shouldFetchBranch: false,
+      })
+    ).unwrap();
   }
 
-  if (data.managerId) {
-    employee = await dispatch(fetchEmployeeById({ id: String(data.managerId), skipState: true, shouldFetchBranch: false })).unwrap();
+  if (data.parentDepartmentId) {
+    parentDepartment = await fetchDepartmentRecursive(String(data.parentDepartmentId), dispatch, false);
   }
 
   return mapDepartment(data, parentDepartment, employee);
@@ -143,7 +152,7 @@ export const fetchDepartmentById = createAsyncThunk<Department, { id: string; sk
   'department/fetchDepartmentById',
   async ({ id }, { dispatch, rejectWithValue }) => {
     try {
-      return await fetchDepartmentRecursive(id, dispatch);
+      return await fetchDepartmentRecursive(id, dispatch, true);
     } catch (error) {
       return rejectWithValue(error as ErrorResponseDTO);
     }
