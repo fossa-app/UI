@@ -30,7 +30,7 @@ import {
 
 const branchAdminRoutes = [ROUTES.newBranch.path, `${ROUTES.branches.path}/edit/222222222222`];
 
-describe('Branches Tests', () => {
+describe('Branch Catalog Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
