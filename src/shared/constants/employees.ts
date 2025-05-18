@@ -72,8 +72,8 @@ export const EMPLOYEE_TABLE_ACTIONS_SCHEMA: Action<Employee>[] = [
   },
 ];
 
-export const EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
-  module: Module.employeeSetup,
+export const CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
+  module: Module.createEmployee,
   subModule: SubModule.employeeDetails,
   title: 'Employee Details',
   fields: [
@@ -276,7 +276,7 @@ export const EMPLOYEE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
 };
 
 export const PROFILE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
-  ...EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA,
+  ...CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA,
   module: Module.profile,
   subModule: SubModule.profileDetails,
   title: 'Profile Details',

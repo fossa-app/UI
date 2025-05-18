@@ -30,9 +30,9 @@ export const ROUTES: AppRoute = {
     name: 'Company Offboarding',
     path: '/flows/offboarding/company',
   },
-  setupCompany: {
-    name: 'Setup Company',
-    path: '/flows/onboarding/company/setupCompany',
+  createCompany: {
+    name: 'Create Company',
+    path: '/flows/onboarding/company/createCompany',
   },
   editCompany: {
     name: 'Edit Company',
@@ -46,9 +46,9 @@ export const ROUTES: AppRoute = {
     name: 'Branches',
     path: '/flows/branches',
   },
-  setupBranch: {
-    name: 'Setup Branch',
-    path: `/flows/onboarding/company/setupBranch`,
+  createBranch: {
+    name: 'Create Branch',
+    path: `/flows/onboarding/company/createBranch`,
   },
   newBranch: {
     name: 'Create Branch',
@@ -74,9 +74,9 @@ export const ROUTES: AppRoute = {
     name: 'Employee Offboarding',
     path: '/flows/offboarding/employee',
   },
-  setupEmployee: {
-    name: 'Setup Employee',
-    path: '/flows/onboarding/employee/setupEmployee',
+  createEmployee: {
+    name: 'Create Employee',
+    path: '/flows/onboarding/employee/createEmployee',
   },
   viewProfile: {
     name: 'View Profile',
@@ -102,9 +102,9 @@ export const ROUTES: AppRoute = {
     name: 'Departments',
     path: '/flows/departments',
   },
-  setupCompanyLicense: {
-    name: 'Setup Company License',
-    path: '/flows/onboarding/company/setupCompanyLicense',
+  uploadCompanyLicense: {
+    name: 'Upload Company License',
+    path: '/flows/onboarding/company/uploadCompanyLicense',
   },
   newDepartment: {
     name: 'Create Department',

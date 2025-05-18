@@ -74,7 +74,7 @@ describe('Branch Catalog Tests', () => {
           cy.url().should('include', ROUTES.flows.path);
         });
 
-        it('should not display the linear loader if fetching branches is in progress, it is a part of fetchSetupData', () => {
+        it('should not display the linear loader if fetching branches is in progress, it is a part of fetchOnboardingData', () => {
           interceptFetchBranchesRequest();
 
           getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('not.exist');

@@ -249,9 +249,9 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
   ],
 };
 
-export const BRANCH_SETUP_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
+export const CREATE_BRANCH_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
   ...BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA,
-  module: Module.branchSetup,
+  module: Module.createBranch,
   subModule: SubModule.branchDetails,
   actions: [
     {

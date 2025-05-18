@@ -150,9 +150,9 @@ export const COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Company> = {
   ],
 };
 
-export const COMPANY_SETUP_DETAILS_FORM_SCHEMA: FormProps<Company> = {
+export const CREATE_COMPANY_DETAILS_FORM_SCHEMA: FormProps<Company> = {
   ...COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA,
-  module: Module.companySetup,
+  module: Module.createCompany,
   subModule: SubModule.companyDetails,
   actions: [
     {
@@ -168,8 +168,8 @@ export const COMPANY_SETUP_DETAILS_FORM_SCHEMA: FormProps<Company> = {
   ],
 };
 
-export const COMPANY_LICENSE_SETUP_DETAILS_FORM_SCHEMA: FormProps<CompanyLicense> = {
-  module: Module.companyLicenseSetup,
+export const UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA: FormProps<CompanyLicense> = {
+  module: Module.uploadCompanyLicense,
   subModule: SubModule.companyLicenseDetails,
   title: 'Company License Details',
   fields: [

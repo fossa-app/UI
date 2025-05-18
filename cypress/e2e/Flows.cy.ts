@@ -165,7 +165,7 @@ describe('Flows Tests', () => {
         });
 
         it('should not be able to navigate by urls from the flows page if the subflow is disabled', () => {
-          [ROUTES.setupCompany.path, ROUTES.setupBranch.path, ROUTES.setupEmployee.path].forEach((route) => {
+          [ROUTES.createCompany.path, ROUTES.createBranch.path, ROUTES.createEmployee.path].forEach((route) => {
             cy.visit(route);
             cy.url().should('include', ROUTES.flows.path);
           });
@@ -283,7 +283,7 @@ describe('Flows Tests', () => {
 
       clickSubFlow('Company Onboarding');
 
-      cy.url().should('include', ROUTES.setupBranch.path);
+      cy.url().should('include', ROUTES.createBranch.path);
     });
 
     it('should display correct enabled and disabled subFlows when in different onboarding flows', () => {
@@ -296,16 +296,16 @@ describe('Flows Tests', () => {
       interceptCreateProfileRequest();
 
       clickSubFlow('Company Onboarding');
-      cy.url().should('include', ROUTES.setupCompany.path);
+      cy.url().should('include', ROUTES.createCompany.path);
 
-      getTestSelectorByModule(Module.companySetup, SubModule.companyDetails, 'form-field-name').type('Good Omens');
-      selectOption(Module.companySetup, SubModule.companyDetails, 'countryCode', 'US');
-      clickActionButton(Module.companySetup, SubModule.companyDetails);
+      getTestSelectorByModule(Module.createCompany, SubModule.companyDetails, 'form-field-name').type('Good Omens');
+      selectOption(Module.createCompany, SubModule.companyDetails, 'countryCode', 'US');
+      clickActionButton(Module.createCompany, SubModule.companyDetails);
       interceptFetchCompanyRequest();
       cy.wait('@createCompanyRequest');
       cy.wait('@fetchCompanyRequest');
 
-      cy.url().should('include', ROUTES.setupCompanyLicense.path);
+      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
       clickFlowsIcon();
 
       cy.url().should('include', ROUTES.flows.path);
@@ -320,20 +320,20 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Employee Offboarding', true);
 
       clickSubFlow('Company Onboarding');
-      cy.url().should('include', ROUTES.setupCompanyLicense.path);
+      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
 
-      getTestSelectorByModule(Module.companyLicenseSetup, SubModule.companyLicenseDetails, 'form-field-licenseFile-file-upload').click();
+      getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-field-licenseFile-file-upload').click();
       uploadTestFile('input#file-upload-input', 'company/valid-company-license.lic');
-      getTestSelectorByModule(Module.companyLicenseSetup, SubModule.companyLicenseDetails, 'file-upload-selected-file-name').should(
+      getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'file-upload-selected-file-name').should(
         'have.text',
         'company/valid-company-license.lic'
       );
       interceptFetchCompanyLicenseRequest();
-      clickActionButton(Module.companyLicenseSetup, SubModule.companyLicenseDetails);
+      clickActionButton(Module.uploadCompanyLicense, SubModule.companyLicenseDetails);
       cy.wait('@uploadCompanyLicenseRequest');
       cy.wait('@fetchCompanyLicenseRequest');
 
-      cy.url().should('include', ROUTES.setupBranch.path);
+      cy.url().should('include', ROUTES.createBranch.path);
 
       clickFlowsIcon();
 
@@ -350,12 +350,12 @@ describe('Flows Tests', () => {
 
       clickSubFlow('Company Onboarding');
 
-      cy.url().should('include', ROUTES.setupBranch.path);
+      cy.url().should('include', ROUTES.createBranch.path);
 
-      getTestSelectorByModule(Module.branchSetup, SubModule.branchDetails, 'form-field-name').type('America/New_York');
-      selectOption(Module.branchSetup, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
-      clickField(Module.branchSetup, SubModule.branchDetails, 'form-field-noPhysicalAddress');
-      clickActionButton(Module.branchSetup, SubModule.branchDetails);
+      getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-name').type('America/New_York');
+      selectOption(Module.createBranch, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
+      clickField(Module.createBranch, SubModule.branchDetails, 'form-field-noPhysicalAddress');
+      clickActionButton(Module.createBranch, SubModule.branchDetails);
       interceptFetchBranchesRequest();
       cy.wait('@createBranchRequest');
       cy.wait('@fetchBranchesRequest');
@@ -372,10 +372,10 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Employee Offboarding', true);
 
       clickSubFlow('Employee Onboarding');
-      cy.url().should('include', ROUTES.setupEmployee.path);
+      cy.url().should('include', ROUTES.createEmployee.path);
 
       interceptFetchProfileRequest();
-      clickActionButton(Module.employeeSetup, SubModule.employeeDetails);
+      clickActionButton(Module.createEmployee, SubModule.employeeDetails);
       cy.wait('@createProfileRequest');
       cy.wait('@fetchProfileRequest');
 
