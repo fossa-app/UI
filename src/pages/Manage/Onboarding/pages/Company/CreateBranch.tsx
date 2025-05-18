@@ -19,13 +19,13 @@ import {
   deepCopyObject,
   hasAllowedRole,
 } from 'shared/helpers';
-import { BRANCH_SETUP_DETAILS_FORM_SCHEMA, BRANCH_DETAILS_FORM_DEFAULT_VALUES, MESSAGES } from 'shared/constants';
+import { CREATE_BRANCH_DETAILS_FORM_SCHEMA, BRANCH_DETAILS_FORM_DEFAULT_VALUES, MESSAGES } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';
 
-const testModule = BRANCH_SETUP_DETAILS_FORM_SCHEMA.module;
-const testSubModule = BRANCH_SETUP_DETAILS_FORM_SCHEMA.subModule;
+const testModule = CREATE_BRANCH_DETAILS_FORM_SCHEMA.module;
+const testSubModule = CREATE_BRANCH_DETAILS_FORM_SCHEMA.subModule;
 
-const SetupBranchPage: React.FC = () => {
+const CreateBranchPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const userRoles = useAppSelector(selectUserRoles);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
@@ -41,7 +41,7 @@ const SetupBranchPage: React.FC = () => {
   );
 
   const fields = React.useMemo(() => {
-    const schema = getBranchManagementDetailsByAddressFormSchema(BRANCH_SETUP_DETAILS_FORM_SCHEMA.fields, !!noPhysicalAddress);
+    const schema = getBranchManagementDetailsByAddressFormSchema(CREATE_BRANCH_DETAILS_FORM_SCHEMA.fields, !!noPhysicalAddress);
     const disabledFields = mapDisabledFields(schema, userRoles);
     const mappedFields = mapBranchFieldOptionsToFieldOptions(disabledFields, companyTimeZones, availableCountries);
 
@@ -50,7 +50,7 @@ const SetupBranchPage: React.FC = () => {
 
   const actions = React.useMemo(
     () =>
-      BRANCH_SETUP_DETAILS_FORM_SCHEMA.actions.map((action) =>
+      CREATE_BRANCH_DETAILS_FORM_SCHEMA.actions.map((action) =>
         action.name === FormActionName.submit
           ? { ...action, disabled: !hasAllowedRole(action.roles, userRoles), loading: updateStatus === 'loading' }
           : action
@@ -81,7 +81,7 @@ const SetupBranchPage: React.FC = () => {
       onChange={handleChange}
       onSubmit={handleSubmit}
     >
-      <Form.Header>{BRANCH_SETUP_DETAILS_FORM_SCHEMA.title}</Form.Header>
+      <Form.Header>{CREATE_BRANCH_DETAILS_FORM_SCHEMA.title}</Form.Header>
 
       <Form.Content fields={fields} />
 
@@ -90,4 +90,4 @@ const SetupBranchPage: React.FC = () => {
   );
 };
 
-export default SetupBranchPage;
+export default CreateBranchPage;

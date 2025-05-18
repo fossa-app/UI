@@ -17,12 +17,12 @@ const CompanyOnboarding: React.FC = () => {
   const [activeStep, setActiveStep] = React.useState(0);
 
   React.useEffect(() => {
-    if (step === OnboardingStep.company && pathname !== ROUTES.setupCompany.path) {
-      navigate(ROUTES.setupCompany.path, { replace: true });
-    } else if (step === OnboardingStep.branch && pathname !== ROUTES.setupBranch.path) {
-      navigate(ROUTES.setupBranch.path, { replace: true });
-    } else if (step === OnboardingStep.companyLicense && pathname !== ROUTES.setupCompanyLicense.path) {
-      navigate(ROUTES.setupCompanyLicense.path, { replace: true });
+    if (step === OnboardingStep.company && pathname !== ROUTES.createCompany.path) {
+      navigate(ROUTES.createCompany.path, { replace: true });
+    } else if (step === OnboardingStep.branch && pathname !== ROUTES.createBranch.path) {
+      navigate(ROUTES.createBranch.path, { replace: true });
+    } else if (step === OnboardingStep.companyLicense && pathname !== ROUTES.uploadCompanyLicense.path) {
+      navigate(ROUTES.uploadCompanyLicense.path, { replace: true });
     } else if (step === OnboardingStep.completed) {
       navigate(ROUTES.flows.path, { replace: true });
     }

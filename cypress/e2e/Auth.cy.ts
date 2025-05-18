@@ -31,9 +31,9 @@ describe('Authentication Flow Tests', () => {
 
   it('should not be able to manually navigate to secured pages if not authenticated', () => {
     const securedRoutes = [
-      ROUTES.setupCompany.path,
-      ROUTES.setupBranch.path,
-      ROUTES.setupEmployee.path,
+      ROUTES.createCompany.path,
+      ROUTES.createBranch.path,
+      ROUTES.createEmployee.path,
       ROUTES.company.path,
       ROUTES.branches.path,
       ROUTES.newBranch.path,

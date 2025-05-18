@@ -3,14 +3,14 @@ import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import { createProfile, selectUser, selectProfile } from 'store/features';
 import { Employee } from 'shared/models';
-import { EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA } from 'shared/constants';
+import { EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import { deepCopyObject, mapProfileDTO, mapUserProfileToEmployee } from 'shared/helpers';
 import Form, { FormActionName } from 'components/UI/Form';
 
-const testModule = EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA.module;
-const testSubModule = EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA.subModule;
+const testModule = CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA.module;
+const testSubModule = CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA.subModule;
 
-const SetupEmployeePage: React.FC = () => {
+const CreateEmployeePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { data: user } = useAppSelector(selectUser);
   const { error, updateStatus } = useAppSelector(selectProfile);
@@ -21,7 +21,7 @@ const SetupEmployeePage: React.FC = () => {
 
   const actions = React.useMemo(
     () =>
-      EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA.actions.map((action) =>
+      CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA.actions.map((action) =>
         action.name === FormActionName.submit ? { ...action, loading: updateStatus === 'loading' } : action
       ),
     [updateStatus]
@@ -46,13 +46,13 @@ const SetupEmployeePage: React.FC = () => {
       errors={errors}
       onSubmit={handleSubmit}
     >
-      <Form.Header>{EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA.title}</Form.Header>
+      <Form.Header>{CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA.title}</Form.Header>
 
-      <Form.Content fields={EMPLOYEE_SETUP_DETAILS_FORM_SCHEMA.fields} />
+      <Form.Content fields={CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA.fields} />
 
       <Form.Actions actions={actions}></Form.Actions>
     </Form>
   );
 };
 
-export default SetupEmployeePage;
+export default CreateEmployeePage;

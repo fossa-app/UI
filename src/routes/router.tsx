@@ -15,17 +15,17 @@ import { createLazyComponent } from './lazy-loaded-component';
 // Lazy loaded pages
 const LoginPage = createLazyComponent(() => import('pages/Login'), { title: ROUTES.login.name });
 const CallbackPage = createLazyComponent(() => import('pages/Callback'), { title: ROUTES.callback.name });
-const SetupCompanyPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/SetupCompany'), {
+const CreateCompanyPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/CreateCompany'), {
   title: ROUTES.companyOnboarding.name,
 });
-const SetupBranchPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/SetupBranch'), {
-  title: ROUTES.setupBranch.name,
+const CreateBranchPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/CreateBranch'), {
+  title: ROUTES.createBranch.name,
 });
-const SetupCompanyLicensePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/SetupCompanyLicense'), {
-  title: ROUTES.setupCompanyLicense.name,
+const UploadCompanyLicensePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/UploadCompanyLicense'), {
+  title: ROUTES.uploadCompanyLicense.name,
 });
-const SetupEmployeePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Employee/SetupEmployee'), {
-  title: ROUTES.employeeOnbarding.name,
+const CreateEmployeePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Employee/CreateEmployee'), {
+  title: ROUTES.createEmployee.name,
 });
 const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
 const CompanyPage = createLazyComponent(() => import('pages/Manage/Company/Company'));
@@ -46,7 +46,7 @@ const ViewEmployeePage = createLazyComponent(() => import('pages/Manage/Employee
 const BranchPage = createLazyComponent(() => import('pages/Manage/Branch/Branch'));
 const BranchCatalogPage = createLazyComponent(() => import('pages/Manage/Branch/pages/BranchCatalog'), { title: ROUTES.branches.name });
 const ViewBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/ViewBranch'), { title: ROUTES.viewBranch.name });
-const CreateBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/ManageBranch'), {
+const NewBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/ManageBranch'), {
   title: ROUTES.newBranch.name,
   isAdminRoute: true,
 });
@@ -122,19 +122,19 @@ const router = createBrowserRouter(
                       children: [
                         {
                           index: true,
-                          element: <Navigate to={ROUTES.setupCompany.path} replace />,
+                          element: <Navigate to={ROUTES.createCompany.path} replace />,
                         },
                         {
-                          path: ROUTES.setupCompany.path,
-                          element: SetupCompanyPage,
+                          path: ROUTES.createCompany.path,
+                          element: CreateCompanyPage,
                         },
                         {
-                          path: ROUTES.setupCompanyLicense.path,
-                          element: SetupCompanyLicensePage,
+                          path: ROUTES.uploadCompanyLicense.path,
+                          element: UploadCompanyLicensePage,
                         },
                         {
-                          path: ROUTES.setupBranch.path,
-                          element: SetupBranchPage,
+                          path: ROUTES.createBranch.path,
+                          element: CreateBranchPage,
                         },
                       ],
                     },
@@ -144,11 +144,11 @@ const router = createBrowserRouter(
                       children: [
                         {
                           index: true,
-                          element: <Navigate to={ROUTES.setupEmployee.path} replace />,
+                          element: <Navigate to={ROUTES.createEmployee.path} replace />,
                         },
                         {
-                          path: ROUTES.setupEmployee.path,
-                          element: SetupEmployeePage,
+                          path: ROUTES.createEmployee.path,
+                          element: CreateEmployeePage,
                         },
                       ],
                     },
@@ -186,7 +186,7 @@ const router = createBrowserRouter(
                     },
                     {
                       path: ROUTES.newBranch.path,
-                      element: CreateBranchPage,
+                      element: NewBranchPage,
                     },
                     {
                       path: ROUTES.editBranch.path,
