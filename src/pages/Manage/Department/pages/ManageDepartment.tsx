@@ -11,14 +11,19 @@ import {
   resetDepartmentsFetchStatus,
   selectDepartment,
   editDepartment,
-  selectEmployees,
-  fetchEmployees,
-  selectDepartments,
-  fetchDepartments,
+  selectManagers,
+  fetchParentDepartments,
+  selectParentDepartments,
+  updateParentDepartmentsPagination,
+  resetParentDepartmentsFetchStatus,
+  fetchManagers,
+  updateManagersPagination,
+  resetManagersFetchStatus,
 } from 'store/features';
 import {
   APP_CONFIG,
   DEPARTMENT_DETAILS_FORM_DEFAULT_VALUES,
+  DEPARTMENT_FIELDS,
   DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA,
   MESSAGES,
   ROUTES,
@@ -40,16 +45,32 @@ const ManageDepartmentPage: React.FC = () => {
   const userRoles = useAppSelector(selectUserRoles);
   const { data: department, error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectDepartment);
   const {
-    data: departments,
-    page: departmentsPage = APP_CONFIG.table.defaultPagination,
-    fetchStatus: departmentsFetchStatus,
-  } = useAppSelector(selectDepartments);
+    data: parentDepartments,
+    fetchStatus: parentDepartmentsFetchStatus,
+    page: parentDepartmentsPage = APP_CONFIG.table.defaultPagination,
+  } = useAppSelector(selectParentDepartments);
   const {
-    data: employees,
-    fetchStatus: employeesFetchStatus,
-    page: employeesPage = APP_CONFIG.table.defaultPagination,
-  } = useAppSelector(selectEmployees);
+    data: managers,
+    fetchStatus: managersFetchStatus,
+    page: managersPage = APP_CONFIG.table.defaultPagination,
+  } = useAppSelector(selectManagers);
   const [formSubmitted, setFormSubmitted] = React.useState(false);
+  const parentDepartmentsLoading = parentDepartmentsFetchStatus === 'loading';
+  const managersLoading = managersFetchStatus === 'loading';
+
+  const handleParentDepartmentsScrollEnd = React.useCallback(() => {
+    if (parentDepartmentsPage.pageNumber! < parentDepartmentsPage.totalPages!) {
+      dispatch(updateParentDepartmentsPagination({ pageNumber: parentDepartmentsPage.pageNumber! + 1 }));
+      dispatch(resetParentDepartmentsFetchStatus());
+    }
+  }, [parentDepartmentsPage, dispatch]);
+
+  const handleManagersScrollEnd = React.useCallback(() => {
+    if (managersPage.pageNumber! < managersPage.totalPages!) {
+      dispatch(updateManagersPagination({ pageNumber: managersPage.pageNumber! + 1 }));
+      dispatch(resetManagersFetchStatus());
+    }
+  }, [managersPage, dispatch]);
 
   const errors = React.useMemo(() => {
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
@@ -57,10 +78,35 @@ const ManageDepartmentPage: React.FC = () => {
 
   const fields = React.useMemo(() => {
     const disabledFields = mapDisabledFields(DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, userRoles);
-    const mappedFields = mapDepartmentFieldOptionsToFieldOptions(disabledFields, departments?.items, employees?.items);
+    const mappedFields = mapDepartmentFieldOptionsToFieldOptions(disabledFields, parentDepartments?.items, managers?.items);
 
-    return mappedFields;
-  }, [userRoles, departments, employees]);
+    return mappedFields.map((field) => {
+      switch (field.name) {
+        case DEPARTMENT_FIELDS.parentDepartmentId.field:
+          return {
+            ...field,
+            loading: parentDepartmentsLoading,
+            onScrollEnd: handleParentDepartmentsScrollEnd,
+          };
+        case DEPARTMENT_FIELDS.managerId.field:
+          return {
+            ...field,
+            loading: managersLoading,
+            onScrollEnd: handleManagersScrollEnd,
+          };
+        default:
+          return field;
+      }
+    });
+  }, [
+    userRoles,
+    parentDepartments,
+    managers,
+    parentDepartmentsLoading,
+    managersLoading,
+    handleParentDepartmentsScrollEnd,
+    handleManagersScrollEnd,
+  ]);
 
   const handleCancel = React.useCallback(() => {
     dispatch(resetDepartment());
@@ -96,16 +142,16 @@ const ManageDepartmentPage: React.FC = () => {
   }, [id, dispatch]);
 
   React.useEffect(() => {
-    if (employeesFetchStatus === 'idle') {
-      dispatch(fetchEmployees([employeesPage, false]));
+    if (managersFetchStatus === 'idle') {
+      dispatch(fetchManagers(managersPage));
     }
-  }, [employeesFetchStatus, employeesPage, dispatch]);
+  }, [managersFetchStatus, managersPage, dispatch]);
 
   React.useEffect(() => {
-    if (departmentsFetchStatus === 'idle') {
-      dispatch(fetchDepartments([departmentsPage]));
+    if (parentDepartmentsFetchStatus === 'idle') {
+      dispatch(fetchParentDepartments(parentDepartmentsPage));
     }
-  }, [departmentsFetchStatus, departmentsPage, dispatch]);
+  }, [parentDepartmentsFetchStatus, parentDepartmentsPage, dispatch]);
 
   useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
 

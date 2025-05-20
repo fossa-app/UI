@@ -7,11 +7,13 @@ import {
   editEmployee,
   fetchEmployeeById,
   resetEmployeesFetchStatus,
-  selectSearchedBranches,
-  fetchSearchedBranches,
+  selectAssignedBranches,
   resetEmployee,
+  updateAssignedBranchesPagination,
+  resetAssignedBranchesFetchStatus,
+  fetchAssignedBranches,
 } from 'store/features';
-import { EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
+import { APP_CONFIG, EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
 import { Branch, Employee } from 'shared/models';
 import { deepCopyObject, mapBranchToFieldOption, mapEmployeeDTO } from 'shared/helpers';
 import { useOnFormSubmitEffect } from 'shared/hooks';
@@ -26,36 +28,33 @@ const EditEmployeePage: React.FC = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { data: employee, error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectEmployee);
-  const { data: branches, fetchStatus: searchedBranchesStatus } = useAppSelector(selectSearchedBranches);
+  const {
+    data: assignedBranches,
+    fetchStatus: assignedBranchesFetchStatus,
+    page: assignedBranchesPage = APP_CONFIG.table.defaultPagination,
+  } = useAppSelector(selectAssignedBranches);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
   const defaultValues: Employee = employee || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
 
+  const handleAssignedBranchesScrollEnd = React.useCallback(() => {
+    if (assignedBranchesPage.pageNumber! < assignedBranchesPage.totalPages!) {
+      dispatch(updateAssignedBranchesPagination({ pageNumber: assignedBranchesPage.pageNumber! + 1 }));
+      dispatch(resetAssignedBranchesFetchStatus());
+    }
+  }, [assignedBranchesPage, dispatch]);
+
   const branchItems = React.useMemo(() => {
-    const branchList = branches?.items || [];
+    const branchList = assignedBranches?.items || [];
     const isBranchOptionAvailable = branchList.some((branchItem) => String(branchItem.id) === String(employee?.assignedBranchId));
 
     return employee?.assignedBranchId && !isBranchOptionAvailable
       ? [...branchList, { id: employee.assignedBranchId, name: employee.assignedBranchName } as Branch]
       : branchList;
-  }, [branches?.items, employee?.assignedBranchId, employee?.assignedBranchName]);
+  }, [assignedBranches?.items, employee?.assignedBranchId, employee?.assignedBranchName]);
 
   const errors = React.useMemo(() => {
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
   }, [error?.errors]);
-
-  const handleBranchSearch = React.useCallback(
-    (_: unknown, search: string) => {
-      const isBranchOptionAvailable =
-        branchItems.some((branchItem) => String(branchItem.id) === String(employee?.assignedBranchId)) &&
-        branchItems.some((branchItem) => branchItem.name.toLowerCase().includes(search.toLowerCase()));
-
-      if (search && !isBranchOptionAvailable) {
-        // TODO: load lazy and paginated
-        dispatch(fetchSearchedBranches({ search, pageNumber: 1, pageSize: 100 }));
-      }
-    },
-    [branchItems, employee?.assignedBranchId, dispatch]
-  );
 
   const handleCancel = React.useCallback(() => {
     dispatch(resetEmployee());
@@ -73,13 +72,13 @@ const EditEmployeePage: React.FC = () => {
         field.name === EMPLOYEE_FIELDS.assignedBranchId?.field
           ? {
               ...field,
-              loading: searchedBranchesStatus === 'loading',
-              options: branchItems.map(mapBranchToFieldOption),
-              onInputChange: handleBranchSearch,
+              loading: assignedBranchesFetchStatus === 'loading',
+              options: branchItems.map(mapBranchToFieldOption) || [],
+              onScrollEnd: handleAssignedBranchesScrollEnd,
             }
           : field
       ),
-    [branchItems, searchedBranchesStatus, handleBranchSearch]
+    [branchItems, assignedBranchesFetchStatus, handleAssignedBranchesScrollEnd]
   );
 
   const actions = React.useMemo(
@@ -96,6 +95,12 @@ const EditEmployeePage: React.FC = () => {
       }),
     [updateStatus, handleCancel]
   );
+
+  React.useEffect(() => {
+    if (assignedBranchesFetchStatus === 'idle') {
+      dispatch(fetchAssignedBranches(assignedBranchesPage));
+    }
+  }, [assignedBranchesFetchStatus, assignedBranchesPage, dispatch]);
 
   React.useEffect(() => {
     if (id) {

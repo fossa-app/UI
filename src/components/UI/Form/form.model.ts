@@ -81,6 +81,7 @@ export type AutocompleteFieldProps = BaseFormFieldProps & {
   options: FieldOption[];
   loading?: boolean;
   onInputChange?: (event: React.SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => void;
+  onScrollEnd?: () => void;
 } & Omit<AutocompleteProps<FieldOption, boolean | undefined, boolean | undefined, boolean | undefined>, 'renderInput'>;
 
 export type SelectFieldProps = BaseFormFieldProps & {

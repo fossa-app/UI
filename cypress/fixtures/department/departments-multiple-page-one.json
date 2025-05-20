@@ -1,0 +1,68 @@
+{
+  "pageNumber": 1,
+  "pageSize": 10,
+  "items": [
+    {
+      "id": 444444444444,
+      "name": "Production",
+      "parentDepartmentId": null,
+      "managerId": 333333333335
+    },
+    {
+      "id": 444444444445,
+      "name": "Line Production",
+      "parentDepartmentId": 444444444444,
+      "managerId": 333333333335
+    },
+    {
+      "id": 444444444446,
+      "name": "Unit Production",
+      "parentDepartmentId": 444444444444,
+      "managerId": 333333333334
+    },
+    {
+      "id": 444444444447,
+      "name": "Costume",
+      "parentDepartmentId": null,
+      "managerId": 333333333333
+    },
+    {
+      "id": 444444444448,
+      "name": "Set Design",
+      "parentDepartmentId": null,
+      "managerId": 333333333334
+    },
+    {
+      "id": 444444444449,
+      "name": "Art Direction",
+      "parentDepartmentId": 444444444448,
+      "managerId": 333333333335
+    },
+    {
+      "id": 444444444450,
+      "name": "Lighting",
+      "parentDepartmentId": null,
+      "managerId": 333333333333
+    },
+    {
+      "id": 444444444451,
+      "name": "Sound",
+      "parentDepartmentId": null,
+      "managerId": 333333333334
+    },
+    {
+      "id": 444444444452,
+      "name": "Editing",
+      "parentDepartmentId": null,
+      "managerId": 333333333335
+    },
+    {
+      "id": 444444444453,
+      "name": "Casting",
+      "parentDepartmentId": null,
+      "managerId": 333333333333
+    }
+  ],
+  "totalItems": 12,
+  "totalPages": 2
+}

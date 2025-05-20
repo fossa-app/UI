@@ -19,6 +19,7 @@ interface BranchState {
   branch: StateEntity<Branch | undefined>;
   branches: StateEntity<PaginatedResponse<Branch> | undefined>;
   searchedBranches: StateEntity<PaginatedResponse<Branch> | undefined>;
+  assignedBranches: StateEntity<PaginatedResponse<BranchDTO> | undefined>;
 }
 
 const initialState: BranchState = {
@@ -34,6 +35,11 @@ const initialState: BranchState = {
     fetchStatus: 'idle',
   },
   searchedBranches: {
+    data: undefined,
+    page: APP_CONFIG.table.defaultPagination,
+    fetchStatus: 'idle',
+  },
+  assignedBranches: {
     data: undefined,
     page: APP_CONFIG.table.defaultPagination,
     fetchStatus: 'idle',
@@ -78,6 +84,24 @@ export const fetchSearchedBranches = createAsyncThunk<
   Partial<PaginationParams>,
   { rejectValue: ErrorResponseDTO }
 >('branch/fetchSearchedBranches', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
+  try {
+    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
+    const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?${queryParams}`);
+
+    return data;
+  } catch (error) {
+    return rejectWithValue({
+      ...(error as ErrorResponseDTO),
+      title: MESSAGES.error.branches.notFound,
+    });
+  }
+});
+
+export const fetchAssignedBranches = createAsyncThunk<
+  PaginatedResponse<BranchDTO> | undefined,
+  Partial<PaginationParams>,
+  { state: RootState; rejectValue: ErrorResponseDTO }
+>('branch/fetchAssignedBranches', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
   try {
     const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
     const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?${queryParams}`);
@@ -239,14 +263,20 @@ const branchSlice = createSlice({
   name: 'branch',
   initialState,
   reducers: {
-    setBranchesPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
+    updateBranchesPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
       state.branches.page = { ...state.branches.page, ...action.payload };
     },
     resetBranchesPagination(state) {
       state.branches.page = initialState.branches.page;
     },
+    updateAssignedBranchesPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
+      state.assignedBranches.page = { ...state.assignedBranches.page, ...action.payload };
+    },
     resetBranchesFetchStatus(state) {
       state.branches.fetchStatus = initialState.branches.fetchStatus;
+    },
+    resetAssignedBranchesFetchStatus(state) {
+      state.assignedBranches.fetchStatus = initialState.assignedBranches.fetchStatus;
     },
     resetBranch(state) {
       state.branch = initialState.branch as WritableDraft<StateEntity<Branch>>;
@@ -283,6 +313,27 @@ const branchSlice = createSlice({
         state.searchedBranches.page!.totalPages = action.payload?.totalPages;
         state.searchedBranches.fetchStatus = 'succeeded';
         state.searchedBranches.error = undefined;
+      })
+
+      .addCase(fetchAssignedBranches.pending, (state) => {
+        state.assignedBranches.fetchStatus = 'loading';
+      })
+      .addCase(fetchAssignedBranches.fulfilled, (state, action) => {
+        state.assignedBranches.page!.totalItems = action.payload?.totalItems;
+        state.assignedBranches.page!.totalPages = action.payload?.totalPages;
+        state.assignedBranches.page!.pageNumber = action.payload?.pageNumber;
+        state.assignedBranches.fetchStatus = 'succeeded';
+
+        const existingItems = state.assignedBranches.data?.items || [];
+        const newItems = action.payload?.items.filter((item) => !existingItems.some(({ id }) => id === item.id)) || [];
+
+        state.assignedBranches.data = {
+          ...action.payload,
+          items: [...existingItems, ...newItems],
+        };
+      })
+      .addCase(fetchAssignedBranches.rejected, (state) => {
+        state.assignedBranches.fetchStatus = 'failed';
       })
       .addCase(fetchBranchById.pending, (state, action) => {
         if (action.meta.arg.skipState) {
@@ -348,7 +399,15 @@ const branchSlice = createSlice({
 export const selectBranch = (state: RootState) => state.branch.branch;
 export const selectBranches = (state: RootState) => state.branch.branches;
 export const selectSearchedBranches = (state: RootState) => state.branch.searchedBranches;
+export const selectAssignedBranches = (state: RootState) => state.branch.assignedBranches;
 
-export const { setBranchesPagination, resetBranchesPagination, resetBranch, resetBranchesFetchStatus } = branchSlice.actions;
+export const {
+  updateBranchesPagination,
+  resetBranchesPagination,
+  updateAssignedBranchesPagination,
+  resetAssignedBranchesFetchStatus,
+  resetBranch,
+  resetBranchesFetchStatus,
+} = branchSlice.actions;
 
 export default branchSlice.reducer;

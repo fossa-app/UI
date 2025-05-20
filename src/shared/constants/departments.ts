@@ -60,7 +60,7 @@ export const DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Department> = 
       roles: [UserRole.administrator],
     },
     {
-      type: FormFieldType.select,
+      type: FormFieldType.autocomplete,
       name: DEPARTMENT_FIELDS.parentDepartmentId.field,
       label: 'Select Parent Department',
       grid: { size: { xs: 12, md: 6 } },
@@ -68,7 +68,7 @@ export const DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Department> = 
       roles: [UserRole.administrator],
     },
     {
-      type: FormFieldType.select,
+      type: FormFieldType.autocomplete,
       name: DEPARTMENT_FIELDS.managerId.field,
       label: 'Select Manager',
       grid: { size: { xs: 12, md: 6 } },

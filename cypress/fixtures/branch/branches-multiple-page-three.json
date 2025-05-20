@@ -1,0 +1,36 @@
+{
+  "pageNumber": 3,
+  "pageSize": 10,
+  "items": [
+    {
+      "id": 222222222242,
+      "companyId": 111111111111,
+      "name": "Boston Branch",
+      "timeZoneId": "America/New_York",
+      "address": {
+        "line1": "500 Boylston St",
+        "line2": "",
+        "city": "Boston",
+        "subdivision": "MA",
+        "postalCode": "02116",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222243,
+      "companyId": 111111111111,
+      "name": "Detroit Branch",
+      "timeZoneId": "America/Chicago",
+      "address": {
+        "line1": "600 Woodward Ave",
+        "line2": "",
+        "city": "Detroit",
+        "subdivision": "MI",
+        "postalCode": "48226",
+        "countryCode": "US"
+      }
+    }
+  ],
+  "totalItems": 22,
+  "totalPages": 3
+}

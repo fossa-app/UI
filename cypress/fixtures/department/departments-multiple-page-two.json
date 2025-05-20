@@ -1,0 +1,20 @@
+{
+  "pageNumber": 2,
+  "pageSize": 10,
+  "items": [
+    {
+      "id": 444444444454,
+      "name": "Makeup",
+      "parentDepartmentId": 444444444447,
+      "managerId": 333333333334
+    },
+        {
+      "id": 444444444455,
+      "name": "Visual Effects",
+      "parentDepartmentId": 444444444447,
+      "managerId": 333333333334
+    }
+  ],
+  "totalItems": 12,
+  "totalPages": 2
+}
