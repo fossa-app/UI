@@ -8,10 +8,10 @@
       "parentDepartmentId": 444444444447,
       "managerId": 333333333334
     },
-        {
+    {
       "id": 444444444455,
       "name": "Visual Effects",
-      "parentDepartmentId": 444444444447,
+      "parentDepartmentId": null,
       "managerId": 333333333334
     }
   ],

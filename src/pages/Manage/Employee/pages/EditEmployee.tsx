@@ -48,7 +48,7 @@ const EditEmployeePage: React.FC = () => {
     const isBranchOptionAvailable = branchList.some((branchItem) => String(branchItem.id) === String(employee?.assignedBranchId));
 
     return employee?.assignedBranchId && !isBranchOptionAvailable
-      ? [...branchList, { id: employee.assignedBranchId, name: employee.assignedBranchName } as Branch]
+      ? [{ id: employee.assignedBranchId, name: employee.assignedBranchName } as Branch, ...branchList]
       : branchList;
   }, [assignedBranches?.items, employee?.assignedBranchId, employee?.assignedBranchName]);
 

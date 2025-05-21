@@ -1,0 +1,16 @@
+{
+  "pageNumber": 1,
+  "pageSize": 5,
+  "items": [
+    {
+      "id": 333333333335,
+      "companyId": 111111111111,
+      "firstName": "Anthony",
+      "lastName": "Crowley",
+      "fullName": "Anthony User Crowley",
+      "assignedBranchId": 222222222241
+    }
+  ],
+  "totalItems": 1,
+  "totalPages": 1
+}
