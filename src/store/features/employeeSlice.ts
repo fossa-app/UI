@@ -27,11 +27,17 @@ import { fetchBranchById, fetchBranchesByIds } from './branchSlice';
 
 interface EmployeeState {
   employees: StateEntity<PaginatedResponse<Employee> | undefined>;
+  managers: StateEntity<PaginatedResponse<EmployeeDTO> | undefined>;
   employee: StateEntity<Employee | undefined>;
 }
 
 const initialState: EmployeeState = {
   employees: {
+    data: undefined,
+    page: APP_CONFIG.table.defaultPagination,
+    fetchStatus: 'idle',
+  },
+  managers: {
     data: undefined,
     page: APP_CONFIG.table.defaultPagination,
     fetchStatus: 'idle',
@@ -65,6 +71,24 @@ export const fetchEmployees = createAsyncThunk<
         items: mapEmployees(data.items, branches?.items),
       };
     }
+  } catch (error) {
+    return rejectWithValue({
+      ...(error as ErrorResponseDTO),
+      title: MESSAGES.error.employee.notFound,
+    });
+  }
+});
+
+export const fetchManagers = createAsyncThunk<
+  PaginatedResponse<EmployeeDTO> | undefined,
+  Partial<PaginationParams>,
+  { state: RootState; rejectValue: ErrorResponseDTO }
+>('employee/fetchManagers', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
+  try {
+    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
+    const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
+
+    return data;
   } catch (error) {
     return rejectWithValue({
       ...(error as ErrorResponseDTO),
@@ -137,14 +161,20 @@ const employeeSlice = createSlice({
   name: 'employee',
   initialState,
   reducers: {
-    setEmployeesPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
+    updateEmployeesPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
       state.employees.page = { ...state.employees.page, ...action.payload };
     },
     resetEmployeesPagination(state) {
       state.employees.page = initialState.employees.page;
     },
+    updateManagersPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
+      state.managers.page = { ...state.managers.page, ...action.payload };
+    },
     resetEmployeesFetchStatus(state) {
       state.employees.fetchStatus = initialState.employees.fetchStatus;
+    },
+    resetManagersFetchStatus(state) {
+      state.managers.fetchStatus = initialState.managers.fetchStatus;
     },
     resetEmployee(state) {
       state.employee = initialState.employee as WritableDraft<StateEntity<Employee>>;
@@ -165,6 +195,26 @@ const employeeSlice = createSlice({
         state.employees.page!.totalItems = action.payload?.totalItems;
         state.employees.page!.totalPages = action.payload?.totalPages;
         state.employees.fetchStatus = 'succeeded';
+      })
+      .addCase(fetchManagers.pending, (state) => {
+        state.managers.fetchStatus = 'loading';
+      })
+      .addCase(fetchManagers.fulfilled, (state, action) => {
+        state.managers.page!.totalItems = action.payload?.totalItems;
+        state.managers.page!.totalPages = action.payload?.totalPages;
+        state.managers.page!.pageNumber = action.payload?.pageNumber;
+        state.managers.fetchStatus = 'succeeded';
+
+        const existingItems = state.managers.data?.items || [];
+        const newItems = action.payload?.items.filter((item) => !existingItems.some(({ id }) => id === item.id)) || [];
+
+        state.managers.data = {
+          ...action.payload,
+          items: [...existingItems, ...newItems],
+        };
+      })
+      .addCase(fetchManagers.rejected, (state) => {
+        state.managers.fetchStatus = 'failed';
       })
       .addCase(fetchEmployeeById.pending, (state, action) => {
         if (action.meta.arg.skipState) {
@@ -205,8 +255,16 @@ const employeeSlice = createSlice({
 });
 
 export const selectEmployees = (state: RootState) => state.employee.employees;
+export const selectManagers = (state: RootState) => state.employee.managers;
 export const selectEmployee = (state: RootState) => state.employee.employee;
 
-export const { setEmployeesPagination, resetEmployeesPagination, resetEmployeesFetchStatus, resetEmployee } = employeeSlice.actions;
+export const {
+  updateEmployeesPagination,
+  resetEmployeesPagination,
+  updateManagersPagination,
+  resetEmployeesFetchStatus,
+  resetManagersFetchStatus,
+  resetEmployee,
+} = employeeSlice.actions;
 
 export default employeeSlice.reducer;

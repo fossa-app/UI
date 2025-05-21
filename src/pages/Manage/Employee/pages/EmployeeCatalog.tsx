@@ -7,7 +7,7 @@ import {
   resetEmployeesPagination,
   selectEmployees,
   selectUserRoles,
-  setEmployeesPagination,
+  updateEmployeesPagination,
 } from 'store/features';
 import { Employee, Module, PaginationParams, SubModule } from 'shared/models';
 import { ACTION_FIELDS, APP_CONFIG, EMPLOYEE_FIELDS, EMPLOYEE_TABLE_ACTIONS_SCHEMA, EMPLOYEE_TABLE_SCHEMA, ROUTES } from 'shared/constants';
@@ -49,7 +49,7 @@ const EmployeeCatalogPage: React.FC = () => {
   const handlePageChange = React.useCallback(
     (pagination: Partial<PaginationParams>) => {
       dispatch(resetEmployeesFetchStatus());
-      dispatch(setEmployeesPagination(pagination));
+      dispatch(updateEmployeesPagination(pagination));
     },
     [dispatch]
   );

@@ -10,16 +10,34 @@ import { APP_CONFIG } from 'shared/constants';
 import { AutocompleteFieldProps, FieldOption } from '../form.model';
 import { useFormContext } from '../FormContext';
 
-const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ label, name, options, loading, onInputChange, ...props }) => {
+const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ label, name, options, loading, onInputChange, onScrollEnd, ...props }) => {
   const {
     formState: { errors },
     control,
   } = reactHookFormContext();
   const { module, subModule } = useFormContext();
   const error = get(errors, name) as FieldError;
+  const listboxRef = React.useRef<HTMLElement | null>(null);
+  const hasReachedEnd = React.useRef(false);
 
   const getValue = (field: ControllerRenderProps<FieldValues, string>) => {
     return options.find((option) => option.value === String(field.value)) || null;
+  };
+
+  const handleScroll = () => {
+    if (!listboxRef.current || !onScrollEnd) {
+      return;
+    }
+
+    const { scrollTop, scrollHeight, clientHeight } = listboxRef.current;
+    const isAtBottom = scrollHeight - scrollTop <= clientHeight + 10;
+
+    if (isAtBottom && !hasReachedEnd.current) {
+      hasReachedEnd.current = true;
+      onScrollEnd();
+    } else if (!isAtBottom && hasReachedEnd.current) {
+      hasReachedEnd.current = false;
+    }
   };
 
   const debouncedOnInputChange = React.useMemo(
@@ -51,6 +69,21 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ label, name, opti
             }}
             onInputChange={(event, newValue, reason) => {
               debouncedOnInputChange(event, newValue, reason);
+            }}
+            slotProps={{
+              listbox: {
+                ref: (node: HTMLElement | null) => {
+                  if (listboxRef.current && listboxRef.current !== node) {
+                    listboxRef.current.removeEventListener('scroll', handleScroll);
+                  }
+
+                  listboxRef.current = node;
+
+                  if (node) {
+                    node.addEventListener('scroll', handleScroll, { passive: true });
+                  }
+                },
+              },
             }}
             renderInput={(params) => (
               <TextField

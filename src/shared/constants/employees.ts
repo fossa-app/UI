@@ -246,7 +246,7 @@ export const EMPLOYEE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
     {
       type: FormFieldType.autocomplete,
       name: EMPLOYEE_FIELDS.assignedBranchId!.field,
-      label: 'Search Branch',
+      label: 'Select Branch',
       grid: { size: { xs: 12, md: 6 } },
       options: [],
       roles: [UserRole.administrator],

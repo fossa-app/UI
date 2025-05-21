@@ -8,7 +8,7 @@ import {
   selectDepartment,
   selectDepartments,
   selectUserRoles,
-  setDepartmentsPagination,
+  updateDepartmentsPagination,
   resetDepartmentsPagination,
 } from 'store/features';
 import { Department, Module, PaginationParams, SubModule, UserRole } from 'shared/models';
@@ -58,7 +58,7 @@ const DepartmentCatalogPage: React.FC = () => {
           break;
         case 'delete':
           if (page.pageNumber! > 1 && departments?.items.length === 1) {
-            dispatch(setDepartmentsPagination({ pageNumber: page.pageNumber! - 1 }));
+            dispatch(updateDepartmentsPagination({ pageNumber: page.pageNumber! - 1 }));
           }
           dispatch(deleteDepartment(department.id));
           break;
@@ -70,7 +70,7 @@ const DepartmentCatalogPage: React.FC = () => {
   const handlePageChange = React.useCallback(
     (pagination: Partial<PaginationParams>) => {
       dispatch(resetDepartmentsFetchStatus());
-      dispatch(setDepartmentsPagination(pagination));
+      dispatch(updateDepartmentsPagination(pagination));
     },
     [dispatch]
   );

@@ -45,8 +45,8 @@ const testDepartmentEmptyInputFields = () => {
 const testDepartmentInputFields = () => {
   verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
     'form-field-name': 'Line Production',
-    'form-field-parentDepartmentId': '444444444444',
-    'form-field-managerId': '333333333335',
+    'form-field-parentDepartmentId': 'Production',
+    'form-field-managerId': 'Anthony',
   });
 };
 
@@ -242,7 +242,7 @@ describe('Department Management Tests', () => {
     verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
       'form-field-name': 'Production',
       'form-field-parentDepartmentId': '',
-      'form-field-managerId': '333333333335',
+      'form-field-managerId': 'Anthony',
     });
   });
 
@@ -438,7 +438,7 @@ describe('Department Management Tests', () => {
     verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
       'form-field-name': 'Costume',
       'form-field-parentDepartmentId': '',
-      'form-field-managerId': '333333333333',
+      'form-field-managerId': 'Gabriel',
     });
 
     // TODO: flaky test, waiting solves the issue
@@ -482,7 +482,7 @@ describe('Department Management Tests', () => {
     verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
       'form-field-name': 'Costume',
       'form-field-parentDepartmentId': '',
-      'form-field-managerId': '333333333333',
+      'form-field-managerId': 'Gabriel',
     });
   });
 
@@ -521,5 +521,50 @@ describe('Department Management Tests', () => {
 
     getLinearLoader(Module.departmentManagement, SubModule.departmentDetails, 'form').should('not.exist');
     cy.wait('@fetchDepartmentByIdQuickRequest');
+  });
+
+  it('should fetch and display parent departments when scrolling down the parent department field', () => {
+    interceptFetchEmployeesRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchEmployeeByIdRequest('333333333335');
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchDepartmentByIdRequest('444444444444');
+    cy.visit(`${ROUTES.departments.path}/edit/444444444444`);
+    interceptFetchDepartmentsRequest(
+      { pageNumber: 1, pageSize: 10 },
+      { alias: 'fetchParentDepartmentsRequestPage1', fixture: 'department/departments-multiple-page-one' }
+    );
+    cy.visit(`${ROUTES.departments.path}/edit/444444444444`);
+
+    cy.wait('@fetchDepartmentByIdRequest');
+    cy.wait('@fetchParentDepartmentsRequestPage1').its('request.url').should('include', 'Departments?pageNumber=1&pageSize=10');
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-parentDepartmentId').click();
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-parentDepartmentId-option', true).should(
+      'have.length',
+      10
+    );
+
+    interceptFetchDepartmentsRequest(
+      { pageNumber: 2, pageSize: 10 },
+      { alias: 'fetchParentDepartmentsRequestPage2', fixture: 'department/departments-multiple-page-two' }
+    );
+
+    cy.get('[role="listbox"]').should('exist');
+    cy.get('[role="listbox"]').scrollTo('bottom');
+
+    cy.wait('@fetchParentDepartmentsRequestPage2').its('request.url').should('include', 'Departments?pageNumber=2&pageSize=10');
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-parentDepartmentId-option', true).should(
+      'have.length',
+      12
+    );
+
+    cy.intercept('GET', '**/Departments?pageNumber=3&pageSize=10').as('fetchParentDepartmentsRequestPage3');
+
+    cy.get('[role="listbox"]').scrollTo('bottom');
+
+    cy.get('@fetchParentDepartmentsRequestPage3.all').should('have.length', 0);
   });
 });

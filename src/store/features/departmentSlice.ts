@@ -29,6 +29,7 @@ interface DepartmentState {
   department: StateEntity<Department | undefined>;
   departments: StateEntity<PaginatedResponse<Department> | undefined>;
   searchedDepartments: StateEntity<PaginatedResponse<Department> | undefined>;
+  parentDepartments: StateEntity<PaginatedResponse<DepartmentDTO> | undefined>;
 }
 
 const initialState: DepartmentState = {
@@ -44,6 +45,11 @@ const initialState: DepartmentState = {
     fetchStatus: 'idle',
   },
   searchedDepartments: {
+    data: undefined,
+    page: APP_CONFIG.table.defaultPagination,
+    fetchStatus: 'idle',
+  },
+  parentDepartments: {
     data: undefined,
     page: APP_CONFIG.table.defaultPagination,
     fetchStatus: 'idle',
@@ -117,6 +123,24 @@ export const fetchSearchedDepartments = createAsyncThunk<
   Partial<PaginationParams>,
   { rejectValue: ErrorResponseDTO }
 >('department/fetchSearchedDepartments', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
+  try {
+    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
+    const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
+
+    return data;
+  } catch (error) {
+    return rejectWithValue({
+      ...(error as ErrorResponseDTO),
+      title: MESSAGES.error.departments.notFound,
+    });
+  }
+});
+
+export const fetchParentDepartments = createAsyncThunk<
+  PaginatedResponse<DepartmentDTO> | undefined,
+  Partial<PaginationParams>,
+  { state: RootState; rejectValue: ErrorResponseDTO }
+>('department/fetchParentDepartments', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
   try {
     const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
     const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
@@ -228,14 +252,20 @@ const departmentSlice = createSlice({
   name: 'department',
   initialState,
   reducers: {
-    setDepartmentsPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
+    updateDepartmentsPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
       state.departments.page = { ...state.departments.page, ...action.payload };
     },
     resetDepartmentsPagination(state) {
       state.departments.page = initialState.departments.page;
     },
+    updateParentDepartmentsPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
+      state.parentDepartments.page = { ...state.parentDepartments.page, ...action.payload };
+    },
     resetDepartmentsFetchStatus(state) {
       state.departments.fetchStatus = initialState.departments.fetchStatus;
+    },
+    resetParentDepartmentsFetchStatus(state) {
+      state.parentDepartments.fetchStatus = initialState.parentDepartments.fetchStatus;
     },
     resetDepartment(state) {
       state.department = initialState.department as WritableDraft<StateEntity<Department>>;
@@ -272,6 +302,26 @@ const departmentSlice = createSlice({
         state.searchedDepartments.page!.totalPages = action.payload?.totalPages;
         state.searchedDepartments.fetchStatus = 'succeeded';
         state.searchedDepartments.error = undefined;
+      })
+      .addCase(fetchParentDepartments.pending, (state) => {
+        state.parentDepartments.fetchStatus = 'loading';
+      })
+      .addCase(fetchParentDepartments.fulfilled, (state, action) => {
+        state.parentDepartments.page!.totalItems = action.payload?.totalItems;
+        state.parentDepartments.page!.totalPages = action.payload?.totalPages;
+        state.parentDepartments.page!.pageNumber = action.payload?.pageNumber;
+        state.parentDepartments.fetchStatus = 'succeeded';
+
+        const existingItems = state.parentDepartments.data?.items || [];
+        const newItems = action.payload?.items.filter((item) => !existingItems.some(({ id }) => id === item.id)) || [];
+
+        state.parentDepartments.data = {
+          ...action.payload,
+          items: [...existingItems, ...newItems],
+        };
+      })
+      .addCase(fetchParentDepartments.rejected, (state) => {
+        state.parentDepartments.fetchStatus = 'failed';
       })
       .addCase(fetchDepartmentById.pending, (state, action) => {
         if (action.meta.arg.skipState) {
@@ -337,8 +387,15 @@ const departmentSlice = createSlice({
 export const selectDepartment = (state: RootState) => state.department.department;
 export const selectDepartments = (state: RootState) => state.department.departments;
 export const selectSearchedDepartments = (state: RootState) => state.department.searchedDepartments;
+export const selectParentDepartments = (state: RootState) => state.department.parentDepartments;
 
-export const { setDepartmentsPagination, resetDepartmentsPagination, resetDepartmentsFetchStatus, resetDepartment } =
-  departmentSlice.actions;
+export const {
+  updateDepartmentsPagination,
+  resetDepartmentsPagination,
+  updateParentDepartmentsPagination,
+  resetDepartmentsFetchStatus,
+  resetParentDepartmentsFetchStatus,
+  resetDepartment,
+} = departmentSlice.actions;
 
 export default departmentSlice.reducer;

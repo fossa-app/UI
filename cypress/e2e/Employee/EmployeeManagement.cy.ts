@@ -159,8 +159,8 @@ describe('Employee Management Tests', () => {
       interceptFetchBranchByIdRequest('222222222222');
       interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 100, search: '*' },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
+        { pageNumber: 1, pageSize: 10 },
+        { alias: 'fetchAssignedBranchesRequest', fixture: 'branch/branches-multiple' }
       );
       cy.visit(ROUTES.employees.path);
 
@@ -168,17 +168,11 @@ describe('Employee Management Tests', () => {
 
       cy.url().should('include', `${ROUTES.employees.path}/edit/333333333335`);
 
-      cy.wait('@fetchEmployeeByIdRequest');
-      cy.wait('@fetchBranchByIdRequest');
+      cy.wait(['@fetchEmployeeByIdRequest', '@fetchBranchByIdRequest', '@fetchAssignedBranchesRequest']);
 
       testEmployeeFormFields();
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId').click();
-      cy.get('.MuiAutocomplete-clearIndicator').click();
-      cy.focused().type('Hawaii');
-
-      cy.wait('@fetchMultipleBranchesRequest');
-
       getTestSelectorByModule(
         Module.employeeManagement,
         SubModule.employeeDetails,
@@ -257,20 +251,14 @@ describe('Employee Management Tests', () => {
       interceptEditEmployeeFailedWithErrorRequest('333333333335');
       interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 100, search: '*' },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple-updated' }
+        { pageNumber: 1, pageSize: 10 },
+        { alias: 'fetchAssignedBranchesRequest', fixture: 'branch/branches-multiple' }
       );
       cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
-      cy.wait('@fetchEmployeeByIdRequest');
-      cy.wait('@fetchBranchByIdRequest');
+      cy.wait(['@fetchEmployeeByIdRequest', '@fetchBranchByIdRequest', '@fetchAssignedBranchesRequest']);
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId').click();
-      cy.get('.MuiAutocomplete-clearIndicator').click();
-      cy.focused().type('Anchorage Branch');
-
-      cy.wait('@fetchMultipleBranchesRequest');
-
       getTestSelectorByModule(
         Module.employeeManagement,
         SubModule.employeeDetails,
@@ -298,8 +286,8 @@ describe('Employee Management Tests', () => {
       interceptEditEmployeeRequest('333333333335');
       interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 100, search: '*' },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
+        { pageNumber: 1, pageSize: 10 },
+        { alias: 'fetchAssignedBranchesRequest', fixture: 'branch/branches-multiple' }
       );
       cy.visit(ROUTES.employees.path);
 
@@ -320,15 +308,9 @@ describe('Employee Management Tests', () => {
 
       selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'edit', '333333333335');
 
-      cy.wait('@fetchEmployeeByIdRequest');
-      cy.wait('@fetchBranchByIdRequest');
+      cy.wait(['@fetchEmployeeByIdRequest', '@fetchBranchByIdRequest', '@fetchAssignedBranchesRequest']);
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId').click();
-      cy.get('.MuiAutocomplete-clearIndicator').click();
-      cy.focused().type('Hawaii');
-
-      cy.wait('@fetchMultipleBranchesRequest');
-
       getTestSelectorByModule(
         Module.employeeManagement,
         SubModule.employeeDetails,
@@ -401,56 +383,59 @@ describe('Employee Management Tests', () => {
       testEmployeeFormFields();
     });
 
-    it('should search and display correct branches', () => {
+    it('should fetch and display assigned branches when scrolling down the assigned branch field', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
-      interceptEditEmployeeRequest('333333333335');
       interceptFetchBranchesRequest(
-        { pageNumber: 1, pageSize: 100, search: '*' },
-        { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
+        { pageNumber: 1, pageSize: 10 },
+        { alias: 'fetchAssignedBranchesRequestPage1', fixture: 'branch/branches-multiple-page-one' }
       );
       cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
-      cy.wait('@fetchEmployeeByIdRequest');
-      cy.wait('@fetchBranchByIdRequest');
+      cy.wait(['@fetchEmployeeByIdRequest', '@fetchBranchByIdRequest']);
+      cy.wait('@fetchAssignedBranchesRequestPage1').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
 
-      verifyInputFields(Module.employeeManagement, SubModule.employeeDetails, {
-        'form-field-assignedBranchId-input': 'New York Branch',
-      });
-
-      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId').click();
-      cy.get('.MuiAutocomplete-clearIndicator').click();
-
-      verifyInputFields(Module.employeeManagement, SubModule.employeeDetails, {
-        'form-field-assignedBranchId-input': '',
-      });
-
-      cy.focused().type('Hawaii');
-
-      cy.wait('@fetchMultipleBranchesRequest');
-
-      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId-option', true).should(
-        'have.length',
-        1
-      );
-
-      getTestSelectorByModule(
-        Module.employeeManagement,
-        SubModule.employeeDetails,
-        'form-field-assignedBranchId-option-222222222223'
-      ).click();
-
-      verifyInputFields(Module.employeeManagement, SubModule.employeeDetails, {
-        'form-field-assignedBranchId-input': 'Hawaii Branch',
-      });
-
-      cy.get('.MuiAutocomplete-clearIndicator').click();
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId').click();
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId-option', true).should(
         'have.length',
-        2
+        10
       );
+
+      interceptFetchBranchesRequest(
+        { pageNumber: 2, pageSize: 10 },
+        { alias: 'fetchAssignedBranchesRequestPage2', fixture: 'branch/branches-multiple-page-two' }
+      );
+
+      cy.get('[role="listbox"]').should('exist');
+      cy.get('[role="listbox"]').scrollTo('bottom');
+
+      cy.wait('@fetchAssignedBranchesRequestPage2').its('request.url').should('include', 'Branches?pageNumber=2&pageSize=10');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId-option', true).should(
+        'have.length',
+        20
+      );
+
+      interceptFetchBranchesRequest(
+        { pageNumber: 3, pageSize: 10 },
+        { alias: 'fetchAssignedBranchesRequestPage3', fixture: 'branch/branches-multiple-page-three' }
+      );
+
+      cy.get('[role="listbox"]').scrollTo('bottom');
+
+      cy.wait('@fetchAssignedBranchesRequestPage3').its('request.url').should('include', 'Branches?pageNumber=3&pageSize=10');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId-option', true).should(
+        'have.length',
+        22
+      );
+
+      cy.intercept('GET', '**/Branches?pageNumber=4&pageSize=10').as('fetchAssignedBranchesRequestPage4');
+
+      cy.get('[role="listbox"]').scrollTo('bottom');
+
+      cy.get('@fetchAssignedBranchesRequestPage4.all').should('have.length', 0);
     });
   });
 });

@@ -9,7 +9,7 @@ import {
   selectBranch,
   selectBranches,
   selectUserRoles,
-  setBranchesPagination,
+  updateBranchesPagination,
 } from 'store/features';
 import { Branch, Module, PaginationParams, SubModule, UserRole } from 'shared/models';
 import { ACTION_FIELDS, APP_CONFIG, BRANCH_FIELDS, BRANCH_TABLE_ACTIONS_SCHEMA, BRANCH_TABLE_SCHEMA, ROUTES } from 'shared/constants';
@@ -47,7 +47,7 @@ const BranchCatalogPage: React.FC = () => {
           break;
         case 'delete':
           if (page.pageNumber! > 1 && branches?.items.length === 1) {
-            dispatch(setBranchesPagination({ pageNumber: page.pageNumber! - 1 }));
+            dispatch(updateBranchesPagination({ pageNumber: page.pageNumber! - 1 }));
           }
           dispatch(deleteBranch(branch.id));
           break;
@@ -59,7 +59,7 @@ const BranchCatalogPage: React.FC = () => {
   const handlePageChange = React.useCallback(
     (pagination: Partial<PaginationParams>) => {
       dispatch(resetBranchesFetchStatus());
-      dispatch(setBranchesPagination(pagination));
+      dispatch(updateBranchesPagination(pagination));
     },
     [dispatch]
   );
