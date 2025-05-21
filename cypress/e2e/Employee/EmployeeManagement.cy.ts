@@ -383,7 +383,7 @@ describe('Employee Management Tests', () => {
       testEmployeeFormFields();
     });
 
-    it('should fetch and display assigned branches when scrolling down the assigned branch field', () => {
+    it('should fetch and display the assigned branches when scrolling down the assigned branch field', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
       interceptFetchBranchesRequest(
@@ -436,6 +436,32 @@ describe('Employee Management Tests', () => {
       cy.get('[role="listbox"]').scrollTo('bottom');
 
       cy.get('@fetchAssignedBranchesRequestPage4.all').should('have.length', 0);
+    });
+
+    it('should display the assigned branch even if it is not in the first page of the assigned branches field', () => {
+      interceptFetchEmployeeByIdRequest('333333333335', 'fetchEmployeeByIdRequest', 'employee/employees-different-page-assigned-branch');
+      interceptFetchBranchByIdRequest('222222222241', 'fetchBranchByIdRequest', 'branch/branches-multiple-page-two');
+      interceptFetchBranchesRequest(
+        { pageNumber: 1, pageSize: 10 },
+        { alias: 'fetchAssignedBranchesRequestPage1', fixture: 'branch/branches-multiple-page-one' }
+      );
+      cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
+
+      cy.wait(['@fetchEmployeeByIdRequest', '@fetchBranchByIdRequest', '@fetchAssignedBranchesRequestPage1']);
+
+      verifyInputFields(Module.employeeManagement, SubModule.employeeDetails, {
+        'form-field-assignedBranchId-input': 'Anchorage Branch',
+      });
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId').click();
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId-option', true).should(
+        'have.length',
+        11
+      );
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId-option-222222222241')
+        .should('exist')
+        .and('have.text', 'Anchorage Branch');
     });
   });
 });

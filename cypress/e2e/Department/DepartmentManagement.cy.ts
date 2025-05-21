@@ -523,7 +523,7 @@ describe('Department Management Tests', () => {
     cy.wait('@fetchDepartmentByIdQuickRequest');
   });
 
-  it('should fetch and display parent departments when scrolling down the parent department field', () => {
+  it('should fetch and display the parent departments when scrolling down the parent department field', () => {
     interceptFetchEmployeesRequest();
     interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
     interceptFetchEmployeeByIdRequest('333333333335');
@@ -552,7 +552,10 @@ describe('Department Management Tests', () => {
     );
 
     cy.get('[role="listbox"]').should('exist');
-    cy.get('[role="listbox"]').scrollTo('bottom');
+    cy.get('[role="listbox"]').then(($listbox) => {
+      $listbox[0].scrollTop = $listbox[0].scrollHeight;
+      $listbox[0].dispatchEvent(new Event('scroll', { bubbles: true }));
+    });
 
     cy.wait('@fetchParentDepartmentsRequestPage2').its('request.url').should('include', 'Departments?pageNumber=2&pageSize=10');
 
@@ -563,8 +566,35 @@ describe('Department Management Tests', () => {
 
     cy.intercept('GET', '**/Departments?pageNumber=3&pageSize=10').as('fetchParentDepartmentsRequestPage3');
 
-    cy.get('[role="listbox"]').scrollTo('bottom');
+    cy.get('[role="listbox"]').then(($listbox) => {
+      $listbox[0].scrollTop = $listbox[0].scrollHeight;
+      $listbox[0].dispatchEvent(new Event('scroll', { bubbles: true }));
+    });
 
     cy.get('@fetchParentDepartmentsRequestPage3.all').should('have.length', 0);
+  });
+
+  it('should display the parent department even if it is not in the first page of the parent departments field', () => {
+    interceptFetchEmployeesRequest({}, { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' });
+    interceptFetchEmployeeByIdRequest('333333333333');
+    interceptFetchDepartmentByIdRequest('444444444453', 'fetchDepartmentByIdRequest', 'department/departments-multiple-page-one');
+    interceptFetchDepartmentByIdRequest('444444444455', 'fetchParentDepartmentByIdRequest', 'department/departments-multiple-page-two');
+    interceptFetchDepartmentsRequest(
+      { pageNumber: 1, pageSize: 10 },
+      { alias: 'fetchParentDepartmentsRequestPage1', fixture: 'department/departments-multiple-page-one' }
+    );
+    cy.visit(`${ROUTES.departments.path}/edit/444444444453`);
+
+    cy.wait(['@fetchDepartmentByIdRequest', '@fetchParentDepartmentsRequestPage1']);
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-parentDepartmentId').click();
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-parentDepartmentId-option', true).should(
+      'have.length',
+      11
+    );
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-parentDepartmentId-option-444444444455')
+      .should('exist')
+      .and('have.text', 'Visual Effects');
   });
 });

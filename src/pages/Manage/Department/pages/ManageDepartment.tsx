@@ -28,7 +28,7 @@ import {
   MESSAGES,
   ROUTES,
 } from 'shared/constants';
-import { Department } from 'shared/models';
+import { Department, Employee } from 'shared/models';
 import { mapDisabledFields, deepCopyObject, mapDepartmentDTO, mapDepartmentFieldOptionsToFieldOptions } from 'shared/helpers';
 import { useOnFormSubmitEffect } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
@@ -76,9 +76,29 @@ const ManageDepartmentPage: React.FC = () => {
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
   }, [error?.errors]);
 
+  const parentDepartmentItems = React.useMemo(() => {
+    const parentDepartmentList = parentDepartments?.items || [];
+    const isParentDepartmentOptionAvailable = parentDepartmentList.some(
+      (parentDepartmentItem) => String(parentDepartmentItem.id) === String(department?.parentDepartmentId)
+    );
+
+    return department?.parentDepartmentId && !isParentDepartmentOptionAvailable
+      ? [{ id: department.parentDepartmentId, name: department.parentDepartmentName } as Department, ...parentDepartmentList]
+      : parentDepartmentList;
+  }, [parentDepartments?.items, department?.parentDepartmentId, department?.parentDepartmentName]);
+
+  const managerItems = React.useMemo(() => {
+    const managertList = managers?.items || [];
+    const isManagerOptionAvailable = managertList.some((managertItem) => String(managertItem.id) === String(department?.managerId));
+
+    return department?.managerId && !isManagerOptionAvailable
+      ? [{ id: department.managerId, name: department.managerName } as unknown as Employee, ...managertList]
+      : managertList;
+  }, [managers?.items, department?.managerId, department?.managerName]);
+
   const fields = React.useMemo(() => {
     const disabledFields = mapDisabledFields(DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, userRoles);
-    const mappedFields = mapDepartmentFieldOptionsToFieldOptions(disabledFields, parentDepartments?.items, managers?.items);
+    const mappedFields = mapDepartmentFieldOptionsToFieldOptions(disabledFields, parentDepartmentItems, managerItems);
 
     return mappedFields.map((field) => {
       switch (field.name) {
@@ -100,8 +120,8 @@ const ManageDepartmentPage: React.FC = () => {
     });
   }, [
     userRoles,
-    parentDepartments,
-    managers,
+    parentDepartmentItems,
+    managerItems,
     parentDepartmentsLoading,
     managersLoading,
     handleParentDepartmentsScrollEnd,
