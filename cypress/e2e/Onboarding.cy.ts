@@ -97,7 +97,7 @@ describe('Onboarding Flow Tests', () => {
         });
         employeeOnboardingRoutes.forEach((route) => {
           cy.visit(route);
-          cy.url().should('include', ROUTES.flows.path);
+          cy.location('pathname').should('eq', ROUTES.flows.path);
         });
       });
 
@@ -138,7 +138,7 @@ describe('Onboarding Flow Tests', () => {
         });
         employeeOnboardingRoutes.forEach((route) => {
           cy.visit(route);
-          cy.url().should('include', ROUTES.flows.path);
+          cy.location('pathname').should('eq', ROUTES.createEmployee.path);
         });
       });
 
@@ -169,7 +169,7 @@ describe('Onboarding Flow Tests', () => {
         });
         employeeOnboardingRoutes.forEach((route) => {
           cy.visit(route);
-          cy.url().should('include', ROUTES.flows.path);
+          cy.location('pathname').should('eq', ROUTES.createEmployee.path);
         });
       });
 
@@ -188,13 +188,13 @@ describe('Onboarding Flow Tests', () => {
         getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-action-button').should('contain.text', 'Finish');
         getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
 
-        companyOnboardingRoutes.forEach((route) => {
-          cy.visit(route);
-          cy.url().should('include', ROUTES.flows.path);
-        });
         employeeOnboardingRoutes.forEach((route) => {
           cy.visit(route);
           cy.url().should('include', ROUTES.createEmployee.path);
+        });
+        companyOnboardingRoutes.forEach((route) => {
+          cy.visit(route);
+          cy.location('pathname').should('eq', ROUTES.createBranch.path);
         });
       });
 
@@ -249,7 +249,7 @@ describe('Onboarding Flow Tests', () => {
         cy.wait('@fetchProfileRequest');
 
         getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('not.have.attr', 'disabled');
-        cy.url().should('include', ROUTES.flows.path);
+        cy.location('pathname').should('eq', ROUTES.flows.path);
       });
 
       it('should be able to navigate to the Company page by clicking the company logo if the company has been created', () => {
@@ -279,8 +279,6 @@ describe('Onboarding Flow Tests', () => {
         cy.wait('@fetchProfileRequest');
 
         getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('not.have.attr', 'disabled');
-        // TODO: use this to check the exact match
-        // replace this cy.url().should('include', ROUTES.flows.path); with
         cy.location('pathname').should('eq', ROUTES.flows.path);
       });
     });
@@ -674,7 +672,7 @@ describe('Onboarding Flow Tests', () => {
       cy.wait('@createBranchRequest');
       cy.wait('@fetchBranchesRequest');
 
-      cy.url().should('include', ROUTES.flows.path);
+      cy.location('pathname').should('eq', ROUTES.flows.path);
       getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
     });
 
@@ -760,7 +758,7 @@ describe('Onboarding Flow Tests', () => {
       cy.wait('@fetchProfileRequest');
 
       getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('not.have.attr', 'disabled');
-      cy.url().should('include', ROUTES.flows.path);
+      cy.location('pathname').should('eq', ROUTES.flows.path);
     });
 
     it('should not be able to navigate to the Company creation page from the Company License upload page if the Company has already been created', () => {
@@ -803,7 +801,7 @@ describe('Onboarding Flow Tests', () => {
       cy.url().should('include', ROUTES.createBranch.path);
       cy.visit('/flows/onboarding/wrongUrl');
 
-      cy.url().should('include', ROUTES.flows.path);
+      cy.location('pathname').should('eq', ROUTES.flows.path);
     });
 
     it('should be redirected to the Flows page if manually visiting a non-existing route from the Employee creation page', () => {
@@ -816,7 +814,7 @@ describe('Onboarding Flow Tests', () => {
       cy.url().should('include', ROUTES.createEmployee.path);
       cy.visit('/flows/onboarding/wrongUrl');
 
-      cy.url().should('include', ROUTES.flows.path);
+      cy.location('pathname').should('eq', ROUTES.flows.path);
     });
 
     it('should display correct steps in the stepper when in different onboarding flows', () => {
@@ -935,7 +933,7 @@ describe('Onboarding Flow Tests', () => {
       cy.wait('@createProfileRequest');
       cy.wait('@fetchProfileRequest');
 
-      cy.url().should('include', ROUTES.flows.path);
+      cy.location('pathname').should('eq', ROUTES.flows.path);
     });
 
     it('should display correct steps in the stepper if the company has already been created', () => {

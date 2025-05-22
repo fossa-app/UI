@@ -18,9 +18,6 @@ const InputField: React.FC<InputFieldProps> = ({ name, ...props }) => {
   return (
     <FormControl fullWidth>
       <Controller
-        // TODO: nested error structure & redux store casue a runtime error in react-hook-form
-        // TypeError: e.g. Cannot delete property 'postalCode' of #<Object>
-        // Setting shouldUnregister={true} fixes the issue, however unregisters the form field from the form context
         name={name}
         control={control}
         rules={props.rules}

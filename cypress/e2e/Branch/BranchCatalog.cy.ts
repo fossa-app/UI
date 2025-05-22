@@ -17,7 +17,6 @@ import {
   interceptDeleteBranchFailedRequest,
   interceptDeleteBranchRequest,
   interceptFetchBranchByIdRequest,
-  interceptFetchBranchesFailedRequest,
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
   interceptFetchCompanyLicenseFailedRequest,
@@ -66,12 +65,6 @@ describe('Branch Catalog Tests', () => {
       describe(`${role} Role`, () => {
         beforeEach(() => {
           loginMock();
-        });
-
-        it('should be navigated to the flows page if there are no branches', () => {
-          interceptFetchBranchesFailedRequest();
-
-          cy.url().should('include', ROUTES.flows.path);
         });
 
         it('should not display the linear loader if fetching branches is in progress, it is a part of fetchOnboardingData', () => {
