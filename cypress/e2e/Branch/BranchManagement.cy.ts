@@ -179,7 +179,7 @@ describe('Branch Management Tests', () => {
 
     getTestSelectorByModule(Module.shared, SubModule.notFound, 'page-title').should('exist').and('contain.text', 'Page Not Found');
     getTestSelectorByModule(Module.shared, SubModule.notFound, 'navigate-home-button').should('exist').click();
-    cy.url().should('include', ROUTES.flows.path);
+    cy.location('pathname').should('eq', ROUTES.flows.path);
   });
 
   it('should reset the form and be navigated back to branch catalog page if the cancel button is clicked', () => {

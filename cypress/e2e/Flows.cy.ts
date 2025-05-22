@@ -167,7 +167,7 @@ describe('Flows Tests', () => {
         it('should not be able to navigate by urls from the flows page if the subflow is disabled', () => {
           [ROUTES.createCompany.path, ROUTES.createBranch.path, ROUTES.createEmployee.path].forEach((route) => {
             cy.visit(route);
-            cy.url().should('include', ROUTES.flows.path);
+            cy.location('pathname').should('eq', ROUTES.flows.path);
           });
         });
 
@@ -240,7 +240,7 @@ describe('Flows Tests', () => {
           cy.visit(ROUTES.viewCompany.path);
           clickFlowsIcon();
 
-          cy.url().should('include', ROUTES.flows.path);
+          cy.location('pathname').should('eq', ROUTES.flows.path);
         });
       });
     });
@@ -270,7 +270,7 @@ describe('Flows Tests', () => {
       getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 0);
       clickFlowsIcon();
 
-      cy.url().should('include', ROUTES.flows.path);
+      cy.location('pathname').should('eq', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', false);
       checkIsSubFlowDisabled('View Company', false);
       checkIsSubFlowDisabled('Company Offboarding', true);
@@ -308,7 +308,7 @@ describe('Flows Tests', () => {
       cy.url().should('include', ROUTES.uploadCompanyLicense.path);
       clickFlowsIcon();
 
-      cy.url().should('include', ROUTES.flows.path);
+      cy.location('pathname').should('eq', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', false);
       checkIsSubFlowDisabled('View Company', false);
       checkIsSubFlowDisabled('Company Offboarding', true);
@@ -337,7 +337,7 @@ describe('Flows Tests', () => {
 
       clickFlowsIcon();
 
-      cy.url().should('include', ROUTES.flows.path);
+      cy.location('pathname').should('eq', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', false);
       checkIsSubFlowDisabled('View Company', false);
       checkIsSubFlowDisabled('Company Offboarding', true);
@@ -360,7 +360,7 @@ describe('Flows Tests', () => {
       cy.wait('@createBranchRequest');
       cy.wait('@fetchBranchesRequest');
 
-      cy.url().should('include', ROUTES.flows.path);
+      cy.location('pathname').should('eq', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', true);
       checkIsSubFlowDisabled('View Company', false);
       checkIsSubFlowDisabled('Company Offboarding', true);
@@ -379,7 +379,7 @@ describe('Flows Tests', () => {
       cy.wait('@createProfileRequest');
       cy.wait('@fetchProfileRequest');
 
-      cy.url().should('include', ROUTES.flows.path);
+      cy.location('pathname').should('eq', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', true);
       checkIsSubFlowDisabled('View Company', false);
       checkIsSubFlowDisabled('Company Offboarding', true);

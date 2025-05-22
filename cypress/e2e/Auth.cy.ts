@@ -70,7 +70,7 @@ describe('Authentication Flow Tests', () => {
     cy.loginMock();
     cy.visit(ROUTES.flows.path);
 
-    cy.url().should('include', ROUTES.flows.path);
+    cy.location('pathname').should('eq', ROUTES.flows.path);
     getTestSelectorByModule(Module.shared, SubModule.header, 'profile-menu').should('exist');
     getTestSelectorByModule(Module.shared, SubModule.header, 'profile-avatar').click();
 
@@ -84,7 +84,7 @@ describe('Authentication Flow Tests', () => {
     cy.loginMock(true);
     cy.visit(ROUTES.flows.path);
 
-    cy.url().should('include', ROUTES.flows.path);
+    cy.location('pathname').should('eq', ROUTES.flows.path);
     getTestSelectorByModule(Module.shared, SubModule.header, 'profile-avatar').click();
     getTestSelectorByModule(Module.shared, SubModule.header, 'profile-name').should('exist').and('have.text', 'Hi, Admin');
   });

@@ -8,7 +8,6 @@ export const mapDepartment = (department: DepartmentDTO, parentDepartment?: Depa
   return {
     ...department,
     managerName,
-    // TODO: enhance this
     parentDepartmentName: department.parentDepartmentId ? parentDepartment?.name : '',
   };
 };
