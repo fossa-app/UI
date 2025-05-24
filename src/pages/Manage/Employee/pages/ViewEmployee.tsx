@@ -31,15 +31,15 @@ const ViewEmployeePage: React.FC = () => {
     navigate(ROUTES.viewProfile.path);
   };
 
-  const navigateBack = () => {
+  const handleCancel = React.useCallback(() => {
     navigate(ROUTES.employees.path);
-  };
+  }, [navigate]);
 
   React.useEffect(() => {
-    if (id) {
-      dispatch(fetchEmployeeById({ id }));
+    if (id && fetchStatus === 'idle') {
+      dispatch(fetchEmployeeById({ id, shouldFetchBranchGeoAddress: false }));
     }
-  }, [id, dispatch]);
+  }, [id, fetchStatus, dispatch]);
 
   React.useEffect(() => {
     return () => {
@@ -54,7 +54,7 @@ const ViewEmployeePage: React.FC = () => {
       subModule={testSubModule}
       pageTitle="View Employee"
       displayNotFoundPage={fetchStatus === 'failed' && !employee}
-      onBackButtonClick={navigateBack}
+      onBackButtonClick={handleCancel}
     >
       <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>
         <ViewDetails.Header>{EMPLOYEE_VIEW_DETAILS_SCHEMA.title}</ViewDetails.Header>

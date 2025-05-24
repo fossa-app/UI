@@ -137,7 +137,7 @@ describe('Branch Management Tests', () => {
     cy.url().should('include', ROUTES.newBranch.path);
   });
 
-  it('should be able to create new branch and be navigated back to branch catalog page if the form is valid and branch creation succeeded', () => {
+  it('should be able to create new branch and be navigated back to the branch catalog page if the form is valid and branch creation succeeded', () => {
     interceptCreateBranchRequest();
     cy.visit(ROUTES.branches.path);
 
@@ -182,7 +182,7 @@ describe('Branch Management Tests', () => {
     cy.location('pathname').should('eq', ROUTES.flows.path);
   });
 
-  it('should reset the form and be navigated back to branch catalog page if the cancel button is clicked', () => {
+  it('should reset the form and be navigated back to the branch catalog page if the cancel button is clicked', () => {
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit(ROUTES.branches.path);
 
@@ -290,7 +290,7 @@ describe('Branch Management Tests', () => {
     cy.url().should('include', `${ROUTES.branches.path}/edit/222222222222`);
   });
 
-  it('should be able to edit the branch and be navigated back to branch catalog page if the form is valid and branch update succeeded', () => {
+  it('should be able to edit the branch and be navigated back to the branch catalog page if the form is valid and branch update succeeded', () => {
     interceptEditBranchRequest('222222222222');
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit(ROUTES.branches.path);

@@ -128,15 +128,14 @@ const ManageDepartmentPage: React.FC = () => {
     handleManagersScrollEnd,
   ]);
 
-  const handleCancel = React.useCallback(() => {
-    dispatch(resetDepartment());
+  const handleSuccess = React.useCallback(() => {
     navigate(ROUTES.departments.path);
+    dispatch(resetDepartmentsFetchStatus());
   }, [navigate, dispatch]);
 
-  const handleSuccess = React.useCallback(() => {
-    dispatch(resetDepartment());
+  const handleCancel = React.useCallback(() => {
     navigate(ROUTES.departments.path);
-  }, [dispatch, navigate]);
+  }, [navigate]);
 
   const actions = React.useMemo(
     () =>
@@ -154,14 +153,6 @@ const ManageDepartmentPage: React.FC = () => {
   );
 
   React.useEffect(() => {
-    if (id) {
-      dispatch(fetchDepartmentById({ id, skipState: false }));
-    } else {
-      dispatch(resetDepartment());
-    }
-  }, [id, dispatch]);
-
-  React.useEffect(() => {
     if (managersFetchStatus === 'idle') {
       dispatch(fetchManagers(managersPage));
     }
@@ -176,12 +167,16 @@ const ManageDepartmentPage: React.FC = () => {
   useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
 
   React.useEffect(() => {
+    if (id && fetchStatus === 'idle') {
+      dispatch(fetchDepartmentById({ id, skipState: false }));
+    }
+  }, [id, fetchStatus, dispatch]);
+
+  React.useEffect(() => {
     return () => {
-      if (formSubmitted) {
-        dispatch(resetDepartmentsFetchStatus());
-      }
+      dispatch(resetDepartment());
     };
-  }, [formSubmitted, dispatch]);
+  }, [dispatch]);
 
   const handleSubmit = (formValue: Department) => {
     const submitData = mapDepartmentDTO(formValue);

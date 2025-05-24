@@ -67,6 +67,7 @@ describe('Branch Catalog Tests', () => {
           loginMock();
         });
 
+        // TODO: check why the linear loader is being displayed
         it('should not display the linear loader if fetching branches is in progress, it is a part of fetchOnboardingData', () => {
           interceptFetchBranchesRequest();
 
