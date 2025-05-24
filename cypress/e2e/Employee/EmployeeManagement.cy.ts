@@ -408,7 +408,10 @@ describe('Employee Management Tests', () => {
       );
 
       cy.get('[role="listbox"]').should('exist');
-      cy.get('[role="listbox"]').scrollTo('bottom');
+      cy.get('[role="listbox"]').then(($listbox) => {
+        $listbox[0].scrollTop = $listbox[0].scrollHeight;
+        $listbox[0].dispatchEvent(new Event('scroll', { bubbles: true }));
+      });
 
       cy.wait('@fetchAssignedBranchesRequestPage2').its('request.url').should('include', 'Branches?pageNumber=2&pageSize=10');
 
@@ -422,7 +425,10 @@ describe('Employee Management Tests', () => {
         { alias: 'fetchAssignedBranchesRequestPage3', fixture: 'branch/branches-multiple-page-three' }
       );
 
-      cy.get('[role="listbox"]').scrollTo('bottom');
+      cy.get('[role="listbox"]').then(($listbox) => {
+        $listbox[0].scrollTop = $listbox[0].scrollHeight;
+        $listbox[0].dispatchEvent(new Event('scroll', { bubbles: true }));
+      });
 
       cy.wait('@fetchAssignedBranchesRequestPage3').its('request.url').should('include', 'Branches?pageNumber=3&pageSize=10');
 
@@ -462,6 +468,20 @@ describe('Employee Management Tests', () => {
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId-option-222222222241')
         .should('exist')
         .and('have.text', 'Anchorage Branch');
+    });
+
+    it('should not fetch the branch geo address, even though the fetching of the geo address is part of the FetchBranchByIdRequest', () => {
+      interceptFetchEmployeeByIdRequest('333333333335');
+      interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchBranchesRequest(
+        { pageNumber: 1, pageSize: 100 },
+        { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
+      );
+      cy.intercept('GET', '**/openstreetmap.org/search').as('fetchBranchGeoAddressRequest');
+      cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
+
+      cy.wait(['@fetchEmployeeByIdRequest', '@fetchBranchByIdRequest']);
+      cy.get('@fetchBranchGeoAddressRequest.all').should('have.length', 0);
     });
   });
 });

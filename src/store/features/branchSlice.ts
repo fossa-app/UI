@@ -132,31 +132,36 @@ export const fetchBranchesByIds = createAsyncThunk<PaginatedResponse<BranchDTO> 
   }
 );
 
-export const fetchBranchById = createAsyncThunk<Branch, { id: string; skipState?: boolean }, { rejectValue: ErrorResponseDTO }>(
-  'branch/fetchBranchById',
-  async ({ id }, { getState, dispatch, rejectWithValue }) => {
-    try {
-      const { data } = await axios.get<BranchDTO>(`${ENDPOINTS.branches}/${id}`);
-      const state = getState() as RootState;
-      const timeZones = state.license.system.data?.entitlements.timeZones || [];
-      const countries = state.license.system.data?.entitlements.countries || [];
-      const companyCountryCode = state.company.company.data!.countryCode;
-      const countryName = countries.find((country) => country.code === data.address?.countryCode)?.name;
-      const fullAddress = data.address ? getFullAddress({ ...data.address, countryName }, false) : '';
-      const geoAddress = await dispatch(fetchGeoAddress(fullAddress)).unwrap();
+export const fetchBranchById = createAsyncThunk<
+  Branch,
+  { id: string; skipState?: boolean; shouldFetchBranchGeoAddress?: boolean },
+  { rejectValue: ErrorResponseDTO }
+>('branch/fetchBranchById', async ({ id, shouldFetchBranchGeoAddress = true }, { getState, dispatch, rejectWithValue }) => {
+  try {
+    const { data } = await axios.get<BranchDTO>(`${ENDPOINTS.branches}/${id}`);
+    const state = getState() as RootState;
+    const timeZones = state.license.system.data?.entitlements.timeZones || [];
+    const countries = state.license.system.data?.entitlements.countries || [];
+    const companyCountryCode = state.company.company.data!.countryCode;
+    const countryName = countries.find((country) => country.code === data.address?.countryCode)?.name;
+    const fullAddress = data.address ? getFullAddress({ ...data.address, countryName }, false) : '';
+    let geoAddress: GeoAddress | undefined;
 
-      return mapBranch({
-        branch: data,
-        timeZones,
-        companyCountryCode,
-        countries,
-        geoAddress,
-      });
-    } catch (error) {
-      return rejectWithValue(error as ErrorResponseDTO);
+    if (shouldFetchBranchGeoAddress) {
+      geoAddress = await dispatch(fetchGeoAddress(fullAddress)).unwrap();
     }
+
+    return mapBranch({
+      branch: data,
+      timeZones,
+      companyCountryCode,
+      countries,
+      geoAddress,
+    });
+  } catch (error) {
+    return rejectWithValue(error as ErrorResponseDTO);
   }
-);
+});
 
 export const createBranch = createAsyncThunk<void, [BranchDTO, boolean?], { rejectValue: ErrorResponse<FieldValues> }>(
   'branch/createBranch',

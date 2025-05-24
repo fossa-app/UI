@@ -25,6 +25,10 @@ const ViewDepartmentPage: React.FC = () => {
     navigate(editPath);
   }, [id, navigate]);
 
+  const handleCancel = React.useCallback(() => {
+    navigate(ROUTES.departments.path);
+  }, [navigate]);
+
   const actions = React.useMemo(
     () =>
       DEPARTMENT_VIEW_DETAILS_SCHEMA.actions
@@ -40,19 +44,14 @@ const ViewDepartmentPage: React.FC = () => {
     [userRoles, handleEdit]
   );
 
-  const navigateBack = () => {
-    navigate(ROUTES.departments.path);
-  };
-
   React.useEffect(() => {
-    if (id) {
+    if (id && fetchStatus === 'idle') {
       dispatch(fetchDepartmentById({ id, skipState: false }));
     }
-  }, [id, dispatch]);
+  }, [id, fetchStatus, dispatch]);
 
   React.useEffect(() => {
     return () => {
-      // TODO: this causes unnecessary fetch
       dispatch(resetDepartment());
     };
   }, [dispatch]);
@@ -64,7 +63,7 @@ const ViewDepartmentPage: React.FC = () => {
       subModule={testSubModule}
       pageTitle="View Department"
       displayNotFoundPage={fetchStatus === 'failed' && !department}
-      onBackButtonClick={navigateBack}
+      onBackButtonClick={handleCancel}
     >
       <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>
         <ViewDetails.Header>{DEPARTMENT_VIEW_DETAILS_SCHEMA.title}</ViewDetails.Header>

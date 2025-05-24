@@ -6,15 +6,20 @@ import RootPage from 'pages/Root';
 import ProtectedPage from 'pages/Protected';
 import ManagePage from 'pages/Manage/Manage';
 import FlowsPage from 'pages/Manage/Flows';
-// TODO: lazy load the OnboardingPage
-import OnboardingPage from 'pages/Manage/Onboarding/Onboarding';
-import CompanyOnboarding from 'pages/Manage/Onboarding/pages/Company/CompanyOnboarding';
-import EmployeeOnboarding from 'pages/Manage/Onboarding/pages/Employee/EmployeeOnboarding';
 import { createLazyComponent } from './lazy-loaded-component';
 
 // Lazy loaded pages
 const LoginPage = createLazyComponent(() => import('pages/Login'), { title: ROUTES.login.name });
 const CallbackPage = createLazyComponent(() => import('pages/Callback'), { title: ROUTES.callback.name });
+const OnboardingPage = createLazyComponent(() => import('pages/Manage/Onboarding/Onboarding'), {
+  title: ROUTES.onboarding.name,
+});
+const CompanyOnboardingPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/CompanyOnboarding'), {
+  title: ROUTES.companyOnboarding.name,
+});
+const EmployeeOnboardingPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Employee/EmployeeOnboarding'), {
+  title: ROUTES.employeeOnbarding.name,
+});
 const CreateCompanyPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/CreateCompany'), {
   title: ROUTES.companyOnboarding.name,
 });
@@ -110,7 +115,7 @@ const router = createBrowserRouter(
                 },
                 {
                   path: ROUTES.onboarding.path,
-                  element: <OnboardingPage />,
+                  element: OnboardingPage,
                   children: [
                     {
                       index: true,
@@ -118,7 +123,7 @@ const router = createBrowserRouter(
                     },
                     {
                       path: ROUTES.companyOnboarding.path,
-                      element: <CompanyOnboarding />,
+                      element: CompanyOnboardingPage,
                       children: [
                         {
                           index: true,
@@ -140,7 +145,7 @@ const router = createBrowserRouter(
                     },
                     {
                       path: ROUTES.employeeOnbarding.path,
-                      element: <EmployeeOnboarding />,
+                      element: EmployeeOnboardingPage,
                       children: [
                         {
                           index: true,

@@ -65,15 +65,14 @@ const ManageBranchPage: React.FC = () => {
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
   }, [error?.errors]);
 
-  const handleCancel = React.useCallback(() => {
-    dispatch(resetBranch());
+  const handleSuccess = React.useCallback(() => {
     navigate(ROUTES.branches.path);
+    dispatch(resetBranchesFetchStatus());
   }, [navigate, dispatch]);
 
-  const handleSuccess = React.useCallback(() => {
-    dispatch(resetBranch());
+  const handleCancel = React.useCallback(() => {
     navigate(ROUTES.branches.path);
-  }, [dispatch, navigate]);
+  }, [navigate]);
 
   const actions = React.useMemo(
     () =>
@@ -100,12 +99,10 @@ const ManageBranchPage: React.FC = () => {
   }, [noPhysicalAddress, userRoles, availableCountries, availableTimeZones]);
 
   React.useEffect(() => {
-    if (id) {
+    if (id && fetchStatus === 'idle') {
       dispatch(fetchBranchById({ id, skipState: false }));
-    } else {
-      dispatch(resetBranch());
     }
-  }, [id, dispatch]);
+  }, [id, fetchStatus, dispatch]);
 
   useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
 
@@ -117,11 +114,9 @@ const ManageBranchPage: React.FC = () => {
 
   React.useEffect(() => {
     return () => {
-      if (formSubmitted) {
-        dispatch(resetBranchesFetchStatus());
-      }
+      dispatch(resetBranch());
     };
-  }, [formSubmitted, dispatch]);
+  }, [dispatch]);
 
   const handleSubmit = (formValue: Branch) => {
     const submitData = mapBranchDTO(formValue);

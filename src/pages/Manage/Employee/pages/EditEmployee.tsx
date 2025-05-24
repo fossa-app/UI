@@ -56,15 +56,14 @@ const EditEmployeePage: React.FC = () => {
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
   }, [error?.errors]);
 
-  const handleCancel = React.useCallback(() => {
-    dispatch(resetEmployee());
-    navigate(ROUTES.employees.path);
-  }, [dispatch, navigate]);
-
   const handleSuccess = React.useCallback(() => {
-    dispatch(resetEmployeesFetchStatus());
     navigate(ROUTES.employees.path);
-  }, [dispatch, navigate]);
+    dispatch(resetEmployeesFetchStatus());
+  }, [navigate, dispatch]);
+
+  const handleCancel = React.useCallback(() => {
+    navigate(ROUTES.employees.path);
+  }, [navigate]);
 
   const fields = React.useMemo(
     () =>
@@ -103,10 +102,10 @@ const EditEmployeePage: React.FC = () => {
   }, [assignedBranchesFetchStatus, assignedBranchesPage, dispatch]);
 
   React.useEffect(() => {
-    if (id) {
-      dispatch(fetchEmployeeById({ id }));
+    if (id && fetchStatus === 'idle') {
+      dispatch(fetchEmployeeById({ id, shouldFetchBranchGeoAddress: false }));
     }
-  }, [id, dispatch]);
+  }, [id, fetchStatus, dispatch]);
 
   useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
 
