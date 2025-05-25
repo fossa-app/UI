@@ -2,9 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'store';
 import { FlowsMap } from 'shared/models';
 import { FLOWS_MAP } from 'shared/constants';
-import { fetchCompany } from './companySlice';
+import { deleteCompany, fetchCompany } from './companySlice';
 import { fetchBranches } from './branchSlice';
-import { fetchProfile } from './profileSlice';
+import { deleteProfile, fetchProfile } from './profileSlice';
 import { fetchCompanyLicense } from './licenseSlice';
 
 interface FlowState {
@@ -26,7 +26,8 @@ const flowSlice = createSlice({
       })
       .addCase(fetchCompany.fulfilled, (state) => {
         state.flows.company!.subFlows!.viewCompany!.disabled = false;
-        state.flows.profile!.subFlows!.employeeOnbarding!.disabled = false;
+        state.flows.profile!.subFlows!.employeeOnboarding!.disabled = false;
+        state.flows.company!.subFlows!.companyOffboarding!.disabled = false;
       })
       .addCase(fetchCompanyLicense.rejected, (state) => {
         state.flows.company!.subFlows!.companyOnboarding!.disabled = false;
@@ -41,15 +42,33 @@ const flowSlice = createSlice({
         state.flows.employees!.subFlows!.employees!.disabled = true;
         state.flows.branches!.subFlows!.branches!.disabled = true;
         state.flows.departments!.subFlows!.departments!.disabled = true;
-        state.flows.profile!.subFlows!.employeeOnbarding!.disabled = false;
+        state.flows.profile!.subFlows!.employeeOnboarding!.disabled = false;
         state.flows.profile!.subFlows!.viewProfile!.disabled = true;
       })
       .addCase(fetchProfile.fulfilled, (state) => {
         state.flows.employees!.subFlows!.employees!.disabled = false;
         state.flows.branches!.subFlows!.branches!.disabled = false;
         state.flows.departments!.subFlows!.departments!.disabled = false;
-        state.flows.profile!.subFlows!.employeeOnbarding!.disabled = true;
+        state.flows.profile!.subFlows!.employeeOnboarding!.disabled = true;
+        state.flows.profile!.subFlows!.employeeOffboarding!.disabled = false;
         state.flows.profile!.subFlows!.viewProfile!.disabled = false;
+      })
+      .addCase(deleteCompany.fulfilled, (state) => {
+        state.flows.company!.subFlows!.companyOnboarding!.disabled = false;
+        state.flows.company!.subFlows!.companyOffboarding!.disabled = true;
+        state.flows.company!.subFlows!.viewCompany!.disabled = true;
+        state.flows.profile!.subFlows!.employeeOnboarding!.disabled = true;
+        state.flows.profile!.subFlows!.viewProfile!.disabled = true;
+        state.flows.profile!.subFlows!.employeeOffboarding!.disabled = true;
+        state.flows.employees!.subFlows!.employees!.disabled = true;
+        state.flows.branches!.subFlows!.branches!.disabled = true;
+        state.flows.departments!.subFlows!.departments!.disabled = true;
+      })
+      .addCase(deleteProfile.fulfilled, (state) => {
+        state.flows.profile!.subFlows!.employeeOnboarding!.disabled = false;
+        state.flows.profile!.subFlows!.employeeOffboarding!.disabled = true;
+        state.flows.profile!.subFlows!.viewProfile!.disabled = true;
+        state.flows.employees!.subFlows!.employees!.disabled = true;
       });
   },
 });

@@ -2,9 +2,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import { ErrorResponseDTO, OnboardingStep } from 'shared/models';
 import { APP_CONFIG } from 'shared/constants';
-import { fetchCompany } from './companySlice';
+import { deleteCompany, fetchCompany } from './companySlice';
 import { fetchBranches } from './branchSlice';
-import { fetchProfile } from './profileSlice';
+import { deleteProfile, fetchProfile } from './profileSlice';
 import { fetchCompanyLicense } from './licenseSlice';
 
 interface OnboardingState {
@@ -93,6 +93,12 @@ const onboardingSlice = createSlice({
       .addCase(fetchProfile.fulfilled, (state) => {
         state.employee.status = 'succeeded';
         state.employee.data = OnboardingStep.completed;
+      })
+      .addCase(deleteCompany.fulfilled, (state) => {
+        state.company.data = OnboardingStep.company;
+      })
+      .addCase(deleteProfile.fulfilled, (state) => {
+        state.employee.data = OnboardingStep.employee;
       });
   },
 });

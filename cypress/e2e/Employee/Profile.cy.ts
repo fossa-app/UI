@@ -51,7 +51,7 @@ describe('Profile Tests', () => {
 
       it('should not be able to navigate to the profile page if the employee is in a draft status', () => {
         interceptFetchProfileFailedRequest();
-        cy.visit(ROUTES.employeeOnbarding.path);
+        cy.visit(ROUTES.employeeOnboarding.path);
 
         cy.wait('@fetchProfileFailedRequest');
         openUserProfile();
@@ -287,9 +287,24 @@ describe('Profile Tests', () => {
           .click();
 
         getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'dialog').should('not.exist');
-        getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
-          .should('exist')
-          .and('contain.text', 'Profile has been successfully deleted');
+      });
+
+      it('should correctly navigate after delete confirmation popup actions', () => {
+        interceptFetchProfileRequest();
+        cy.visit(ROUTES.viewProfile.path);
+
+        cy.wait('@fetchProfileRequest');
+
+        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-details-header').click();
+        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'view-action-button').click();
+
+        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'dialog-cancel-button').click();
+
+        cy.url().should('include', ROUTES.viewProfile.path);
+
+        getTestSelectorByModule(Module.profile, SubModule.profileViewSettings, 'dialog-action-button').click();
+
+        cy.url().should('include', ROUTES.deleteEmployee.path);
       });
     });
   });

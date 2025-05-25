@@ -78,6 +78,14 @@ export const interceptEditCompanyFailedWithErrorRequest = (
   });
 };
 
+export const interceptDeleteCompanyRequest = () => {
+  cy.interceptWithAuth('DELETE', `${serverBaseUrl}/Company`, null, 'deleteCompanyRequest');
+};
+
+export const interceptDeleteCompanyFailedRequest = () => {
+  cy.interceptWithAuth('DELETE', `${serverBaseUrl}/Company`, { status: 424 }, 'deleteCompanyFailedRequest', 424);
+};
+
 export const interceptFetchCompanyLicenseRequest = () => {
   cy.fixture('company/company-license').then((companyLicense) => {
     cy.interceptWithAuth('GET', `${serverBaseUrl}/License/Company`, companyLicense, 'fetchCompanyLicenseRequest');
@@ -245,6 +253,14 @@ export const interceptEditProfileRequest = () => {
 
 export const interceptEditProfileFailedRequest = () => {
   cy.interceptWithAuth('PUT', `${serverBaseUrl}/Employee`, null, 'editProfileFailedRequest', 404);
+};
+
+export const interceptDeleteProfileRequest = () => {
+  cy.interceptWithAuth('DELETE', `${serverBaseUrl}/Employee`, null, 'deleteProfileRequest');
+};
+
+export const interceptDeleteProfileFailedRequest = () => {
+  cy.interceptWithAuth('DELETE', `${serverBaseUrl}/Employee`, { status: 424 }, 'deleteProfileFailedRequest', 424);
 };
 
 export const interceptEditProfileFailedWithErrorRequest = (

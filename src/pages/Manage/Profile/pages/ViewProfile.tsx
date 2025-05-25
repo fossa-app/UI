@@ -5,9 +5,9 @@ import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchProfile, selectProfile, setSuccess } from 'store/features';
+import { fetchProfile, selectProfile } from 'store/features';
 import { Module, SubModule } from 'shared/models';
-import { MESSAGES, PROFILE_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
+import { PROFILE_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
 import ViewDetails, { ViewDetailActionName } from 'components/UI/ViewDetails';
 import DeleteProfileDialog from '../components/DeleteProfileDialog';
@@ -44,9 +44,8 @@ const ViewProfilePage: React.FC = () => {
   };
 
   const handleDeleteAction = () => {
-    // TODO: continue to the offboarding flow
     setDialogOpen(false);
-    dispatch(setSuccess(MESSAGES.success.employee.deleteProfile));
+    navigate(ROUTES.deleteEmployee.path);
   };
 
   const handleClose = () => {

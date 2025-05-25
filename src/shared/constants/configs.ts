@@ -46,6 +46,8 @@ export const MESSAGES = {
       notFound: 'Company not found 😞',
       create: 'Failed to create a Company 😞',
       update: 'Failed to update the Company 😞',
+      deleteDependency: 'Unable to delete the Company. It has dependent entities 😞',
+      delete: 'Failed to delete the Company 😞',
     },
     branches: {
       notFound: 'Branch not found 😞',
@@ -64,6 +66,8 @@ export const MESSAGES = {
       create: 'Failed to create an Employee 😞',
       updateEmployee: 'Failed to update the Employee 😞',
       updateProfile: 'Failed to update the Profile 😞',
+      deleteProfileDependency: 'Unable to delete the Profile. It has dependent entities 😞',
+      deleteProfile: 'Failed to delete the Profile 😞',
     },
   },
   success: {
