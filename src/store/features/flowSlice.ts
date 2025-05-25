@@ -69,6 +69,8 @@ const flowSlice = createSlice({
         state.flows.profile!.subFlows!.employeeOffboarding!.disabled = true;
         state.flows.profile!.subFlows!.viewProfile!.disabled = true;
         state.flows.employees!.subFlows!.employees!.disabled = true;
+        state.flows.branches!.subFlows!.branches!.disabled = true;
+        state.flows.departments!.subFlows!.departments!.disabled = true;
       });
   },
 });
