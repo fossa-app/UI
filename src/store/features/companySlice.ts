@@ -86,6 +86,35 @@ export const editCompany = createAsyncThunk<void, Omit<CompanyDTO, 'id'>, { reje
   }
 );
 
+export const deleteCompany = createAsyncThunk<void, void, { rejectValue: ErrorResponseDTO }>(
+  'company/deleteCompany',
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      await axios.delete<void>(ENDPOINTS.company);
+
+      dispatch(setSuccess(MESSAGES.success.company.delete));
+    } catch (error) {
+      if ((error as ErrorResponseDTO).status === 424) {
+        dispatch(
+          setError({
+            ...(error as ErrorResponseDTO),
+            title: MESSAGES.error.company.deleteDependency,
+          })
+        );
+      } else {
+        dispatch(
+          setError({
+            ...(error as ErrorResponseDTO),
+            title: MESSAGES.error.company.delete,
+          })
+        );
+      }
+
+      return rejectWithValue(error as ErrorResponseDTO);
+    }
+  }
+);
+
 const companySlice = createSlice({
   name: 'company',
   initialState,
@@ -128,6 +157,17 @@ const companySlice = createSlice({
       .addCase(editCompany.fulfilled, (state) => {
         state.company.updateStatus = 'succeeded';
         state.company.error = undefined;
+      })
+      .addCase(deleteCompany.pending, (state) => {
+        state.company.deleteStatus = 'loading';
+      })
+      .addCase(deleteCompany.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+        state.company.deleteStatus = 'failed';
+        state.company.error = action.payload;
+      })
+      .addCase(deleteCompany.fulfilled, (state) => {
+        state.company.data = undefined;
+        state.company.deleteStatus = 'succeeded';
       });
   },
 });

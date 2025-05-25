@@ -3,6 +3,7 @@ export * from './appConfigSlice';
 export * from './licenseSlice';
 export * from './authSlice';
 export * from './onboardingSlice';
+export * from './offboardingSlice';
 export * from './companySlice';
 export * from './branchSlice';
 export * from './departmentSlice';

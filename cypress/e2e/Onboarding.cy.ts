@@ -178,7 +178,7 @@ describe('Onboarding Flow Tests', () => {
         interceptFetchCompanyLicenseRequest();
         interceptFetchBranchesFailedRequest();
         interceptFetchProfileFailedRequest();
-        cy.visit(ROUTES.employeeOnbarding.path);
+        cy.visit(ROUTES.employeeOnboarding.path);
 
         cy.wait('@fetchProfileFailedRequest');
 
@@ -204,7 +204,7 @@ describe('Onboarding Flow Tests', () => {
         interceptFetchBranchesRequest();
         interceptFetchProfileFailedRequest();
         interceptCreateProfileFailedRequest();
-        cy.visit(ROUTES.employeeOnbarding.path);
+        cy.visit(ROUTES.employeeOnboarding.path);
 
         cy.wait('@fetchProfileFailedRequest');
 
@@ -224,7 +224,7 @@ describe('Onboarding Flow Tests', () => {
         interceptFetchBranchesRequest();
         interceptFetchProfileFailedRequest();
         interceptCreateProfileRequest();
-        cy.visit(ROUTES.employeeOnbarding.path);
+        cy.visit(ROUTES.employeeOnboarding.path);
 
         cy.wait('@fetchProfileFailedRequest');
 
@@ -682,7 +682,7 @@ describe('Onboarding Flow Tests', () => {
       interceptFetchBranchesRequest();
       interceptFetchProfileFailedRequest();
       interceptCreateProfileFailedRequest();
-      cy.visit(ROUTES.employeeOnbarding.path);
+      cy.visit(ROUTES.employeeOnboarding.path);
 
       cy.wait('@fetchProfileFailedRequest');
 
@@ -707,7 +707,7 @@ describe('Onboarding Flow Tests', () => {
       interceptFetchBranchesRequest();
       interceptFetchProfileFailedRequest();
       interceptCreateProfileFailedWithErrorRequest();
-      cy.visit(ROUTES.employeeOnbarding.path);
+      cy.visit(ROUTES.employeeOnboarding.path);
 
       cy.wait('@fetchProfileFailedRequest');
 
@@ -809,7 +809,7 @@ describe('Onboarding Flow Tests', () => {
       interceptFetchCompanyLicenseRequest();
       interceptFetchBranchesRequest();
       interceptFetchProfileFailedRequest();
-      cy.visit(ROUTES.employeeOnbarding.path);
+      cy.visit(ROUTES.employeeOnboarding.path);
 
       cy.url().should('include', ROUTES.createEmployee.path);
       cy.visit('/flows/onboarding/wrongUrl');

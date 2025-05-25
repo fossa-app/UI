@@ -10,7 +10,7 @@ import { selectCompanyOnboardingStep } from 'store/features';
 import { Module, OnboardingStep, SubModule } from 'shared/models';
 import { COMPANY_ONBOARDING_STEPS, ROUTES } from 'shared/constants';
 
-const CompanyOnboarding: React.FC = () => {
+const CompanyOnboardingPage: React.FC = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { data: step } = useAppSelector(selectCompanyOnboardingStep);
@@ -52,4 +52,4 @@ const CompanyOnboarding: React.FC = () => {
   );
 };
 
-export default CompanyOnboarding;
+export default CompanyOnboardingPage;

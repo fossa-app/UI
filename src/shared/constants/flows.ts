@@ -73,9 +73,9 @@ export const FLOWS_MAP: FlowsMap = {
     path: ROUTES.profile.path,
     icon: IconType.profile,
     subFlows: {
-      [RouteKey.employeeOnbarding]: {
-        name: ROUTES.employeeOnbarding.name,
-        path: ROUTES.employeeOnbarding.path,
+      [RouteKey.employeeOnboarding]: {
+        name: ROUTES.employeeOnboarding.name,
+        path: ROUTES.employeeOnboarding.path,
         icon: IconType.assign,
         disabled: true,
       },

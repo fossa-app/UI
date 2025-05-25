@@ -198,6 +198,26 @@ export const UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA: FormProps<CompanyLicens
   ],
 };
 
+export const DELETE_COMPANY_DETAILS_FORM_SCHEMA: FormProps<void> = {
+  module: Module.deleteCompany,
+  subModule: SubModule.companyDetails,
+  title: 'Delete Company',
+  fields: [],
+  actions: [
+    {
+      actionType: FormActionType.loadingButton,
+      label: 'Delete Company',
+      name: FormActionName.submit,
+      loadingPosition: 'end',
+      endIcon: IconType.remove,
+      color: 'error',
+      type: 'submit',
+      roles: [UserRole.administrator],
+      'aria-label': 'Delete Company Button',
+    },
+  ],
+};
+
 export const COMPANY_VIEW_DETAILS_SCHEMA: ViewDetailProps<Company> = {
   module: Module.companyManagement,
   subModule: SubModule.companyViewDetails,

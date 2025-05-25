@@ -14,14 +14,26 @@ const CallbackPage = createLazyComponent(() => import('pages/Callback'), { title
 const OnboardingPage = createLazyComponent(() => import('pages/Manage/Onboarding/Onboarding'), {
   title: ROUTES.onboarding.name,
 });
+const OffboardingPage = createLazyComponent(() => import('pages/Manage/Offboarding/Offboarding'), {
+  title: ROUTES.offboarding.name,
+});
 const CompanyOnboardingPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/CompanyOnboarding'), {
   title: ROUTES.companyOnboarding.name,
 });
+const CompanyOffboardingPage = createLazyComponent(() => import('pages/Manage/Offboarding/pages/Company/CompanyOffboarding'), {
+  title: ROUTES.companyOffboarding.name,
+});
 const EmployeeOnboardingPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Employee/EmployeeOnboarding'), {
-  title: ROUTES.employeeOnbarding.name,
+  title: ROUTES.employeeOnboarding.name,
+});
+const EmployeeOffboardingPage = createLazyComponent(() => import('pages/Manage/Offboarding/pages/Employee/EmployeeOffboarding'), {
+  title: ROUTES.employeeOffboarding.name,
 });
 const CreateCompanyPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/CreateCompany'), {
-  title: ROUTES.companyOnboarding.name,
+  title: ROUTES.createCompany.name,
+});
+const DeleteCompanyPage = createLazyComponent(() => import('pages/Manage/Offboarding/pages/Company/DeleteCompany'), {
+  title: ROUTES.deleteCompany.name,
 });
 const CreateBranchPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/CreateBranch'), {
   title: ROUTES.createBranch.name,
@@ -31,6 +43,9 @@ const UploadCompanyLicensePage = createLazyComponent(() => import('pages/Manage/
 });
 const CreateEmployeePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Employee/CreateEmployee'), {
   title: ROUTES.createEmployee.name,
+});
+const DeleteEmployeePage = createLazyComponent(() => import('pages/Manage/Offboarding/pages/Employee/DeleteEmployee'), {
+  title: ROUTES.deleteEmployee.name,
 });
 const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
 const CompanyPage = createLazyComponent(() => import('pages/Manage/Company/Company'));
@@ -144,7 +159,7 @@ const router = createBrowserRouter(
                       ],
                     },
                     {
-                      path: ROUTES.employeeOnbarding.path,
+                      path: ROUTES.employeeOnboarding.path,
                       element: EmployeeOnboardingPage,
                       children: [
                         {
@@ -154,6 +169,48 @@ const router = createBrowserRouter(
                         {
                           path: ROUTES.createEmployee.path,
                           element: CreateEmployeePage,
+                        },
+                      ],
+                    },
+                    {
+                      path: '*',
+                      element: <Navigate to={ROUTES.flows.path} replace />,
+                    },
+                  ],
+                },
+                {
+                  path: ROUTES.offboarding.path,
+                  element: OffboardingPage,
+                  children: [
+                    {
+                      index: true,
+                      element: <Navigate to={ROUTES.companyOffboarding.path} replace />,
+                    },
+                    {
+                      path: ROUTES.companyOffboarding.path,
+                      element: CompanyOffboardingPage,
+                      children: [
+                        {
+                          index: true,
+                          element: <Navigate to={ROUTES.deleteCompany.path} replace />,
+                        },
+                        {
+                          path: ROUTES.deleteCompany.path,
+                          element: DeleteCompanyPage,
+                        },
+                      ],
+                    },
+                    {
+                      path: ROUTES.employeeOffboarding.path,
+                      element: EmployeeOffboardingPage,
+                      children: [
+                        {
+                          index: true,
+                          element: <Navigate to={ROUTES.deleteEmployee.path} replace />,
+                        },
+                        {
+                          path: ROUTES.deleteEmployee.path,
+                          element: DeleteEmployeePage,
                         },
                       ],
                     },

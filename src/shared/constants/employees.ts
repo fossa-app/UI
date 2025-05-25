@@ -122,6 +122,25 @@ export const CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
   ],
 };
 
+export const DELETE_EMPLOYEE_DETAILS_FORM_SCHEMA: FormProps<void> = {
+  module: Module.deleteEmployee,
+  subModule: SubModule.employeeDetails,
+  title: 'Delete Profile',
+  fields: [],
+  actions: [
+    {
+      actionType: FormActionType.loadingButton,
+      label: 'Delete Profile',
+      name: FormActionName.submit,
+      loadingPosition: 'end',
+      endIcon: IconType.remove,
+      color: 'error',
+      type: 'submit',
+      'aria-label': 'Delete Profile Button',
+    },
+  ],
+};
+
 export const PROFILE_VIEW_DETAILS_SCHEMA: ViewDetailProps<Employee> = {
   module: Module.profile,
   subModule: SubModule.profileViewDetails,

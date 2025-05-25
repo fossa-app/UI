@@ -5,6 +5,7 @@ export * from './status';
 export * from './response';
 export * from './user';
 export * from './onboarding';
+export * from './offboarding';
 export * from './company';
 export * from './branch';
 export * from './employee';

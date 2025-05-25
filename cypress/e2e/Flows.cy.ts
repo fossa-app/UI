@@ -76,7 +76,7 @@ describe('Flows Tests', () => {
 
           checkIsSubFlowHasDisabledAttribute('Company Onboarding', !isAdminRole);
           checkIsSubFlowDisabled('View Company', false);
-          checkIsSubFlowDisabled('Company Offboarding', true);
+          checkIsSubFlowDisabled('Company Offboarding', false);
           checkIsSubFlowDisabled('Branches', true);
           checkIsSubFlowDisabled('Departments', true);
           checkIsSubFlowDisabled('Employees', true);
@@ -92,7 +92,7 @@ describe('Flows Tests', () => {
 
           checkIsSubFlowDisabled('Company Onboarding', true);
           checkIsSubFlowDisabled('View Company', false);
-          checkIsSubFlowDisabled('Company Offboarding', true);
+          checkIsSubFlowDisabled('Company Offboarding', false);
           checkIsSubFlowDisabled('Branches', true);
           checkIsSubFlowDisabled('Departments', true);
           checkIsSubFlowDisabled('Employees', true);
@@ -227,13 +227,13 @@ describe('Flows Tests', () => {
         it('should display correct enabled and disabled subFlows', () => {
           checkIsSubFlowDisabled('Company Onboarding', true);
           checkIsSubFlowDisabled('View Company', false);
-          checkIsSubFlowDisabled('Company Offboarding', true);
+          checkIsSubFlowDisabled('Company Offboarding', false);
           checkIsSubFlowDisabled('Branches', false);
           checkIsSubFlowDisabled('Departments', false);
           checkIsSubFlowDisabled('Employees', false);
           checkIsSubFlowDisabled('Employee Onboarding', true);
           checkIsSubFlowDisabled('View Profile', false);
-          checkIsSubFlowDisabled('Employee Offboarding', true);
+          checkIsSubFlowDisabled('Employee Offboarding', false);
         });
 
         it('should navigate to the flows page if the flows navigation icon is clicked', () => {
@@ -273,13 +273,13 @@ describe('Flows Tests', () => {
       cy.location('pathname').should('eq', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', false);
       checkIsSubFlowDisabled('View Company', false);
-      checkIsSubFlowDisabled('Company Offboarding', true);
+      checkIsSubFlowDisabled('Company Offboarding', false);
       checkIsSubFlowDisabled('Branches', false);
       checkIsSubFlowDisabled('Departments', false);
       checkIsSubFlowDisabled('Employees', false);
       checkIsSubFlowDisabled('Employee Onboarding', true);
       checkIsSubFlowDisabled('View Profile', false);
-      checkIsSubFlowDisabled('Employee Offboarding', true);
+      checkIsSubFlowDisabled('Employee Offboarding', false);
 
       clickSubFlow('Company Onboarding');
 
@@ -311,7 +311,7 @@ describe('Flows Tests', () => {
       cy.location('pathname').should('eq', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', false);
       checkIsSubFlowDisabled('View Company', false);
-      checkIsSubFlowDisabled('Company Offboarding', true);
+      checkIsSubFlowDisabled('Company Offboarding', false);
       checkIsSubFlowDisabled('Branches', true);
       checkIsSubFlowDisabled('Departments', true);
       checkIsSubFlowDisabled('Employees', true);
@@ -340,7 +340,7 @@ describe('Flows Tests', () => {
       cy.location('pathname').should('eq', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', false);
       checkIsSubFlowDisabled('View Company', false);
-      checkIsSubFlowDisabled('Company Offboarding', true);
+      checkIsSubFlowDisabled('Company Offboarding', false);
       checkIsSubFlowDisabled('Branches', true);
       checkIsSubFlowDisabled('Departments', true);
       checkIsSubFlowDisabled('Employees', true);
@@ -363,7 +363,7 @@ describe('Flows Tests', () => {
       cy.location('pathname').should('eq', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', true);
       checkIsSubFlowDisabled('View Company', false);
-      checkIsSubFlowDisabled('Company Offboarding', true);
+      checkIsSubFlowDisabled('Company Offboarding', false);
       checkIsSubFlowDisabled('Branches', true);
       checkIsSubFlowDisabled('Departments', true);
       checkIsSubFlowDisabled('Employees', true);
@@ -382,13 +382,13 @@ describe('Flows Tests', () => {
       cy.location('pathname').should('eq', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', true);
       checkIsSubFlowDisabled('View Company', false);
-      checkIsSubFlowDisabled('Company Offboarding', true);
+      checkIsSubFlowDisabled('Company Offboarding', false);
       checkIsSubFlowDisabled('Branches', false);
       checkIsSubFlowDisabled('Departments', false);
       checkIsSubFlowDisabled('Employees', false);
       checkIsSubFlowDisabled('Employee Onboarding', true);
       checkIsSubFlowDisabled('View Profile', false);
-      checkIsSubFlowDisabled('Employee Offboarding', true);
+      checkIsSubFlowDisabled('Employee Offboarding', false);
     });
   });
 });

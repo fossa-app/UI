@@ -87,6 +87,35 @@ export const editProfile = createAsyncThunk<void, Omit<EmployeeDTO, 'id'>, { rej
   }
 );
 
+export const deleteProfile = createAsyncThunk<void, void, { rejectValue: ErrorResponseDTO }>(
+  'profile/deleteProfile',
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      await axios.delete<void>(ENDPOINTS.employee);
+
+      dispatch(setSuccess(MESSAGES.success.employee.deleteProfile));
+    } catch (error) {
+      if ((error as ErrorResponseDTO).status === 424) {
+        dispatch(
+          setError({
+            ...(error as ErrorResponseDTO),
+            title: MESSAGES.error.employee.deleteProfileDependency,
+          })
+        );
+      } else {
+        dispatch(
+          setError({
+            ...(error as ErrorResponseDTO),
+            title: MESSAGES.error.employee.deleteProfile,
+          })
+        );
+      }
+
+      return rejectWithValue(error as ErrorResponseDTO);
+    }
+  }
+);
+
 const profileSlice = createSlice({
   name: 'profile',
   initialState,
@@ -133,6 +162,16 @@ const profileSlice = createSlice({
       })
       .addCase(editProfile.fulfilled, (state) => {
         state.profile.updateStatus = 'succeeded';
+      })
+      .addCase(deleteProfile.pending, (state) => {
+        state.profile.deleteStatus = 'loading';
+      })
+      .addCase(deleteProfile.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+        state.profile.deleteStatus = 'failed';
+        state.profile.error = action.payload;
+      })
+      .addCase(deleteProfile.fulfilled, (state) => {
+        state.profile.deleteStatus = 'succeeded';
       });
   },
 });
