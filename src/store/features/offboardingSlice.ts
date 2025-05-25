@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import { OffboardingStep } from 'shared/models';
-import { deleteCompany } from './companySlice';
-import { deleteProfile } from './profileSlice';
+import { deleteCompany, fetchCompany } from './companySlice';
+import { deleteProfile, fetchProfile } from './profileSlice';
 
 interface OffboardingState {
   company: StateEntity<OffboardingStep>;
@@ -38,6 +38,12 @@ const offboardingSlice = createSlice({
       .addCase(deleteProfile.fulfilled, (state) => {
         state.employee.status = 'succeeded';
         state.employee.data = OffboardingStep.completed;
+      })
+      .addCase(fetchCompany.fulfilled, (state) => {
+        state.company.data = OffboardingStep.company;
+      })
+      .addCase(fetchProfile.fulfilled, (state) => {
+        state.employee.data = OffboardingStep.employee;
       });
   },
 });
