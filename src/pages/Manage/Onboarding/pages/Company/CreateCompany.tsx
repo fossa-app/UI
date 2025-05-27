@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompany, createCompany, selectIsUserAdmin, selectUserRoles, selectSystemCountries } from 'store/features';
 import { Company, CompanyDTO } from 'shared/models';
 import { deepCopyObject, hasAllowedRole, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
-import { COMPANY_DETAILS_FORM_DEFAULT_VALUES, CREATE_COMPANY_DETAILS_FORM_SCHEMA, MESSAGES } from 'shared/constants';
+import { COMPANY_DETAILS_FORM_DEFAULT_VALUES, CREATE_COMPANY_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';
 
 const testModule = CREATE_COMPANY_DETAILS_FORM_SCHEMA.module;
@@ -14,7 +14,7 @@ const CreateCompanyPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const userRoles = useAppSelector(selectUserRoles);
   const countries = useAppSelector(selectSystemCountries);
-  const { error, updateStatus } = useAppSelector(selectCompany);
+  const { updateStatus, updateError: error } = useAppSelector(selectCompany);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
 
   const fields = React.useMemo(
@@ -33,8 +33,12 @@ const CreateCompanyPage: React.FC = () => {
   );
 
   const errors = React.useMemo(() => {
+    if (!isUserAdmin) {
+      return USER_PERMISSION_GENERAL_MESSAGE as unknown as FieldErrors<FieldValues>;
+    }
+
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
-  }, [error?.errors]);
+  }, [error?.errors, isUserAdmin]);
 
   const handleSubmit = (data: CompanyDTO) => {
     dispatch(createCompany(data));
@@ -52,7 +56,7 @@ const CreateCompanyPage: React.FC = () => {
 
       <Form.Content fields={fields} />
 
-      <Form.Actions actions={actions} generalValidationMessage={isUserAdmin ? undefined : MESSAGES.error.general.permission}></Form.Actions>
+      <Form.Actions actions={actions}></Form.Actions>
     </Form>
   );
 };

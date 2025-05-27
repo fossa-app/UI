@@ -187,7 +187,7 @@ export const interceptCreateBranchFailedRequest = () => {
 
 export const interceptCreateBranchFailedWithErrorRequest = (
   alias = 'createBranchFailedWithErrorRequest',
-  fixture = 'branch/branch-error'
+  fixture = 'branch/branch-error-field-create'
 ) => {
   cy.fixture(fixture).then((branchError) => {
     cy.interceptWithAuth('POST', `${serverBaseUrl}/Branches`, branchError, alias, 422);
@@ -205,7 +205,7 @@ export const interceptEditBranchFailedRequest = (id: string) => {
 export const interceptEditBranchFailedWithErrorRequest = (
   id: string,
   alias = 'editBranchFailedWithErrorRequest',
-  fixture = 'branch/branch-error'
+  fixture = 'branch/branch-error-edit'
 ) => {
   cy.fixture(fixture).then((branchError) => {
     cy.interceptWithAuth('PUT', `${serverBaseUrl}/Branches/${id}`, branchError, alias, 422);
@@ -408,7 +408,7 @@ export const interceptCreateDepartmentFailedRequest = () => {
 
 export const interceptCreateDepartmentFailedWithErrorRequest = (
   alias = 'createDepartmentFailedWithErrorRequest',
-  fixture = 'department/department-error'
+  fixture = 'department/department-error-create'
 ) => {
   cy.fixture(fixture).then((departmentError) => {
     cy.interceptWithAuth('POST', `${serverBaseUrl}/Departments`, departmentError, alias, 422);
@@ -426,7 +426,7 @@ export const interceptEditDepartmentFailedRequest = (id: string) => {
 export const interceptEditDepartmentFailedWithErrorRequest = (
   id: string,
   alias = 'editDepartmentFailedWithErrorRequest',
-  fixture = 'department/department-error'
+  fixture = 'department/department-error-edit'
 ) => {
   cy.fixture(fixture).then((departmentError) => {
     cy.interceptWithAuth('PUT', `${serverBaseUrl}/Departments/${id}`, departmentError, alias, 422);

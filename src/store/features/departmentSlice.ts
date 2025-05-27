@@ -353,22 +353,22 @@ const departmentSlice = createSlice({
       })
       .addCase(createDepartment.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.department.updateStatus = 'failed';
-        state.department.error = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.department.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(createDepartment.fulfilled, (state) => {
         state.department.updateStatus = 'succeeded';
-        state.department.error = undefined;
+        state.department.updateError = undefined;
       })
       .addCase(editDepartment.pending, (state) => {
         state.department.updateStatus = 'loading';
       })
       .addCase(editDepartment.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.department.updateStatus = 'failed';
-        state.department.error = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.department.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(editDepartment.fulfilled, (state) => {
         state.department.updateStatus = 'succeeded';
-        state.department.error = undefined;
+        state.department.updateError = undefined;
       })
       .addCase(deleteDepartment.pending, (state) => {
         state.department.deleteStatus = 'loading';

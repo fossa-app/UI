@@ -11,7 +11,12 @@ import {
   resetCompanyFetchStatus,
   resetBranchesFetchStatus,
 } from 'store/features';
-import { COMPANY_DETAILS_FORM_DEFAULT_VALUES, COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA, MESSAGES, ROUTES } from 'shared/constants';
+import {
+  COMPANY_DETAILS_FORM_DEFAULT_VALUES,
+  COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA,
+  ROUTES,
+  USER_PERMISSION_GENERAL_MESSAGE,
+} from 'shared/constants';
 import { Company, CompanyDTO } from 'shared/models';
 import { deepCopyObject, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
 import { useOnFormSubmitEffect } from 'shared/hooks';
@@ -27,7 +32,7 @@ const EditCompanyPage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const userRoles = useAppSelector(selectUserRoles);
   const countries = useAppSelector(selectSystemCountries);
-  const { data: company, error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectCompany);
+  const { data: company, updateError: error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectCompany);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
 
   const handleSubmit = (data: Omit<CompanyDTO, 'id'>) => {
@@ -70,8 +75,12 @@ const EditCompanyPage: React.FC = () => {
   );
 
   const errors = React.useMemo(() => {
+    if (!isUserAdmin) {
+      return USER_PERMISSION_GENERAL_MESSAGE as unknown as FieldErrors<FieldValues>;
+    }
+
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
-  }, [error?.errors]);
+  }, [error?.errors, isUserAdmin]);
 
   useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
 
@@ -98,10 +107,7 @@ const EditCompanyPage: React.FC = () => {
 
         <Form.Content fields={fields} />
 
-        <Form.Actions
-          actions={actions}
-          generalValidationMessage={isUserAdmin ? undefined : MESSAGES.error.general.permission}
-        ></Form.Actions>
+        <Form.Actions actions={actions}></Form.Actions>
       </Form>
     </PageLayout>
   );

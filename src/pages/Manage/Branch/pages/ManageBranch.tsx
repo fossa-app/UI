@@ -15,7 +15,12 @@ import {
   selectCompany,
   selectSystemCountries,
 } from 'store/features';
-import { BRANCH_DETAILS_FORM_DEFAULT_VALUES, BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA, MESSAGES, ROUTES } from 'shared/constants';
+import {
+  BRANCH_DETAILS_FORM_DEFAULT_VALUES,
+  BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA,
+  ROUTES,
+  USER_PERMISSION_GENERAL_MESSAGE,
+} from 'shared/constants';
 import { Branch, TimeZone } from 'shared/models';
 import {
   getBranchManagementDetailsByAddressFormSchema,
@@ -40,7 +45,7 @@ const ManageBranchPage: React.FC = () => {
   const companyTimeZones = useAppSelector(selectCompanyTimeZones);
   const { data: company } = useAppSelector(selectCompany);
   const countries = useAppSelector(selectSystemCountries);
-  const { data: branch, error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectBranch);
+  const { data: branch, updateError: error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectBranch);
   const [formSubmitted, setFormSubmitted] = React.useState(false);
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
   const [fields, setFields] = React.useState<FormFieldProps<Branch>[]>([]);
@@ -62,8 +67,12 @@ const ManageBranchPage: React.FC = () => {
   }, [companyTimeZones, branch]);
 
   const errors = React.useMemo(() => {
+    if (!isUserAdmin) {
+      return USER_PERMISSION_GENERAL_MESSAGE as unknown as FieldErrors<FieldValues>;
+    }
+
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
-  }, [error?.errors]);
+  }, [error?.errors, isUserAdmin]);
 
   const handleSuccess = React.useCallback(() => {
     navigate(ROUTES.branches.path);
@@ -159,10 +168,7 @@ const ManageBranchPage: React.FC = () => {
 
         <Form.Content fields={fields} />
 
-        <Form.Actions
-          actions={actions}
-          generalValidationMessage={isUserAdmin ? undefined : MESSAGES.error.general.permission}
-        ></Form.Actions>
+        <Form.Actions actions={actions}></Form.Actions>
       </Form>
     </PageLayout>
   );

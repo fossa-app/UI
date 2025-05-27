@@ -80,10 +80,10 @@ describe('Onboarding Flow Tests', () => {
         cy.url().should('include', ROUTES.createCompany.path);
 
         if (isAdminRole) {
-          getTestSelectorByModule(Module.createCompany, SubModule.companyDetails, 'form-general-validation-message').should('not.exist');
+          getTestSelectorByModule(Module.createCompany, SubModule.companyDetails, 'form-general-error-message').should('not.exist');
           getTestSelectorByModule(Module.createCompany, SubModule.companyDetails, 'form-action-button').should('not.have.attr', 'disabled');
         } else {
-          getTestSelectorByModule(Module.createCompany, SubModule.companyDetails, 'form-general-validation-message')
+          getTestSelectorByModule(Module.createCompany, SubModule.companyDetails, 'form-general-error-message')
             .should('exist')
             .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
           getTestSelectorByModule(Module.createCompany, SubModule.companyDetails, 'form-action-button').should('have.attr', 'disabled');
@@ -113,7 +113,7 @@ describe('Onboarding Flow Tests', () => {
         cy.url().should('include', ROUTES.uploadCompanyLicense.path);
 
         if (isAdminRole) {
-          getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-general-validation-message').should(
+          getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-general-error-message').should(
             'not.exist'
           );
           getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-action-button').should(
@@ -121,7 +121,7 @@ describe('Onboarding Flow Tests', () => {
             'disabled'
           );
         } else {
-          getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-general-validation-message')
+          getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-general-error-message')
             .should('exist')
             .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
           getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-action-button').should(
@@ -152,11 +152,11 @@ describe('Onboarding Flow Tests', () => {
         cy.url().should('include', ROUTES.createBranch.path);
 
         if (isAdminRole) {
-          getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-general-validation-message').should('not.exist');
+          getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-general-error-message').should('not.exist');
           getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-action-button').should('not.have.attr', 'disabled');
         } else {
           getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-action-button').should('have.attr', 'disabled');
-          getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-general-validation-message')
+          getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-general-error-message')
             .should('exist')
             .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
         }
@@ -184,7 +184,7 @@ describe('Onboarding Flow Tests', () => {
 
         cy.url().should('include', ROUTES.createEmployee.path);
         getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-action-button').should('not.have.attr', 'disabled');
-        getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-general-validation-message').should('not.exist');
+        getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-general-error-message').should('not.exist');
         getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-action-button').should('contain.text', 'Finish');
         getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
 
@@ -614,7 +614,6 @@ describe('Onboarding Flow Tests', () => {
 
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error').should('exist').and('contain.text', 'Failed to create a Branch');
       verifyFormValidationMessages(Module.createBranch, SubModule.branchDetails, [
-        { field: 'form-section-field-address-validation', message: 'Value is provided however is not valid' },
         {
           field: 'form-field-address.postalCode-validation',
           message: `Postal Code '*****' for Country 'US - [United States]' is invalid.`,

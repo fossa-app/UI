@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { FieldValues } from 'react-hook-form';
+import { FieldValues, FieldErrors } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompanyLicense, selectIsUserAdmin, selectUserRoles, uploadCompanyLicense } from 'store/features';
-import { mapDisabledFields, hasAllowedRole } from 'shared/helpers';
-import { UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA, MESSAGES } from 'shared/constants';
+import { mapDisabledFields, hasAllowedRole, deepCopyObject } from 'shared/helpers';
+import { UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';
 
 const testModule = UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.module;
@@ -13,11 +13,19 @@ const UploadCompanyLicensePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const userRoles = useAppSelector(selectUserRoles);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
-  const { updateStatus } = useAppSelector(selectCompanyLicense);
+  const { updateStatus, updateError: error } = useAppSelector(selectCompanyLicense);
 
   const fields = React.useMemo(() => {
     return mapDisabledFields(UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.fields, userRoles);
   }, [userRoles]);
+
+  const errors = React.useMemo(() => {
+    if (!isUserAdmin) {
+      return USER_PERMISSION_GENERAL_MESSAGE as unknown as FieldErrors<FieldValues>;
+    }
+
+    return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
+  }, [error?.errors, isUserAdmin]);
 
   const actions = React.useMemo(() => {
     return UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.actions.map((action) => {
@@ -41,12 +49,12 @@ const UploadCompanyLicensePage: React.FC = () => {
   };
 
   return (
-    <Form<File> module={testModule} subModule={testSubModule} onSubmit={handleSubmit}>
+    <Form<File> module={testModule} subModule={testSubModule} errors={errors} onSubmit={handleSubmit}>
       <Form.Header>{UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.title}</Form.Header>
 
       <Form.Content fields={fields} />
 
-      <Form.Actions actions={actions} generalValidationMessage={isUserAdmin ? undefined : MESSAGES.error.general.permission}></Form.Actions>
+      <Form.Actions actions={actions}></Form.Actions>
     </Form>
   );
 };

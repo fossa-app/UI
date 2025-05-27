@@ -251,10 +251,11 @@ const employeeSlice = createSlice({
       })
       .addCase(editEmployee.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.employee.updateStatus = 'failed';
-        state.employee.error = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.employee.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(editEmployee.fulfilled, (state) => {
         state.employee.updateStatus = 'succeeded';
+        state.employee.updateError = undefined;
       });
   },
 });

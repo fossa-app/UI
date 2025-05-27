@@ -370,22 +370,22 @@ const branchSlice = createSlice({
       })
       .addCase(createBranch.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.branch.updateStatus = 'failed';
-        state.branch.error = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.branch.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(createBranch.fulfilled, (state) => {
         state.branch.updateStatus = 'succeeded';
-        state.branch.error = undefined;
+        state.branch.updateError = undefined;
       })
       .addCase(editBranch.pending, (state) => {
         state.branch.updateStatus = 'loading';
       })
       .addCase(editBranch.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.branch.updateStatus = 'failed';
-        state.branch.error = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.branch.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(editBranch.fulfilled, (state) => {
         state.branch.updateStatus = 'succeeded';
-        state.branch.error = undefined;
+        state.branch.updateError = undefined;
       })
       .addCase(deleteBranch.pending, (state) => {
         state.branch.deleteStatus = 'loading';
