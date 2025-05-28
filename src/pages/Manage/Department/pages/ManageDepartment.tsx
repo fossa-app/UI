@@ -25,8 +25,8 @@ import {
   DEPARTMENT_DETAILS_FORM_DEFAULT_VALUES,
   DEPARTMENT_FIELDS,
   DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA,
-  MESSAGES,
   ROUTES,
+  USER_PERMISSION_GENERAL_MESSAGE,
 } from 'shared/constants';
 import { Department, Employee } from 'shared/models';
 import { mapDisabledFields, deepCopyObject, mapDepartmentDTO, mapDepartmentFieldOptionsToFieldOptions } from 'shared/helpers';
@@ -43,7 +43,7 @@ const ManageDepartmentPage: React.FC = () => {
   const { id } = useParams();
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const userRoles = useAppSelector(selectUserRoles);
-  const { data: department, error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectDepartment);
+  const { data: department, updateError: error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectDepartment);
   const {
     data: parentDepartments,
     fetchStatus: parentDepartmentsFetchStatus,
@@ -73,8 +73,12 @@ const ManageDepartmentPage: React.FC = () => {
   }, [managersPage, dispatch]);
 
   const errors = React.useMemo(() => {
+    if (!isUserAdmin) {
+      return USER_PERMISSION_GENERAL_MESSAGE as unknown as FieldErrors<FieldValues>;
+    }
+
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
-  }, [error?.errors]);
+  }, [error?.errors, isUserAdmin]);
 
   const parentDepartmentItems = React.useMemo(() => {
     const parentDepartmentList = parentDepartments?.items || [];
@@ -212,10 +216,7 @@ const ManageDepartmentPage: React.FC = () => {
 
         <Form.Content fields={fields} />
 
-        <Form.Actions
-          actions={actions}
-          generalValidationMessage={isUserAdmin ? undefined : MESSAGES.error.general.permission}
-        ></Form.Actions>
+        <Form.Actions actions={actions}></Form.Actions>
       </Form>
     </PageLayout>
   );

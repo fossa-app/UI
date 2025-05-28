@@ -19,7 +19,7 @@ import {
   deepCopyObject,
   hasAllowedRole,
 } from 'shared/helpers';
-import { CREATE_BRANCH_DETAILS_FORM_SCHEMA, BRANCH_DETAILS_FORM_DEFAULT_VALUES, MESSAGES } from 'shared/constants';
+import { CREATE_BRANCH_DETAILS_FORM_SCHEMA, BRANCH_DETAILS_FORM_DEFAULT_VALUES, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';
 
 const testModule = CREATE_BRANCH_DETAILS_FORM_SCHEMA.module;
@@ -30,7 +30,7 @@ const CreateBranchPage: React.FC = () => {
   const userRoles = useAppSelector(selectUserRoles);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { data: company } = useAppSelector(selectCompany);
-  const { updateStatus, error } = useAppSelector(selectBranch);
+  const { updateStatus, updateError: error } = useAppSelector(selectBranch);
   const companyTimeZones = useAppSelector(selectCompanyTimeZones);
   const countries = useAppSelector(selectSystemCountries);
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
@@ -59,8 +59,12 @@ const CreateBranchPage: React.FC = () => {
   );
 
   const errors = React.useMemo(() => {
+    if (!isUserAdmin) {
+      return USER_PERMISSION_GENERAL_MESSAGE as unknown as FieldErrors<FieldValues>;
+    }
+
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
-  }, [error?.errors]);
+  }, [error?.errors, isUserAdmin]);
 
   const handleSubmit = (formValue: Branch) => {
     const submitData = mapBranchDTO(formValue);
@@ -85,7 +89,7 @@ const CreateBranchPage: React.FC = () => {
 
       <Form.Content fields={fields} />
 
-      <Form.Actions actions={actions} generalValidationMessage={isUserAdmin ? undefined : MESSAGES.error.general.permission}></Form.Actions>
+      <Form.Actions actions={actions}></Form.Actions>
     </Form>
   );
 };

@@ -1,0 +1,11 @@
+{
+  "type": "https://httpstatuses.io/422",
+  "title": "One or more validation errors occurred.",
+  "status": 422,
+  "errors": {
+    "": [
+      "E43705653: The current company license entitlements limit the number of departments that can be created, and this limit has been reached"
+    ]
+  },
+  "traceId": "00-7379c09a495dcaa398de5f2a7a13b56a-79f3b6dba2508bad-01"
+}

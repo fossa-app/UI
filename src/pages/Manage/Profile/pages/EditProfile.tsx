@@ -16,7 +16,7 @@ const testSubModule = PROFILE_DETAILS_FORM_SCHEMA.subModule;
 const EditProfilePage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: profile, error, updateStatus = 'idle' } = useAppSelector(selectProfile);
+  const { data: profile, updateError: error, updateStatus = 'idle' } = useAppSelector(selectProfile);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
   const defaultValues: Employee = profile || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
 

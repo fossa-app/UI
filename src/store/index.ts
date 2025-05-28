@@ -48,6 +48,7 @@ export interface StateEntity<T = unknown> {
   updateStatus?: Status;
   deleteStatus?: Status;
   error?: ErrorResponseDTO | ErrorResponse<FieldValues>;
+  updateError?: ErrorResponseDTO | ErrorResponse<FieldValues>;
   page?: Partial<PaginationParams>;
 }
 

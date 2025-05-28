@@ -62,10 +62,10 @@ describe('Offboarding Flow Tests', () => {
           .and('have.text', 'Delete Company');
 
         if (isAdminRole) {
-          getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-general-validation-message').should('not.exist');
+          getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-general-error-message').should('not.exist');
           getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-action-button').should('not.have.attr', 'disabled');
         } else {
-          getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-general-validation-message')
+          getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-general-error-message')
             .should('exist')
             .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
           getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-action-button').should('have.attr', 'disabled');
@@ -85,7 +85,7 @@ describe('Offboarding Flow Tests', () => {
           .should('exist')
           .and('have.text', 'Delete Profile');
 
-        getTestSelectorByModule(Module.deleteEmployee, SubModule.employeeDetails, 'form-general-validation-message').should('not.exist');
+        getTestSelectorByModule(Module.deleteEmployee, SubModule.employeeDetails, 'form-general-error-message').should('not.exist');
         getTestSelectorByModule(Module.deleteEmployee, SubModule.employeeDetails, 'form-action-button').should('not.have.attr', 'disabled');
       });
 
@@ -279,7 +279,6 @@ describe('Offboarding Flow Tests', () => {
       cy.visit(ROUTES.flows.path);
 
       clickSubFlow('Company Offboarding');
-
       clickActionButton(Module.deleteCompany, SubModule.companyDetails);
       cy.wait('@deleteCompanyRequest');
 

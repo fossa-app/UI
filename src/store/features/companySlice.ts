@@ -142,21 +142,22 @@ const companySlice = createSlice({
       })
       .addCase(createCompany.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.company.updateStatus = 'failed';
-        state.company.error = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.company.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(createCompany.fulfilled, (state) => {
         state.company.updateStatus = 'succeeded';
+        state.company.updateError = undefined;
       })
       .addCase(editCompany.pending, (state) => {
         state.company.updateStatus = 'loading';
       })
       .addCase(editCompany.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.company.updateStatus = 'failed';
-        state.company.error = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.company.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(editCompany.fulfilled, (state) => {
         state.company.updateStatus = 'succeeded';
-        state.company.error = undefined;
+        state.company.updateError = undefined;
       })
       .addCase(deleteCompany.pending, (state) => {
         state.company.deleteStatus = 'loading';

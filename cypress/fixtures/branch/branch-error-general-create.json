@@ -1,0 +1,11 @@
+{
+  "type": "https://httpstatuses.io/422",
+  "title": "One or more validation errors occurred.",
+  "status": 422,
+  "errors": {
+    "": [
+      "E43705652: The current company license entitlements limit the number of branches that can be created, and this limit has been reached"
+    ]
+  },
+  "traceId": "00-dcf8d919d1cd8291f0100594e6f825d1-1c5b4381090e6052-01"
+}

@@ -21,6 +21,7 @@ import {
 } from '../../support/helpers';
 import {
   interceptCreateBranchFailedRequest,
+  interceptCreateBranchFailedWithErrorRequest,
   interceptCreateBranchRequest,
   interceptEditBranchFailedRequest,
   interceptEditBranchFailedWithErrorRequest,
@@ -281,13 +282,31 @@ describe('Branch Management Tests', () => {
 
     getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error').should('exist').and('contain.text', 'Failed to update the Branch');
     verifyFormValidationMessages(Module.branchManagement, SubModule.branchDetails, [
-      { field: 'form-section-field-address-validation', message: 'Value is provided however is not valid' },
       {
         field: 'form-field-address.postalCode-validation',
         message: `Postal Code '*****' for Country 'US - [United States]' is invalid.`,
       },
     ]);
     cy.url().should('include', `${ROUTES.branches.path}/edit/222222222222`);
+  });
+
+  it('should display async general validation messages if the branch creation failed with validation errors', () => {
+    interceptCreateBranchFailedWithErrorRequest('createBranchFailedWithErrorRequest', 'branch/branch-error-general-create');
+    cy.visit(ROUTES.newBranch.path);
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').type('New Test Branch');
+    selectOption(Module.branchManagement, SubModule.branchDetails, 'timeZoneId', 'America/Chicago');
+    clickField(Module.branchManagement, SubModule.branchDetails, 'form-field-noPhysicalAddress');
+    clickActionButton(Module.branchManagement, SubModule.branchDetails);
+    cy.wait('@createBranchFailedWithErrorRequest');
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-general-error-message')
+      .should('exist')
+      .and(
+        'contain.text',
+        'E43705652: The current company license entitlements limit the number of branches that can be created, and this limit has been reached'
+      );
+    getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error').should('exist').and('contain.text', 'Failed to create a Branch');
   });
 
   it('should be able to edit the branch and be navigated back to the branch catalog page if the form is valid and branch update succeeded', () => {

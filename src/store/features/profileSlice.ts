@@ -148,20 +148,22 @@ const profileSlice = createSlice({
       })
       .addCase(createProfile.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.profile.updateStatus = 'failed';
-        state.profile.error = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.profile.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(createProfile.fulfilled, (state) => {
         state.profile.updateStatus = 'succeeded';
+        state.profile.updateError = undefined;
       })
       .addCase(editProfile.pending, (state) => {
         state.profile.updateStatus = 'loading';
       })
       .addCase(editProfile.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.profile.updateStatus = 'failed';
-        state.profile.error = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.profile.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(editProfile.fulfilled, (state) => {
         state.profile.updateStatus = 'succeeded';
+        state.profile.updateError = undefined;
       })
       .addCase(deleteProfile.pending, (state) => {
         state.profile.deleteStatus = 'loading';

@@ -27,7 +27,7 @@ const EditEmployeePage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  const { data: employee, error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectEmployee);
+  const { data: employee, updateError: error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectEmployee);
   const {
     data: assignedBranches,
     fetchStatus: assignedBranchesFetchStatus,

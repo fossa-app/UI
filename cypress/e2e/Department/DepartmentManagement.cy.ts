@@ -15,6 +15,7 @@ import {
 } from '../../support/helpers';
 import {
   interceptCreateDepartmentFailedRequest,
+  interceptCreateDepartmentFailedWithErrorRequest,
   interceptCreateDepartmentRequest,
   interceptEditDepartmentFailedRequest,
   interceptEditDepartmentFailedWithErrorRequest,
@@ -324,6 +325,36 @@ describe('Department Management Tests', () => {
       },
     ]);
     cy.url().should('include', `${ROUTES.departments.path}/edit/444444444446`);
+  });
+
+  it('should display async general validation messages if the department creation failed with validation errors', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 10 },
+      { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
+    );
+    interceptCreateDepartmentFailedWithErrorRequest();
+    cy.visit(ROUTES.newDepartment.path);
+
+    fillDepartmentDetailsForm({
+      name: 'Department Name',
+      parentDepartmentId: 444444444446,
+      managerId: 333333333335,
+    });
+    clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
+    cy.wait('@createDepartmentFailedWithErrorRequest');
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-general-error-message')
+      .should('exist')
+      .and(
+        'contain.text',
+        'E43705653: The current company license entitlements limit the number of departments that can be created, and this limit has been reached'
+      );
+    getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
+      .should('exist')
+      .and('contain.text', 'Failed to create a Department');
   });
 
   it('should be able to edit the department and be navigated back to the department catalog page if the form is valid and department updating succeeded', () => {

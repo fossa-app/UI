@@ -100,4 +100,11 @@ export const MESSAGES = {
   },
 };
 
+export const USER_PERMISSION_GENERAL_MESSAGE = {
+  '': {
+    type: 'pattern',
+    message: [MESSAGES.error.general.permission],
+  },
+};
+
 export const STEP_KEY = 'step';
