@@ -2,20 +2,24 @@ import * as React from 'react';
 import Box, { BoxProps } from '@mui/material/Box';
 import { Module, SubModule } from 'shared/models';
 import PageContext from './PageContext';
+import PageTitle from './PageTitle';
+import PageSubtitle from './PageSubtitle';
 
-type PageProps = {
+type PageProps = React.PropsWithChildren<{
   module: Module;
   subModule: SubModule;
-} & BoxProps;
+}> &
+  BoxProps;
 
-const Page: React.FC<React.PropsWithChildren<PageProps>> = ({ module, subModule, children, ...props }) => {
+const Page = ({ module, subModule, children, ...props }: PageProps) => {
   return (
     <PageContext.Provider value={{ module, subModule }}>
       <Box
         data-cy={`${module}-${subModule}-page`}
         {...props}
         sx={{
-          textAlign: 'center',
+          display: 'flex',
+          flexDirection: 'column',
           my: 4,
           ...props.sx,
         }}
@@ -25,5 +29,8 @@ const Page: React.FC<React.PropsWithChildren<PageProps>> = ({ module, subModule,
     </PageContext.Provider>
   );
 };
+
+Page.Title = PageTitle;
+Page.Subtitle = PageSubtitle;
 
 export default Page;

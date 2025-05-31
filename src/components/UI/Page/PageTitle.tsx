@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Typography from '@mui/material/Typography';
 import Box, { BoxProps } from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { usePageContext } from './PageContext';
@@ -10,12 +10,7 @@ type PageTitleProps = {
   onBackButtonClick?: () => void;
 } & BoxProps;
 
-export const PageTitle: React.FC<React.PropsWithChildren<PageTitleProps>> = ({
-  children,
-  withBackButton = false,
-  onBackButtonClick,
-  ...props
-}) => {
+const PageTitle = ({ children, withBackButton = false, onBackButtonClick, ...props }: React.PropsWithChildren<PageTitleProps>) => {
   const context = usePageContext();
 
   if (!context) {
@@ -25,7 +20,7 @@ export const PageTitle: React.FC<React.PropsWithChildren<PageTitleProps>> = ({
   const { module, subModule } = context;
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', height: '100%' }} {...props}>
+    <Box sx={{ display: 'flex', alignItems: 'center', height: '100%', ...props.sx }} {...props}>
       {withBackButton && (
         <IconButton
           aria-label="Navigate Back"
@@ -36,9 +31,16 @@ export const PageTitle: React.FC<React.PropsWithChildren<PageTitleProps>> = ({
           <ArrowBackIcon />
         </IconButton>
       )}
-      <Typography data-cy={`${module}-${subModule}-page-title`} variant="h5" component="h1" sx={{ flexGrow: 1 }}>
+      <Typography
+        data-cy={`${module}-${subModule}-page-title`}
+        variant="h5"
+        component="h1"
+        sx={{ textAlign: 'center', flexGrow: 1, ...props.sx }}
+      >
         {children}
       </Typography>
     </Box>
   );
 };
+
+export default PageTitle;

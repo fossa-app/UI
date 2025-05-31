@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box, { BoxProps } from '@mui/material/Box';
 import { Module, SubModule } from 'shared/models';
-import Page, { PageTitle } from 'components/UI/Page';
+import Page from 'components/UI/Page';
 import { createLazyComponent } from 'routes/lazy-loaded-component';
 
 const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
@@ -32,9 +32,9 @@ const PageLayout: React.FC<React.PropsWithChildren<PageLayoutProps>> = ({
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, ...props.sx }} {...props}>
       <Page module={module} subModule={subModule} sx={{ minHeight: 48 }}>
-        <PageTitle withBackButton={withBackButton} onBackButtonClick={onBackButtonClick}>
+        <Page.Title withBackButton={withBackButton} onBackButtonClick={onBackButtonClick}>
           {pageTitle}
-        </PageTitle>
+        </Page.Title>
       </Page>
       {children}
     </Box>

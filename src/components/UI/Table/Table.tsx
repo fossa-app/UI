@@ -9,7 +9,7 @@ import Paper, { PaperProps } from '@mui/material/Paper';
 import { Item, Module, SubModule } from 'shared/models';
 import { APP_CONFIG } from 'shared/constants';
 import { CUSTOM_STYLES } from 'shared/configs/theme';
-import Page, { PageSubtitle } from 'components/UI/Page';
+import Page from 'components/UI/Page';
 import { Column } from './table.model';
 import { StyledTable } from './StyledTable';
 import LinearLoader from '../LinearLoader';
@@ -59,7 +59,7 @@ const Table = <T extends Item>({
           <TableCell colSpan={columns.length} align="center">
             {noRecordsTemplate ?? (
               <Page module={module} subModule={subModule} sx={{ margin: 0 }}>
-                <PageSubtitle>No Records Found</PageSubtitle>
+                <Page.Subtitle>No Records Found</Page.Subtitle>
               </Page>
             )}
           </TableCell>

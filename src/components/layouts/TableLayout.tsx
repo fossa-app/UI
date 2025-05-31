@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { Module, SubModule, UserRole } from 'shared/models';
-import Page, { PageTitle } from 'components/UI/Page';
+import Page from 'components/UI/Page';
 import WithRolesLayout from './WithRolesLayout';
 
 interface TableLayoutProps {
@@ -30,9 +30,9 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
       <Page
         module={module}
         subModule={subModule}
-        sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', textAlign: 'left', mb: 5, minHeight: 38 }}
+        sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 5, minHeight: 38 }}
       >
-        <PageTitle sx={{ flexGrow: 1 }}>{pageTitle}</PageTitle>
+        <Page.Title sx={{ flexGrow: 1, textAlign: 'left' }}>{pageTitle}</Page.Title>
         <WithRolesLayout allowedRoles={allowedRoles} userRoles={userRoles}>
           <Button
             data-cy={`${module}-${subModule}-table-layout-action-button`}

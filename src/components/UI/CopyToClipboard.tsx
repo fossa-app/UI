@@ -23,7 +23,7 @@ const CopyToClipboard: React.FC<CopyToClipboardProps> = ({ text }) => {
 
   return (
     <Tooltip title={copied ? 'Copied!' : 'Copy'}>
-      <IconButton size="medium" color="default" onClick={handleCopy}>
+      <IconButton size="medium" color="default" sx={{ p: 0 }} onClick={handleCopy}>
         {copied ? <CheckIcon /> : <ContentCopyIcon />}
       </IconButton>
     </Tooltip>

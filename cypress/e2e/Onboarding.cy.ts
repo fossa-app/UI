@@ -399,9 +399,12 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchCompanyLicenseFailedRequest');
 
-      getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-field-value-companyId')
+      getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'copyable-field-label')
         .should('exist')
-        .find('div p')
+        .and('have.text', 'Company ID');
+
+      getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'copyable-field-value')
+        .should('exist')
         .and('have.text', '111111111111');
 
       clickActionButton(Module.uploadCompanyLicense, SubModule.companyLicenseDetails);
