@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { FieldValues, FieldErrors } from 'react-hook-form';
+import { renderCopyableField } from 'components/UI/CopyableField';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectCompanyLicense, selectIsUserAdmin, selectUserRoles, uploadCompanyLicense } from 'store/features';
+import { selectCompany, selectCompanyLicense, selectIsUserAdmin, selectUserRoles, uploadCompanyLicense } from 'store/features';
 import { mapDisabledFields, hasAllowedRole, deepCopyObject } from 'shared/helpers';
 import { UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';
@@ -14,10 +17,31 @@ const UploadCompanyLicensePage: React.FC = () => {
   const userRoles = useAppSelector(selectUserRoles);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { updateStatus, updateError: error } = useAppSelector(selectCompanyLicense);
+  const { data: company } = useAppSelector(selectCompany);
 
   const fields = React.useMemo(() => {
-    return mapDisabledFields(UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.fields, userRoles);
-  }, [userRoles]);
+    const mappedFields = mapDisabledFields(UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.fields, userRoles);
+
+    return mappedFields.map((field) => {
+      switch (field.name) {
+        case 'companyId':
+          return {
+            ...field,
+            renderField: () => (
+              // TODO: enhance this
+              <Box data-cy={`${testModule}-${testSubModule}-form-field-value-companyId`}>
+                <Typography variant="body2" color="textSecondary">
+                  Company ID
+                </Typography>
+                {renderCopyableField({ text: String(company?.id) })}
+              </Box>
+            ),
+          };
+        default:
+          return field;
+      }
+    });
+  }, [userRoles, company?.id]);
 
   const errors = React.useMemo(() => {
     if (!isUserAdmin) {

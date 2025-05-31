@@ -1,31 +1,33 @@
-export const parseResponseData = <T = unknown>(data: string | object): T => {
-  if (data === '') {
-    return data as T;
+export const parseResponse = <T = unknown>(response: any): T => {
+  if (response.data === '') {
+    return response as T;
   }
 
-  if (typeof data === 'string') {
+  if (response?.headers?.['content-type']?.includes('text/html')) {
+    return response as T;
+  }
+
+  if (typeof response.data === 'string') {
     const isBigNumber = (num: string | number): boolean => {
-      return !isNaN(Number(num)) && !Number.isSafeInteger(Number(num));
+      const n = Number(num);
+      return !isNaN(n) && !Number.isSafeInteger(n);
     };
 
     const enquoteBigNumber = (jsonString: string, bigNumChecker: (num: string | number) => boolean): string =>
-      jsonString.replaceAll(/([:\s,[]*)(\d+)([\s,\]]*)/g, (matchingSubstr, prefix, bigNum, suffix) =>
-        bigNumChecker(bigNum) ? `${prefix}"${bigNum}"${suffix}` : matchingSubstr
+      jsonString.replace(/(:\s*)(\d{15,})(\s*[,}])/g, (match, prefix, numberPart, suffix) =>
+        bigNumChecker(numberPart) ? `${prefix}"${numberPart}"${suffix}` : match
       );
 
     try {
-      return JSON.parse(enquoteBigNumber(data, isBigNumber), (_, value) => {
-        if (value === 'string' && isBigNumber(value)) {
-          // TODO: check, it never gets here
-          return BigInt(value);
-        }
-        return value;
-      }) as T;
+      return {
+        ...response,
+        data: JSON.parse(enquoteBigNumber(response.data, isBigNumber)),
+      } as T;
     } catch (error) {
       console.error('Error parsing response data:', error);
-      return data as T;
+      return response as T;
     }
   }
 
-  return data as T;
+  return response as T;
 };

@@ -16,6 +16,7 @@ const LabelValueDetail = <T,>({ values, ...props }: { values: T } & ViewDetailFi
         {props.label}
       </Typography>
       <Box data-cy={`${module}-${subModule}-view-details-value-${props.name}`}>
+        {/* TODO: move this part to the view detail content level like in the form content */}
         {props.renderDetailField ? (
           props.renderDetailField(values)
         ) : (

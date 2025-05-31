@@ -3,7 +3,7 @@ import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { Client, ErrorResponseDTO } from 'shared/models';
 import { MESSAGES, ROUTES, ENDPOINTS } from 'shared/constants';
-import { parseResponseData } from 'shared/helpers';
+import { parseResponse } from 'shared/helpers';
 import { updateAuthSettings } from './authSlice';
 
 interface IdentityState {
@@ -21,25 +21,25 @@ export const fetchClient = createAsyncThunk<Client | null, void, { rejectValue: 
   'identity/fetchClient',
   async (_, { dispatch, rejectWithValue }) => {
     try {
-      const { data } = await axios.get<Client>(`${ENDPOINTS.client}?origin=${window.location.origin}`);
+      const response = await axios.get<{ data: Client }>(`${ENDPOINTS.client}?origin=${window.location.origin}`);
       // TODO: this should be handled in AxiosInterceptor, but this method is not being called in axios response
-      const parsedData = parseResponseData<Client>(data);
+      const parsedResponse = parseResponse<{ data: Client }>(response);
 
-      if (parsedData) {
+      if (parsedResponse?.data) {
         dispatch(
           updateAuthSettings({
-            client_id: parsedData.clientId,
+            client_id: parsedResponse.data.clientId,
             redirect_uri: `${window.location.origin}${ROUTES.callback.path}`,
             post_logout_redirect_uri: `${window.location.origin}/`,
           })
         );
 
-        return parsedData;
+        return parsedResponse.data;
       }
 
       return rejectWithValue({ title: MESSAGES.error.client.notFound });
-    } catch (error) {
-      return rejectWithValue(error as ErrorResponseDTO);
+    } catch (error: any) {
+      return rejectWithValue(parseResponse<{ data: ErrorResponseDTO }>(error.response).data);
     }
   }
 );

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { removeUser, selectAuthSettings, setError } from 'store/features';
 import axios, { AxiosError, AxiosRequestConfig } from 'shared/configs/axios';
-import { getUserFromLocalStorage, getUserManager, parseResponseData } from 'shared/helpers';
+import { getUserFromLocalStorage, getUserManager, parseResponse } from 'shared/helpers';
 import { MESSAGES, ROUTES } from 'shared/constants';
 import { ErrorResponseDTO } from 'shared/models';
 
@@ -67,18 +67,15 @@ const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
 
     const responseInterceptor = axios.interceptors.response.use(
       (response) => {
-        return {
-          ...response,
-          data: parseResponseData(response.data),
-        };
+        return parseResponse(response);
       },
       async (error: AxiosError) => {
         if (!error.isAxiosError) {
           return Promise.reject(error);
         }
 
-        if (error.response?.data) {
-          error.response.data = parseResponseData(error.response.data);
+        if (error.response) {
+          error.response = parseResponse(error.response);
         }
 
         if (error.code === 'ERR_NETWORK') {

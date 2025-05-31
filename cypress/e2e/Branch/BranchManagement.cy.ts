@@ -97,17 +97,12 @@ describe('Branch Management Tests', () => {
       { field: 'form-field-address.line2-validation', message: 'Address Line 2 must not exceed 50 characters.' },
       { field: 'form-field-address.city-validation', message: 'City must not exceed 50 characters.' },
       { field: 'form-field-address.subdivision-validation', message: 'State must not exceed 50 characters.' },
-      { field: 'form-field-address.postalCode-validation', message: 'Postal Code must not exceed 10 characters.' },
     ]);
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').find('input').clear();
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').find('input').type('12');
 
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
-
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode-validation')
-      .should('exist')
-      .and('have.text', 'Postal Code must be at least 4 characters long.');
 
     clickField(Module.branchManagement, SubModule.branchDetails, 'form-field-noPhysicalAddress');
     clickActionButton(Module.branchManagement, SubModule.branchDetails);

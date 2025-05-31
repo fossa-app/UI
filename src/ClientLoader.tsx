@@ -8,6 +8,13 @@ import Footer from 'layout/Footer';
 import SideBar from 'layout/Sidebar';
 import { SearchProvider } from 'components/Search';
 import CircularLoader from 'components/UI/CircularLoader';
+import { createLazyComponent } from 'routes/lazy-loaded-component';
+
+const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), {
+  title: 'Not found',
+  subtitle: 'The Client was not found',
+  showActionButton: false,
+});
 
 const ClientLoader: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -27,9 +34,13 @@ const ClientLoader: React.FC = () => {
     }
   }, [systemLicenseStatus, dispatch]);
 
-  if (loading || !client || !system) {
+  if (loading) {
     // TODO: combine all loaders
     return <CircularLoader />;
+  }
+
+  if (!loading && (!client || !system)) {
+    return NotFoundPage;
   }
 
   return (

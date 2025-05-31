@@ -174,6 +174,13 @@ export const UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA: FormProps<CompanyLicens
   title: 'Company License Details',
   fields: [
     {
+      // TODO: this type is unnecessary, it won't render the LabelValueField component in any case
+      type: FormFieldType.labelValue,
+      name: 'companyId',
+      label: 'Company ID',
+      grid: { size: { xs: 12 } },
+    },
+    {
       type: FormFieldType.fileUpload,
       name: 'licenseFile',
       label: 'Upload Company License',

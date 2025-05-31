@@ -8,14 +8,18 @@ type ImportFunc = () => Promise<{ default: React.ComponentType<object> }>;
 interface LazyComponentProps {
   title?: string;
   isAdminRoute?: boolean;
+  [key: string]: unknown;
 }
 
-export const createLazyComponent = (importFunc: ImportFunc, { title, isAdminRoute }: LazyComponentProps = {}): React.ReactElement => {
+export const createLazyComponent = (
+  importFunc: ImportFunc,
+  { title, isAdminRoute, ...props }: LazyComponentProps = {}
+): React.ReactElement => {
   const Component = React.lazy(importFunc);
   const content = (
     <>
       {title && <RouteTitle title={title} />}
-      <Component />
+      <Component {...props} />
     </>
   );
 

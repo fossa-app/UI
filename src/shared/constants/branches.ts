@@ -214,14 +214,6 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
       grid: { size: { xs: 12, md: 6 } },
       rules: {
         required: { value: true, message: 'Postal Code is required' },
-        minLength: {
-          value: 4,
-          message: 'Postal Code must be at least 4 characters long.',
-        },
-        maxLength: {
-          value: 10,
-          message: 'Postal Code must not exceed 10 characters.',
-        },
       },
       roles: [UserRole.administrator],
     },

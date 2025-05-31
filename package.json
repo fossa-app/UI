@@ -6,7 +6,6 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.13.0",
-    "@fontsource/roboto": "^5.2.5",
     "@mui/icons-material": "^6.1.6",
     "@mui/material": "^6.4.8",
     "@reduxjs/toolkit": "^2.7.0",

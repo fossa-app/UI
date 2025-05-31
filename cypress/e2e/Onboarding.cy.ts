@@ -399,6 +399,11 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchCompanyLicenseFailedRequest');
 
+      getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-field-value-companyId')
+        .should('exist')
+        .find('div p')
+        .and('have.text', '111111111111');
+
       clickActionButton(Module.uploadCompanyLicense, SubModule.companyLicenseDetails);
 
       getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-field-licenseFile-file-upload-validation')
@@ -563,17 +568,12 @@ describe('Onboarding Flow Tests', () => {
         { field: 'form-field-address.line2-validation', message: 'Address Line 2 must not exceed 50 characters.' },
         { field: 'form-field-address.city-validation', message: 'City must not exceed 50 characters.' },
         { field: 'form-field-address.subdivision-validation', message: 'State must not exceed 50 characters.' },
-        { field: 'form-field-address.postalCode-validation', message: 'Postal Code must not exceed 10 characters.' },
       ]);
 
       getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-address.postalCode').find('input').clear();
       getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-address.postalCode').find('input').type('12');
 
       clickActionButton(Module.createBranch, SubModule.branchDetails);
-
-      getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-address.postalCode-validation')
-        .should('exist')
-        .and('have.text', 'Postal Code must be at least 4 characters long.');
 
       clickField(Module.createBranch, SubModule.branchDetails, 'form-field-noPhysicalAddress');
       clickActionButton(Module.createBranch, SubModule.branchDetails);
