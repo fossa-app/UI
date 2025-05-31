@@ -30,12 +30,12 @@ const Footer: React.FC = () => {
             </Grid>
             <Grid>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Environment kind={system?.entitlements.environmentKind} name={system?.entitlements.environmentName} />
+                <Environment kind={system?.entitlements?.environmentKind} name={system?.entitlements?.environmentName} />
                 <License
                   loading={fetchStatus === 'idle' || fetchStatus === 'loading'}
                   isAdmin={isAdmin}
-                  system={system?.terms.licensee}
-                  company={company?.terms.licensee}
+                  system={system?.terms?.licensee}
+                  company={company?.terms?.licensee}
                 />
               </Box>
             </Grid>

@@ -16,6 +16,16 @@ export const interceptFetchClientRequest = () => {
   });
 };
 
+export const interceptFetchClientFailedRequest = () => {
+  cy.interceptWithAuth(
+    'GET',
+    `${serverBaseUrl}/Identity/Client?origin=${Cypress.config('baseUrl')}`,
+    null,
+    'fetchClientFailedRequest',
+    404
+  );
+};
+
 export const interceptLoginRequest = () => {
   cy.intercept('GET', `${fusionAuthBaseUrl}/oauth2/authorize*`, { statusCode: 302 }).as('loginRequest');
 };

@@ -2,6 +2,7 @@ import { ROUTES } from 'shared/constants';
 import { Module, SubModule } from 'shared/models';
 import { getTestSelectorByModule } from '../support/helpers';
 import {
+  interceptFetchClientFailedRequest,
   interceptFetchClientRequest,
   interceptFetchCompanyFailedRequest,
   interceptFetchSystemLicenseRequest,
@@ -11,7 +12,23 @@ import {
   interceptOpenidConfigurationRequest,
 } from '../support/interceptors';
 
-describe('Authentication Flow Tests', () => {
+describe('Authentication Flow Tests - Failed Client Request', () => {
+  beforeEach(() => {
+    interceptFetchClientFailedRequest();
+  });
+
+  it('should render the Not Found page if the client was not found', () => {
+    cy.visit('http://xxx.dev.localhost:4211');
+
+    getTestSelectorByModule(Module.shared, SubModule.notFound, 'page').should('exist');
+    getTestSelectorByModule(Module.shared, SubModule.notFound, 'page-title').should('exist').and('have.text', 'Page Not Found');
+    getTestSelectorByModule(Module.shared, SubModule.notFound, 'page-subtitle')
+      .should('exist')
+      .and('have.text', 'The Client was not found');
+  });
+});
+
+describe('Authentication Flow Tests - Successful Client Request', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();

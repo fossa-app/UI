@@ -5,7 +5,7 @@ import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { CompanyLicense, ErrorResponse, ErrorResponseDTO, SystemLicense } from 'shared/models';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
-import { mapCompanyLicense, mapError, parseResponseData } from 'shared/helpers';
+import { mapCompanyLicense, mapError, parseResponse } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
 
 interface LicenseState {
@@ -29,13 +29,13 @@ export const fetchSystemLicense = createAsyncThunk<SystemLicense | null, void, {
   'license/fetchSystemLicense',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get<SystemLicense>(ENDPOINTS.systemLicense);
+      const response = await axios.get<{ data: SystemLicense }>(ENDPOINTS.systemLicense);
       // TODO: this should be handled in AxiosInterceptor, but this method is not being called in axios response
-      const parsedData = parseResponseData<SystemLicense>(data);
+      const parsedResponse = parseResponse<{ data: SystemLicense }>(response);
 
-      return parsedData || rejectWithValue({ title: MESSAGES.error.license.system.notFound });
-    } catch (error) {
-      return rejectWithValue(error as ErrorResponseDTO);
+      return parsedResponse.data || rejectWithValue({ title: MESSAGES.error.license.system.notFound });
+    } catch (error: any) {
+      return rejectWithValue(parseResponse<{ data: ErrorResponseDTO }>(error.response).data);
     }
   }
 );
