@@ -105,11 +105,16 @@ describe('Company Management Tests', () => {
         verifyTextFields(Module.companyManagement, SubModule.companyViewDetails, {
           'view-details-header': 'Company Details',
           'view-details-section-basicInfo': 'Basic Information',
+          'view-details-label-id': 'ID',
           'view-details-label-name': 'Name',
           'view-details-value-name': 'Good Omens',
           'view-details-label-countryName': 'Country',
           'view-details-value-countryName': 'United States',
         });
+        getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'copyable-field-label').should('not.exist');
+        getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'copyable-field-value')
+          .should('exist')
+          .and('have.text', '111111111111');
         getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should(
           viewActionButtonExists ? 'exist' : 'not.exist'
         );

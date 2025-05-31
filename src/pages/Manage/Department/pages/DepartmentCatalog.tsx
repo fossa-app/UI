@@ -22,7 +22,7 @@ import {
 } from 'shared/constants';
 import { getTestSelectorByModule, mapTableActionsColumn } from 'shared/helpers';
 import { useUnmount } from 'shared/hooks';
-import Page, { PageSubtitle } from 'components/UI/Page';
+import Page from 'components/UI/Page';
 import Table from 'components/UI/Table';
 import ActionsMenu from 'components/UI/Table/ActionsMenu';
 import TableLayout from 'components/layouts/TableLayout';
@@ -164,7 +164,7 @@ const DepartmentCatalogPage: React.FC = () => {
         pageSizeOptions={pageSizeOptions}
         noRecordsTemplate={
           <Page module={testModule} subModule={testSubModule} sx={{ margin: 0 }}>
-            <PageSubtitle variant="h6">No Departments Found</PageSubtitle>
+            <Page.Subtitle variant="h6">No Departments Found</Page.Subtitle>
           </Page>
         }
         onPageNumberChange={(pageNumber) => handlePageChange({ pageNumber })}

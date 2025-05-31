@@ -253,7 +253,12 @@ export const COMPANY_VIEW_DETAILS_SCHEMA: ViewDetailProps<Company> = {
       label: COMPANY_FIELDS.id!.name,
       type: ViewDetailType.labelValue,
       grid: { size: { xs: 12 } },
-      renderDetailField: (company) => renderCopyableField({ text: String(company.id) }),
+      renderDetailField: (company) =>
+        renderCopyableField({
+          module: COMPANY_VIEW_DETAILS_SCHEMA.module,
+          subModule: COMPANY_VIEW_DETAILS_SCHEMA.subModule,
+          text: String(company?.id),
+        }),
     },
   ],
   actions: [

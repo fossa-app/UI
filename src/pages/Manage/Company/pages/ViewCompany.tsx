@@ -8,7 +8,7 @@ import { COMPANY_LICENSE_VIEW_DETAILS_SCHEMA, COMPANY_VIEW_DETAILS_SCHEMA, ROUTE
 import { hasAllowedRole } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
 import ViewDetails, { ViewDetailActionName } from 'components/UI/ViewDetails';
-import Page, { PageSubtitle } from 'components/UI/Page';
+import Page from 'components/UI/Page';
 
 const testModule = COMPANY_VIEW_DETAILS_SCHEMA.module;
 const testSubModule = COMPANY_VIEW_DETAILS_SCHEMA.subModule;
@@ -23,7 +23,7 @@ const ViewCompanyPage: React.FC = () => {
 
   const companyLicenseNoValuesTemplate = (
     <Page module={Module.companyManagement} subModule={SubModule.companyLicenseViewDetails} sx={{ margin: 0 }}>
-      <PageSubtitle fontSize={20}>Company License has not been uploaded.</PageSubtitle>
+      <Page.Subtitle fontSize={20}>Company License has not been uploaded.</Page.Subtitle>
     </Page>
   );
 

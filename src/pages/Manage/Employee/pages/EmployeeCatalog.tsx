@@ -13,7 +13,7 @@ import { Employee, Module, PaginationParams, SubModule } from 'shared/models';
 import { ACTION_FIELDS, APP_CONFIG, EMPLOYEE_FIELDS, EMPLOYEE_TABLE_ACTIONS_SCHEMA, EMPLOYEE_TABLE_SCHEMA, ROUTES } from 'shared/constants';
 import { getTestSelectorByModule, mapTableActionsColumn } from 'shared/helpers';
 import { useUnmount } from 'shared/hooks';
-import Page, { PageSubtitle } from 'components/UI/Page';
+import Page from 'components/UI/Page';
 import Table from 'components/UI/Table';
 import TableLayout from 'components/layouts/TableLayout';
 import { useSearch } from 'components/Search';
@@ -129,7 +129,7 @@ const EmployeeCatalogPage: React.FC = () => {
         pageSizeOptions={pageSizeOptions}
         noRecordsTemplate={
           <Page module={testModule} subModule={testSubModule} sx={{ my: 0 }}>
-            <PageSubtitle variant="h6">No Employees Found</PageSubtitle>
+            <Page.Subtitle variant="h6">No Employees Found</Page.Subtitle>
           </Page>
         }
         onPageNumberChange={(pageNumber) => handlePageChange({ pageNumber })}

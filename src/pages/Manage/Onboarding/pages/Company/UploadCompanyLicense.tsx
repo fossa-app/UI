@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { FieldValues, FieldErrors } from 'react-hook-form';
 import { renderCopyableField } from 'components/UI/CopyableField';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompany, selectCompanyLicense, selectIsUserAdmin, selectUserRoles, uploadCompanyLicense } from 'store/features';
 import { mapDisabledFields, hasAllowedRole, deepCopyObject } from 'shared/helpers';
@@ -27,15 +25,13 @@ const UploadCompanyLicensePage: React.FC = () => {
         case 'companyId':
           return {
             ...field,
-            renderField: () => (
-              // TODO: enhance this
-              <Box data-cy={`${testModule}-${testSubModule}-form-field-value-companyId`}>
-                <Typography variant="body2" color="textSecondary">
-                  Company ID
-                </Typography>
-                {renderCopyableField({ text: String(company?.id) })}
-              </Box>
-            ),
+            renderField: () =>
+              renderCopyableField({
+                module: testModule,
+                subModule: testSubModule,
+                label: 'Company ID',
+                text: String(company?.id),
+              }),
           };
         default:
           return field;

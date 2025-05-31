@@ -15,7 +15,7 @@ import { Branch, Module, PaginationParams, SubModule, UserRole } from 'shared/mo
 import { ACTION_FIELDS, APP_CONFIG, BRANCH_FIELDS, BRANCH_TABLE_ACTIONS_SCHEMA, BRANCH_TABLE_SCHEMA, ROUTES } from 'shared/constants';
 import { getTestSelectorByModule, mapTableActionsColumn } from 'shared/helpers';
 import { useUnmount } from 'shared/hooks';
-import Page, { PageSubtitle } from 'components/UI/Page';
+import Page from 'components/UI/Page';
 import Table from 'components/UI/Table';
 import ActionsMenu from 'components/UI/Table/ActionsMenu';
 import TableLayout from 'components/layouts/TableLayout';
@@ -147,7 +147,7 @@ const BranchCatalogPage: React.FC = () => {
         pageSizeOptions={pageSizeOptions}
         noRecordsTemplate={
           <Page module={testModule} subModule={testSubModule} sx={{ margin: 0 }}>
-            <PageSubtitle variant="h6">No Branches Found</PageSubtitle>
+            <Page.Subtitle variant="h6">No Branches Found</Page.Subtitle>
           </Page>
         }
         onPageNumberChange={(pageNumber) => handlePageChange({ pageNumber })}

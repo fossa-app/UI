@@ -4,7 +4,7 @@ import { usePageContext } from './PageContext';
 
 type PageSubtitleProps = TypographyProps;
 
-export const PageSubtitle: React.FC<React.PropsWithChildren<PageSubtitleProps>> = ({ children, ...props }) => {
+const PageSubtitle = ({ children, ...props }: React.PropsWithChildren<PageSubtitleProps>) => {
   const context = usePageContext();
 
   if (!context) {
@@ -14,8 +14,17 @@ export const PageSubtitle: React.FC<React.PropsWithChildren<PageSubtitleProps>> 
   const { module, subModule } = context;
 
   return (
-    <Typography data-cy={`${module}-${subModule}-page-subtitle`} variant="subtitle1" component="h2" color="textSecondary" {...props}>
+    <Typography
+      data-cy={`${module}-${subModule}-page-subtitle`}
+      variant="subtitle1"
+      component="h2"
+      color="textSecondary"
+      sx={{ textAlign: 'center' }}
+      {...props}
+    >
       {children}
     </Typography>
   );
 };
+
+export default PageSubtitle;

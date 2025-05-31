@@ -5,7 +5,7 @@ import { selectFlows, selectUserRoles } from 'store/features';
 import { Module, SubModule } from 'shared/models';
 import { convertFlowsMapToArray } from 'shared/helpers';
 import { APP_CONFIG } from 'shared/constants';
-import Page, { PageSubtitle, PageTitle } from 'components/UI/Page';
+import Page from 'components/UI/Page';
 import FlowGroup from 'components/Flow/FlowGroup';
 
 const testModule = Module.manage;
@@ -19,8 +19,8 @@ const FlowsPage: React.FC = () => {
   return (
     <>
       <Page module={testModule} subModule={testSubModule} sx={{ display: 'flex', flexDirection: 'column' }}>
-        <PageTitle>Flows</PageTitle>
-        <PageSubtitle>Manage Flows</PageSubtitle>
+        <Page.Title>Flows</Page.Title>
+        <Page.Subtitle>Manage Flows</Page.Subtitle>
       </Page>
       <Grid container spacing={4} sx={{ mt: 4, mx: 'auto' }}>
         {flows.map((item) => (

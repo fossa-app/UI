@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid2';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import Page, { PageSubtitle } from '../Page';
+import Page from '../Page';
 import { ViewDetailFieldProps } from './view-details.model';
 import { useViewDetailsContext } from './ViewDetailsContext';
 import Detail from './details';
@@ -39,7 +39,7 @@ const ViewDetailsContent = <T,>({ fields, values, noValuesTemplate, children }: 
             !values &&
             (noValuesTemplate ?? (
               <Page module={module} subModule={subModule} sx={{ margin: 0 }}>
-                <PageSubtitle>No Detail Found</PageSubtitle>
+                <Page.Subtitle>No Detail Found</Page.Subtitle>
               </Page>
             ))}
           <Grid container spacing={4}>

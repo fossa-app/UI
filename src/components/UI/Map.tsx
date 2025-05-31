@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { MapContainer, TileLayer, Marker, Popup, MapContainerProps } from 'react-leaflet';
 import { GeoAddress, Module, SubModule } from 'shared/models';
-import Page, { PageSubtitle } from './Page';
+import Page from 'components/UI/Page';
 
 type MapViewProps = {
   module: Module;
@@ -20,7 +20,7 @@ const MapView: React.FC<MapViewProps> = ({ module, subModule, loading, geoAddres
     return (
       noLocationTemplate ?? (
         <Page module={module} subModule={subModule} sx={{ my: 0 }}>
-          <PageSubtitle variant="h6">Location data is unavailable.</PageSubtitle>
+          <Page.Subtitle variant="h6">Location data is unavailable.</Page.Subtitle>
         </Page>
       )
     );

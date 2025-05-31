@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Box from '@mui/system/Box';
 import Button from '@mui/material/Button';
 import { Module, SubModule } from 'shared/models';
-import Page, { PageTitle, PageSubtitle } from 'components/UI/Page';
+import Page from 'components/UI/Page';
 
 export interface NotFoundPageProps {
   title?: string;
@@ -19,8 +19,8 @@ const NotFoundPage: React.FC<NotFoundPageProps> = ({
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexGrow: 1, gap: 5 }}>
       <Page module={Module.shared} subModule={SubModule.notFound}>
-        <PageTitle>{title}</PageTitle>
-        <PageSubtitle>{subtitle}</PageSubtitle>
+        <Page.Title>{title}</Page.Title>
+        <Page.Subtitle>{subtitle}</Page.Subtitle>
       </Page>
       {showActionButton && (
         <Button
