@@ -98,7 +98,7 @@ const BranchCatalogPage: React.FC = () => {
 
   React.useEffect(() => {
     if (fetchStatus === 'idle') {
-      dispatch(fetchBranches([page]));
+      dispatch(fetchBranches(page));
     }
   }, [fetchStatus, page, dispatch]);
 

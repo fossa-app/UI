@@ -87,7 +87,7 @@ describe('Flows Tests', () => {
 
         it('should display correct enabled and disabled subFlows if the Company Onboarding has been completed', () => {
           interceptFetchCompanyRequest();
-          interceptFetchBranchesRequest();
+          interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
           interceptFetchProfileFailedRequest();
 
           checkIsSubFlowDisabled('Company Onboarding', true);
@@ -105,7 +105,7 @@ describe('Flows Tests', () => {
       describe('Onboarding Completed Tests', () => {
         beforeEach(() => {
           interceptFetchCompanyRequest();
-          interceptFetchBranchesRequest();
+          interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
           interceptFetchProfileRequest();
         });
 
@@ -255,6 +255,7 @@ describe('Flows Tests', () => {
     it('should display correct enabled and disabled subFlows if the last branch has been deleted', () => {
       interceptFetchCompanyRequest();
       interceptFetchCompanyLicenseRequest();
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
       interceptFetchBranchesRequest();
       interceptFetchProfileRequest();
       interceptDeleteBranchRequest('222222222222');
@@ -271,7 +272,7 @@ describe('Flows Tests', () => {
       clickFlowsIcon();
 
       cy.location('pathname').should('eq', ROUTES.flows.path);
-      checkIsSubFlowDisabled('Company Onboarding', false);
+      checkIsSubFlowDisabled('Company Onboarding', true);
       checkIsSubFlowDisabled('View Company', false);
       checkIsSubFlowDisabled('Company Offboarding', false);
       checkIsSubFlowDisabled('Branches', false);
@@ -283,7 +284,7 @@ describe('Flows Tests', () => {
 
       clickSubFlow('Company Onboarding');
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.flows.path);
     });
 
     it('should display correct enabled and disabled subFlows when in different onboarding flows', () => {
@@ -356,7 +357,7 @@ describe('Flows Tests', () => {
       selectOption(Module.createBranch, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
       clickField(Module.createBranch, SubModule.branchDetails, 'form-field-noPhysicalAddress');
       clickActionButton(Module.createBranch, SubModule.branchDetails);
-      interceptFetchBranchesRequest();
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
       cy.wait('@createBranchRequest');
       cy.wait('@fetchBranchesRequest');
 

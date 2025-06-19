@@ -19,7 +19,7 @@ const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), {
 const ClientLoader: React.FC = () => {
   const dispatch = useAppDispatch();
   const { data: client, status: clientStatus } = useAppSelector(selectClient);
-  const { data: system, status: systemLicenseStatus } = useAppSelector(selectSystemLicense);
+  const { status: systemLicenseStatus } = useAppSelector(selectSystemLicense);
   const loading = clientStatus === 'loading' || systemLicenseStatus === 'loading';
 
   React.useEffect(() => {
@@ -39,7 +39,7 @@ const ClientLoader: React.FC = () => {
     return <CircularLoader />;
   }
 
-  if (!loading && (!client || !system)) {
+  if (!loading && !client) {
     return NotFoundPage;
   }
 

@@ -19,7 +19,7 @@ import {
   interceptFetchBranchByIdRequest,
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
-  interceptFetchCompanyLicenseFailedRequest,
+  interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
   interceptFetchEmployeesRequest,
   interceptFetchProfileRequest,
@@ -33,9 +33,10 @@ describe('Branch Catalog Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
-    interceptFetchCompanyLicenseFailedRequest();
+    interceptFetchCompanyLicenseRequest();
     interceptFetchCompanyRequest();
     interceptFetchProfileRequest();
+    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     cy.visit(ROUTES.branches.path);
   });
 
@@ -67,11 +68,10 @@ describe('Branch Catalog Tests', () => {
           loginMock();
         });
 
-        // TODO: check why the linear loader is being displayed
-        it('should not display the linear loader if fetching branches is in progress, it is a part of fetchOnboardingData', () => {
+        it('should display the linear loader if fetching branches is in progress', () => {
           interceptFetchBranchesRequest();
 
-          getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('not.exist');
+          getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('exist');
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'page-subtitle').should('not.exist');
 
           cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');

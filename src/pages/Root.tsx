@@ -7,7 +7,6 @@ import { selectAppConfig } from 'store/features';
 import { darkScrollbar, lightScrollbar } from 'shared/helpers';
 import { darkTheme, lightTheme } from 'shared/configs/theme';
 import MessageLayout from 'layout/MessageLayout';
-import LoaderLayout from 'layout/LoaderLayout';
 import AxiosInterceptor from '../AxiosInterceptor';
 import ClientLoader from '../ClientLoader';
 
@@ -22,7 +21,6 @@ const RootPage: React.FC = () => {
         <CssBaseline />
         <ClientLoader />
         <MessageLayout />
-        <LoaderLayout />
       </ThemeProvider>
     </AxiosInterceptor>
   );

@@ -133,7 +133,7 @@ const ManageBranchPage: React.FC = () => {
     if (id) {
       dispatch(editBranch([id, submitData]));
     } else {
-      dispatch(createBranch([submitData, false]));
+      dispatch(createBranch(submitData));
     }
 
     setFormSubmitted(true);
