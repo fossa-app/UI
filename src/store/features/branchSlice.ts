@@ -46,16 +46,40 @@ const initialState: BranchState = {
   },
 };
 
+export const fetchOnboardingBranches = createAsyncThunk<PaginatedResponse<BranchDTO> | undefined, void, { rejectValue: ErrorResponseDTO }>(
+  'branch/fetchOnboardingBranches',
+  async (_, { rejectWithValue }) => {
+    try {
+      const queryParams = prepareQueryParams({ pageNumber: 1, pageSize: 1 });
+      const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?${queryParams}`);
+
+      if (!data.items.length) {
+        return rejectWithValue({
+          status: 404,
+          title: MESSAGES.error.branches.notFound,
+        });
+      }
+
+      return data;
+    } catch (error) {
+      return rejectWithValue({
+        ...(error as ErrorResponseDTO),
+        title: MESSAGES.error.branches.notFound,
+      });
+    }
+  }
+);
+
 export const fetchBranches = createAsyncThunk<
   PaginatedResponse<Branch> | undefined,
-  [Partial<PaginationParams>, boolean?],
+  Partial<PaginationParams>,
   { rejectValue: ErrorResponseDTO }
->('branch/fetchBranches', async ([{ pageNumber, pageSize, search }, shouldRejectEmptyResponse = false], { getState, rejectWithValue }) => {
+>('branch/fetchBranches', async ({ pageNumber, pageSize, search }, { getState, rejectWithValue }) => {
   try {
     const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
     const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?${queryParams}`);
 
-    if (!data.items.length && shouldRejectEmptyResponse) {
+    if (!data.items.length) {
       return rejectWithValue({
         status: 404,
         title: MESSAGES.error.branches.notFound,
@@ -163,15 +187,37 @@ export const fetchBranchById = createAsyncThunk<
   }
 });
 
-export const createBranch = createAsyncThunk<void, [BranchDTO, boolean?], { rejectValue: ErrorResponse<FieldValues> }>(
-  'branch/createBranch',
-  async ([branch, shouldFetchBranches = true], { dispatch, rejectWithValue }) => {
+export const createOnboardingBranch = createAsyncThunk<void, BranchDTO, { rejectValue: ErrorResponse<FieldValues> }>(
+  'branch/createOnboardingBranch',
+  async (branch, { dispatch, rejectWithValue }) => {
     try {
       await axios.post<void>(ENDPOINTS.branches, branch);
 
-      if (shouldFetchBranches) {
-        await dispatch(fetchBranches([APP_CONFIG.table.defaultPagination])).unwrap();
-      }
+      await dispatch(fetchOnboardingBranches()).unwrap();
+
+      dispatch(setSuccess(MESSAGES.success.branches.create));
+    } catch (error) {
+      dispatch(
+        setError({
+          ...(error as ErrorResponseDTO),
+          title: MESSAGES.error.branches.create,
+        })
+      );
+
+      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+
+      return rejectWithValue(mappedError);
+    }
+  }
+);
+
+export const createBranch = createAsyncThunk<void, BranchDTO, { rejectValue: ErrorResponse<FieldValues> }>(
+  'branch/createBranch',
+  async (branch, { dispatch, rejectWithValue }) => {
+    try {
+      await axios.post<void>(ENDPOINTS.branches, branch);
+
+      await dispatch(fetchBranches(APP_CONFIG.table.defaultPagination)).unwrap();
 
       dispatch(setSuccess(MESSAGES.success.branches.create));
     } catch (error) {
@@ -373,6 +419,17 @@ const branchSlice = createSlice({
         state.branch.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(createBranch.fulfilled, (state) => {
+        state.branch.updateStatus = 'succeeded';
+        state.branch.updateError = undefined;
+      })
+      .addCase(createOnboardingBranch.pending, (state) => {
+        state.branch.updateStatus = 'loading';
+      })
+      .addCase(createOnboardingBranch.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
+        state.branch.updateStatus = 'failed';
+        state.branch.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+      })
+      .addCase(createOnboardingBranch.fulfilled, (state) => {
         state.branch.updateStatus = 'succeeded';
         state.branch.updateError = undefined;
       })

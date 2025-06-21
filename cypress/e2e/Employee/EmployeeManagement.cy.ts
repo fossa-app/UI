@@ -62,6 +62,7 @@ describe('Employee Management Tests', () => {
     interceptFetchCompanyLicenseRequest();
     interceptFetchCompanyRequest();
     interceptFetchBranchesRequest();
+    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     interceptFetchProfileRequest();
     interceptFetchEmployeesRequest(
       { pageNumber: 1, pageSize: 10 },

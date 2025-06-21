@@ -71,8 +71,8 @@ describe('Company Management Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
-    interceptFetchCompanyLicenseFailedRequest();
-    interceptFetchBranchesRequest();
+    interceptFetchCompanyLicenseRequest();
+    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     interceptFetchProfileRequest();
     interceptFetchCompanyRequest();
   });

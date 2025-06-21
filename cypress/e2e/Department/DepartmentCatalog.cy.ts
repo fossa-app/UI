@@ -13,7 +13,7 @@ import {
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
-  interceptFetchCompanyLicenseFailedRequest,
+  interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
@@ -34,9 +34,9 @@ describe('Department Catalog Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
-    interceptFetchCompanyLicenseFailedRequest();
+    interceptFetchCompanyLicenseRequest();
     interceptFetchCompanyRequest();
-    interceptFetchBranchesRequest();
+    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     interceptFetchProfileRequest();
     cy.visit(ROUTES.departments.path);
   });

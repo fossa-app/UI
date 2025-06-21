@@ -11,4 +11,3 @@ export * from './employeeSlice';
 export * from './profileSlice';
 export * from './flowSlice';
 export * from './messageSlice';
-export * from './appLoadingSlice';

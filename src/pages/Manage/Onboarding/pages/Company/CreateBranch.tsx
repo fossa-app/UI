@@ -2,7 +2,7 @@ import * as React from 'react';
 import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
-  createBranch,
+  createOnboardingBranch,
   selectBranch,
   selectIsUserAdmin,
   selectCompanyTimeZones,
@@ -69,7 +69,7 @@ const CreateBranchPage: React.FC = () => {
   const handleSubmit = (formValue: Branch) => {
     const submitData = mapBranchDTO(formValue);
 
-    dispatch(createBranch([submitData]));
+    dispatch(createOnboardingBranch(submitData));
   };
 
   const handleChange = (formValue: Branch) => {

@@ -17,6 +17,10 @@ const UploadCompanyLicensePage: React.FC = () => {
   const { updateStatus, updateError: error } = useAppSelector(selectCompanyLicense);
   const { data: company } = useAppSelector(selectCompany);
 
+  // const handleSkip = React.useCallback(() => {
+  //   dispatch(setCompanyLicenseSkipped());
+  // }, [dispatch]);
+
   const fields = React.useMemo(() => {
     const mappedFields = mapDisabledFields(UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.fields, userRoles);
 
@@ -56,6 +60,8 @@ const UploadCompanyLicensePage: React.FC = () => {
             disabled: !hasAllowedRole(action.roles, userRoles),
             loading: updateStatus === 'loading',
           };
+        // case FormActionName.cancel:
+        //   return { ...action, onClick: handleSkip };
         default:
           return action;
       }

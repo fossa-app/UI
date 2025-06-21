@@ -15,7 +15,6 @@ import employeeReducer from './features/employeeSlice';
 import profileReducer from './features/profileSlice';
 import flowReducer from './features/flowSlice';
 import messageReducer from './features/messageSlice';
-import appLoadingReducer from './features/appLoadingSlice';
 
 const rootReducer = combineReducers({
   identity: clientReducer,
@@ -31,7 +30,6 @@ const rootReducer = combineReducers({
   profile: profileReducer,
   flow: flowReducer,
   message: messageReducer,
-  appLoading: appLoadingReducer,
 });
 
 const store = configureStore({

@@ -201,7 +201,7 @@ describe('Onboarding Flow Tests', () => {
       it('should not be able to navigate to the Profile page if employee creation failed', () => {
         interceptFetchCompanyRequest();
         interceptFetchCompanyLicenseRequest();
-        interceptFetchBranchesRequest();
+        interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
         interceptFetchProfileFailedRequest();
         interceptCreateProfileFailedRequest();
         cy.visit(ROUTES.employeeOnboarding.path);
@@ -221,7 +221,7 @@ describe('Onboarding Flow Tests', () => {
       it('should be able to navigate to the Flows page if the employee creation succeeded', () => {
         interceptFetchCompanyRequest();
         interceptFetchCompanyLicenseRequest();
-        interceptFetchBranchesRequest();
+        interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
         interceptFetchProfileFailedRequest();
         interceptCreateProfileRequest();
         cy.visit(ROUTES.employeeOnboarding.path);
@@ -255,7 +255,7 @@ describe('Onboarding Flow Tests', () => {
       it('should be able to navigate to the Company page by clicking the company logo if the company has been created', () => {
         interceptFetchCompanyRequest();
         interceptFetchCompanyLicenseRequest();
-        interceptFetchBranchesRequest();
+        interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
         interceptFetchProfileFailedRequest();
         cy.visit(ROUTES.createEmployee.path);
 
@@ -269,7 +269,7 @@ describe('Onboarding Flow Tests', () => {
       it('should navigate to the Flows page if company, company license, branch and employee data exist', () => {
         interceptFetchCompanyRequest();
         interceptFetchCompanyLicenseRequest();
-        interceptFetchBranchesRequest();
+        interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
         interceptFetchProfileRequest();
         cy.visit(ROUTES.onboarding.path);
 
@@ -664,7 +664,7 @@ describe('Onboarding Flow Tests', () => {
         'form-section-field-address': 'Address Information',
       });
 
-      interceptFetchBranchesRequest();
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
 
       getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-name').type('America/New_York');
       selectOption(Module.createBranch, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
@@ -681,7 +681,7 @@ describe('Onboarding Flow Tests', () => {
     it('should display validation messages if the employee creation form is invalid', () => {
       interceptFetchCompanyRequest();
       interceptFetchCompanyLicenseRequest();
-      interceptFetchBranchesRequest();
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
       interceptFetchProfileFailedRequest();
       interceptCreateProfileFailedRequest();
       cy.visit(ROUTES.employeeOnboarding.path);
@@ -706,7 +706,7 @@ describe('Onboarding Flow Tests', () => {
     it('should display async validation messages if the employee creation failed with validation errors', () => {
       interceptFetchCompanyRequest();
       interceptFetchCompanyLicenseRequest();
-      interceptFetchBranchesRequest();
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
       interceptFetchProfileFailedRequest();
       interceptCreateProfileFailedWithErrorRequest();
       cy.visit(ROUTES.employeeOnboarding.path);
@@ -748,7 +748,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.url().should('include', ROUTES.createBranch.path);
 
-      interceptFetchBranchesRequest();
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
 
       getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-name').type('America/New_York');
       selectOption(Module.createBranch, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
@@ -809,7 +809,7 @@ describe('Onboarding Flow Tests', () => {
     it('should be redirected to the Flows page if manually visiting a non-existing route from the Employee creation page', () => {
       interceptFetchCompanyRequest();
       interceptFetchCompanyLicenseRequest();
-      interceptFetchBranchesRequest();
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
       interceptFetchProfileFailedRequest();
       cy.visit(ROUTES.employeeOnboarding.path);
 
@@ -909,7 +909,7 @@ describe('Onboarding Flow Tests', () => {
       selectOption(Module.createBranch, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
       clickField(Module.createBranch, SubModule.branchDetails, 'form-field-noPhysicalAddress');
       clickActionButton(Module.createBranch, SubModule.branchDetails);
-      interceptFetchBranchesRequest();
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
       cy.wait('@createBranchRequest');
       cy.wait('@fetchBranchesRequest');
 

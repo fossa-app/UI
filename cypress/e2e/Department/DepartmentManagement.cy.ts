@@ -22,7 +22,7 @@ import {
   interceptEditDepartmentRequest,
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
-  interceptFetchCompanyLicenseFailedRequest,
+  interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
   interceptFetchDepartmentByIdFailedRequest,
   interceptFetchDepartmentByIdRequest,
@@ -55,9 +55,9 @@ describe('Department Management Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
-    interceptFetchCompanyLicenseFailedRequest();
+    interceptFetchCompanyLicenseRequest();
     interceptFetchCompanyRequest();
-    interceptFetchBranchesRequest();
+    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     interceptFetchProfileRequest();
     cy.loginMock(true);
   });

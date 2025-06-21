@@ -15,7 +15,7 @@ import {
   interceptEditProfileRequest,
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
-  interceptFetchCompanyLicenseFailedRequest,
+  interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
   interceptFetchProfileFailedRequest,
   interceptFetchProfileRequest,
@@ -26,9 +26,9 @@ describe('Profile Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
-    interceptFetchCompanyLicenseFailedRequest();
+    interceptFetchCompanyLicenseRequest();
     interceptFetchCompanyRequest();
-    interceptFetchBranchesRequest();
+    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     cy.loginMock();
   });
 

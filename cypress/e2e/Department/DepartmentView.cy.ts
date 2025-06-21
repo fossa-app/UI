@@ -4,7 +4,7 @@ import { getLinearLoader, getTestSelectorByModule, selectAction, verifyInputFiel
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
-  interceptFetchCompanyLicenseFailedRequest,
+  interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
   interceptFetchDepartmentByIdFailedRequest,
   interceptFetchDepartmentByIdRequest,
@@ -42,9 +42,9 @@ describe('Department View Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
-    interceptFetchCompanyLicenseFailedRequest();
+    interceptFetchCompanyLicenseRequest();
     interceptFetchCompanyRequest();
-    interceptFetchBranchesRequest();
+    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     interceptFetchProfileRequest();
   });
 

@@ -27,6 +27,10 @@ describe('Offboarding Flow Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
+    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
+    interceptFetchCompanyRequest();
+    interceptFetchCompanyLicenseRequest();
+    interceptFetchProfileRequest();
   });
 
   const roles = [
@@ -49,10 +53,6 @@ describe('Offboarding Flow Tests', () => {
       });
 
       it('should be redirected to the Delete Company page', () => {
-        interceptFetchCompanyRequest();
-        interceptFetchCompanyLicenseRequest();
-        interceptFetchBranchesRequest();
-        interceptFetchProfileRequest();
         cy.visit(ROUTES.offboarding.path);
 
         cy.url().should('include', ROUTES.deleteCompany.path);
@@ -73,10 +73,6 @@ describe('Offboarding Flow Tests', () => {
       });
 
       it('should be redirected to the Delete Profile page', () => {
-        interceptFetchCompanyRequest();
-        interceptFetchCompanyLicenseRequest();
-        interceptFetchBranchesRequest();
-        interceptFetchProfileRequest();
         cy.visit(ROUTES.employeeOffboarding.path);
 
         cy.url().should('include', ROUTES.deleteEmployee.path);
@@ -90,10 +86,6 @@ describe('Offboarding Flow Tests', () => {
       });
 
       it('should be able to navigate to the Delete Profile page if the employee offboarding subflow is clicked', () => {
-        interceptFetchCompanyRequest();
-        interceptFetchCompanyLicenseRequest();
-        interceptFetchBranchesRequest();
-        interceptFetchProfileRequest();
         cy.visit(ROUTES.flows.path);
 
         checkIsSubFlowDisabled('Employee Offboarding', false);
@@ -103,15 +95,10 @@ describe('Offboarding Flow Tests', () => {
       });
 
       it('should not be redirected to the Flows page if the profile deletion failed', () => {
-        interceptFetchCompanyRequest();
-        interceptFetchCompanyLicenseRequest();
-        interceptFetchBranchesRequest();
-        interceptFetchProfileRequest();
         interceptDeleteProfileFailedRequest();
         cy.visit(ROUTES.flows.path);
 
         clickSubFlow('Employee Offboarding');
-
         clickActionButton(Module.deleteEmployee, SubModule.employeeDetails);
         cy.wait('@deleteProfileFailedRequest');
 
@@ -127,15 +114,10 @@ describe('Offboarding Flow Tests', () => {
       });
 
       it('should be redirected to the Flows page if the profile deletion succeeded', () => {
-        interceptFetchCompanyRequest();
-        interceptFetchCompanyLicenseRequest();
-        interceptFetchBranchesRequest();
-        interceptFetchProfileRequest();
         interceptDeleteProfileRequest();
         cy.visit(ROUTES.flows.path);
 
         clickSubFlow('Employee Offboarding');
-
         clickActionButton(Module.deleteEmployee, SubModule.employeeDetails);
         cy.wait('@deleteProfileRequest');
 
@@ -156,15 +138,10 @@ describe('Offboarding Flow Tests', () => {
       });
 
       it('should not be able to manually navigate to the View Profile or Edit Profile page, if the profile has been deleted', () => {
-        interceptFetchCompanyRequest();
-        interceptFetchCompanyLicenseRequest();
-        interceptFetchBranchesRequest();
-        interceptFetchProfileRequest();
         interceptDeleteProfileRequest();
         cy.visit(ROUTES.flows.path);
 
         clickSubFlow('Employee Offboarding');
-
         clickActionButton(Module.deleteEmployee, SubModule.employeeDetails);
         cy.wait('@deleteProfileRequest');
 
@@ -186,10 +163,6 @@ describe('Offboarding Flow Tests', () => {
     });
 
     it('should disable the company offboarding subflow', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchCompanyLicenseRequest();
-      interceptFetchBranchesRequest();
-      interceptFetchProfileRequest();
       cy.visit(ROUTES.flows.path);
 
       checkIsSubFlowHasDisabledAttribute('Company Offboarding', true);
@@ -205,10 +178,6 @@ describe('Offboarding Flow Tests', () => {
     });
 
     it('should be able to navigate to the Delete Company page if the company offboarding subflow is clicked', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchCompanyLicenseRequest();
-      interceptFetchBranchesRequest();
-      interceptFetchProfileRequest();
       cy.visit(ROUTES.flows.path);
 
       checkIsSubFlowHasDisabledAttribute('Company Offboarding', false);
@@ -218,15 +187,10 @@ describe('Offboarding Flow Tests', () => {
     });
 
     it('should not be redirected to the Flows page if the company deletion failed', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchCompanyLicenseRequest();
-      interceptFetchBranchesRequest();
-      interceptFetchProfileRequest();
       interceptDeleteCompanyFailedRequest();
       cy.visit(ROUTES.flows.path);
 
       clickSubFlow('Company Offboarding');
-
       clickActionButton(Module.deleteCompany, SubModule.companyDetails);
       cy.wait('@deleteCompanyFailedRequest');
 
@@ -242,15 +206,10 @@ describe('Offboarding Flow Tests', () => {
     });
 
     it('should be redirected to the Flows page if the company deletion succeeded', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchCompanyLicenseRequest();
-      interceptFetchBranchesRequest();
-      interceptFetchProfileRequest();
       interceptDeleteCompanyRequest();
       cy.visit(ROUTES.flows.path);
 
       clickSubFlow('Company Offboarding');
-
       clickActionButton(Module.deleteCompany, SubModule.companyDetails);
       cy.wait('@deleteCompanyRequest');
 
@@ -271,10 +230,6 @@ describe('Offboarding Flow Tests', () => {
     });
 
     it('should not be able to manually navigate to the View Company or Edit Company page, if the company has been deleted', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchCompanyLicenseRequest();
-      interceptFetchBranchesRequest();
-      interceptFetchProfileRequest();
       interceptDeleteCompanyRequest();
       cy.visit(ROUTES.flows.path);
 
