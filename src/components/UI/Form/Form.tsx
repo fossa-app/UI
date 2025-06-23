@@ -3,7 +3,7 @@ import { FormProvider as ReactHookFormProvider, useForm, DefaultValues, FieldErr
 import Paper from '@mui/material/Paper';
 import { Item, Module, SubModule } from 'shared/models';
 import { deepEqual } from 'shared/helpers';
-import { CUSTOM_STYLES } from 'shared/configs/theme';
+import { CUSTOM_STYLES } from 'shared/themes';
 import LinearLoader from '../LinearLoader';
 import FormContext from './FormContext';
 import FormHeader from './FormHeader';

@@ -1,0 +1,118 @@
+export const COLOR_SCHEMES = {
+  midnight: {
+    label: 'Midnight',
+    light: {
+      primary: '#223A5E',
+      secondary: '#406882',
+      error: '#E63946',
+      background: '#A3BFD9',
+      paper: '#F0F4F8',
+      info: '#B5CFE3',
+    },
+    dark: {
+      primary: '#0077B6',
+      secondary: '#5A9BD5',
+      error: '#F25C54',
+      background: '#0B0F14',
+      paper: '#121821',
+      info: '#7FA7C5',
+    },
+  },
+  forest: {
+    label: 'Forest',
+    light: {
+      primary: '#2E8B57',
+      secondary: '#9E6F38',
+      error: '#D64545',
+      background: '#F0F8F0',
+      paper: '#FFFFFF',
+      info: '#78C2AD',
+    },
+    dark: {
+      primary: '#3CB371',
+      secondary: '#A67C52',
+      error: '#FF6B6B',
+      background: '#1B2B1B',
+      paper: '#222F22',
+      info: '#4F9A81',
+    },
+  },
+  ocean: {
+    label: 'Ocean',
+    light: {
+      primary: '#007B8A',
+      secondary: '#49C5B6',
+      error: '#D64545',
+      background: '#E6F7F8',
+      paper: '#FFFFFF',
+      info: '#82CFFD',
+    },
+    dark: {
+      primary: '#00ADB5',
+      secondary: '#81E4D2',
+      error: '#FF4D4D',
+      background: '#122126',
+      paper: '#1B2B30',
+      info: '#69C9CC',
+    },
+  },
+  sunset: {
+    label: 'Sunset',
+    light: {
+      primary: '#FF6F61',
+      secondary: '#FFA07A',
+      error: '#E63946',
+      background: '#FFF5EC',
+      paper: '#FFFFFF',
+      info: '#FFD3B4',
+    },
+    dark: {
+      primary: '#FF4F4F',
+      secondary: '#FF944D',
+      error: '#FFD460',
+      background: '#2D1E1E',
+      paper: '#3A1F1F',
+      info: '#FFBFA3',
+    },
+  },
+  sunrise: {
+    label: 'Sunrise',
+    light: {
+      primary: '#FFB347',
+      secondary: '#DE7114',
+      error: '#E05252',
+      background: '#FFFDF5',
+      paper: '#FFFFFF',
+      info: '#FFE0B2',
+    },
+    dark: {
+      primary: '#FF8C42',
+      secondary: '#C55300',
+      error: '#FF6E6E',
+      background: '#1A1410',
+      paper: '#251A12',
+      info: '#E8B684',
+    },
+  },
+  lavender: {
+    label: 'Lavender',
+    light: {
+      primary: '#A98AC7',
+      secondary: '#6B4EA0',
+      error: '#FF8A8A',
+      background: '#F2E6FF',
+      paper: '#FFFFFF',
+      info: '#D5AAFF',
+    },
+    dark: {
+      primary: '#9C7FC4',
+      secondary: '#B58EDC',
+      error: '#FF9999',
+      background: '#1E1627',
+      paper: '#2A1B39',
+      info: '#CBA4FF',
+    },
+  },
+};
+
+export const COLOR_SCHEME_KEYS = ['primary', 'secondary', 'background', 'paper', 'error', 'info'] as const;

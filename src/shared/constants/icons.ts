@@ -8,6 +8,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import GroupIcon from '@mui/icons-material/Group';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { IconType, SvgIcon } from 'shared/models';
 
 export const ICONS: Record<IconType, SvgIcon> = {
@@ -21,4 +22,5 @@ export const ICONS: Record<IconType, SvgIcon> = {
   [IconType.department]: GroupIcon,
   [IconType.assign]: AssignmentTurnedInIcon,
   [IconType.remove]: RemoveCircleIcon,
+  [IconType.settings]: SettingsIcon,
 };

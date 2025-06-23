@@ -8,7 +8,7 @@ import TablePagination from '@mui/material/TablePagination';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import { Item, Module, SubModule } from 'shared/models';
 import { APP_CONFIG } from 'shared/constants';
-import { CUSTOM_STYLES } from 'shared/configs/theme';
+import { CUSTOM_STYLES } from 'shared/themes';
 import Page from 'components/UI/Page';
 import { Column } from './table.model';
 import { StyledTable } from './StyledTable';

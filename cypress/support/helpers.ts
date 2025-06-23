@@ -165,6 +165,18 @@ export const checkIsSubFlowHasDisabledAttribute = (subFlowName: string, isDisabl
   cy.get(selector).should(isDisabled ? 'have.attr' : 'not.have.attr', 'aria-disabled', 'true');
 };
 
+export const verifyRadioGroupValue = (name: string, expectedValue: string, allValues: string[]) => {
+  allValues.forEach((value) => {
+    const assertion = value === expectedValue ? 'be.checked' : 'not.be.checked';
+
+    cy.get(`input[name="${name}"][value="${value}"]`).should(assertion);
+  });
+};
+
+export const selectColorScheme = (module: Module, subModule: SubModule, selector: string) => {
+  getTestSelectorByModule(module, subModule, selector).click();
+};
+
 export const uploadTestFile = (selector: string, fixtureName: string, fileType = 'application/octet-stream') => {
   cy.fixture(fixtureName, 'binary').then((fileContent) => {
     const blob = Cypress.Blob.binaryStringToBlob(fileContent, fileType);

@@ -4,6 +4,7 @@ export const ENDPOINTS = {
   systemLicense: 'License/System',
   companyLicense: 'License/Company',
   company: 'Company',
+  companySettings: 'CompanySettings',
   branches: 'Branches',
   departments: 'Departments',
   employee: 'Employee',

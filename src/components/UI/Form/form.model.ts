@@ -8,7 +8,7 @@ import { CheckboxProps } from '@mui/material/Checkbox';
 import { SwitchProps } from '@mui/material/Switch';
 import { GridBaseProps } from '@mui/material/Grid2';
 import { TypographyProps } from '@mui/material/Typography';
-import { Module, SubModule, UserRole } from 'shared/models';
+import { Module, SubModule, ThemeMode, UserRole } from 'shared/models';
 import { LoadingButtonProps } from '../LoadingButton';
 import { FileUploadProps } from '../FileUpload';
 
@@ -30,6 +30,7 @@ export enum FormFieldType {
   switch = 'switch',
   labelValue = 'labelValue',
   fileUpload = 'fileUpload',
+  colorScheme = 'colorScheme',
 }
 
 export enum FormActionType {
@@ -106,6 +107,11 @@ export type FileUploadFieldProps = BaseFormFieldProps & {
   onFileSelect?: (file: File) => void;
 } & Partial<FileUploadProps>;
 
+export type ColorSchemeFieldProps = BaseFormFieldProps & {
+  type: FormFieldType.colorScheme;
+  mode?: ThemeMode;
+};
+
 export type FormFieldProps<T> = { renderField?: (item?: T) => React.ReactNode } & (
   | SectionFieldProps
   | LabelValueFieldProps
@@ -115,6 +121,7 @@ export type FormFieldProps<T> = { renderField?: (item?: T) => React.ReactNode } 
   | CheckboxFieldProps
   | SwitchFieldProps
   | FileUploadFieldProps
+  | ColorSchemeFieldProps
 );
 
 type FormActionButtonProps = FormBaseActionProps & {

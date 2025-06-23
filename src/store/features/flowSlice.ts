@@ -47,6 +47,7 @@ const flowSlice = createSlice({
         state.flags[OnboardingStep.company] = true;
         state.flows.company!.subFlows!.viewCompany!.disabled = false;
         state.flows.profile!.subFlows!.employeeOnboarding!.disabled = false;
+        state.flows.company!.subFlows!.companySettings!.disabled = false;
         state.flows.company!.subFlows!.companyOffboarding!.disabled = false;
         state.flows.company!.subFlows!.companyOnboarding!.disabled = checkAllFlagsSet(state.flags);
       })
@@ -77,6 +78,7 @@ const flowSlice = createSlice({
         state.flows.company!.subFlows!.companyOnboarding!.disabled = false;
         state.flows.company!.subFlows!.companyOffboarding!.disabled = true;
         state.flows.company!.subFlows!.viewCompany!.disabled = true;
+        state.flows.company!.subFlows!.companySettings!.disabled = true;
         state.flows.profile!.subFlows!.employeeOnboarding!.disabled = true;
         state.flows.profile!.subFlows!.viewProfile!.disabled = true;
         state.flows.profile!.subFlows!.employeeOffboarding!.disabled = true;

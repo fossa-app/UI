@@ -92,6 +92,10 @@ const EditDepartmentPage = createLazyComponent(() => import('pages/Manage/Depart
   title: ROUTES.editDepartment.name,
   isAdminRoute: true,
 });
+const CompanySettingsPage = createLazyComponent(() => import('pages/Manage/Company/pages/CompanySettings'), {
+  title: ROUTES.companySettings.name,
+  isAdminRoute: true,
+});
 
 const router = createBrowserRouter(
   [
@@ -235,6 +239,10 @@ const router = createBrowserRouter(
                     {
                       path: ROUTES.editCompany.path,
                       element: EditCompanyPage,
+                    },
+                    {
+                      path: ROUTES.companySettings.path,
+                      element: CompanySettingsPage,
                     },
                   ],
                 },
