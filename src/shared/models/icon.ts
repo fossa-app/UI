@@ -12,6 +12,7 @@ export enum IconType {
   department = 'department',
   assign = 'assign',
   remove = 'remove',
+  settings = 'settings',
 }
 
 export type SvgIcon = OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;

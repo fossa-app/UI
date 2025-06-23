@@ -1,5 +1,5 @@
 import { OidcClientSettings } from 'oidc-client-ts';
-import { PaginationParams } from 'shared/models';
+import { ColorSchemeId, PaginationParams } from 'shared/models';
 
 export const OIDC_INITIAL_CONFIG: OidcClientSettings = {
   authority: 'http://localhost:9011',
@@ -49,6 +49,12 @@ export const MESSAGES = {
       deleteDependency: 'Unable to delete the Company. It has dependent entities 😞',
       delete: 'Failed to delete the Company 😞',
     },
+    companySettings: {
+      notFound: 'Company Settings not found 😞',
+      create: 'Failed to create a Company Settings 😞',
+      update: 'Failed to update the Company Settings 😞',
+      delete: 'Failed to delete the Company Settings 😞',
+    },
     branches: {
       notFound: 'Branch not found 😞',
       create: 'Failed to create a Branch 😞',
@@ -81,6 +87,11 @@ export const MESSAGES = {
       update: 'Company has been successfully updated 😊',
       delete: 'Company has been successfully deleted 😊',
     },
+    companySettings: {
+      create: 'Company Settings has been successfully created 😊',
+      update: 'Company Settings has been successfully updated 😊',
+      delete: 'Company Settings has been successfully deleted 😊',
+    },
     branches: {
       create: 'Branch has been successfully created 😊',
       update: 'Branch has been successfully updated 😊',
@@ -108,3 +119,5 @@ export const USER_PERMISSION_GENERAL_MESSAGE = {
 };
 
 export const STEP_KEY = 'step';
+
+export const DEFAULT_COLOR_SCHEME: ColorSchemeId = 'midnight';

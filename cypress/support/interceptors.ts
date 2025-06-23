@@ -131,6 +131,32 @@ export const interceptCreateCompanyFailedWithErrorRequest = (
   });
 };
 
+export const interceptFetchCompanySettingsRequest = (alias = 'fetchCompanySettingsRequest', fixture = 'company/company-settings') => {
+  cy.fixture(fixture).then((companySettings) => {
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/CompanySettings`, companySettings, alias);
+  });
+};
+
+export const interceptFetchCompanySettingsFailedRequest = () => {
+  cy.interceptWithAuth('GET', `${serverBaseUrl}/CompanySettings`, null, 'fetchCompanySettingsFailedRequest', 404);
+};
+
+export const interceptCreateCompanySettingsRequest = () => {
+  cy.interceptWithAuth('POST', `${serverBaseUrl}/CompanySettings`, null, 'createCompanySettingsRequest');
+};
+
+export const interceptCreateCompanySettingsFailedRequest = () => {
+  cy.interceptWithAuth('POST', `${serverBaseUrl}/CompanySettings`, null, 'createCompanySettingsFailedRequest', 404);
+};
+
+export const interceptEditCompanySettingsRequest = () => {
+  cy.interceptWithAuth('PUT', `${serverBaseUrl}/CompanySettings`, null, 'editCompanySettingsRequest');
+};
+
+export const interceptEditCompanySettingsFailedRequest = () => {
+  cy.interceptWithAuth('PUT', `${serverBaseUrl}/CompanySettings`, null, 'editCompanySettingsFailedRequest', 404);
+};
+
 export const interceptFetchBranchesRequest = (
   { pageNumber = 1, pageSize = 10, search = '' } = {},
   { alias = 'fetchBranchesRequest', fixture = 'branch/branches', statusCode = 200, delay = 300 } = {}

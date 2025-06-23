@@ -9,6 +9,7 @@ import authReducer from './features/authSlice';
 import onboardingReducer from './features/onboardingSlice';
 import offboardingReducer from './features/offboardingSlice';
 import companyReducer from './features/companySlice';
+import companySettingsReducer from './features/companySettingsSlice';
 import branchReducer from './features/branchSlice';
 import departmentReducer from './features/departmentSlice';
 import employeeReducer from './features/employeeSlice';
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   onboarding: onboardingReducer,
   offboarding: offboardingReducer,
   company: companyReducer,
+  companySettings: companySettingsReducer,
   branch: branchReducer,
   department: departmentReducer,
   employee: employeeReducer,

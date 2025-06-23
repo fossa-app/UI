@@ -3,6 +3,8 @@ import {
   CompanyFieldConfig,
   CompanyLicense,
   CompanyLicenseFieldConfig,
+  CompanySettings,
+  CompanySettingsFieldConfig,
   IconType,
   Module,
   SubModule,
@@ -11,6 +13,7 @@ import {
 import { FormActionType, FormFieldType, FormActionName, FormProps } from 'components/UI/Form';
 import { ViewDetailActionName, ViewDetailActionType, ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
 import { renderCopyableField } from 'components/UI/CopyableField';
+import { DEFAULT_COLOR_SCHEME } from './configs';
 
 export const COMPANY_FIELDS: CompanyFieldConfig = {
   id: {
@@ -87,6 +90,21 @@ export const COMPANY_LICENSE_FIELDS: CompanyLicenseFieldConfig = {
       field: 'maximumDepartmentCount',
       name: 'Maximum Department Count',
     },
+  },
+};
+
+export const COMPANY_SETTINGS_FIELDS: CompanySettingsFieldConfig = {
+  id: {
+    field: 'id',
+    name: 'ID',
+  },
+  companyId: {
+    field: 'companyId',
+    name: 'Company ID',
+  },
+  colorSchemeId: {
+    field: 'colorSchemeId',
+    name: 'Color Scheme',
   },
 };
 
@@ -349,4 +367,52 @@ export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewDetailProps<CompanyLicense
 export const COMPANY_DETAILS_FORM_DEFAULT_VALUES: Company = {
   name: '',
   countryCode: '',
+};
+
+export const COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<CompanySettingsFieldConfig> = {
+  module: Module.companyManagement,
+  subModule: SubModule.companySettingsDetails,
+  title: 'Company Settings Details',
+  fields: [
+    {
+      type: FormFieldType.section,
+      name: 'colorScheme',
+      label: 'Color Scheme',
+      grid: { size: { xs: 12 } },
+      roles: [UserRole.administrator],
+    },
+    {
+      type: FormFieldType.colorScheme,
+      name: COMPANY_SETTINGS_FIELDS.colorSchemeId!.field,
+      label: 'Select Company Color Scheme',
+      grid: { size: { xs: 12 } },
+      rules: {
+        required: { value: true, message: 'Company Color Scheme is required' },
+      },
+      roles: [UserRole.administrator],
+    },
+  ],
+  actions: [
+    {
+      actionType: FormActionType.button,
+      label: 'Cancel',
+      name: FormActionName.cancel,
+      variant: 'text',
+      color: 'secondary',
+      'aria-label': 'Cancel Company Settings Button',
+    },
+    {
+      actionType: FormActionType.loadingButton,
+      label: 'Save',
+      name: FormActionName.submit,
+      type: 'submit',
+      loadingPosition: 'end',
+      endIcon: IconType.save,
+      'aria-label': 'Save Company Settings Button',
+    },
+  ],
+};
+
+export const COMPANY_SETTINGS_DETAILS_FORM_DEFAULT_VALUES: CompanySettings = {
+  colorSchemeId: DEFAULT_COLOR_SCHEME,
 };

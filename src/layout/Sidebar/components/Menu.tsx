@@ -20,7 +20,7 @@ const Menu: React.FC<MenuProps> = ({ onCloseSideBar }) => {
   const flows = React.useMemo(() => convertFlowsMapToArray(flowsMap), [flowsMap]);
 
   const getButtonStyles = (isActive: boolean) => ({
-    color: isActive ? theme.palette.primary.main : theme.palette.info.contrastText,
+    color: isActive ? theme.palette.primary.main : theme.palette.text.primary,
   });
 
   return (

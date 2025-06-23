@@ -16,6 +16,7 @@ export enum RouteKey {
   editCompany = 'editCompany',
   viewCompany = 'viewCompany',
   deleteCompany = 'deleteCompany',
+  companySettings = 'companySettings',
   branches = 'branches',
   employees = 'employees',
   createBranch = 'createBranch',

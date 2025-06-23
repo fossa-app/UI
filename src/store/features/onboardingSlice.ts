@@ -6,6 +6,7 @@ import { deleteCompany, fetchCompany } from './companySlice';
 import { fetchOnboardingBranches } from './branchSlice';
 import { deleteProfile, fetchProfile } from './profileSlice';
 import { fetchCompanyLicense } from './licenseSlice';
+import { fetchCompanySettings } from './companySettingsSlice';
 
 interface OnboardingState {
   company: StateEntity<CompanyOnboardingStep> & {
@@ -66,6 +67,12 @@ export const fetchOnboardingData = createAsyncThunk<void, void, { rejectValue: E
         await dispatch(fetchCompanyLicense()).unwrap();
       } catch (error) {
         console.error('Failed to fetch company license:', error);
+      }
+
+      try {
+        await dispatch(fetchCompanySettings()).unwrap();
+      } catch (error) {
+        console.error('Failed to fetch company settings:', error);
       }
 
       try {

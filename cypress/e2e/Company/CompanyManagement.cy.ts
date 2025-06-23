@@ -2,24 +2,34 @@ import { ROUTES } from 'shared/constants';
 import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
+  clickFlowsIcon,
+  clickSubFlow,
   getLinearLoader,
   getLoadingButtonLoadingIcon,
   getTestSelectorByModule,
+  selectColorScheme,
   selectNavigationMenuItem,
   selectOption,
   verifyFormValidationMessages,
   verifyNotExist,
+  verifyRadioGroupValue,
   verifyTextFields,
 } from '../../support/helpers';
 import {
+  interceptCreateCompanySettingsFailedRequest,
+  interceptCreateCompanySettingsRequest,
   interceptEditCompanyFailedRequest,
   interceptEditCompanyFailedWithErrorRequest,
   interceptEditCompanyRequest,
+  interceptEditCompanySettingsFailedRequest,
+  interceptEditCompanySettingsRequest,
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
   interceptFetchCompanyLicenseFailedRequest,
   interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
+  interceptFetchCompanySettingsFailedRequest,
+  interceptFetchCompanySettingsRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
 } from '../../support/interceptors';
@@ -75,6 +85,7 @@ describe('Company Management Tests', () => {
     interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     interceptFetchProfileRequest();
     interceptFetchCompanyRequest();
+    interceptFetchCompanySettingsRequest();
   });
 
   const roles = [
@@ -154,6 +165,12 @@ describe('Company Management Tests', () => {
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('not.exist');
 
       cy.visit(ROUTES.editCompany.path);
+
+      cy.url().should('include', ROUTES.viewCompany.path);
+    });
+
+    it('should not be able to navigate to the company settings page', () => {
+      cy.visit(ROUTES.companySettings.path);
 
       cy.url().should('include', ROUTES.viewCompany.path);
     });
@@ -292,6 +309,163 @@ describe('Company Management Tests', () => {
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
         .should('exist')
         .and('contain.text', 'Company has been successfully updated');
+    });
+
+    it('should be able to navigate and view the company settings page and the default color scheme', () => {
+      interceptFetchCompanySettingsFailedRequest();
+      cy.visit(ROUTES.companySettings.path);
+
+      cy.url().should('include', ROUTES.companySettings.path);
+
+      getLinearLoader(Module.companyManagement, SubModule.companySettingsDetails, 'form').should('not.exist');
+      cy.wait('@fetchCompanySettingsFailedRequest');
+
+      getLinearLoader(Module.companyManagement, SubModule.companySettingsDetails, 'form').should('not.exist');
+
+      getTestSelectorByModule(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-label', true).should(
+        'have.length',
+        6
+      );
+      verifyTextFields(Module.companyManagement, SubModule.companySettingsDetails, {
+        'form-header': 'Company Settings Details',
+        'form-section-field-colorScheme': 'Color Scheme',
+        'color-scheme-label-midnight': 'Midnight',
+        'color-scheme-label-forest': 'Forest',
+        'color-scheme-label-ocean': 'Ocean',
+        'color-scheme-label-sunset': 'Sunset',
+        'color-scheme-label-sunrise': 'Sunrise',
+        'color-scheme-label-lavender': 'Lavender',
+      });
+      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+    });
+
+    it('should navigate to the Flows page and reset the form when the cancel button is clicked', () => {
+      cy.visit(ROUTES.companySettings.path);
+
+      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      selectColorScheme(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-sunset');
+      getTestSelectorByModule(Module.companyManagement, SubModule.companySettingsDetails, 'form-cancel-button').should('exist').click();
+
+      cy.location('pathname').should('eq', ROUTES.flows.path);
+
+      clickSubFlow('Company Settings');
+
+      cy.url().should('include', ROUTES.companySettings.path);
+
+      verifyTextFields(Module.companyManagement, SubModule.companySettingsDetails, {
+        'color-scheme-label-midnight': 'Midnight',
+        'color-scheme-label-forest': 'Forest',
+        'color-scheme-label-ocean': 'Ocean',
+        'color-scheme-label-sunset': 'Sunset',
+        'color-scheme-label-sunrise': 'Sunrise',
+        'color-scheme-label-lavender': 'Lavender',
+      });
+      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+    });
+
+    it('should display correct schemes and selected color when the theme mode is changed', () => {
+      cy.visit(ROUTES.companySettings.path);
+
+      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+
+      getTestSelectorByModule(Module.shared, SubModule.header, 'theme-button').click();
+
+      getTestSelectorByModule(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-label', true).should(
+        'have.length',
+        6
+      );
+      verifyTextFields(Module.companyManagement, SubModule.companySettingsDetails, {
+        'color-scheme-label-midnight': 'Midnight',
+        'color-scheme-label-forest': 'Forest',
+        'color-scheme-label-ocean': 'Ocean',
+        'color-scheme-label-sunset': 'Sunset',
+        'color-scheme-label-sunrise': 'Sunrise',
+        'color-scheme-label-lavender': 'Lavender',
+      });
+      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+    });
+
+    it('should not apply the new color scheme if the company settings creation failed', () => {
+      interceptFetchCompanySettingsFailedRequest();
+      interceptCreateCompanySettingsFailedRequest();
+      cy.visit(ROUTES.companySettings.path);
+
+      selectColorScheme(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-sunrise');
+
+      verifyRadioGroupValue('color-scheme-group', 'sunrise', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+
+      clickActionButton(Module.companyManagement, SubModule.companySettingsDetails);
+      cy.wait('@createCompanySettingsFailedRequest');
+
+      getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
+        .should('exist')
+        .and('contain.text', 'Failed to create a Company Settings');
+
+      clickFlowsIcon();
+      clickSubFlow('Company Settings');
+
+      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+    });
+
+    it('should apply the new color scheme if the company settings creation succeeded', () => {
+      interceptFetchCompanySettingsFailedRequest();
+      interceptCreateCompanySettingsRequest();
+      cy.visit(ROUTES.companySettings.path);
+
+      selectColorScheme(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-sunset');
+
+      verifyRadioGroupValue('color-scheme-group', 'sunset', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+
+      interceptFetchCompanySettingsRequest('fetchCompanySettingsRequest', 'company/company-settings-created');
+
+      clickActionButton(Module.companyManagement, SubModule.companySettingsDetails);
+      cy.wait('@createCompanySettingsRequest');
+      cy.wait('@fetchCompanySettingsRequest');
+
+      getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
+        .should('exist')
+        .and('contain.text', 'Company Settings has been successfully created');
+      verifyRadioGroupValue('color-scheme-group', 'sunset', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+    });
+
+    it('should not apply the new color scheme if the company settings update failed', () => {
+      interceptFetchCompanySettingsRequest();
+      interceptEditCompanySettingsFailedRequest();
+      cy.visit(ROUTES.companySettings.path);
+
+      getTestSelectorByModule(Module.shared, SubModule.header, 'theme-button').click();
+      selectColorScheme(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-lavender');
+
+      verifyRadioGroupValue('color-scheme-group', 'lavender', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+
+      clickActionButton(Module.companyManagement, SubModule.companySettingsDetails);
+      cy.wait('@editCompanySettingsFailedRequest');
+
+      getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
+        .should('exist')
+        .and('contain.text', 'Failed to update the Company Settings');
+    });
+
+    it('should apply the new color scheme if the company settings update succeeded', () => {
+      interceptFetchCompanySettingsRequest();
+      interceptEditCompanySettingsRequest();
+      cy.visit(ROUTES.companySettings.path);
+
+      getTestSelectorByModule(Module.shared, SubModule.header, 'theme-button').click();
+      selectColorScheme(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-ocean');
+
+      verifyRadioGroupValue('color-scheme-group', 'ocean', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+
+      interceptFetchCompanySettingsRequest('fetchCompanySettingsRequest', 'company/company-settings-updated');
+
+      clickActionButton(Module.companyManagement, SubModule.companySettingsDetails);
+      cy.wait('@editCompanySettingsRequest');
+      cy.wait('@fetchCompanySettingsRequest');
+
+      getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
+        .should('exist')
+        .and('contain.text', 'Company Settings has been successfully updated');
+      verifyRadioGroupValue('color-scheme-group', 'ocean', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
     });
   });
 });

@@ -8,6 +8,7 @@ import SectionField from './SectionField';
 import LabelValueField from './LabelValueField';
 import SwitchField from './SwitchField';
 import FileUploadField from './FileUploadField';
+import ColorSchemeField from './ColorSchemeField';
 
 const Field = <T,>(props: FormFieldProps<T>) => {
   switch (props.type) {
@@ -27,6 +28,8 @@ const Field = <T,>(props: FormFieldProps<T>) => {
       return <LabelValueField {...props} />;
     case FormFieldType.fileUpload:
       return <FileUploadField {...props} />;
+    case FormFieldType.colorScheme:
+      return <ColorSchemeField {...props} />;
     default:
       throw new Error('Invalid Form Field Type');
   }

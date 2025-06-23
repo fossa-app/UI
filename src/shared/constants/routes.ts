@@ -50,6 +50,10 @@ export const ROUTES: AppRoute = {
     name: 'Delete Company',
     path: '/flows/offboarding/company/deleteCompany',
   },
+  companySettings: {
+    name: 'Company Settings',
+    path: '/flows/company/settings',
+  },
   branches: {
     name: 'Branches',
     path: '/flows/branches',

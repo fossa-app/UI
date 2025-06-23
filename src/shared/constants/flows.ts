@@ -20,6 +20,13 @@ export const FLOWS_MAP: FlowsMap = {
         icon: IconType.company,
         disabled: true,
       },
+      [RouteKey.companySettings]: {
+        name: ROUTES.companySettings.name,
+        path: ROUTES.companySettings.path,
+        icon: IconType.settings,
+        roles: [UserRole.administrator],
+        disabled: true,
+      },
       [RouteKey.companyOffboarding]: {
         name: ROUTES.companyOffboarding.name,
         path: ROUTES.companyOffboarding.path,

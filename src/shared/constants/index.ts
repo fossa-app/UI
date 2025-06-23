@@ -1,7 +1,6 @@
 export * from './endpoints';
 export * from './routes';
 export * from './configs';
-export * from './colors';
 export * from './flows';
 export * from './employees';
 export * from './branches';

@@ -23,6 +23,7 @@ export enum SubModule {
   companyViewDetails = 'companyViewDetails',
   companyLicenseDetails = 'companyLicenseDetails',
   companyLicenseViewDetails = 'companyLicenseViewDetails',
+  companySettingsDetails = 'companySettingsDetails',
   branchCatalog = 'branchCatalog',
   branchDetails = 'branchDetails',
   branchViewDetails = 'branchViewDetails',
