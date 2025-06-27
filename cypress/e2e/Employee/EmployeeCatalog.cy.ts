@@ -21,14 +21,16 @@ import {
   interceptFetchSystemLicenseRequest,
   interceptFetchBranchByIdRequest,
   interceptFetchBranchesByIdsRequest,
+  interceptFetchCompanySettingsRequest,
 } from '../../support/interceptors';
 
 describe('Employee Catalog Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
-    interceptFetchCompanyLicenseRequest();
     interceptFetchCompanyRequest();
+    interceptFetchCompanySettingsRequest();
+    interceptFetchCompanyLicenseRequest();
     interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     interceptFetchProfileRequest();
     cy.visit(ROUTES.employees.path);

@@ -126,7 +126,7 @@ describe('Profile Tests', () => {
 
         getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-action-button').click();
 
-        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-action-button').should('not.have.attr', 'disabled');
+        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-submit-button').should('not.have.attr', 'disabled');
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName').find('input').clear();
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-lastName').find('input').clear();
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').clear();
@@ -209,8 +209,8 @@ describe('Profile Tests', () => {
 
         clickActionButton(Module.profile, SubModule.profileDetails);
 
-        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-action-button').should('have.attr', 'disabled');
-        getLoadingButtonLoadingIcon(Module.profile, SubModule.profileDetails, 'form-action-button').should('be.visible');
+        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-submit-button').should('have.attr', 'disabled');
+        getLoadingButtonLoadingIcon(Module.profile, SubModule.profileDetails, 'form-submit-button').should('be.visible');
         getLinearLoader(Module.profile, SubModule.profileViewDetails, 'view-details').should('exist');
 
         cy.wait('@editProfileRequest');

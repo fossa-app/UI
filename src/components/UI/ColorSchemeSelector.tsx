@@ -8,15 +8,23 @@ import Radio from '@mui/material/Radio';
 import { COLOR_SCHEME_KEYS, COLOR_SCHEMES } from 'shared/themes';
 import { ThemeMode, ColorSchemeId, Module, SubModule } from 'shared/models';
 
-interface ColorSchemeSelectorProps {
+type ColorSchemeSelectorProps = {
   module: Module;
   subModule: SubModule;
   selectedScheme?: ColorSchemeId;
   mode?: ThemeMode;
+  disabled?: boolean;
   onChange: (schemeId: ColorSchemeId) => void;
-}
+};
 
-const ColorSchemeSelector: React.FC<ColorSchemeSelectorProps> = ({ module, subModule, selectedScheme, mode = 'dark', onChange }) => {
+const ColorSchemeSelector: React.FC<ColorSchemeSelectorProps> = ({
+  module,
+  subModule,
+  selectedScheme,
+  mode = 'dark',
+  disabled,
+  onChange,
+}) => {
   const availableSchemes = React.useMemo(() => {
     return Object.entries(COLOR_SCHEMES).filter(([_, scheme]) => scheme[mode]);
   }, [mode]);
@@ -34,8 +42,9 @@ const ColorSchemeSelector: React.FC<ColorSchemeSelectorProps> = ({ module, subMo
           return (
             <Grid key={schemeId} size={{ xs: 12, sm: 6, md: 4 }}>
               <FormControlLabel
+                data-cy={`${module}-${subModule}-color-scheme-radio-${schemeId}`}
                 value={schemeId}
-                control={<Radio />}
+                control={<Radio disabled={disabled} />}
                 label={
                   <Box data-cy={`${module}-${subModule}-color-scheme-${schemeId}`} sx={{ cursor: 'pointer' }}>
                     <Typography gutterBottom variant="subtitle1" data-cy={`${module}-${subModule}-color-scheme-label-${schemeId}`}>

@@ -1,5 +1,5 @@
 import { OidcClientSettings } from 'oidc-client-ts';
-import { ColorSchemeId, PaginationParams } from 'shared/models';
+import { ColorSchemeId, CompanySettings, PaginationParams } from 'shared/models';
 
 export const OIDC_INITIAL_CONFIG: OidcClientSettings = {
   authority: 'http://localhost:9011',
@@ -120,4 +120,10 @@ export const USER_PERMISSION_GENERAL_MESSAGE = {
 
 export const STEP_KEY = 'step';
 
+export const COMPANY_SETTINGS_KEY = 'companySettings';
+
 export const DEFAULT_COLOR_SCHEME: ColorSchemeId = 'midnight';
+
+export const DEFAULT_COMPANY_SETTINGS: CompanySettings = {
+  colorSchemeId: DEFAULT_COLOR_SCHEME,
+};

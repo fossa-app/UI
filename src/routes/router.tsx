@@ -96,6 +96,9 @@ const CompanySettingsPage = createLazyComponent(() => import('pages/Manage/Compa
   title: ROUTES.companySettings.name,
   isAdminRoute: true,
 });
+const CreateCompanySettingsPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/CreateCompanySettings'), {
+  title: ROUTES.createCompanySettings.name,
+});
 
 const router = createBrowserRouter(
   [
@@ -151,6 +154,10 @@ const router = createBrowserRouter(
                         {
                           path: ROUTES.createCompany.path,
                           element: CreateCompanyPage,
+                        },
+                        {
+                          path: ROUTES.createCompanySettings.path,
+                          element: CreateCompanySettingsPage,
                         },
                         {
                           path: ROUTES.uploadCompanyLicense.path,

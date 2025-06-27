@@ -35,7 +35,7 @@ export const clickField = (module: Module, subModule: SubModule, selector: strin
 };
 
 export const clickActionButton = (module: Module, subModule: SubModule) => {
-  getTestSelectorByModule(module, subModule, 'form-action-button').click();
+  getTestSelectorByModule(module, subModule, 'form-submit-button').click();
 };
 
 export const search = (module: Module, subModule: SubModule, selector: string, text: string) => {

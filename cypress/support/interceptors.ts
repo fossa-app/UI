@@ -157,6 +157,14 @@ export const interceptEditCompanySettingsFailedRequest = () => {
   cy.interceptWithAuth('PUT', `${serverBaseUrl}/CompanySettings`, null, 'editCompanySettingsFailedRequest', 404);
 };
 
+export const interceptDeleteCompanySettingsRequest = () => {
+  cy.interceptWithAuth('DELETE', `${serverBaseUrl}/CompanySettings`, null, 'deleteCompanySettingsRequest');
+};
+
+export const interceptDeleteCompanySettingsFailedRequest = () => {
+  cy.interceptWithAuth('DELETE', `${serverBaseUrl}/CompanySettings`, { status: 424 }, 'deleteCompanySettingsFailedRequest', 424);
+};
+
 export const interceptFetchBranchesRequest = (
   { pageNumber = 1, pageSize = 10, search = '' } = {},
   { alias = 'fetchBranchesRequest', fixture = 'branch/branches', statusCode = 200, delay = 300 } = {}

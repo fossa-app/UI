@@ -41,6 +41,7 @@ export enum FormActionType {
 export enum FormActionName {
   cancel = 'cancel',
   submit = 'submit',
+  delete = 'delete',
 }
 
 interface BaseFormFieldProps {
@@ -110,6 +111,7 @@ export type FileUploadFieldProps = BaseFormFieldProps & {
 export type ColorSchemeFieldProps = BaseFormFieldProps & {
   type: FormFieldType.colorScheme;
   mode?: ThemeMode;
+  disabled?: boolean;
 };
 
 export type FormFieldProps<T> = { renderField?: (item?: T) => React.ReactNode } & (

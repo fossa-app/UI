@@ -33,6 +33,7 @@ import {
   interceptFetchClientRequest,
   interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
+  interceptFetchCompanySettingsRequest,
   interceptFetchEmployeeByIdRequest,
   interceptFetchEmployeesRequest,
   interceptFetchProfileRequest,
@@ -43,8 +44,9 @@ describe('Branch Management Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
-    interceptFetchCompanyLicenseRequest();
     interceptFetchCompanyRequest();
+    interceptFetchCompanySettingsRequest();
+    interceptFetchCompanyLicenseRequest();
     interceptFetchBranchesRequest();
     interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     interceptFetchProfileRequest();
@@ -153,7 +155,7 @@ describe('Branch Management Tests', () => {
         countryCode: 'US',
       },
     });
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('contain.text', 'Save');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-submit-button').should('contain.text', 'Save');
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
     interceptFetchBranchesRequest(
@@ -336,8 +338,8 @@ describe('Branch Management Tests', () => {
     });
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('have.attr', 'disabled');
-    getLoadingButtonLoadingIcon(Module.branchManagement, SubModule.branchDetails, 'form-action-button').should('be.visible');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-submit-button').should('have.attr', 'disabled');
+    getLoadingButtonLoadingIcon(Module.branchManagement, SubModule.branchDetails, 'form-submit-button').should('be.visible');
 
     cy.wait('@editBranchRequest');
     interceptFetchBranchesRequest(

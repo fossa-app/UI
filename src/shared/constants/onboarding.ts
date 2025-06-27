@@ -3,6 +3,7 @@ import { ROUTES } from './routes';
 
 export const COMPANY_ONBOARDING_STEPS: OnboardingStepOption[] = [
   { name: OnboardingStep.company, label: 'Create Company' },
+  { name: OnboardingStep.companySettings, label: 'Create Company Settings' },
   { name: OnboardingStep.companyLicense, label: 'Upload Company License' },
   { name: OnboardingStep.branch, label: 'Create Branch' },
 ];
@@ -11,6 +12,10 @@ export const COMPANY_ONBOARDING_STEP_MAP: Record<CompanyOnboardingStep, RouteIte
   [OnboardingStep.company]: {
     name: ROUTES.createCompany.name,
     path: ROUTES.createCompany.path,
+  },
+  [OnboardingStep.companySettings]: {
+    name: ROUTES.createCompanySettings.name,
+    path: ROUTES.createCompanySettings.path,
   },
   [OnboardingStep.companyLicense]: {
     name: ROUTES.uploadCompanyLicense.name,

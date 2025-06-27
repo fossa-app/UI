@@ -57,18 +57,18 @@ describe('Offboarding Flow Tests', () => {
 
         cy.url().should('include', ROUTES.deleteCompany.path);
         getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-header').should('have.text', 'Delete Company');
-        getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-action-button')
+        getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-submit-button')
           .should('exist')
           .and('have.text', 'Delete Company');
 
         if (isAdminRole) {
           getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-general-error-message').should('not.exist');
-          getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-action-button').should('not.have.attr', 'disabled');
+          getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-submit-button').should('not.have.attr', 'disabled');
         } else {
           getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-general-error-message')
             .should('exist')
             .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
-          getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-action-button').should('have.attr', 'disabled');
+          getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-submit-button').should('have.attr', 'disabled');
         }
       });
 
@@ -77,12 +77,12 @@ describe('Offboarding Flow Tests', () => {
 
         cy.url().should('include', ROUTES.deleteEmployee.path);
         getTestSelectorByModule(Module.deleteEmployee, SubModule.employeeDetails, 'form-header').should('have.text', 'Delete Profile');
-        getTestSelectorByModule(Module.deleteEmployee, SubModule.employeeDetails, 'form-action-button')
+        getTestSelectorByModule(Module.deleteEmployee, SubModule.employeeDetails, 'form-submit-button')
           .should('exist')
           .and('have.text', 'Delete Profile');
 
         getTestSelectorByModule(Module.deleteEmployee, SubModule.employeeDetails, 'form-general-error-message').should('not.exist');
-        getTestSelectorByModule(Module.deleteEmployee, SubModule.employeeDetails, 'form-action-button').should('not.have.attr', 'disabled');
+        getTestSelectorByModule(Module.deleteEmployee, SubModule.employeeDetails, 'form-submit-button').should('not.have.attr', 'disabled');
       });
 
       it('should be able to navigate to the Delete Profile page if the employee offboarding subflow is clicked', () => {
