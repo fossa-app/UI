@@ -10,12 +10,14 @@ import {
   clickSubFlow,
   getTestSelectorByModule,
   selectAction,
+  selectColorScheme,
   selectOption,
   uploadTestFile,
 } from '../support/helpers';
 import {
   interceptCreateBranchRequest,
   interceptCreateCompanyRequest,
+  interceptCreateCompanySettingsRequest,
   interceptCreateProfileRequest,
   interceptDeleteBranchRequest,
   interceptFetchBranchesFailedRequest,
@@ -25,6 +27,7 @@ import {
   interceptFetchCompanyLicenseFailedRequest,
   interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
+  interceptFetchCompanySettingsFailedRequest,
   interceptFetchCompanySettingsRequest,
   interceptFetchProfileFailedRequest,
   interceptFetchProfileRequest,
@@ -310,9 +313,11 @@ describe('Flows Tests', () => {
 
     it('should display correct enabled and disabled subFlows when in different onboarding flows', () => {
       interceptFetchCompanyFailedRequest();
+      interceptFetchCompanySettingsFailedRequest();
       interceptFetchCompanyLicenseFailedRequest();
       interceptFetchBranchesFailedRequest();
       interceptCreateCompanyRequest();
+      interceptCreateCompanySettingsRequest();
       interceptUploadCompanyLicenseRequest();
       interceptCreateBranchRequest();
       interceptCreateProfileRequest();
@@ -326,6 +331,29 @@ describe('Flows Tests', () => {
       interceptFetchCompanyRequest();
       cy.wait('@createCompanyRequest');
       cy.wait('@fetchCompanyRequest');
+
+      cy.url().should('include', ROUTES.createCompanySettings.path);
+
+      clickFlowsIcon();
+
+      cy.location('pathname').should('eq', ROUTES.flows.path);
+      checkIsSubFlowDisabled('Company Onboarding', false);
+      checkIsSubFlowDisabled('View Company', false);
+      checkIsSubFlowDisabled('Company Settings', false);
+      checkIsSubFlowDisabled('Company Offboarding', false);
+      checkIsSubFlowDisabled('Branches', true);
+      checkIsSubFlowDisabled('Departments', true);
+      checkIsSubFlowDisabled('Employees', true);
+      checkIsSubFlowDisabled('Employee Onboarding', false);
+      checkIsSubFlowDisabled('View Profile', true);
+      checkIsSubFlowDisabled('Employee Offboarding', true);
+
+      clickSubFlow('Company Onboarding');
+      selectColorScheme(Module.createCompanySettings, SubModule.companySettingsDetails, 'color-scheme-sunset');
+      interceptFetchCompanySettingsRequest();
+      clickActionButton(Module.createCompanySettings, SubModule.companySettingsDetails);
+
+      cy.wait(['@createCompanySettingsRequest', '@fetchCompanySettingsRequest']);
 
       cy.url().should('include', ROUTES.uploadCompanyLicense.path);
       clickFlowsIcon();

@@ -25,6 +25,7 @@ import {
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
   interceptFetchBranchesByIdsRequest,
+  interceptFetchCompanySettingsRequest,
 } from '../../support/interceptors';
 
 const branchAdminRoutes = [ROUTES.newBranch.path, `${ROUTES.branches.path}/edit/222222222222`];
@@ -33,8 +34,9 @@ describe('Branch Catalog Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
-    interceptFetchCompanyLicenseRequest();
     interceptFetchCompanyRequest();
+    interceptFetchCompanySettingsRequest();
+    interceptFetchCompanyLicenseRequest();
     interceptFetchProfileRequest();
     interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     cy.visit(ROUTES.branches.path);

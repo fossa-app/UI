@@ -1,18 +1,21 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { FieldValues } from 'react-hook-form';
+import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { CompanySettings, CompanySettingsDTO, ErrorResponseDTO } from 'shared/models';
-import { MESSAGES, ENDPOINTS, DEFAULT_COLOR_SCHEME } from 'shared/constants';
+import { CompanySettings, CompanySettingsDTO, ErrorResponse, ErrorResponseDTO } from 'shared/models';
+import { MESSAGES, ENDPOINTS, COMPANY_SETTINGS_KEY, DEFAULT_COMPANY_SETTINGS } from 'shared/constants';
+import { mapError, saveToLocalStorage, removeFromLocalStorage } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
 
 interface CompanySettingsState {
-  companySettings: StateEntity<CompanySettings | undefined>;
+  companySettings: StateEntity<CompanySettings>;
 }
 
 const initialState: CompanySettingsState = {
   companySettings: {
     data: {
-      colorSchemeId: DEFAULT_COLOR_SCHEME,
+      colorSchemeId: undefined,
     },
     fetchStatus: 'idle',
     updateStatus: 'idle',
@@ -20,15 +23,13 @@ const initialState: CompanySettingsState = {
   },
 };
 
-export const fetchCompanySettings = createAsyncThunk<CompanySettings | undefined, void, { rejectValue: ErrorResponseDTO }>(
+export const fetchCompanySettings = createAsyncThunk<CompanySettings, void, { rejectValue: ErrorResponseDTO }>(
   'companySettings/fetchCompanySettings',
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await axios.get<CompanySettingsDTO>(ENDPOINTS.companySettings);
 
-      if (data) {
-        return data;
-      }
+      return data || {};
     } catch (error) {
       return rejectWithValue({
         ...(error as ErrorResponseDTO),
@@ -38,11 +39,12 @@ export const fetchCompanySettings = createAsyncThunk<CompanySettings | undefined
   }
 );
 
-export const createCompanySettings = createAsyncThunk<void, CompanySettingsDTO, { rejectValue: ErrorResponseDTO }>(
+export const createCompanySettings = createAsyncThunk<void, CompanySettingsDTO, { rejectValue: ErrorResponse<FieldValues> }>(
   'companySettings/createCompanySettings',
   async (companySettings, { dispatch, rejectWithValue }) => {
     try {
       await axios.post<CompanySettingsDTO>(ENDPOINTS.companySettings, companySettings);
+      saveToLocalStorage(COMPANY_SETTINGS_KEY, companySettings);
       await dispatch(fetchCompanySettings()).unwrap();
 
       dispatch(setSuccess(MESSAGES.success.companySettings.create));
@@ -54,18 +56,22 @@ export const createCompanySettings = createAsyncThunk<void, CompanySettingsDTO, 
         })
       );
 
-      return rejectWithValue(error as ErrorResponseDTO);
+      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+
+      return rejectWithValue(mappedError);
     }
   }
 );
 
-export const editCompanySettings = createAsyncThunk<void, Omit<CompanySettingsDTO, 'id'>, { rejectValue: ErrorResponseDTO }>(
+export const editCompanySettings = createAsyncThunk<void, Omit<CompanySettingsDTO, 'id'>, { rejectValue: ErrorResponse<FieldValues> }>(
   'companySettings/editCompanySettings',
   async (companySettings, { dispatch, rejectWithValue }) => {
     try {
       await axios.put<CompanySettingsDTO>(ENDPOINTS.companySettings, companySettings);
+
       await dispatch(fetchCompanySettings()).unwrap();
 
+      saveToLocalStorage(COMPANY_SETTINGS_KEY, companySettings);
       dispatch(setSuccess(MESSAGES.success.companySettings.update));
     } catch (error) {
       dispatch(
@@ -75,7 +81,9 @@ export const editCompanySettings = createAsyncThunk<void, Omit<CompanySettingsDT
         })
       );
 
-      return rejectWithValue(error as ErrorResponseDTO);
+      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+
+      return rejectWithValue(mappedError);
     }
   }
 );
@@ -86,7 +94,14 @@ export const deleteCompanySettings = createAsyncThunk<void, void, { rejectValue:
     try {
       await axios.delete<void>(ENDPOINTS.companySettings);
 
+      removeFromLocalStorage(COMPANY_SETTINGS_KEY);
+      saveToLocalStorage(COMPANY_SETTINGS_KEY, DEFAULT_COMPANY_SETTINGS);
       dispatch(setSuccess(MESSAGES.success.companySettings.delete));
+      try {
+        await dispatch(fetchCompanySettings()).unwrap();
+      } catch {
+        // Ignored: fetchCompanySettings will return 404 after delete, which is expected.
+      }
     } catch (error) {
       dispatch(
         setError({
@@ -110,20 +125,19 @@ const companySettingsSlice = createSlice({
         state.companySettings.fetchStatus = 'loading';
       })
       .addCase(fetchCompanySettings.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
-        state.companySettings.data = undefined;
         state.companySettings.fetchStatus = 'failed';
         state.companySettings.error = action.payload;
       })
-      .addCase(fetchCompanySettings.fulfilled, (state, action: PayloadAction<CompanySettingsDTO | undefined>) => {
+      .addCase(fetchCompanySettings.fulfilled, (state, action: PayloadAction<CompanySettingsDTO>) => {
         state.companySettings.data = action.payload;
         state.companySettings.fetchStatus = 'succeeded';
       })
       .addCase(createCompanySettings.pending, (state) => {
         state.companySettings.updateStatus = 'loading';
       })
-      .addCase(createCompanySettings.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(createCompanySettings.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.companySettings.updateStatus = 'failed';
-        state.companySettings.updateError = action.payload;
+        state.companySettings.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(createCompanySettings.fulfilled, (state) => {
         state.companySettings.updateStatus = 'succeeded';
@@ -132,9 +146,9 @@ const companySettingsSlice = createSlice({
       .addCase(editCompanySettings.pending, (state) => {
         state.companySettings.updateStatus = 'loading';
       })
-      .addCase(editCompanySettings.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(editCompanySettings.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.companySettings.updateStatus = 'failed';
-        state.companySettings.updateError = action.payload;
+        state.companySettings.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
       .addCase(editCompanySettings.fulfilled, (state) => {
         state.companySettings.updateStatus = 'succeeded';
@@ -148,7 +162,7 @@ const companySettingsSlice = createSlice({
         state.companySettings.error = action.payload;
       })
       .addCase(deleteCompanySettings.fulfilled, (state) => {
-        state.companySettings.data = undefined;
+        state.companySettings.data = initialState.companySettings.data;
         state.companySettings.deleteStatus = 'succeeded';
       });
   },

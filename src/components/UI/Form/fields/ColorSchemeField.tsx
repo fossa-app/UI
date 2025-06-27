@@ -6,7 +6,7 @@ import ColorSchemeSelector from 'components/UI/ColorSchemeSelector';
 import { useFormContext } from '../FormContext';
 import { ColorSchemeFieldProps } from '../form.model';
 
-const ColorSchemeField: React.FC<ColorSchemeFieldProps> = ({ name, mode, rules }) => {
+const ColorSchemeField: React.FC<ColorSchemeFieldProps> = ({ name, mode, rules, ...props }) => {
   const {
     control,
     formState: { errors },
@@ -22,7 +22,14 @@ const ColorSchemeField: React.FC<ColorSchemeFieldProps> = ({ name, mode, rules }
         control={control}
         rules={rules}
         render={({ field }) => (
-          <ColorSchemeSelector module={module} subModule={subModule} selectedScheme={field.value} mode={mode} onChange={field.onChange} />
+          <ColorSchemeSelector
+            module={module}
+            subModule={subModule}
+            selectedScheme={field.value}
+            mode={mode}
+            disabled={props.disabled}
+            onChange={field.onChange}
+          />
         )}
       />
       {error && <FormHelperText data-cy={`${module}-${subModule}-form-field-${name}-validation`}>{error.message}</FormHelperText>}

@@ -1,13 +1,15 @@
 export enum OnboardingStep {
   company = 'company',
-  branch = 'branch',
+  companySettings = 'companySettings',
   companyLicense = 'companyLicense',
+  branch = 'branch',
   employee = 'employee',
   completed = 'completed',
 }
 
 export type CompanyOnboardingStep =
   | OnboardingStep.company
+  | OnboardingStep.companySettings
   | OnboardingStep.companyLicense
   | OnboardingStep.branch
   | OnboardingStep.completed;

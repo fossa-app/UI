@@ -12,6 +12,7 @@ interface OnboardingState {
   company: StateEntity<CompanyOnboardingStep> & {
     flags: {
       [OnboardingStep.company]: boolean;
+      [OnboardingStep.companySettings]: boolean;
       [OnboardingStep.companyLicense]: boolean;
       [OnboardingStep.branch]: boolean;
     };
@@ -25,6 +26,7 @@ const initialState: OnboardingState = {
     status: 'idle',
     flags: {
       [OnboardingStep.company]: false,
+      [OnboardingStep.companySettings]: false,
       [OnboardingStep.companyLicense]: false,
       [OnboardingStep.branch]: false,
     },
@@ -36,16 +38,19 @@ const initialState: OnboardingState = {
 };
 
 const evaluateCompanyOnboardingStep = (state: WritableDraft<OnboardingState>) => {
-  const { company, companyLicense, branch } = state.company.flags;
+  const { company, companySettings, companyLicense, branch } = state.company.flags;
 
-  if (company && companyLicense && branch) {
+  if (company && companySettings && companyLicense && branch) {
     state.company.data = OnboardingStep.completed;
     state.company.status = 'succeeded';
-  } else if (company && companyLicense) {
+  } else if (company && companySettings && companyLicense) {
     state.company.data = OnboardingStep.branch;
     state.company.status = 'failed';
-  } else if (company) {
+  } else if (company && companySettings) {
     state.company.data = OnboardingStep.companyLicense;
+    state.company.status = 'failed';
+  } else if (company) {
+    state.company.data = OnboardingStep.companySettings;
     state.company.status = 'failed';
   } else {
     state.company.data = OnboardingStep.company;
@@ -110,6 +115,10 @@ const onboardingSlice = createSlice({
       .addCase(fetchCompany.rejected, (state) => {
         state.company.status = 'failed';
       })
+      .addCase(fetchCompanySettings.rejected, (state) => {
+        state.company.flags[OnboardingStep.companySettings] = false;
+        evaluateCompanyOnboardingStep(state);
+      })
       .addCase(fetchCompanyLicense.rejected, (state) => {
         state.company.status = 'failed';
       })
@@ -123,6 +132,10 @@ const onboardingSlice = createSlice({
         state.company.flags[OnboardingStep.company] = true;
         evaluateCompanyOnboardingStep(state);
         state.employee.data = OnboardingStep.employee;
+      })
+      .addCase(fetchCompanySettings.fulfilled, (state) => {
+        state.company.flags[OnboardingStep.companySettings] = true;
+        evaluateCompanyOnboardingStep(state);
       })
       .addCase(fetchCompanyLicense.fulfilled, (state) => {
         state.company.flags[OnboardingStep.companyLicense] = true;
@@ -139,6 +152,9 @@ const onboardingSlice = createSlice({
       .addCase(deleteCompany.fulfilled, (state) => {
         state.company.data = OnboardingStep.company;
       })
+      // .addCase(deleteCompanySettings.fulfilled, (state) => {
+      //   state.company.data = OnboardingStep.companySettings;
+      // })
       .addCase(deleteProfile.fulfilled, (state) => {
         state.employee.data = OnboardingStep.employee;
       });

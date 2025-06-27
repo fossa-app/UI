@@ -3,7 +3,6 @@ import {
   CompanyFieldConfig,
   CompanyLicense,
   CompanyLicenseFieldConfig,
-  CompanySettings,
   CompanySettingsFieldConfig,
   IconType,
   Module,
@@ -13,7 +12,6 @@ import {
 import { FormActionType, FormFieldType, FormActionName, FormProps } from 'components/UI/Form';
 import { ViewDetailActionName, ViewDetailActionType, ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
 import { renderCopyableField } from 'components/UI/CopyableField';
-import { DEFAULT_COLOR_SCHEME } from './configs';
 
 export const COMPANY_FIELDS: CompanyFieldConfig = {
   id: {
@@ -386,13 +384,19 @@ export const COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<CompanyS
       name: COMPANY_SETTINGS_FIELDS.colorSchemeId!.field,
       label: 'Select Company Color Scheme',
       grid: { size: { xs: 12 } },
-      rules: {
-        required: { value: true, message: 'Company Color Scheme is required' },
-      },
       roles: [UserRole.administrator],
     },
   ],
   actions: [
+    {
+      actionType: FormActionType.loadingButton,
+      label: 'Delete Company Settings',
+      name: FormActionName.delete,
+      color: 'warning',
+      loadingPosition: 'end',
+      endIcon: IconType.remove,
+      'aria-label': 'Delete Company Settings Button',
+    },
     {
       actionType: FormActionType.button,
       label: 'Cancel',
@@ -413,6 +417,20 @@ export const COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<CompanyS
   ],
 };
 
-export const COMPANY_SETTINGS_DETAILS_FORM_DEFAULT_VALUES: CompanySettings = {
-  colorSchemeId: DEFAULT_COLOR_SCHEME,
+export const CREATE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA: FormProps<CompanySettingsFieldConfig> = {
+  ...COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA,
+  module: Module.createCompanySettings,
+  subModule: SubModule.companySettingsDetails,
+  actions: [
+    {
+      actionType: FormActionType.loadingButton,
+      label: 'Next',
+      name: FormActionName.submit,
+      loadingPosition: 'end',
+      endIcon: IconType.next,
+      type: 'submit',
+      roles: [UserRole.administrator],
+      'aria-label': 'Create Company Settings Button',
+    },
+  ],
 };

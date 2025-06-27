@@ -2,6 +2,7 @@ export enum Module {
   manage = 'manage',
   onboarding = 'onboarding',
   createCompany = 'createCompany',
+  createCompanySettings = 'createCompanySettings',
   deleteCompany = 'deleteCompany',
   uploadCompanyLicense = 'uploadCompanyLicense',
   createBranch = 'createBranch',

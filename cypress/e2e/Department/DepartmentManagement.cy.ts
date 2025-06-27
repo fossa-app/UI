@@ -176,7 +176,7 @@ describe('Department Management Tests', () => {
       parentDepartmentId: 444444444446,
       managerId: 333333333333,
     });
-    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-action-button').should('contain.text', 'Save');
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-submit-button').should('contain.text', 'Save');
     interceptFetchDepartmentsRequest(
       { pageNumber: 1, pageSize: 10, search: '' },
       { alias: 'fetchCreatedDepartmentsRequest', fixture: 'department/departments-created' }
@@ -404,8 +404,8 @@ describe('Department Management Tests', () => {
     );
     clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
 
-    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-action-button').should('have.attr', 'disabled');
-    getLoadingButtonLoadingIcon(Module.departmentManagement, SubModule.departmentDetails, 'form-action-button').should('be.visible');
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-submit-button').should('have.attr', 'disabled');
+    getLoadingButtonLoadingIcon(Module.departmentManagement, SubModule.departmentDetails, 'form-submit-button').should('be.visible');
 
     cy.wait('@editDepartmentRequest');
 
