@@ -15,6 +15,7 @@ import {
   selectColorScheme,
   clickFlowsIcon,
   verifyRadioGroupValue,
+  checkIsSubFlowDisabled,
 } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
@@ -1153,6 +1154,62 @@ describe('Onboarding Flow Tests', () => {
       clickSubFlow('Company Onboarding');
 
       cy.url().should('include', ROUTES.createCompanySettings.path);
+    });
+
+    it('should be able to skip the Company License upload step', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchCompanySettingsRequest();
+      interceptFetchCompanyLicenseFailedRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptFetchProfileFailedRequest();
+      interceptCreateBranchRequest();
+      interceptUploadCompanyLicenseRequest();
+      cy.visit(ROUTES.flows.path);
+
+      clickSubFlow('Company Onboarding');
+
+      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-cancel-button').should('exist').click();
+
+      cy.url().should('include', ROUTES.createBranch.path);
+
+      getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-name').type('America/New_York');
+      selectOption(Module.createBranch, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
+      clickField(Module.createBranch, SubModule.branchDetails, 'form-field-noPhysicalAddress');
+      clickActionButton(Module.createBranch, SubModule.branchDetails);
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
+      cy.wait('@createBranchRequest');
+      cy.wait('@fetchBranchesRequest');
+
+      cy.location('pathname').should('eq', ROUTES.flows.path);
+      checkIsSubFlowDisabled('Company Onboarding', false);
+
+      clickSubFlow('Company Onboarding');
+
+      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-cancel-button').click();
+
+      cy.location('pathname').should('eq', ROUTES.flows.path);
+      checkIsSubFlowDisabled('Company Onboarding', false);
+
+      clickSubFlow('Company Onboarding');
+
+      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+
+      getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-field-licenseFile-file-upload').click();
+      uploadTestFile('input#file-upload-input', 'company/valid-company-license.lic');
+      getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'file-upload-selected-file-name').should(
+        'have.text',
+        'company/valid-company-license.lic'
+      );
+      interceptFetchCompanyLicenseRequest();
+      clickActionButton(Module.uploadCompanyLicense, SubModule.companyLicenseDetails);
+
+      cy.wait('@uploadCompanyLicenseRequest');
+      cy.wait('@fetchCompanyLicenseRequest');
+
+      cy.location('pathname').should('eq', ROUTES.flows.path);
+      checkIsSubFlowDisabled('Company Onboarding', true);
     });
   });
 });

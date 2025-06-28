@@ -1,25 +1,35 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FieldValues, FieldErrors } from 'react-hook-form';
 import { renderCopyableField } from 'components/UI/CopyableField';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectCompany, selectCompanyLicense, selectIsUserAdmin, selectUserRoles, uploadCompanyLicense } from 'store/features';
+import {
+  selectCompany,
+  selectCompanyLicense,
+  selectIsUserAdmin,
+  selectUserRoles,
+  setCompanyLicenseSkipped,
+  uploadCompanyLicense,
+} from 'store/features';
 import { mapDisabledFields, hasAllowedRole, deepCopyObject } from 'shared/helpers';
-import { UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
+import { ROUTES, UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';
 
 const testModule = UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.module;
 const testSubModule = UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.subModule;
 
 const UploadCompanyLicensePage: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const userRoles = useAppSelector(selectUserRoles);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { updateStatus, updateError: error } = useAppSelector(selectCompanyLicense);
   const { data: company } = useAppSelector(selectCompany);
 
-  // const handleSkip = React.useCallback(() => {
-  //   dispatch(setCompanyLicenseSkipped());
-  // }, [dispatch]);
+  const handleSkip = React.useCallback(() => {
+    dispatch(setCompanyLicenseSkipped());
+    navigate(ROUTES.createBranch.path, { replace: true });
+  }, [dispatch, navigate]);
 
   const fields = React.useMemo(() => {
     const mappedFields = mapDisabledFields(UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.fields, userRoles);
@@ -60,13 +70,13 @@ const UploadCompanyLicensePage: React.FC = () => {
             disabled: !hasAllowedRole(action.roles, userRoles),
             loading: updateStatus === 'loading',
           };
-        // case FormActionName.cancel:
-        //   return { ...action, onClick: handleSkip };
+        case FormActionName.cancel:
+          return { ...action, onClick: handleSkip };
         default:
           return action;
       }
     });
-  }, [userRoles, updateStatus]);
+  }, [userRoles, updateStatus, handleSkip]);
 
   const handleSubmit = (data: FieldValues) => {
     const file = data['licenseFile'] as File;

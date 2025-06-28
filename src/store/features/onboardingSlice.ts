@@ -16,6 +16,9 @@ interface OnboardingState {
       [OnboardingStep.companyLicense]: boolean;
       [OnboardingStep.branch]: boolean;
     };
+    skippedSteps: {
+      [OnboardingStep.companyLicense]: boolean;
+    };
   };
   employee: StateEntity<OnboardingStep>;
 }
@@ -29,6 +32,9 @@ const initialState: OnboardingState = {
       [OnboardingStep.companySettings]: false,
       [OnboardingStep.companyLicense]: false,
       [OnboardingStep.branch]: false,
+    },
+    skippedSteps: {
+      [OnboardingStep.companyLicense]: false,
     },
   },
   employee: {
@@ -106,8 +112,10 @@ const onboardingSlice = createSlice({
       state.employee.status = 'failed';
     },
     setCompanyLicenseSkipped(state) {
-      state.company.flags[OnboardingStep.companyLicense] = true;
-      evaluateCompanyOnboardingStep(state);
+      state.company.skippedSteps[OnboardingStep.companyLicense] = true;
+    },
+    resetCompanyLicenseSkipped(state) {
+      state.company.skippedSteps[OnboardingStep.companyLicense] = false;
     },
   },
   extraReducers: (builder) => {
@@ -152,9 +160,6 @@ const onboardingSlice = createSlice({
       .addCase(deleteCompany.fulfilled, (state) => {
         state.company.data = OnboardingStep.company;
       })
-      // .addCase(deleteCompanySettings.fulfilled, (state) => {
-      //   state.company.data = OnboardingStep.companySettings;
-      // })
       .addCase(deleteProfile.fulfilled, (state) => {
         state.employee.data = OnboardingStep.employee;
       });
@@ -163,6 +168,7 @@ const onboardingSlice = createSlice({
 
 export const selectCompanyOnboardingStep = (state: RootState) => state.onboarding.company;
 export const selectCompanyOnboardingFlags = (state: RootState) => state.onboarding.company.flags;
+export const selectCompanyOnboardingSkippedSteps = (state: RootState) => state.onboarding.company.skippedSteps;
 export const selectEmployeeOnboardingStep = (state: RootState) => state.onboarding.employee;
 export const selectOnboardingCompleted = (state: RootState) =>
   state.onboarding.company.data === OnboardingStep.completed && state.onboarding.employee.data === OnboardingStep.completed;
@@ -171,6 +177,6 @@ export const selectOnboardingLoading = (state: RootState) =>
   !['succeeded', 'failed'].includes(state.onboarding.company.status ?? '') ||
   !['succeeded', 'failed'].includes(state.onboarding.employee.status ?? '');
 
-export const { setCompanyLicenseSkipped } = onboardingSlice.actions;
+export const { setCompanyLicenseSkipped, resetCompanyLicenseSkipped } = onboardingSlice.actions;
 
 export default onboardingSlice.reducer;

@@ -208,16 +208,15 @@ export const UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA: FormProps<CompanyLicens
     },
   ],
   actions: [
-    // TODO: Uncomment this action to allow skipping the license upload step
-    // {
-    //   actionType: FormActionType.button,
-    //   label: 'Skip',
-    //   name: FormActionName.cancel,
-    //   variant: 'text',
-    //   color: 'secondary',
-    //   roles: [UserRole.administrator],
-    //   'aria-label': 'Skip License Upload Button',
-    // },
+    {
+      actionType: FormActionType.button,
+      label: 'Skip',
+      name: FormActionName.cancel,
+      variant: 'text',
+      color: 'secondary',
+      roles: [UserRole.administrator],
+      'aria-label': 'Skip License Upload Button',
+    },
     {
       actionType: FormActionType.loadingButton,
       label: 'Next',
