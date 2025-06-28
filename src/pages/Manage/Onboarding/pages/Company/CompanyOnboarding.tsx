@@ -5,19 +5,34 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
-import { useAppSelector } from 'store';
-import { selectCompanyOnboardingStep } from 'store/features';
-import { Module, SubModule } from 'shared/models';
+import { useAppDispatch, useAppSelector } from 'store';
+import {
+  resetCompanyLicenseSkipped,
+  selectCompanyOnboardingFlags,
+  selectCompanyOnboardingSkippedSteps,
+  selectCompanyOnboardingStep,
+} from 'store/features';
+import { Module, OnboardingStep, SubModule } from 'shared/models';
 import { COMPANY_ONBOARDING_STEP_MAP, COMPANY_ONBOARDING_STEPS } from 'shared/constants';
 
 const CompanyOnboardingPage: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { data: step } = useAppSelector(selectCompanyOnboardingStep);
+  const { companyLicense } = useAppSelector(selectCompanyOnboardingSkippedSteps);
+  const { branch } = useAppSelector(selectCompanyOnboardingFlags);
   const [activeStep, setActiveStep] = React.useState(0);
 
   React.useEffect(() => {
     navigate(COMPANY_ONBOARDING_STEP_MAP[step].path, { replace: true });
   }, [step, navigate]);
+
+  React.useEffect(() => {
+    if (branch && companyLicense && step === OnboardingStep.companyLicense) {
+      dispatch(resetCompanyLicenseSkipped());
+      navigate(COMPANY_ONBOARDING_STEP_MAP[OnboardingStep.completed].path, { replace: true });
+    }
+  }, [step, companyLicense, branch, navigate, dispatch]);
 
   React.useEffect(() => {
     const currentStep = COMPANY_ONBOARDING_STEPS.findIndex(({ name }) => name === step);
