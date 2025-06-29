@@ -16,12 +16,12 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": "src",
-    "types": ["cypress", "node", "vite/client"]
+    "types": ["node", "vite/client"]
   },
   "ts-node": {
     "compilerOptions": {
       "module": "esnext"
     }
   },
-  "include": ["src", "cypress/**/*.ts", "types/**/*.ts"]
+  "include": ["src"]
 }

@@ -74,7 +74,13 @@ export default [
   },
   {
     files: ['cypress/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unused-expressions': 'off',
+    },
     languageOptions: {
+      parserOptions: {
+        project: 'cypress/tsconfig.e2e.json',
+      },
       globals: {
         ...globals.cypress,
         Cypress: true,
