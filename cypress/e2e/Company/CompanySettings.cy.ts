@@ -1,5 +1,5 @@
-import { ROUTES } from 'shared/constants';
-import { Module, SubModule } from 'shared/models';
+import { COMPANY_SETTINGS_KEY, ROUTES } from '../../../src/shared/constants';
+import { Module, SubModule } from '../../../src/shared/models';
 import {
   clickActionButton,
   clickFlowsIcon,
@@ -25,6 +25,8 @@ import {
   interceptFetchCompanySettingsRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
+  interceptLogoutRequest,
+  interceptOpenidConfigurationRequest,
 } from '../../support/interceptors';
 
 describe('Company Settings Tests', () => {
@@ -251,7 +253,66 @@ describe('Company Settings Tests', () => {
       );
     });
 
-    // TODO: add this test case
-    // it('should store default settings in the localstorage and apply the stored color scheme after logout', () => {});
+    it('should store default settings in the localstorage and apply the stored color scheme after logout', () => {
+      interceptFetchCompanySettingsRequest();
+      interceptEditCompanySettingsRequest();
+      interceptDeleteCompanySettingsRequest();
+      interceptOpenidConfigurationRequest();
+      interceptLogoutRequest();
+      cy.visit(ROUTES.companySettings.path);
+
+      cy.window().then((win) => {
+        const stored = win.localStorage.getItem(COMPANY_SETTINGS_KEY);
+        expect(stored).to.be.null;
+      });
+
+      selectColorScheme(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-ocean');
+      interceptFetchCompanySettingsRequest('fetchCompanySettingsUpdatedRequest', 'company/company-settings-updated');
+      clickActionButton(Module.companyManagement, SubModule.companySettingsDetails);
+      cy.wait('@editCompanySettingsRequest');
+      cy.wait('@fetchCompanySettingsUpdatedRequest');
+
+      verifyRadioGroupValue('color-scheme-group', 'ocean', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      cy.window().then((win) => {
+        const stored = win.localStorage.getItem(COMPANY_SETTINGS_KEY);
+        expect(stored).to.not.be.null;
+
+        const parsed = JSON.parse(stored!);
+        expect(parsed.colorSchemeId).to.equal('ocean');
+      });
+
+      getTestSelectorByModule(Module.shared, SubModule.header, 'profile-avatar').click();
+      getTestSelectorByModule(Module.shared, SubModule.header, 'logout-button').click();
+
+      cy.logoutMock();
+      cy.wait('@openidConfigurationRequest');
+      cy.wait('@logoutRequest');
+
+      cy.window().then((win) => {
+        const stored = win.localStorage.getItem(COMPANY_SETTINGS_KEY);
+        expect(stored).to.not.be.null;
+
+        const parsed = JSON.parse(stored!);
+        expect(parsed.colorSchemeId).to.equal('ocean');
+      });
+
+      cy.loginMock(true);
+      cy.visit(ROUTES.companySettings.path);
+
+      interceptFetchCompanySettingsRequest('fetchCompanySettingsUpdatedSecondRequest', 'company/company-settings-updated');
+
+      getTestSelectorByModule(Module.companyManagement, SubModule.companySettingsDetails, 'form-delete-button').click();
+      cy.wait('@deleteCompanySettingsRequest');
+      cy.wait('@fetchCompanySettingsUpdatedSecondRequest');
+
+      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      cy.window().then((win) => {
+        const stored = win.localStorage.getItem(COMPANY_SETTINGS_KEY);
+        expect(stored).to.not.be.null;
+
+        const parsed = JSON.parse(stored!);
+        expect(parsed.colorSchemeId).to.equal('midnight');
+      });
+    });
   });
 });

@@ -1,5 +1,5 @@
-import { ROUTES } from 'shared/constants';
-import { Module, SubModule } from 'shared/models';
+import { ROUTES } from '../../../src/shared/constants';
+import { Module, SubModule } from '../../../src/shared/models';
 import { getLinearLoader, getTestSelectorByModule, selectAction, verifyInputFields, verifyTextFields } from '../../support/helpers';
 import {
   interceptFetchBranchesRequest,
