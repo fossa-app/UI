@@ -88,6 +88,6 @@ export default [
     },
   },
   {
-    ignores: ['node_modules', 'coverage', 'build', 'vite.config.ts', 'cypress.config.ts', 'jest.config.ts'],
+    ignores: ['node_modules', 'coverage', 'build', 'vite.config.ts', 'cypress.config.ts', 'jest.config.ts', 'cypress/support/index.d.ts'],
   },
 ];
