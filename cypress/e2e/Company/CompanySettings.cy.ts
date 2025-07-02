@@ -263,6 +263,7 @@ describe('Company Settings Tests', () => {
 
       cy.window().then((win) => {
         const stored = win.localStorage.getItem(COMPANY_SETTINGS_KEY);
+        // @ts-expect-error Jest types are leaking into Cypress context; expect is not typed as Chai
         expect(stored).to.be.null;
       });
 
@@ -275,9 +276,11 @@ describe('Company Settings Tests', () => {
       verifyRadioGroupValue('color-scheme-group', 'ocean', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
       cy.window().then((win) => {
         const stored = win.localStorage.getItem(COMPANY_SETTINGS_KEY);
+        // @ts-expect-error Jest types are leaking into Cypress context; expect is not typed as Chai
         expect(stored).to.not.be.null;
 
         const parsed = JSON.parse(stored!);
+        // @ts-expect-error Jest types are leaking into Cypress context; expect is not typed as Chai
         expect(parsed.colorSchemeId).to.equal('ocean');
       });
 
@@ -290,9 +293,11 @@ describe('Company Settings Tests', () => {
 
       cy.window().then((win) => {
         const stored = win.localStorage.getItem(COMPANY_SETTINGS_KEY);
+        // @ts-expect-error Jest types are leaking into Cypress context; expect is not typed as Chai
         expect(stored).to.not.be.null;
 
         const parsed = JSON.parse(stored!);
+        // @ts-expect-error Jest types are leaking into Cypress context; expect is not typed as Chai
         expect(parsed.colorSchemeId).to.equal('ocean');
       });
 
@@ -308,9 +313,11 @@ describe('Company Settings Tests', () => {
       verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
       cy.window().then((win) => {
         const stored = win.localStorage.getItem(COMPANY_SETTINGS_KEY);
+        // @ts-expect-error Jest types are leaking into Cypress context; expect is not typed as Chai
         expect(stored).to.not.be.null;
 
         const parsed = JSON.parse(stored!);
+        // @ts-expect-error Jest types are leaking into Cypress context; expect is not typed as Chai
         expect(parsed.colorSchemeId).to.equal('midnight');
       });
     });

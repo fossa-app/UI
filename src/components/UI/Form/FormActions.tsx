@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
+import Box, { BoxProps } from '@mui/material/Box';
 import { useFormContext } from './FormContext';
 import { FormActionProps } from './form.model';
 import FormAction from './actions';
@@ -14,9 +14,9 @@ type WithChildren = {
   actions?: never;
 };
 
-type FormActionsProps = WithActions | WithChildren;
+type FormActionsProps = (WithActions | WithChildren) & BoxProps;
 
-const FormActions: React.FC<FormActionsProps> = ({ actions, children }) => {
+const FormActions: React.FC<FormActionsProps> = ({ actions, children, ...props }) => {
   const context = useFormContext();
 
   if (!context) {
@@ -24,10 +24,8 @@ const FormActions: React.FC<FormActionsProps> = ({ actions, children }) => {
   }
 
   return (
-    <Box sx={{ padding: 6 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 4 }}>
-        {actions ? actions.map((action) => <FormAction key={action.name} {...action} />) : children}
-      </Box>
+    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 4, padding: 6, ...props.sx }}>
+      {actions ? actions.map((action) => <FormAction key={action.name} {...action} />) : children}
     </Box>
   );
 };

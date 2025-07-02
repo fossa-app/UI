@@ -403,6 +403,9 @@ export const COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<CompanyS
       variant: 'text',
       color: 'secondary',
       'aria-label': 'Cancel Company Settings Button',
+      sx: {
+        marginLeft: 'auto',
+      },
     },
     {
       actionType: FormActionType.loadingButton,
