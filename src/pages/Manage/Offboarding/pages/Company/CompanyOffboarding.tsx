@@ -1,27 +1,46 @@
 import * as React from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Typography from '@mui/material/Typography';
 import { useAppSelector } from 'store';
 import { selectCompanyOffboardingStep } from 'store/features';
-import { OffboardingStep } from 'shared/models';
-import { ROUTES } from 'shared/constants';
+import { COMPANY_OFFBOARDING_STEPS, COMPANY_OFFBOARDING_STEP_MAP } from 'shared/constants/offboarding';
+import { Module, SubModule } from 'shared/models';
 
 const CompanyOffboardingPage: React.FC = () => {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
   const { data: step } = useAppSelector(selectCompanyOffboardingStep);
+  const [activeStep, setActiveStep] = React.useState(0);
 
   React.useEffect(() => {
-    if (step === OffboardingStep.company && pathname !== ROUTES.deleteCompany.path) {
-      navigate(ROUTES.deleteCompany.path, { replace: true });
-    } else if (step === OffboardingStep.completed) {
-      navigate(ROUTES.flows.path, { replace: true });
+    navigate(COMPANY_OFFBOARDING_STEP_MAP[step].path, { replace: true });
+  }, [step, navigate]);
+
+  React.useEffect(() => {
+    const currentStep = COMPANY_OFFBOARDING_STEPS.findIndex(({ name }) => name === step);
+
+    if (currentStep !== -1) {
+      setActiveStep(currentStep);
     }
-  }, [step, pathname, navigate]);
+  }, [step]);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: 5 }}>
-      <Outlet />
+      <Stepper activeStep={activeStep} sx={{ justifyContent: 'center', mb: 3 }}>
+        {COMPANY_OFFBOARDING_STEPS.map(({ name, label }) => (
+          <Step key={label} data-cy={`${Module.offboarding}-${SubModule.companyOffboarding}-stepper-${name}`}>
+            <StepLabel>
+              <Typography variant="h6">{label}</Typography>
+            </StepLabel>
+          </Step>
+        ))}
+      </Stepper>
+      <Box sx={{ flexGrow: 1 }}>
+        <Outlet />
+      </Box>
     </Box>
   );
 };

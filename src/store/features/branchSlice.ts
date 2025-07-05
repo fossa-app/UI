@@ -14,6 +14,7 @@ import {
   getFullAddress,
 } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
+import { setBranchInstructionsCompleted } from './offboardingSlice';
 
 interface BranchState {
   branch: StateEntity<Branch | undefined>;
@@ -259,12 +260,19 @@ export const editBranch = createAsyncThunk<void, [string, Omit<BranchDTO, 'id'>]
 
 export const deleteBranch = createAsyncThunk<void, BranchDTO['id'], { state: RootState; rejectValue: ErrorResponseDTO }>(
   'branch/deleteBranch',
-  async (id, { dispatch, rejectWithValue }) => {
+  async (id, { dispatch, getState, rejectWithValue }) => {
     try {
       await axios.delete<void>(`${ENDPOINTS.branches}/${id}`);
 
       dispatch(resetBranchesFetchStatus());
       dispatch(setSuccess(MESSAGES.success.branches.delete));
+
+      const state = getState() as RootState;
+      const branches = state.branch.branches.data?.items || [];
+
+      if (branches.length === 1) {
+        dispatch(setBranchInstructionsCompleted());
+      }
     } catch (error) {
       dispatch(
         setError({

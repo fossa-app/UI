@@ -85,7 +85,7 @@ describe('Onboarding Flow Tests', () => {
         loginMock();
       });
 
-      it('should navigate to the Company creation page and no other onboarding page if there is no company', () => {
+      it('should navigate to the Create Company page and no other onboarding page if there is no company', () => {
         interceptFetchCompanyFailedRequest();
         cy.visit(ROUTES.onboarding.path);
 
@@ -201,7 +201,7 @@ describe('Onboarding Flow Tests', () => {
         });
       });
 
-      it('should navigate to the Branch creation page and no other onboarding page if company, company settings has been created and the company license has been uploaded', () => {
+      it('should navigate to the Create Branch page and no other onboarding page if company, company settings has been created and the company license has been uploaded', () => {
         interceptFetchCompanyRequest();
         interceptFetchCompanySettingsRequest();
         interceptFetchCompanyLicenseRequest();
@@ -233,7 +233,7 @@ describe('Onboarding Flow Tests', () => {
         });
       });
 
-      it('should navigate to the Employee creation page and no other onboarding page if navigating to Employee onboarding flow', () => {
+      it('should navigate to the Create Employee page and no other onboarding page if navigating to Employee onboarding flow', () => {
         interceptFetchCompanyRequest();
         interceptFetchCompanySettingsRequest();
         interceptFetchCompanyLicenseRequest();
@@ -1137,23 +1137,15 @@ describe('Onboarding Flow Tests', () => {
 
       cy.url().should('include', ROUTES.uploadCompanyLicense.path);
       clickFlowsIcon();
-      clickSubFlow('Company Settings');
-
+      clickSubFlow('Company Offboarding');
       interceptFetchCompanySettingsFailedRequest();
-      getTestSelectorByModule(Module.companyManagement, SubModule.companySettingsDetails, 'form-delete-button').click();
-      cy.wait('@deleteCompanySettingsRequest');
-      cy.wait('@fetchCompanySettingsFailedRequest');
-
-      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
-      getTestSelectorByModule(Module.companyManagement, SubModule.companySettingsDetails, 'form-delete-button').should(
-        'have.attr',
-        'disabled'
-      );
-
+      clickActionButton(Module.deleteCompanySettings, SubModule.companySettingsDetails);
+      cy.wait(['@deleteCompanySettingsRequest', '@fetchCompanySettingsFailedRequest']);
       clickFlowsIcon();
       clickSubFlow('Company Onboarding');
 
       cy.url().should('include', ROUTES.createCompanySettings.path);
+      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
     });
 
     it('should be able to skip the Company License upload step', () => {
@@ -1178,8 +1170,7 @@ describe('Onboarding Flow Tests', () => {
       clickField(Module.createBranch, SubModule.branchDetails, 'form-field-noPhysicalAddress');
       clickActionButton(Module.createBranch, SubModule.branchDetails);
       interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
-      cy.wait('@createBranchRequest');
-      cy.wait('@fetchBranchesRequest');
+      cy.wait(['@createBranchRequest', '@fetchBranchesRequest']);
 
       cy.location('pathname').should('eq', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', false);
@@ -1205,8 +1196,40 @@ describe('Onboarding Flow Tests', () => {
       interceptFetchCompanyLicenseRequest();
       clickActionButton(Module.uploadCompanyLicense, SubModule.companyLicenseDetails);
 
-      cy.wait('@uploadCompanyLicenseRequest');
-      cy.wait('@fetchCompanyLicenseRequest');
+      cy.wait(['@uploadCompanyLicenseRequest', '@fetchCompanyLicenseRequest']);
+
+      cy.location('pathname').should('eq', ROUTES.flows.path);
+      checkIsSubFlowDisabled('Company Onboarding', true);
+    });
+
+    it('should correctly jump over the Company License upload step when the license has been uploaded, but there are no company settings and a branch', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchCompanySettingsFailedRequest();
+      interceptFetchCompanyLicenseRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptFetchProfileFailedRequest();
+      interceptCreateCompanySettingsRequest();
+      interceptCreateBranchRequest();
+      cy.visit(ROUTES.flows.path);
+
+      clickSubFlow('Company Onboarding');
+
+      cy.url().should('include', ROUTES.createCompanySettings.path);
+
+      interceptFetchCompanySettingsRequest();
+      selectColorScheme(Module.createCompanySettings, SubModule.companySettingsDetails, 'color-scheme-sunrise');
+      clickActionButton(Module.createCompanySettings, SubModule.companySettingsDetails);
+
+      cy.wait(['@createCompanySettingsRequest', '@fetchCompanySettingsRequest']);
+
+      cy.url().should('include', ROUTES.createBranch.path);
+
+      getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-name').type('America/New_York');
+      selectOption(Module.createBranch, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
+      clickField(Module.createBranch, SubModule.branchDetails, 'form-field-noPhysicalAddress');
+      clickActionButton(Module.createBranch, SubModule.branchDetails);
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
+      cy.wait(['@createBranchRequest', '@fetchBranchesRequest']);
 
       cy.location('pathname').should('eq', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', true);

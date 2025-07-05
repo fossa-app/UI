@@ -6,11 +6,13 @@ import { deleteCompany, fetchCompany } from './companySlice';
 import { fetchOnboardingBranches } from './branchSlice';
 import { deleteProfile, fetchProfile } from './profileSlice';
 import { fetchCompanyLicense } from './licenseSlice';
+import { fetchCompanySettings } from './companySettingsSlice';
 
 interface FlowState {
   flows: FlowsMap;
   flags: {
     [OnboardingStep.company]: boolean;
+    [OnboardingStep.companySettings]: boolean;
     [OnboardingStep.companyLicense]: boolean;
     [OnboardingStep.branch]: boolean;
   };
@@ -20,13 +22,17 @@ const initialState: FlowState = {
   flows: FLOWS_MAP,
   flags: {
     [OnboardingStep.company]: false,
+    [OnboardingStep.companySettings]: false,
     [OnboardingStep.companyLicense]: false,
     [OnboardingStep.branch]: false,
   },
 };
 
 const checkAllFlagsSet = (flags: FlowState['flags']) =>
-  flags[OnboardingStep.company] && flags[OnboardingStep.companyLicense] && flags[OnboardingStep.branch];
+  flags[OnboardingStep.company] &&
+  flags[OnboardingStep.companySettings] &&
+  flags[OnboardingStep.companyLicense] &&
+  flags[OnboardingStep.branch];
 
 const flowSlice = createSlice({
   name: 'flow',
@@ -35,6 +41,9 @@ const flowSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchCompany.rejected, (state) => {
+        state.flows.company!.subFlows!.companyOnboarding!.disabled = false;
+      })
+      .addCase(fetchCompanySettings.rejected, (state) => {
         state.flows.company!.subFlows!.companyOnboarding!.disabled = false;
       })
       .addCase(fetchCompanyLicense.rejected, (state) => {
@@ -49,6 +58,10 @@ const flowSlice = createSlice({
         state.flows.profile!.subFlows!.employeeOnboarding!.disabled = false;
         state.flows.company!.subFlows!.companySettings!.disabled = false;
         state.flows.company!.subFlows!.companyOffboarding!.disabled = false;
+        state.flows.company!.subFlows!.companyOnboarding!.disabled = checkAllFlagsSet(state.flags);
+      })
+      .addCase(fetchCompanySettings.fulfilled, (state) => {
+        state.flags[OnboardingStep.companySettings] = true;
         state.flows.company!.subFlows!.companyOnboarding!.disabled = checkAllFlagsSet(state.flags);
       })
       .addCase(fetchCompanyLicense.fulfilled, (state) => {

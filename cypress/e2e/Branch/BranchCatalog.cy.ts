@@ -463,8 +463,7 @@ describe('Branch Catalog Tests', () => {
       selectAction(Module.branchManagement, SubModule.branchCatalog, 'delete', '222222222223');
 
       interceptFetchBranchesRequest();
-      cy.wait('@deleteBranchRequest');
-      cy.wait('@fetchBranchesRequest');
+      cy.wait(['@deleteBranchRequest', '@fetchBranchesRequest']);
 
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
         .should('exist')
