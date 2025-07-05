@@ -8,4 +8,5 @@ export * from './company';
 export * from './icons';
 export * from './departments';
 export * from './onboarding';
+export * from './offboarding';
 export * from './common';

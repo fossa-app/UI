@@ -36,6 +36,8 @@ export enum RouteKey {
   newDepartment = 'newDepartment',
   editDepartment = 'editDepartment',
   viewDepartment = 'viewDepartment',
+  deleteCompanySettings = 'deleteCompanySettings',
+  companyOffboardingInstructions = 'companyOffboardingInstructions',
 }
 
 export interface RouteItem {

@@ -93,6 +93,12 @@ export const deleteCompany = createAsyncThunk<void, void, { rejectValue: ErrorRe
       await axios.delete<void>(ENDPOINTS.company);
 
       dispatch(setSuccess(MESSAGES.success.company.delete));
+
+      try {
+        await dispatch(fetchCompany()).unwrap();
+      } catch {
+        // Ignored: fetchCompany will return 404 after delete, which is expected.
+      }
     } catch (error) {
       if ((error as ErrorResponseDTO).status === 424) {
         dispatch(

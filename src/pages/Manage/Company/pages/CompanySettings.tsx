@@ -1,14 +1,7 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
-import {
-  selectUserRoles,
-  selectCompanySettings,
-  editCompanySettings,
-  selectAppConfig,
-  createCompanySettings,
-  deleteCompanySettings,
-} from 'store/features';
+import { selectUserRoles, selectCompanySettings, editCompanySettings, selectAppConfig, createCompanySettings } from 'store/features';
 import {
   DEFAULT_COMPANY_SETTINGS,
   COMPANY_SETTINGS_FIELDS,
@@ -28,7 +21,7 @@ const CompanySettingsPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const userRoles = useAppSelector(selectUserRoles);
-  const { data: companySettings, fetchStatus, updateStatus, deleteStatus } = useAppSelector(selectCompanySettings);
+  const { data: companySettings, fetchStatus, updateStatus } = useAppSelector(selectCompanySettings);
   const { isDarkTheme } = useAppSelector(selectAppConfig);
   const mode: ThemeMode = isDarkTheme ? 'dark' : 'light';
   const isEmptySettings = Object.values(companySettings).every((value) => !value);
@@ -47,12 +40,6 @@ const CompanySettingsPage: React.FC = () => {
   const handleCancel = React.useCallback(() => {
     navigate(ROUTES.flows.path);
   }, [navigate]);
-
-  const handleDelete = React.useCallback(() => {
-    if (!isEmptySettings) {
-      dispatch(deleteCompanySettings());
-    }
-  }, [isEmptySettings, dispatch]);
 
   const filteredSchemes = React.useMemo(() => {
     return Object.fromEntries(Object.entries(COLOR_SCHEMES).filter(([, scheme]) => scheme[mode]));
@@ -78,8 +65,6 @@ const CompanySettingsPage: React.FC = () => {
     () =>
       COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA.actions.map((action) => {
         switch (action.name) {
-          case FormActionName.delete:
-            return { ...action, disabled: isEmptySettings, onClick: handleDelete, loading: deleteStatus === 'loading' };
           case FormActionName.cancel:
             return { ...action, onClick: handleCancel };
           case FormActionName.submit:
@@ -88,7 +73,7 @@ const CompanySettingsPage: React.FC = () => {
             return action;
         }
       }),
-    [updateStatus, deleteStatus, isEmptySettings, handleCancel, handleDelete]
+    [updateStatus, handleCancel]
   );
 
   return (

@@ -1,9 +1,12 @@
 export enum Module {
   manage = 'manage',
   onboarding = 'onboarding',
+  offboarding = 'offboarding',
   createCompany = 'createCompany',
   createCompanySettings = 'createCompanySettings',
   deleteCompany = 'deleteCompany',
+  deleteCompanySettings = 'deleteCompanySettings',
+  companyOffboardingInstructions = 'companyOffboardingInstructions',
   uploadCompanyLicense = 'uploadCompanyLicense',
   createBranch = 'createBranch',
   createEmployee = 'createEmployee',
@@ -19,6 +22,7 @@ export enum Module {
 export enum SubModule {
   flows = 'flows',
   companyOnboarding = 'companyOnboarding',
+  companyOffboarding = 'companyOffboarding',
   employeeOnboarding = 'employeeOnboarding',
   companyDetails = 'companyDetails',
   companyViewDetails = 'companyViewDetails',

@@ -41,7 +41,6 @@ export enum FormActionType {
 export enum FormActionName {
   cancel = 'cancel',
   submit = 'submit',
-  delete = 'delete',
 }
 
 interface BaseFormFieldProps {

@@ -13,7 +13,6 @@ import {
 import {
   interceptCreateCompanySettingsFailedRequest,
   interceptCreateCompanySettingsRequest,
-  interceptDeleteCompanySettingsFailedRequest,
   interceptDeleteCompanySettingsRequest,
   interceptEditCompanySettingsFailedRequest,
   interceptEditCompanySettingsRequest,
@@ -202,57 +201,6 @@ describe('Company Settings Tests', () => {
       verifyRadioGroupValue('color-scheme-group', 'ocean', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
     });
 
-    it('should disable the delete company settings button if there is no company settings available', () => {
-      interceptFetchCompanySettingsFailedRequest();
-      cy.visit(ROUTES.companySettings.path);
-
-      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
-
-      getTestSelectorByModule(Module.companyManagement, SubModule.companySettingsDetails, 'form-delete-button').should(
-        'have.attr',
-        'disabled'
-      );
-    });
-
-    it('should not delete the color scheme if the company settings deletion failed', () => {
-      interceptFetchCompanySettingsRequest('fetchCompanySettingsRequest', 'company/company-settings-updated');
-      interceptDeleteCompanySettingsFailedRequest();
-      cy.visit(ROUTES.companySettings.path);
-
-      verifyRadioGroupValue('color-scheme-group', 'ocean', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
-
-      getTestSelectorByModule(Module.companyManagement, SubModule.companySettingsDetails, 'form-delete-button').click();
-      cy.wait('@deleteCompanySettingsFailedRequest');
-
-      getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
-        .should('exist')
-        .and('contain.text', 'Failed to delete the Company Settings');
-      verifyRadioGroupValue('color-scheme-group', 'ocean', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
-    });
-
-    it('should delete the color scheme if the company settings deletion succeeded', () => {
-      interceptFetchCompanySettingsRequest('fetchCompanySettingsRequest', 'company/company-settings-updated');
-      interceptDeleteCompanySettingsRequest();
-      cy.visit(ROUTES.companySettings.path);
-
-      verifyRadioGroupValue('color-scheme-group', 'ocean', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
-
-      interceptFetchCompanySettingsRequest();
-
-      getTestSelectorByModule(Module.companyManagement, SubModule.companySettingsDetails, 'form-delete-button').click();
-      cy.wait('@deleteCompanySettingsRequest');
-      cy.wait('@fetchCompanySettingsRequest');
-
-      getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
-        .should('exist')
-        .and('contain.text', 'Company Settings has been successfully deleted');
-      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
-      getTestSelectorByModule(Module.companyManagement, SubModule.companySettingsDetails, 'form-delete-button').should(
-        'have.attr',
-        'disabled'
-      );
-    });
-
     it('should store default settings in the localstorage and apply the stored color scheme after logout', () => {
       interceptFetchCompanySettingsRequest();
       interceptEditCompanySettingsRequest();
@@ -305,21 +253,6 @@ describe('Company Settings Tests', () => {
       cy.visit(ROUTES.companySettings.path);
 
       interceptFetchCompanySettingsRequest('fetchCompanySettingsUpdatedSecondRequest', 'company/company-settings-updated');
-
-      getTestSelectorByModule(Module.companyManagement, SubModule.companySettingsDetails, 'form-delete-button').click();
-      cy.wait('@deleteCompanySettingsRequest');
-      cy.wait('@fetchCompanySettingsUpdatedSecondRequest');
-
-      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
-      cy.window().then((win) => {
-        const stored = win.localStorage.getItem(COMPANY_SETTINGS_KEY);
-        // @ts-expect-error Jest types are leaking into Cypress context; expect is not typed as Chai
-        expect(stored).to.not.be.null;
-
-        const parsed = JSON.parse(stored!);
-        // @ts-expect-error Jest types are leaking into Cypress context; expect is not typed as Chai
-        expect(parsed.colorSchemeId).to.equal('midnight');
-      });
     });
   });
 });

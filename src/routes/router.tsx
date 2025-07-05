@@ -35,6 +35,15 @@ const CreateCompanyPage = createLazyComponent(() => import('pages/Manage/Onboard
 const DeleteCompanyPage = createLazyComponent(() => import('pages/Manage/Offboarding/pages/Company/DeleteCompany'), {
   title: ROUTES.deleteCompany.name,
 });
+const DeleteCompanySettingsPage = createLazyComponent(() => import('pages/Manage/Offboarding/pages/Company/DeleteCompanySettings'), {
+  title: ROUTES.deleteCompanySettings.name,
+});
+const CompanyOffboardingInstructionsPage = createLazyComponent(
+  () => import('pages/Manage/Offboarding/pages/Company/CompanyOffboardingInstructions'),
+  {
+    title: ROUTES.companyOffboardingInstructions.name,
+  }
+);
 const CreateBranchPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/CreateBranch'), {
   title: ROUTES.createBranch.name,
 });
@@ -203,7 +212,15 @@ const router = createBrowserRouter(
                       children: [
                         {
                           index: true,
-                          element: <Navigate to={ROUTES.deleteCompany.path} replace />,
+                          element: <Navigate to={ROUTES.deleteCompanySettings.path} replace />,
+                        },
+                        {
+                          path: ROUTES.deleteCompanySettings.path,
+                          element: DeleteCompanySettingsPage,
+                        },
+                        {
+                          path: ROUTES.companyOffboardingInstructions.path,
+                          element: CompanyOffboardingInstructionsPage,
                         },
                         {
                           path: ROUTES.deleteCompany.path,
