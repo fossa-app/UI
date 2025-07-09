@@ -40,11 +40,11 @@ const initialState: OffboardingState = {
 const evaluateCompanyOffboardingStep = (state: WritableDraft<OffboardingState>) => {
   const { companySettings, instructions, company } = state.company.flags;
 
-  if (!companySettings) {
-    state.company.data = OffboardingStep.companySettings;
-    state.company.status = 'failed';
-  } else if (!instructions.branch || !instructions.employee) {
+  if (!instructions.branch || !instructions.employee) {
     state.company.data = OffboardingStep.instructions;
+    state.company.status = 'failed';
+  } else if (!companySettings) {
+    state.company.data = OffboardingStep.companySettings;
     state.company.status = 'failed';
   } else if (!company) {
     state.company.data = OffboardingStep.company;

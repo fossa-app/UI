@@ -31,6 +31,7 @@ export enum SubModule {
   companySettingsDetails = 'companySettingsDetails',
   branchCatalog = 'branchCatalog',
   branchDetails = 'branchDetails',
+  offboardingDetails = 'offboardingDetails',
   branchViewDetails = 'branchViewDetails',
   branchLocationDetails = 'branchLocationDetails',
   departmentCatalog = 'departmentCatalog',

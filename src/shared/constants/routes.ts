@@ -46,13 +46,13 @@ export const ROUTES: AppRoute = {
     name: 'View Company',
     path: '/flows/company/view',
   },
-  deleteCompanySettings: {
-    name: 'Delete Company Settings',
-    path: '/flows/offboarding/company/deleteCompanySettings',
-  },
   companyOffboardingInstructions: {
     name: 'Company Offboarding Instructions',
     path: '/flows/offboarding/company/instructions',
+  },
+  deleteCompanySettings: {
+    name: 'Delete Company Settings',
+    path: '/flows/offboarding/company/deleteCompanySettings',
   },
   deleteCompany: {
     name: 'Delete Company',

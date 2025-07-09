@@ -114,6 +114,10 @@ const onboardingSlice = createSlice({
     setCompanyLicenseSkipped(state) {
       state.company.skippedSteps[OnboardingStep.companyLicense] = true;
     },
+    setBranchesFailedFlag(state) {
+      state.company.flags[OnboardingStep.branch] = false;
+      evaluateCompanyOnboardingStep(state);
+    },
     resetCompanyLicenseSkipped(state) {
       state.company.skippedSteps[OnboardingStep.companyLicense] = false;
     },
@@ -177,6 +181,6 @@ export const selectOnboardingLoading = (state: RootState) =>
   !['succeeded', 'failed'].includes(state.onboarding.company.status ?? '') ||
   !['succeeded', 'failed'].includes(state.onboarding.employee.status ?? '');
 
-export const { setCompanyLicenseSkipped, resetCompanyLicenseSkipped } = onboardingSlice.actions;
+export const { setCompanyLicenseSkipped, resetCompanyLicenseSkipped, setBranchesFailedFlag } = onboardingSlice.actions;
 
 export default onboardingSlice.reducer;
