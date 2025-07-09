@@ -8,12 +8,21 @@ import { FormFieldProps } from './form.model';
 import Field from './fields';
 import { useFormContext } from './FormContext';
 
-type FormContentProps<T> = {
+type WithFields<T> = {
   fields: FormFieldProps<T>[];
   values?: T;
+  children?: never;
 };
 
-const FormContent = <T,>({ fields, values }: FormContentProps<T>) => {
+type WithChildren = {
+  children: React.ReactNode;
+  fields?: never;
+  values?: never;
+};
+
+type FormContentProps<T> = WithFields<T> | WithChildren;
+
+const FormContent = <T,>({ fields, values, children }: FormContentProps<T>) => {
   const context = useFormContext();
 
   if (!context) {
@@ -24,17 +33,22 @@ const FormContent = <T,>({ fields, values }: FormContentProps<T>) => {
   const {
     formState: { errors },
   } = reactHookFormContext();
-  const generalErrorMessage = getGeneralErrorMessage<T>(errors, fields);
+  const generalErrorMessage = fields ? getGeneralErrorMessage<T>(errors, fields) : undefined;
 
+  // TODO: hide form content while loading, cleanup CompanyOffboardingInstructionsPage
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1, padding: 6, overflowY: 'auto' }}>
-      <Grid container spacing={4}>
-        {fields.map((field) => (
-          <Grid key={field.name} {...field.grid}>
-            {field.renderField ? field.renderField(values) : <Field<T> key={field.name} {...field} />}
-          </Grid>
-        ))}
-      </Grid>
+      {fields ? (
+        <Grid container spacing={4}>
+          {fields.map((field) => (
+            <Grid key={field.name} {...field.grid}>
+              {field.renderField ? field.renderField(values) : <Field<T> key={field.name} {...field} />}
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        children
+      )}
       {generalErrorMessage && (
         <FormHelperText error data-cy={`${module}-${subModule}-form-general-error-message`} sx={{ my: 3, fontSize: '1rem' }}>
           {generalErrorMessage}

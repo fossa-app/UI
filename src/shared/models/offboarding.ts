@@ -1,14 +1,14 @@
 export enum OffboardingStep {
-  companySettings = 'companySettings',
   instructions = 'instructions',
+  companySettings = 'companySettings',
   company = 'company',
   employee = 'employee',
   completed = 'completed',
 }
 
 export type CompanyOffboardingStep =
-  | OffboardingStep.companySettings
   | OffboardingStep.instructions
+  | OffboardingStep.companySettings
   | OffboardingStep.company
   | OffboardingStep.completed;
 

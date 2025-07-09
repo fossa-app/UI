@@ -16,6 +16,7 @@ import {
   clickFlowsIcon,
   verifyRadioGroupValue,
   checkIsSubFlowDisabled,
+  selectAction,
 } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
@@ -44,6 +45,7 @@ import {
   interceptCreateCompanySettingsFailedRequest,
   interceptCreateCompanySettingsRequest,
   interceptDeleteCompanySettingsRequest,
+  interceptDeleteBranchRequest,
 } from '../support/interceptors';
 
 const companyOnboardingRoutes = [
@@ -1233,6 +1235,38 @@ describe('Onboarding Flow Tests', () => {
 
       cy.location('pathname').should('eq', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', true);
+    });
+
+    it('should correctly be navigated to the Create Branch step if the last branch has been deleted and the Company License upload step is skipped', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchCompanySettingsRequest();
+      interceptFetchCompanyLicenseFailedRequest();
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
+      interceptFetchBranchesRequest();
+      interceptFetchProfileRequest();
+      interceptDeleteBranchRequest('222222222222');
+      cy.visit(ROUTES.flows.path);
+
+      clickSubFlow('Company Onboarding');
+
+      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-cancel-button').click();
+
+      cy.location('pathname').should('eq', ROUTES.flows.path);
+      clickSubFlow('Branches');
+      cy.url().should('include', ROUTES.branches.path);
+
+      selectAction(Module.branchManagement, SubModule.branchCatalog, 'delete', '222222222222');
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetchNoBranchesRequest', fixture: 'branch/branches-empty' });
+      cy.wait('@deleteBranchRequest');
+      cy.wait('@fetchNoBranchesRequest');
+      clickFlowsIcon();
+      clickSubFlow('Company Onboarding');
+
+      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-cancel-button').click();
+
+      cy.url().should('include', ROUTES.createBranch.path);
     });
   });
 });

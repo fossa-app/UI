@@ -408,29 +408,9 @@ export const CREATE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA: FormProps<CompanySetti
   ],
 };
 
-export const DELETE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA: FormProps<CompanySettingsFieldConfig> = {
-  module: Module.deleteCompanySettings,
-  subModule: SubModule.companySettingsDetails,
-  fields: [],
-  actions: [
-    {
-      actionType: FormActionType.loadingButton,
-      label: 'Delete Company Settings',
-      name: FormActionName.submit,
-      color: 'error',
-      loadingPosition: 'end',
-      endIcon: IconType.next,
-      type: 'submit',
-      roles: [UserRole.administrator],
-      'aria-label': 'Delete Company Settings Button',
-    },
-  ],
-  title: 'Delete Company Settings',
-};
-
 export const COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA: FormProps<any> = {
   module: Module.companyOffboardingInstructions,
-  subModule: SubModule.branchDetails,
+  subModule: SubModule.offboardingDetails,
   title: 'Delete Branches, Departments & Offboard Employees',
   fields: [
     {
@@ -453,6 +433,26 @@ export const COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA: FormProps<any> = {
       'aria-label': 'Continue Offboarding Instructions',
     },
   ],
+};
+
+export const DELETE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA: FormProps<CompanySettingsFieldConfig> = {
+  module: Module.deleteCompanySettings,
+  subModule: SubModule.companySettingsDetails,
+  fields: [],
+  actions: [
+    {
+      actionType: FormActionType.loadingButton,
+      label: 'Delete Company Settings',
+      name: FormActionName.submit,
+      color: 'error',
+      loadingPosition: 'end',
+      endIcon: IconType.next,
+      type: 'submit',
+      roles: [UserRole.administrator],
+      'aria-label': 'Delete Company Settings Button',
+    },
+  ],
+  title: 'Delete Company Settings',
 };
 
 export const DELETE_COMPANY_DETAILS_FORM_SCHEMA: FormProps<void> = {

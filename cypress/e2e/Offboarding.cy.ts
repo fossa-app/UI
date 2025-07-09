@@ -58,42 +58,6 @@ describe('Offboarding Flow Tests', () => {
         loginMock();
       });
 
-      it('should be redirected to the Delete Company Settings page', () => {
-        interceptFetchCompanyRequest();
-        interceptFetchCompanySettingsRequest();
-        interceptFetchCompanyLicenseRequest();
-        interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
-        interceptFetchProfileRequest();
-        cy.visit(ROUTES.offboarding.path);
-
-        cy.url().should('include', ROUTES.deleteCompanySettings.path);
-        getTestSelectorByModule(Module.deleteCompanySettings, SubModule.companySettingsDetails, 'form-header').should(
-          'have.text',
-          'Delete Company Settings'
-        );
-        getTestSelectorByModule(Module.deleteCompanySettings, SubModule.companySettingsDetails, 'form-submit-button')
-          .should('exist')
-          .and('have.text', 'Delete Company Settings');
-
-        if (isAdminRole) {
-          getTestSelectorByModule(Module.deleteCompanySettings, SubModule.companySettingsDetails, 'form-general-error-message').should(
-            'not.exist'
-          );
-          getTestSelectorByModule(Module.deleteCompanySettings, SubModule.companySettingsDetails, 'form-submit-button').should(
-            'not.have.attr',
-            'disabled'
-          );
-        } else {
-          getTestSelectorByModule(Module.deleteCompanySettings, SubModule.companySettingsDetails, 'form-general-error-message')
-            .should('exist')
-            .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
-          getTestSelectorByModule(Module.deleteCompanySettings, SubModule.companySettingsDetails, 'form-submit-button').should(
-            'have.attr',
-            'disabled'
-          );
-        }
-      });
-
       it('should be redirected to the Delete Profile page', () => {
         interceptFetchCompanyRequest();
         interceptFetchCompanySettingsRequest();
@@ -202,12 +166,42 @@ describe('Offboarding Flow Tests', () => {
         });
       });
 
-      it('should navigate to the Delete Company Settings page and no other offboarding page at the first step', () => {
+      it('should be redirected to the Company Offboarding Instructions page and no other offboarding page if at the first step', () => {
         interceptFetchCompanyRequest();
-        interceptFetchCompanySettingsRequest();
+        interceptFetchCompanySettingsFailedRequest();
         interceptFetchCompanyLicenseRequest();
         interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
         interceptFetchProfileRequest();
+        cy.visit(ROUTES.offboarding.path);
+
+        cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+
+        if (isAdminRole) {
+          getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-general-error-message').should(
+            'not.exist'
+          );
+          getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-submit-button').should(
+            'not.have.attr',
+            'disabled'
+          );
+        } else {
+          getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-general-error-message')
+            .should('exist')
+            .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
+        }
+
+        companyOffboardingRoutes.forEach((route) => {
+          cy.visit(route);
+          cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+        });
+      });
+
+      it('should be redirected to the Delete Company Settings page and no other offboarding page at the company settings step step', () => {
+        interceptFetchCompanyRequest();
+        interceptFetchCompanySettingsRequest();
+        interceptFetchCompanyLicenseRequest();
+        interceptFetchBranchesFailedRequest();
+        interceptFetchProfileFailedRequest();
         cy.visit(ROUTES.offboarding.path);
 
         cy.url().should('include', ROUTES.deleteCompanySettings.path);
@@ -236,37 +230,7 @@ describe('Offboarding Flow Tests', () => {
         });
       });
 
-      it('should navigate to the Company Offboarding Instructions page and no other offboarding page if at the instructions step', () => {
-        interceptFetchCompanyRequest();
-        interceptFetchCompanySettingsFailedRequest();
-        interceptFetchCompanyLicenseRequest();
-        interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
-        interceptFetchProfileRequest();
-        cy.visit(ROUTES.offboarding.path);
-
-        cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
-
-        if (isAdminRole) {
-          getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.branchDetails, 'form-general-error-message').should(
-            'not.exist'
-          );
-          getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.branchDetails, 'form-submit-button').should(
-            'not.have.attr',
-            'disabled'
-          );
-        } else {
-          getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.branchDetails, 'form-general-error-message')
-            .should('exist')
-            .and('contain.text', `You don't have the necessary permissions. Please reach out to your Company administrator for support.`);
-        }
-
-        companyOffboardingRoutes.forEach((route) => {
-          cy.visit(route);
-          cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
-        });
-      });
-
-      it('should navigate to the Delete Company page and no other offboarding page if at the last step', () => {
+      it('should be redirected to the Delete Company page and no other offboarding page if at the last step', () => {
         interceptFetchCompanyRequest();
         interceptFetchCompanySettingsFailedRequest();
         interceptFetchCompanyLicenseRequest();
@@ -318,7 +282,7 @@ describe('Offboarding Flow Tests', () => {
       cy.loginMock(true);
     });
 
-    it('should be able to navigate to the Delete Company Settings page if the company offboarding subflow is clicked', () => {
+    it('should be redirected to the Company Offboarding Instructions page if the company offboarding subflow is clicked', () => {
       interceptFetchCompanyRequest();
       interceptFetchCompanySettingsRequest();
       interceptFetchCompanyLicenseRequest();
@@ -329,15 +293,123 @@ describe('Offboarding Flow Tests', () => {
       checkIsSubFlowHasDisabledAttribute('Company Offboarding', false);
       clickSubFlow('Company Offboarding');
 
-      cy.url().should('include', ROUTES.deleteCompanySettings.path);
+      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-header').should(
+        'have.text',
+        'Delete Branches, Departments & Offboard Employees'
+      );
+      getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-field-label-instructions').should(
+        'have.text',
+        'Please ensure all branches and departments are deleted, and all employees are offboarded before proceeding to delete the company.'
+      );
+      getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-submit-button')
+        .should('exist')
+        .and('have.text', 'Go to Branch Catalog');
     });
 
-    it('should not be redirected to the Company Offboarding Instructions page if the company settings deletion failed', () => {
+    it('should not be redirected to the Delete Company Settings page if there are any branches', () => {
       interceptFetchCompanyRequest();
       interceptFetchCompanySettingsRequest();
       interceptFetchCompanyLicenseRequest();
       interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
       interceptFetchProfileRequest();
+      cy.visit(ROUTES.flows.path);
+
+      clickSubFlow('Company Offboarding');
+
+      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      clickActionButton(Module.companyOffboardingInstructions, SubModule.offboardingDetails);
+
+      cy.url().should('include', ROUTES.branches.path);
+
+      clickFlowsIcon();
+
+      checkIsSubFlowDisabled('Company Offboarding', false);
+      checkIsSubFlowDisabled('Company Onboarding', true);
+    });
+
+    it('should not be redirected to the Delete Company Settings page if the employee has not been offboarded (TODO: extend this to check the employees request, not profile, and include the departments)', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchCompanySettingsFailedRequest();
+      interceptFetchCompanyLicenseRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptFetchProfileRequest();
+      cy.visit(ROUTES.flows.path);
+
+      clickSubFlow('Company Offboarding');
+
+      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      clickActionButton(Module.companyOffboardingInstructions, SubModule.offboardingDetails);
+
+      cy.url().should('include', ROUTES.branches.path);
+
+      clickFlowsIcon();
+
+      checkIsSubFlowDisabled('Company Offboarding', false);
+      checkIsSubFlowDisabled('Company Onboarding', false);
+    });
+
+    it('should be redirected to the Delete Company Settings page if there are no branches and the employee has been offboarded (TODO: extend this to check the employees request, not profile, and include the departments)', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchCompanySettingsRequest();
+      interceptFetchCompanyLicenseRequest();
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
+      interceptFetchBranchesRequest();
+      interceptFetchProfileRequest();
+      interceptDeleteBranchRequest('222222222222');
+      interceptDeleteProfileRequest();
+      cy.visit(ROUTES.flows.path);
+
+      clickSubFlow('Company Offboarding');
+
+      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      clickActionButton(Module.companyOffboardingInstructions, SubModule.offboardingDetails);
+
+      cy.url().should('include', ROUTES.branches.path);
+
+      clickFlowsIcon();
+
+      checkIsSubFlowDisabled('Company Offboarding', false);
+      checkIsSubFlowDisabled('Company Onboarding', true);
+
+      clickSubFlow('Company Offboarding');
+
+      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      clickActionButton(Module.companyOffboardingInstructions, SubModule.offboardingDetails);
+      cy.wait(['@fetchBranchesRequest']);
+
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetchNoBranchesRequest', fixture: 'branch/branches-empty' });
+      selectAction(Module.branchManagement, SubModule.branchCatalog, 'delete', '222222222222');
+      cy.wait(['@deleteBranchRequest', '@fetchNoBranchesRequest']);
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 0);
+
+      clickFlowsIcon();
+
+      checkIsSubFlowDisabled('Company Offboarding', false);
+      checkIsSubFlowDisabled('Company Onboarding', true);
+
+      clickSubFlow('Company Offboarding');
+
+      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+
+      clickFlowsIcon();
+      clickSubFlow('Employee Offboarding');
+      clickActionButton(Module.deleteEmployee, SubModule.employeeDetails);
+      cy.wait('@deleteProfileRequest');
+
+      clickFlowsIcon();
+      clickSubFlow('Company Offboarding');
+
+      cy.url().should('include', ROUTES.deleteCompanySettings.path);
+    });
+
+    it('should not be redirected to the Delete Company page if the company settings deletion failed', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchCompanySettingsRequest();
+      interceptFetchCompanyLicenseRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptFetchProfileFailedRequest();
       interceptDeleteCompanySettingsFailedRequest();
       cy.visit(ROUTES.flows.path);
 
@@ -353,15 +425,15 @@ describe('Offboarding Flow Tests', () => {
       clickFlowsIcon();
 
       checkIsSubFlowDisabled('Company Offboarding', false);
-      checkIsSubFlowDisabled('Company Onboarding', true);
+      checkIsSubFlowDisabled('Company Onboarding', false);
     });
 
-    it('should be redirected to the Company Offboarding Instructions page if the company settings deletion succeeded', () => {
+    it('should be redirected to the Delete Company page if the company settings deletion succeeded', () => {
       interceptFetchCompanyRequest();
       interceptFetchCompanySettingsRequest();
       interceptFetchCompanyLicenseRequest();
-      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
-      interceptFetchProfileRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptFetchProfileFailedRequest();
       interceptDeleteCompanySettingsRequest();
       cy.visit(ROUTES.flows.path);
 
@@ -370,7 +442,7 @@ describe('Offboarding Flow Tests', () => {
       clickActionButton(Module.deleteCompanySettings, SubModule.companySettingsDetails);
       cy.wait(['@deleteCompanySettingsRequest', '@fetchCompanySettingsFailedRequest']);
 
-      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      cy.url().should('include', ROUTES.deleteCompany.path);
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
         .should('exist')
         .and('contain.text', 'Company Settings has been successfully deleted');
@@ -383,114 +455,6 @@ describe('Offboarding Flow Tests', () => {
         // @ts-expect-error Jest types are leaking into Cypress context; expect is not typed as Chai
         expect(parsed.colorSchemeId).to.equal('midnight');
       });
-      getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.branchDetails, 'form-header').should(
-        'have.text',
-        'Delete Branches, Departments & Offboard Employees'
-      );
-      getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.branchDetails, 'form-field-label-instructions').should(
-        'have.text',
-        'Please ensure all branches and departments are deleted, and all employees are offboarded before proceeding to delete the company.'
-      );
-      getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.branchDetails, 'form-submit-button')
-        .should('exist')
-        .and('have.text', 'Go to Branch Catalog');
-    });
-
-    it('should not be redirected to the Delete Company page if there are any branches', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchCompanySettingsFailedRequest();
-      interceptFetchCompanyLicenseRequest();
-      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
-      interceptFetchProfileRequest();
-      cy.visit(ROUTES.flows.path);
-
-      clickSubFlow('Company Offboarding');
-
-      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
-      clickActionButton(Module.companyOffboardingInstructions, SubModule.branchDetails);
-
-      cy.url().should('include', ROUTES.branches.path);
-
-      clickFlowsIcon();
-
-      checkIsSubFlowDisabled('Company Offboarding', false);
-      checkIsSubFlowDisabled('Company Onboarding', false);
-    });
-
-    it('should not be redirected to the Delete Company page if the employee has not been offboarded', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchCompanySettingsFailedRequest();
-      interceptFetchCompanyLicenseRequest();
-      interceptFetchBranchesFailedRequest();
-      interceptFetchProfileRequest();
-      cy.visit(ROUTES.flows.path);
-
-      clickSubFlow('Company Offboarding');
-
-      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
-      clickActionButton(Module.companyOffboardingInstructions, SubModule.branchDetails);
-
-      cy.url().should('include', ROUTES.branches.path);
-
-      clickFlowsIcon();
-
-      checkIsSubFlowDisabled('Company Offboarding', false);
-      checkIsSubFlowDisabled('Company Onboarding', false);
-    });
-
-    it('should be redirected to the Delete Company page if there are no branches and the employee has been offboarded', () => {
-      interceptFetchCompanyRequest();
-      interceptFetchCompanySettingsFailedRequest();
-      interceptFetchCompanyLicenseRequest();
-      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
-      interceptFetchBranchesRequest();
-      interceptFetchProfileRequest();
-      interceptDeleteBranchRequest('222222222222');
-      interceptDeleteProfileRequest();
-      cy.visit(ROUTES.flows.path);
-
-      clickSubFlow('Company Offboarding');
-
-      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
-      clickActionButton(Module.companyOffboardingInstructions, SubModule.branchDetails);
-
-      cy.url().should('include', ROUTES.branches.path);
-
-      clickFlowsIcon();
-
-      checkIsSubFlowDisabled('Company Offboarding', false);
-      checkIsSubFlowDisabled('Company Onboarding', false);
-
-      clickSubFlow('Company Offboarding');
-
-      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
-      clickActionButton(Module.companyOffboardingInstructions, SubModule.branchDetails);
-      cy.wait(['@fetchBranchesRequest']);
-
-      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetchNoBranchesRequest', fixture: 'branch/branches-empty' });
-      selectAction(Module.branchManagement, SubModule.branchCatalog, 'delete', '222222222222');
-      cy.wait(['@deleteBranchRequest', '@fetchNoBranchesRequest']);
-
-      getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 0);
-
-      clickFlowsIcon();
-
-      checkIsSubFlowDisabled('Company Offboarding', false);
-      checkIsSubFlowDisabled('Company Onboarding', false);
-
-      clickSubFlow('Company Offboarding');
-
-      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
-
-      clickFlowsIcon();
-      clickSubFlow('Employee Offboarding');
-      clickActionButton(Module.deleteEmployee, SubModule.employeeDetails);
-      cy.wait('@deleteProfileRequest');
-
-      clickFlowsIcon();
-      clickSubFlow('Company Offboarding');
-
-      cy.url().should('include', ROUTES.deleteCompany.path);
     });
 
     it('should not be redirected to the Flows page if the company deletion failed', () => {
@@ -586,23 +550,23 @@ describe('Offboarding Flow Tests', () => {
       cy.visit(ROUTES.flows.path);
 
       clickSubFlow('Company Offboarding');
+      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
 
-      cy.url().should('include', ROUTES.deleteCompanySettings.path);
       getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper', true).should('have.length', 3);
-      getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-companySettings')
+      getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-instructions')
         .should('exist')
         .find('.MuiStepLabel-root')
         .should('not.have.class', 'Mui-disabled');
-      getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-companySettings')
-        .find('.MuiStepLabel-label')
-        .should('have.text', 'Delete Company Settings');
-      getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-instructions')
-        .should('exist')
-        .find('.MuiStepLabel-root')
-        .should('have.class', 'Mui-disabled');
       getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-instructions')
         .find('.MuiStepLabel-label')
         .should('have.text', 'Delete Branches, Departments & Offboard Employees');
+      getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-companySettings')
+        .should('exist')
+        .find('.MuiStepLabel-root')
+        .should('have.class', 'Mui-disabled');
+      getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-companySettings')
+        .find('.MuiStepLabel-label')
+        .should('have.text', 'Delete Company Settings');
       getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-company')
         .should('exist')
         .find('.MuiStepLabel-root')
@@ -611,26 +575,7 @@ describe('Offboarding Flow Tests', () => {
         .find('.MuiStepLabel-label')
         .should('have.text', 'Delete Company');
 
-      interceptDeleteCompanySettingsRequest();
-      interceptFetchCompanySettingsFailedRequest();
-      clickActionButton(Module.deleteCompanySettings, SubModule.companySettingsDetails);
-      cy.wait(['@deleteCompanySettingsRequest', '@fetchCompanySettingsFailedRequest']);
-      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
-      getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper', true).should('have.length', 3);
-      getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-companySettings')
-        .should('exist')
-        .find('.MuiStepLabel-root')
-        .should('not.have.class', 'Mui-disabled');
-      getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-instructions')
-        .should('exist')
-        .find('.MuiStepLabel-root')
-        .should('not.have.class', 'Mui-disabled');
-      getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-company')
-        .should('exist')
-        .find('.MuiStepLabel-root')
-        .should('have.class', 'Mui-disabled');
-
-      clickActionButton(Module.companyOffboardingInstructions, SubModule.branchDetails);
+      clickActionButton(Module.companyOffboardingInstructions, SubModule.offboardingDetails);
       cy.url().should('include', ROUTES.branches.path);
       cy.wait(['@fetchBranchesRequest']);
 
@@ -642,13 +587,33 @@ describe('Offboarding Flow Tests', () => {
       interceptFetchBranchesFailedRequest();
       clickSubFlow('Company Offboarding');
 
-      cy.url().should('include', ROUTES.deleteCompany.path);
+      cy.url().should('include', ROUTES.deleteCompanySettings.path);
       getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper', true).should('have.length', 3);
+      getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-instructions')
+        .should('exist')
+        .find('.MuiStepLabel-root')
+        .should('not.have.class', 'Mui-disabled');
       getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-companySettings')
         .should('exist')
         .find('.MuiStepLabel-root')
         .should('not.have.class', 'Mui-disabled');
+      getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-company')
+        .should('exist')
+        .find('.MuiStepLabel-root')
+        .should('have.class', 'Mui-disabled');
+
+      interceptDeleteCompanySettingsRequest();
+      interceptFetchCompanySettingsFailedRequest();
+      clickActionButton(Module.deleteCompanySettings, SubModule.companySettingsDetails);
+      cy.wait(['@deleteCompanySettingsRequest', '@fetchCompanySettingsFailedRequest']);
+
+      cy.url().should('include', ROUTES.deleteCompany.path);
+      getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper', true).should('have.length', 3);
       getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-instructions')
+        .should('exist')
+        .find('.MuiStepLabel-root')
+        .should('not.have.class', 'Mui-disabled');
+      getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-companySettings')
         .should('exist')
         .find('.MuiStepLabel-root')
         .should('not.have.class', 'Mui-disabled');
