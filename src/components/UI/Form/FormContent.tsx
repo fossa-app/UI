@@ -33,7 +33,7 @@ const FormContent = <T,>({ fields, values, children }: FormContentProps<T>) => {
   const {
     formState: { errors },
   } = reactHookFormContext();
-  const generalErrorMessage = fields ? getGeneralErrorMessage<T>(errors, fields) : undefined;
+  const generalErrorMessage = getGeneralErrorMessage<T>(errors, fields);
 
   // TODO: hide form content while loading, cleanup CompanyOffboardingInstructionsPage
   return (

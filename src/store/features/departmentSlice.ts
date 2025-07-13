@@ -82,6 +82,24 @@ const fetchDepartmentRecursive = async (
   return mapDepartment(data, parentDepartment, employee);
 };
 
+export const fetchOnboardingDepartments = createAsyncThunk<
+  PaginatedResponse<DepartmentDTO> | undefined,
+  void,
+  { rejectValue: ErrorResponseDTO }
+>('department/fetchOnboardingDepartments', async (_, { rejectWithValue }) => {
+  try {
+    const queryParams = prepareQueryParams({ pageNumber: 1, pageSize: 1 });
+    const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
+
+    return data;
+  } catch (error) {
+    return rejectWithValue({
+      ...(error as ErrorResponseDTO),
+      title: MESSAGES.error.departments.notFound,
+    });
+  }
+});
+
 export const fetchDepartments = createAsyncThunk<
   PaginatedResponse<Department> | undefined,
   [Partial<PaginationParams>, boolean?],

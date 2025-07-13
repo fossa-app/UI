@@ -18,7 +18,7 @@ import { COMPANY_ONBOARDING_STEP_MAP, COMPANY_ONBOARDING_STEPS } from 'shared/co
 const CompanyOnboardingPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: step } = useAppSelector(selectCompanyOnboardingStep);
+  const { data: step, skippedSteps } = useAppSelector(selectCompanyOnboardingStep);
   const { companyLicense } = useAppSelector(selectCompanyOnboardingSkippedSteps);
   const { branch } = useAppSelector(selectCompanyOnboardingFlags);
   const [activeStep, setActiveStep] = React.useState(0);
@@ -35,12 +35,20 @@ const CompanyOnboardingPage: React.FC = () => {
   }, [step, companyLicense, branch, navigate, dispatch]);
 
   React.useEffect(() => {
-    const currentStep = COMPANY_ONBOARDING_STEPS.findIndex(({ name }) => name === step);
+    if (skippedSteps[OnboardingStep.companyLicense]) {
+      const branchStepIdx = COMPANY_ONBOARDING_STEPS.findIndex(({ name }) => name === OnboardingStep.branch);
 
-    if (currentStep !== -1) {
-      setActiveStep(currentStep);
+      if (branchStepIdx !== -1) {
+        setActiveStep(branchStepIdx);
+      }
+    } else {
+      const currentStep = COMPANY_ONBOARDING_STEPS.findIndex(({ name }) => name === step);
+
+      if (currentStep !== -1) {
+        setActiveStep(currentStep);
+      }
     }
-  }, [step]);
+  }, [step, skippedSteps]);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: 5 }}>

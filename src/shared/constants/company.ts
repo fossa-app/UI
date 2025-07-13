@@ -412,27 +412,8 @@ export const COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA: FormProps<any> = {
   module: Module.companyOffboardingInstructions,
   subModule: SubModule.offboardingDetails,
   title: 'Delete Branches, Departments & Offboard Employees',
-  fields: [
-    {
-      type: FormFieldType.labelValue,
-      name: 'instructions',
-      label:
-        'Please ensure all branches and departments are deleted, and all employees are offboarded before proceeding to delete the company.',
-      grid: { size: { xs: 12 } },
-    },
-  ],
-  actions: [
-    {
-      actionType: FormActionType.loadingButton,
-      label: 'Go to Branch Catalog',
-      name: FormActionName.submit,
-      type: 'submit',
-      color: 'error',
-      endIcon: IconType.next,
-      roles: [UserRole.administrator],
-      'aria-label': 'Continue Offboarding Instructions',
-    },
-  ],
+  fields: [],
+  actions: [],
 };
 
 export const DELETE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA: FormProps<CompanySettingsFieldConfig> = {

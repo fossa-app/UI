@@ -24,6 +24,7 @@ import {
   interceptFetchClientRequest,
   interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
+  interceptFetchCompanySettingsRequest,
   interceptFetchDepartmentByIdFailedRequest,
   interceptFetchDepartmentByIdRequest,
   interceptFetchDepartmentsByIdsRequest,
@@ -55,8 +56,9 @@ describe('Department Management Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
-    interceptFetchCompanyLicenseRequest();
     interceptFetchCompanyRequest();
+    interceptFetchCompanySettingsRequest();
+    interceptFetchCompanyLicenseRequest();
     interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     interceptFetchProfileRequest();
     cy.loginMock(true);

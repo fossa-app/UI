@@ -9,6 +9,7 @@ import {
   interceptFetchClientRequest,
   interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
+  interceptFetchCompanySettingsRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
 } from '../../support/interceptors';
@@ -42,8 +43,9 @@ describe('Branch View Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
-    interceptFetchCompanyLicenseRequest();
     interceptFetchCompanyRequest();
+    interceptFetchCompanySettingsRequest();
+    interceptFetchCompanyLicenseRequest();
     interceptFetchBranchesRequest();
     interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     interceptFetchProfileRequest();

@@ -17,7 +17,7 @@ type FormProps<T extends FieldValues> = React.PropsWithChildren<{
   values?: T;
   errors?: FieldErrors<T>;
   loading?: boolean;
-  onSubmit: (formValue: T) => void;
+  onSubmit?: (formValue: T) => void;
   onChange?: (formValue: T) => void;
 }>;
 
@@ -67,7 +67,7 @@ const Form = <T extends Item>({
           <form
             style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1, height: '100%' }}
             onSubmit={methods.handleSubmit((data) => {
-              onSubmit(data as T);
+              onSubmit?.(data as T);
             })}
           >
             {children}

@@ -35,9 +35,13 @@ export const mapError = <T extends FieldValues>(error: ErrorResponseDTO): ErrorR
   return { ...error, errors };
 };
 
-export const getGeneralErrorMessage = <T>(error: FieldErrors<FieldValues>, fields: FormFieldProps<T>[]): string | null => {
+export const getGeneralErrorMessage = <T>(error: FieldErrors<FieldValues>, fields: FormFieldProps<T>[] = []): string | null => {
   if (Object.keys(error).length === 0) {
     return null;
+  }
+
+  if (!fields.length) {
+    return (error['']?.message as string) ?? null;
   }
 
   const availableFields = new Set(fields.map((field) => field.name as string));

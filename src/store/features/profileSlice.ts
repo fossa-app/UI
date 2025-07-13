@@ -8,7 +8,6 @@ import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import { mapEmployee, mapError, mapUserProfileToEmployee } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
 import { fetchUser } from './authSlice';
-import { setEmployeeInstructionsCompleted } from './offboardingSlice';
 
 interface ProfileState {
   profile: StateEntity<Employee | undefined>;
@@ -95,7 +94,6 @@ export const deleteProfile = createAsyncThunk<void, void, { rejectValue: ErrorRe
       await axios.delete<void>(ENDPOINTS.employee);
 
       dispatch(setSuccess(MESSAGES.success.employee.deleteProfile));
-      dispatch(setEmployeeInstructionsCompleted());
     } catch (error) {
       if ((error as ErrorResponseDTO).status === 424) {
         dispatch(
