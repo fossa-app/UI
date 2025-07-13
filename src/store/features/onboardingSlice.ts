@@ -76,26 +76,26 @@ export const fetchOnboardingData = createAsyncThunk<void, void, { rejectValue: E
 
       try {
         await dispatch(fetchCompanyLicense()).unwrap();
-      } catch (error) {
-        console.error('Failed to fetch company license:', error);
+      } catch {
+        // We expect an error here
       }
 
       try {
         await dispatch(fetchCompanySettings()).unwrap();
-      } catch (error) {
-        console.error('Failed to fetch company settings:', error);
+      } catch {
+        // We expect an error here
       }
 
       try {
         await dispatch(fetchOnboardingBranches()).unwrap();
-      } catch (error) {
-        console.error('Failed to fetch branches:', error);
+      } catch {
+        // We expect an error here
       }
 
       try {
         await dispatch(fetchProfile()).unwrap();
-      } catch (error) {
-        console.error('Failed to fetch profile:', error);
+      } catch {
+        // We expect an error here
       }
     } catch {
       dispatch({ type: 'onboarding/setOnboardingFailed' });
@@ -116,6 +116,10 @@ const onboardingSlice = createSlice({
     },
     setBranchesFailedFlag(state) {
       state.company.flags[OnboardingStep.branch] = false;
+      evaluateCompanyOnboardingStep(state);
+    },
+    setBranchesSucceededFlag(state) {
+      state.company.flags[OnboardingStep.branch] = true;
       evaluateCompanyOnboardingStep(state);
     },
     resetCompanyLicenseSkipped(state) {
@@ -181,6 +185,7 @@ export const selectOnboardingLoading = (state: RootState) =>
   !['succeeded', 'failed'].includes(state.onboarding.company.status ?? '') ||
   !['succeeded', 'failed'].includes(state.onboarding.employee.status ?? '');
 
-export const { setCompanyLicenseSkipped, resetCompanyLicenseSkipped, setBranchesFailedFlag } = onboardingSlice.actions;
+export const { setCompanyLicenseSkipped, resetCompanyLicenseSkipped, setBranchesFailedFlag, setBranchesSucceededFlag } =
+  onboardingSlice.actions;
 
 export default onboardingSlice.reducer;

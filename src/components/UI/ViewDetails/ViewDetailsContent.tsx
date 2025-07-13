@@ -44,7 +44,9 @@ const ViewDetailsContent = <T,>({ fields, values, noValuesTemplate, children }: 
             ))}
           <Grid container spacing={4}>
             {fields.map((field) => {
-              if (loading || !values) return null;
+              if (loading || !values) {
+                return null;
+              }
 
               return (
                 <Grid key={field.name} {...field.grid}>

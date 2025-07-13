@@ -14,12 +14,10 @@ import {
   getFullAddress,
 } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
-import { setBranchInstructionsCompleted } from './offboardingSlice';
-import { setBranchesFailedFlag } from './onboardingSlice';
+import { setBranchesFailedFlag, setBranchesSucceededFlag } from './onboardingSlice';
 
 interface BranchState {
   branch: StateEntity<Branch | undefined>;
-  onboardingBranches: StateEntity<PaginatedResponse<BranchDTO> | undefined>;
   branches: StateEntity<PaginatedResponse<Branch> | undefined>;
   searchedBranches: StateEntity<PaginatedResponse<Branch> | undefined>;
   assignedBranches: StateEntity<PaginatedResponse<BranchDTO> | undefined>;
@@ -31,10 +29,6 @@ const initialState: BranchState = {
     fetchStatus: 'idle',
     updateStatus: 'idle',
     deleteStatus: 'idle',
-  },
-  onboardingBranches: {
-    data: undefined,
-    fetchStatus: 'idle',
   },
   branches: {
     data: undefined,
@@ -225,6 +219,7 @@ export const createBranch = createAsyncThunk<void, BranchDTO, { rejectValue: Err
       await axios.post<void>(ENDPOINTS.branches, branch);
 
       await dispatch(fetchBranches(APP_CONFIG.table.defaultPagination)).unwrap();
+      dispatch(setBranchesSucceededFlag());
 
       dispatch(setSuccess(MESSAGES.success.branches.create));
     } catch (error) {
@@ -277,7 +272,6 @@ export const deleteBranch = createAsyncThunk<void, BranchDTO['id'], { state: Roo
       const branches = state.branch.branches.data;
 
       if (branches?.totalItems === 1) {
-        dispatch(setBranchInstructionsCompleted());
         dispatch(setBranchesFailedFlag());
       }
     } catch (error) {
@@ -350,19 +344,6 @@ const branchSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchOnboardingBranches.pending, (state) => {
-        state.onboardingBranches.fetchStatus = 'loading';
-      })
-      .addCase(fetchOnboardingBranches.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
-        state.onboardingBranches.data = undefined;
-        state.onboardingBranches.fetchStatus = 'failed';
-        state.onboardingBranches.error = action.payload;
-      })
-      .addCase(fetchOnboardingBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<BranchDTO> | undefined>) => {
-        state.onboardingBranches.data = action.payload;
-        state.onboardingBranches.fetchStatus = 'succeeded';
-        state.onboardingBranches.error = undefined;
-      })
       .addCase(fetchBranches.pending, (state) => {
         state.branches.fetchStatus = 'loading';
       })
@@ -488,7 +469,6 @@ const branchSlice = createSlice({
 
 export const selectBranch = (state: RootState) => state.branch.branch;
 export const selectBranches = (state: RootState) => state.branch.branches;
-export const selectOnboardingBranchesBranches = (state: RootState) => state.branch.onboardingBranches;
 export const selectSearchedBranches = (state: RootState) => state.branch.searchedBranches;
 export const selectAssignedBranches = (state: RootState) => state.branch.assignedBranches;
 

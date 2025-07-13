@@ -8,6 +8,7 @@ import {
   checkIsSubFlowHasDisabledAttribute,
   clickFlowsIcon,
   selectAction,
+  verifyTextFields,
 } from '../support/helpers';
 import {
   interceptFetchBranchesRequest,
@@ -29,6 +30,10 @@ import {
   interceptDeleteCompanyRequest,
   interceptFetchCompanyFailedRequest,
   interceptFetchCompanyLicenseFailedRequest,
+  interceptFetchEmployeesRequest,
+  interceptFetchDepartmentsRequest,
+  interceptFetchEmployeesByIdsRequest,
+  interceptDeleteDepartmentRequest,
 } from '../support/interceptors';
 
 const companyOffboardingRoutes = [ROUTES.deleteCompanySettings.path, ROUTES.companyOffboardingInstructions.path, ROUTES.deleteCompany.path];
@@ -171,6 +176,8 @@ describe('Offboarding Flow Tests', () => {
         interceptFetchCompanySettingsFailedRequest();
         interceptFetchCompanyLicenseRequest();
         interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
+        interceptFetchEmployeesRequest({ pageNumber: 1, pageSize: 1 });
+        interceptFetchDepartmentsRequest({ pageNumber: 1, pageSize: 1 });
         interceptFetchProfileRequest();
         cy.visit(ROUTES.offboarding.path);
 
@@ -287,6 +294,8 @@ describe('Offboarding Flow Tests', () => {
       interceptFetchCompanySettingsRequest();
       interceptFetchCompanyLicenseRequest();
       interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
+      interceptFetchEmployeesRequest({ pageNumber: 1, pageSize: 1 });
+      interceptFetchDepartmentsRequest({ pageNumber: 1, pageSize: 1 });
       interceptFetchProfileRequest();
       cy.visit(ROUTES.flows.path);
 
@@ -294,14 +303,14 @@ describe('Offboarding Flow Tests', () => {
       clickSubFlow('Company Offboarding');
 
       cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
-      getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-header').should(
-        'have.text',
-        'Delete Branches, Departments & Offboard Employees'
-      );
-      getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-field-label-instructions').should(
-        'have.text',
-        'Please ensure all branches and departments are deleted, and all employees are offboarded before proceeding to delete the company.'
-      );
+      verifyTextFields(Module.companyOffboardingInstructions, SubModule.offboardingDetails, {
+        'form-header': 'Delete Branches, Departments & Offboard Employees',
+        'form-section-field-basicInfo':
+          'Please ensure all branches and departments are deleted, and all employees are offboarded before proceeding to delete the company.',
+        'form-field-value-branches': 'Remaining Branches: 1',
+        'form-field-value-departments': 'Remaining Departments: 4',
+        'form-field-value-employees': 'Active Employees: 1',
+      });
       getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-submit-button')
         .should('exist')
         .and('have.text', 'Go to Branch Catalog');
@@ -312,13 +321,23 @@ describe('Offboarding Flow Tests', () => {
       interceptFetchCompanySettingsRequest();
       interceptFetchCompanyLicenseRequest();
       interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
+      interceptFetchDepartmentsRequest({ pageNumber: 1, pageSize: 1 });
+      interceptFetchEmployeesRequest({ pageNumber: 1, pageSize: 1 });
       interceptFetchProfileRequest();
       cy.visit(ROUTES.flows.path);
 
       clickSubFlow('Company Offboarding');
 
       cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
-      clickActionButton(Module.companyOffboardingInstructions, SubModule.offboardingDetails);
+      verifyTextFields(Module.companyOffboardingInstructions, SubModule.offboardingDetails, {
+        'form-field-value-branches': 'Remaining Branches: 1',
+        'form-field-value-departments': 'Remaining Departments: 4',
+        'form-field-value-employees': 'Active Employees: 1',
+      });
+      getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-submit-button')
+        .should('exist')
+        .and('have.text', 'Go to Branch Catalog')
+        .click();
 
       cy.url().should('include', ROUTES.branches.path);
 
@@ -328,20 +347,30 @@ describe('Offboarding Flow Tests', () => {
       checkIsSubFlowDisabled('Company Onboarding', true);
     });
 
-    it('should not be redirected to the Delete Company Settings page if the employee has not been offboarded (TODO: extend this to check the employees request, not profile, and include the departments)', () => {
+    it('should not be redirected to the Delete Company Settings page if there are any departments', () => {
       interceptFetchCompanyRequest();
-      interceptFetchCompanySettingsFailedRequest();
+      interceptFetchCompanySettingsRequest();
       interceptFetchCompanyLicenseRequest();
       interceptFetchBranchesFailedRequest();
+      interceptFetchDepartmentsRequest({ pageNumber: 1, pageSize: 1 });
+      interceptFetchEmployeesRequest({ pageNumber: 1, pageSize: 1 });
       interceptFetchProfileRequest();
       cy.visit(ROUTES.flows.path);
 
       clickSubFlow('Company Offboarding');
 
       cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
-      clickActionButton(Module.companyOffboardingInstructions, SubModule.offboardingDetails);
+      verifyTextFields(Module.companyOffboardingInstructions, SubModule.offboardingDetails, {
+        'form-field-value-branches': 'All branches have been removed!',
+        'form-field-value-departments': 'Remaining Departments: 4',
+        'form-field-value-employees': 'Active Employees: 1',
+      });
+      getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-submit-button')
+        .should('exist')
+        .and('have.text', 'Go to Department Catalog')
+        .click();
 
-      cy.url().should('include', ROUTES.branches.path);
+      cy.url().should('include', ROUTES.departments.path);
 
       clickFlowsIcon();
 
@@ -349,12 +378,53 @@ describe('Offboarding Flow Tests', () => {
       checkIsSubFlowDisabled('Company Onboarding', false);
     });
 
-    it('should be redirected to the Delete Company Settings page if there are no branches and the employee has been offboarded (TODO: extend this to check the employees request, not profile, and include the departments)', () => {
+    it('should not be redirected to the Delete Company Settings page if there are any active employees', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchCompanySettingsFailedRequest();
+      interceptFetchCompanyLicenseRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchDepartmentsRequest', fixture: 'department/departments-empty' }
+      );
+      interceptFetchEmployeesRequest({ pageNumber: 1, pageSize: 1 });
+      interceptFetchProfileRequest();
+      cy.visit(ROUTES.flows.path);
+
+      clickSubFlow('Company Offboarding');
+
+      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      verifyTextFields(Module.companyOffboardingInstructions, SubModule.offboardingDetails, {
+        'form-field-value-branches': 'All branches have been removed!',
+        'form-field-value-departments': 'All departments have been removed!',
+        'form-field-value-employees': 'Active Employees: 1',
+      });
+      getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-submit-button')
+        .should('exist')
+        .and('have.text', 'Go to Employee Offboarding')
+        .click();
+
+      cy.url().should('include', ROUTES.deleteEmployee.path);
+
+      clickFlowsIcon();
+
+      checkIsSubFlowDisabled('Company Offboarding', false);
+      checkIsSubFlowDisabled('Company Onboarding', false);
+    });
+
+    it('should be redirected to the Delete Company Settings page if all branches and departments have been deleted and all employees have been offboarded', () => {
       interceptFetchCompanyRequest();
       interceptFetchCompanySettingsRequest();
       interceptFetchCompanyLicenseRequest();
       interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
       interceptFetchBranchesRequest();
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchOnboardingDepartmentsRequest', fixture: 'department/departments-single' }
+      );
+      interceptFetchEmployeesRequest({ pageNumber: 1, pageSize: 1 });
+      interceptFetchEmployeesByIdsRequest({ ids: [333333333335] });
+      interceptDeleteDepartmentRequest('444444444444');
       interceptFetchProfileRequest();
       interceptDeleteBranchRequest('222222222222');
       interceptDeleteProfileRequest();
@@ -363,14 +433,19 @@ describe('Offboarding Flow Tests', () => {
       clickSubFlow('Company Offboarding');
 
       cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
-      clickActionButton(Module.companyOffboardingInstructions, SubModule.offboardingDetails);
+
+      verifyTextFields(Module.companyOffboardingInstructions, SubModule.offboardingDetails, {
+        'form-field-value-branches': 'Remaining Branches: 1',
+        'form-field-value-departments': 'Remaining Departments: 1',
+        'form-field-value-employees': 'Active Employees: 1',
+      });
+      getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-submit-button')
+        .should('exist')
+        .and('have.text', 'Go to Branch Catalog')
+        .click();
 
       cy.url().should('include', ROUTES.branches.path);
-
       clickFlowsIcon();
-
-      checkIsSubFlowDisabled('Company Offboarding', false);
-      checkIsSubFlowDisabled('Company Onboarding', true);
 
       clickSubFlow('Company Offboarding');
 
@@ -386,21 +461,68 @@ describe('Offboarding Flow Tests', () => {
 
       clickFlowsIcon();
 
-      checkIsSubFlowDisabled('Company Offboarding', false);
-      checkIsSubFlowDisabled('Company Onboarding', true);
-
       clickSubFlow('Company Offboarding');
 
+      interceptFetchBranchesRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchEmptyOnboardingBranchesRequest', fixture: 'branch/branches-empty' }
+      );
       cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      cy.wait('@fetchEmptyOnboardingBranchesRequest');
+
+      verifyTextFields(Module.companyOffboardingInstructions, SubModule.offboardingDetails, {
+        'form-field-value-branches': 'All branches have been removed!',
+        'form-field-value-departments': 'Remaining Departments: 1',
+        'form-field-value-employees': 'Active Employees: 1',
+      });
+      getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-submit-button')
+        .should('exist')
+        .and('have.text', 'Go to Department Catalog')
+        .click();
+
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 10 },
+        { alias: 'fetchDepartmentsRequest', fixture: 'department/departments-single' }
+      );
+
+      cy.url().should('include', ROUTES.departments.path);
+
+      selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'delete', '444444444444');
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 10 },
+        { alias: 'fetchNoDepartmentsRequest', fixture: 'department/departments-empty' }
+      );
+      cy.wait(['@deleteDepartmentRequest', '@fetchNoDepartmentsRequest']);
+
+      getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should('have.length', 0);
 
       clickFlowsIcon();
-      clickSubFlow('Employee Offboarding');
+      clickSubFlow('Company Offboarding');
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchEmptyOnboardingDepartmentsRequest', fixture: 'department/departments-empty' }
+      );
+
+      verifyTextFields(Module.companyOffboardingInstructions, SubModule.offboardingDetails, {
+        'form-field-value-branches': 'All branches have been removed!',
+        'form-field-value-departments': 'All departments have been removed!',
+        'form-field-value-employees': 'Active Employees: 1',
+      });
+      getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-submit-button')
+        .should('exist')
+        .and('have.text', 'Go to Employee Offboarding')
+        .click();
+
+      cy.url().should('include', ROUTES.deleteEmployee.path);
       clickActionButton(Module.deleteEmployee, SubModule.employeeDetails);
       cy.wait('@deleteProfileRequest');
 
       clickFlowsIcon();
       clickSubFlow('Company Offboarding');
-
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchEmptyOnboardingEmployeesRequest', fixture: 'employee/employees-empty' }
+      );
       cy.url().should('include', ROUTES.deleteCompanySettings.path);
     });
 
@@ -409,6 +531,14 @@ describe('Offboarding Flow Tests', () => {
       interceptFetchCompanySettingsRequest();
       interceptFetchCompanyLicenseRequest();
       interceptFetchBranchesFailedRequest();
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchEmptyOnboardingDepartmentsRequest', fixture: 'department/departments-empty' }
+      );
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchEmptyOnboardingEmployeesRequest', fixture: 'employee/employees-empty' }
+      );
       interceptFetchProfileFailedRequest();
       interceptDeleteCompanySettingsFailedRequest();
       cy.visit(ROUTES.flows.path);
@@ -433,6 +563,14 @@ describe('Offboarding Flow Tests', () => {
       interceptFetchCompanySettingsRequest();
       interceptFetchCompanyLicenseRequest();
       interceptFetchBranchesFailedRequest();
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchEmptyOnboardingDepartmentsRequest', fixture: 'department/departments-empty' }
+      );
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchEmptyOnboardingEmployeesRequest', fixture: 'employee/employees-empty' }
+      );
       interceptFetchProfileFailedRequest();
       interceptDeleteCompanySettingsRequest();
       cy.visit(ROUTES.flows.path);
@@ -462,6 +600,14 @@ describe('Offboarding Flow Tests', () => {
       interceptFetchCompanySettingsFailedRequest();
       interceptFetchCompanyLicenseRequest();
       interceptFetchBranchesFailedRequest();
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchEmptyOnboardingDepartmentsRequest', fixture: 'department/departments-empty' }
+      );
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchEmptyOnboardingEmployeesRequest', fixture: 'employee/employees-empty' }
+      );
       interceptFetchProfileFailedRequest();
       interceptDeleteCompanyFailedRequest();
       cy.visit(ROUTES.flows.path);
@@ -486,6 +632,14 @@ describe('Offboarding Flow Tests', () => {
       interceptFetchCompanySettingsFailedRequest();
       interceptFetchCompanyLicenseRequest();
       interceptFetchBranchesFailedRequest();
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchEmptyOnboardingDepartmentsRequest', fixture: 'department/departments-empty' }
+      );
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchEmptyOnboardingEmployeesRequest', fixture: 'employee/employees-empty' }
+      );
       interceptFetchProfileFailedRequest();
       interceptDeleteCompanyRequest();
       cy.visit(ROUTES.flows.path);
@@ -521,6 +675,14 @@ describe('Offboarding Flow Tests', () => {
       interceptFetchCompanySettingsFailedRequest();
       interceptFetchCompanyLicenseFailedRequest();
       interceptFetchBranchesFailedRequest();
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchEmptyOnboardingDepartmentsRequest', fixture: 'department/departments-empty' }
+      );
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchEmptyOnboardingEmployeesRequest', fixture: 'employee/employees-empty' }
+      );
       interceptFetchProfileFailedRequest();
       interceptDeleteCompanyRequest();
       cy.visit(ROUTES.flows.path);
@@ -544,6 +706,14 @@ describe('Offboarding Flow Tests', () => {
       interceptFetchCompanySettingsRequest();
       interceptFetchCompanyLicenseRequest();
       interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchEmptyOnboardingDepartmentsRequest', fixture: 'department/departments-empty' }
+      );
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchEmptyOnboardingEmployeesRequest', fixture: 'employee/employees-empty' }
+      );
       interceptFetchBranchesRequest();
       interceptFetchProfileFailedRequest();
       interceptDeleteBranchRequest('222222222222');

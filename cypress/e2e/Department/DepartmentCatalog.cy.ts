@@ -26,6 +26,7 @@ import {
   interceptCreateDepartmentRequest,
   interceptDeleteDepartmentFailedRequest,
   interceptDeleteDepartmentRequest,
+  interceptFetchCompanySettingsRequest,
 } from '../../support/interceptors';
 
 const departmentAdminRoutes = [ROUTES.newDepartment.path, `${ROUTES.departments.path}/edit/444444444444`];
@@ -34,8 +35,9 @@ describe('Department Catalog Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
-    interceptFetchCompanyLicenseRequest();
     interceptFetchCompanyRequest();
+    interceptFetchCompanyLicenseRequest();
+    interceptFetchCompanySettingsRequest();
     interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     interceptFetchProfileRequest();
     cy.visit(ROUTES.departments.path);
@@ -516,8 +518,7 @@ describe('Department Catalog Tests', () => {
       selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'delete', '444444444448');
 
       getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
-      cy.wait('@deleteDepartmentRequest');
-      cy.wait('@fetchDepartmentsRequest');
+      cy.wait(['@deleteDepartmentRequest', '@fetchDepartmentsRequest']);
 
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
         .should('exist')

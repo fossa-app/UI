@@ -46,6 +46,8 @@ import {
   interceptCreateCompanySettingsRequest,
   interceptDeleteCompanySettingsRequest,
   interceptDeleteBranchRequest,
+  interceptFetchEmployeesRequest,
+  interceptFetchDepartmentsRequest,
 } from '../support/interceptors';
 
 const companyOnboardingRoutes = [
@@ -1123,6 +1125,8 @@ describe('Onboarding Flow Tests', () => {
       interceptFetchCompanyLicenseFailedRequest();
       interceptFetchBranchesFailedRequest();
       interceptFetchProfileFailedRequest();
+      interceptFetchEmployeesRequest({ pageSize: 1, pageNumber: 1 });
+      interceptFetchDepartmentsRequest({ pageSize: 1, pageNumber: 1 });
       interceptCreateCompanySettingsRequest();
       interceptDeleteCompanySettingsRequest();
       cy.visit(ROUTES.flows.path);
@@ -1163,9 +1167,21 @@ describe('Onboarding Flow Tests', () => {
       clickSubFlow('Company Onboarding');
 
       cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-companyLicense')
+        .find('.MuiStepLabel-root')
+        .should('not.have.class', 'Mui-disabled');
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-branch')
+        .find('.MuiStepLabel-root')
+        .should('have.class', 'Mui-disabled');
       getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-cancel-button').should('exist').click();
 
       cy.url().should('include', ROUTES.createBranch.path);
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-companyLicense')
+        .find('.MuiStepLabel-root')
+        .should('not.have.class', 'Mui-disabled');
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-branch')
+        .find('.MuiStepLabel-root')
+        .should('not.have.class', 'Mui-disabled');
 
       getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-name').type('America/New_York');
       selectOption(Module.createBranch, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
@@ -1180,6 +1196,12 @@ describe('Onboarding Flow Tests', () => {
       clickSubFlow('Company Onboarding');
 
       cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-companyLicense')
+        .find('.MuiStepLabel-root')
+        .should('not.have.class', 'Mui-disabled');
+      getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-branch')
+        .find('.MuiStepLabel-root')
+        .should('have.class', 'Mui-disabled');
       getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-cancel-button').click();
 
       cy.location('pathname').should('eq', ROUTES.flows.path);

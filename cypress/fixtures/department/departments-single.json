@@ -1,0 +1,14 @@
+{
+  "pageNumber": 1,
+  "pageSize": 10,
+  "items": [
+    {
+      "id": 444444444444,
+      "name": "Production",
+      "parentDepartmentId": null,
+      "managerId": 333333333335
+    }
+  ],
+  "totalItems": 1,
+  "totalPages": 1
+}

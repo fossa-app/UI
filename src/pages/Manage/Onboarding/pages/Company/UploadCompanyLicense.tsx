@@ -3,14 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { FieldValues, FieldErrors } from 'react-hook-form';
 import { renderCopyableField } from 'components/UI/CopyableField';
 import { useAppDispatch, useAppSelector } from 'store';
-import {
-  selectCompany,
-  selectCompanyLicense,
-  selectIsUserAdmin,
-  selectUserRoles,
-  setCompanyLicenseSkipped,
-  uploadCompanyLicense,
-} from 'store/features';
+import { selectCompany } from 'store/features/companySlice';
+import { selectCompanyLicense, uploadCompanyLicense } from 'store/features/licenseSlice';
+import { selectIsUserAdmin, selectUserRoles } from 'store/features/authSlice';
+import { setCompanyLicenseSkipped, resetCompanyLicenseSkipped } from 'store/features/onboardingSlice';
 import { mapDisabledFields, hasAllowedRole, deepCopyObject } from 'shared/helpers';
 import { ROUTES, UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';
@@ -25,8 +21,18 @@ const UploadCompanyLicensePage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { updateStatus, updateError: error } = useAppSelector(selectCompanyLicense);
   const { data: company } = useAppSelector(selectCompany);
+  const skipRef = React.useRef(false);
+
+  React.useEffect(() => {
+    return () => {
+      if (!skipRef.current) {
+        dispatch(resetCompanyLicenseSkipped());
+      }
+    };
+  }, [dispatch]);
 
   const handleSkip = React.useCallback(() => {
+    skipRef.current = true;
     dispatch(setCompanyLicenseSkipped());
     navigate(ROUTES.createBranch.path, { replace: true });
   }, [dispatch, navigate]);

@@ -23,6 +23,7 @@ import {
   interceptFetchBranchByIdRequest,
   interceptFetchBranchesByIdsRequest,
   interceptEditEmployeeFailedWithErrorRequest,
+  interceptFetchCompanySettingsRequest,
 } from '../../support/interceptors';
 
 const testEmployeeViewFields = () => {
@@ -59,8 +60,9 @@ describe('Employee Management Tests', () => {
   beforeEach(() => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
-    interceptFetchCompanyLicenseRequest();
     interceptFetchCompanyRequest();
+    interceptFetchCompanySettingsRequest();
+    interceptFetchCompanyLicenseRequest();
     interceptFetchBranchesRequest();
     interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     interceptFetchProfileRequest();

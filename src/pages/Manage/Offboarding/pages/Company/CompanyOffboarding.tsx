@@ -5,13 +5,14 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
-import { useAppSelector } from 'store';
-import { selectCompanyOffboardingStep } from 'store/features';
-import { COMPANY_OFFBOARDING_STEPS, COMPANY_OFFBOARDING_STEP_MAP } from 'shared/constants/offboarding';
+import { useAppDispatch, useAppSelector } from 'store';
+import { fetchOffboardingData, selectCompanyOffboardingStep } from 'store/features';
+import { COMPANY_OFFBOARDING_STEPS, COMPANY_OFFBOARDING_STEP_MAP } from 'shared/constants';
 import { Module, SubModule } from 'shared/models';
 
 const CompanyOffboardingPage: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { data: step } = useAppSelector(selectCompanyOffboardingStep);
   const [activeStep, setActiveStep] = React.useState(0);
 
@@ -26,6 +27,10 @@ const CompanyOffboardingPage: React.FC = () => {
       setActiveStep(currentStep);
     }
   }, [step]);
+
+  React.useEffect(() => {
+    dispatch(fetchOffboardingData());
+  }, [dispatch]);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: 5 }}>

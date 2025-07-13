@@ -97,6 +97,24 @@ export const fetchManagers = createAsyncThunk<
   }
 });
 
+export const fetchOnboardingEmployees = createAsyncThunk<
+  PaginatedResponse<EmployeeDTO> | undefined,
+  void,
+  { rejectValue: ErrorResponseDTO }
+>('employee/fetchOnboardingEmployees', async (_, { rejectWithValue }) => {
+  try {
+    const queryParams = prepareQueryParams({ pageNumber: 1, pageSize: 1 });
+    const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
+
+    return data;
+  } catch (error) {
+    return rejectWithValue({
+      ...(error as ErrorResponseDTO),
+      title: MESSAGES.error.employee.notFound,
+    });
+  }
+});
+
 export const fetchEmployeeById = createAsyncThunk<
   Employee,
   { id: string; skipState?: boolean; shouldFetchBranch?: boolean; shouldFetchBranchGeoAddress?: boolean },

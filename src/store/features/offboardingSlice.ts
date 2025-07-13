@@ -1,19 +1,32 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
-import { CompanyOffboardingStep, OffboardingStep } from 'shared/models';
+import {
+  BranchDTO,
+  CompanyOffboardingStep,
+  DepartmentDTO,
+  EmployeeDTO,
+  ErrorResponseDTO,
+  OffboardingStep,
+  PaginatedResponse,
+  Status,
+} from 'shared/models';
 import { fetchOnboardingBranches } from './branchSlice';
 import { fetchCompanySettings } from './companySettingsSlice';
 import { fetchCompany } from './companySlice';
 import { deleteProfile, fetchProfile } from './profileSlice';
+import { fetchOnboardingDepartments } from './departmentSlice';
+import { fetchOnboardingEmployees } from './employeeSlice';
 
 interface OffboardingState {
   company: StateEntity<CompanyOffboardingStep> & {
     flags: {
       [OffboardingStep.companySettings]: boolean;
       [OffboardingStep.instructions]: {
-        branch: boolean;
-        employee: boolean;
+        status: Status;
+        branches?: number;
+        employees?: number;
+        departments?: number;
       };
       [OffboardingStep.company]: boolean;
     };
@@ -27,7 +40,12 @@ const initialState: OffboardingState = {
     status: 'idle',
     flags: {
       [OffboardingStep.companySettings]: false,
-      [OffboardingStep.instructions]: { branch: false, employee: false },
+      [OffboardingStep.instructions]: {
+        status: 'idle',
+        branches: undefined,
+        employees: undefined,
+        departments: undefined,
+      },
       [OffboardingStep.company]: false,
     },
   },
@@ -40,13 +58,13 @@ const initialState: OffboardingState = {
 const evaluateCompanyOffboardingStep = (state: WritableDraft<OffboardingState>) => {
   const { companySettings, instructions, company } = state.company.flags;
 
-  if (!instructions.branch || !instructions.employee) {
+  if (instructions.branches || instructions.employees || instructions.departments) {
     state.company.data = OffboardingStep.instructions;
     state.company.status = 'failed';
-  } else if (!companySettings) {
+  } else if (companySettings) {
     state.company.data = OffboardingStep.companySettings;
     state.company.status = 'failed';
-  } else if (!company) {
+  } else if (company) {
     state.company.data = OffboardingStep.company;
     state.company.status = 'failed';
   } else {
@@ -55,35 +73,53 @@ const evaluateCompanyOffboardingStep = (state: WritableDraft<OffboardingState>) 
   }
 };
 
+export const fetchOffboardingData = createAsyncThunk<void, void, { rejectValue: ErrorResponseDTO }>(
+  'offboarding/fetchOffboardingData',
+  async (_, { dispatch }) => {
+    try {
+      await dispatch(fetchOnboardingBranches()).unwrap();
+    } catch {
+      // We expect an error here
+    }
+
+    try {
+      await dispatch(fetchOnboardingEmployees()).unwrap();
+    } catch {
+      // We expect an error here
+    }
+
+    try {
+      await dispatch(fetchOnboardingDepartments()).unwrap();
+    } catch {
+      // We expect an error here
+    }
+  }
+);
+
 const offboardingSlice = createSlice({
   name: 'offboarding',
   initialState,
-  reducers: {
-    setBranchInstructionsCompleted(state) {
-      state.company.flags[OffboardingStep.instructions].branch = true;
-      evaluateCompanyOffboardingStep(state);
-    },
-    setEmployeeInstructionsCompleted(state) {
-      state.company.flags[OffboardingStep.instructions].employee = true;
-      evaluateCompanyOffboardingStep(state);
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchCompanySettings.rejected, (state) => {
-        state.company.flags[OffboardingStep.companySettings] = true;
+        state.company.flags[OffboardingStep.companySettings] = false;
         evaluateCompanyOffboardingStep(state);
       })
       .addCase(fetchOnboardingBranches.rejected, (state) => {
-        state.company.flags[OffboardingStep.instructions].branch = true;
+        state.company.flags[OffboardingStep.instructions].branches = 0;
         evaluateCompanyOffboardingStep(state);
       })
-      .addCase(fetchProfile.rejected, (state) => {
-        state.company.flags[OffboardingStep.instructions].employee = true;
+      .addCase(fetchOnboardingEmployees.rejected, (state) => {
+        state.company.flags[OffboardingStep.instructions].employees = 0;
+        evaluateCompanyOffboardingStep(state);
+      })
+      .addCase(fetchOnboardingDepartments.rejected, (state) => {
+        state.company.flags[OffboardingStep.instructions].departments = 0;
         evaluateCompanyOffboardingStep(state);
       })
       .addCase(fetchCompany.rejected, (state) => {
-        state.company.flags[OffboardingStep.company] = true;
+        state.company.flags[OffboardingStep.company] = false;
         evaluateCompanyOffboardingStep(state);
       })
       .addCase(deleteProfile.rejected, (state) => {
@@ -94,27 +130,43 @@ const offboardingSlice = createSlice({
         state.employee.data = OffboardingStep.completed;
       })
       .addCase(fetchCompanySettings.fulfilled, (state) => {
-        state.company.flags[OffboardingStep.companySettings] = false;
+        state.company.flags[OffboardingStep.companySettings] = true;
         evaluateCompanyOffboardingStep(state);
       })
-      .addCase(fetchOnboardingBranches.fulfilled, (state) => {
-        state.company.flags[OffboardingStep.instructions].branch = false;
+      .addCase(fetchOnboardingBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<BranchDTO> | undefined>) => {
+        state.company.flags[OffboardingStep.instructions].branches = action.payload?.totalItems;
         evaluateCompanyOffboardingStep(state);
       })
       .addCase(fetchProfile.fulfilled, (state) => {
-        state.company.flags[OffboardingStep.instructions].employee = false;
         state.employee.data = OffboardingStep.employee;
       })
       .addCase(fetchCompany.fulfilled, (state) => {
-        state.company.flags[OffboardingStep.company] = false;
+        state.company.flags[OffboardingStep.company] = true;
         evaluateCompanyOffboardingStep(state);
+      })
+      .addCase(fetchOnboardingEmployees.fulfilled, (state, action: PayloadAction<PaginatedResponse<EmployeeDTO> | undefined>) => {
+        state.company.flags[OffboardingStep.instructions].employees = action.payload?.totalItems;
+        evaluateCompanyOffboardingStep(state);
+      })
+      .addCase(fetchOnboardingDepartments.fulfilled, (state, action: PayloadAction<PaginatedResponse<DepartmentDTO> | undefined>) => {
+        state.company.flags[OffboardingStep.instructions].departments = action.payload?.totalItems;
+        evaluateCompanyOffboardingStep(state);
+      })
+      .addCase(fetchOffboardingData.pending, (state) => {
+        state.company.flags[OffboardingStep.instructions].status = 'loading';
+      })
+      .addCase(fetchOffboardingData.rejected, (state) => {
+        state.company.flags[OffboardingStep.instructions].status = 'failed';
+      })
+      .addCase(fetchOffboardingData.fulfilled, (state) => {
+        state.company.flags[OffboardingStep.instructions].status = 'succeeded';
       });
   },
 });
 
 export const selectCompanyOffboardingStep = (state: RootState) => state.offboarding.company;
+export const selectCompanyOffboardingInstructionsFlags = (state: RootState) =>
+  state.offboarding.company.flags[OffboardingStep.instructions];
 export const selectEmployeeOffboardingStep = (state: RootState) => state.offboarding.employee;
-
-export const { setBranchInstructionsCompleted, setEmployeeInstructionsCompleted } = offboardingSlice.actions;
 
 export default offboardingSlice.reducer;
