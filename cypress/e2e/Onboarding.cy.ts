@@ -798,11 +798,55 @@ describe('Onboarding Flow Tests', () => {
       clickField(Module.createBranch, SubModule.branchDetails, 'form-field-noPhysicalAddress');
       clickActionButton(Module.createBranch, SubModule.branchDetails);
 
-      cy.wait('@createBranchRequest');
-      cy.wait('@fetchBranchesRequest');
+      cy.wait(['@createBranchRequest', '@fetchBranchesRequest']);
 
       cy.location('pathname').should('eq', ROUTES.flows.path);
+      checkIsSubFlowDisabled('Company Onboarding', true);
       getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
+    });
+
+    it('should fetch and display the onboarded branch on the Branch Catalog page', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchCompanySettingsRequest();
+      interceptFetchCompanyLicenseFailedRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptCreateBranchRequest();
+      interceptFetchProfileRequest();
+      cy.visit(ROUTES.flows.path);
+
+      clickSubFlow('Company Onboarding');
+
+      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-cancel-button').click();
+
+      cy.url().should('include', ROUTES.createBranch.path);
+
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
+      getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-name').type('America/New_York');
+      selectOption(Module.createBranch, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
+      clickField(Module.createBranch, SubModule.branchDetails, 'form-field-noPhysicalAddress');
+      clickActionButton(Module.createBranch, SubModule.branchDetails);
+
+      cy.wait(['@createBranchRequest', '@fetchOnboardingBranchesRequest']);
+
+      cy.location('pathname').should('eq', ROUTES.flows.path);
+
+      interceptFetchBranchesRequest();
+      checkIsSubFlowDisabled('Company Onboarding', false);
+      clickSubFlow('Branches');
+      cy.wait('@fetchBranchesRequest');
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 1);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-cell-222222222222-name')
+        .find('p')
+        .should('have.text', 'New York Branch');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-cell-222222222222-timeZoneName')
+        .find('p')
+        .should('have.text', 'Eastern Standard Time');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-cell-222222222222-fullAddress').should(
+        'have.text',
+        '270 W 11th Street, Apt 2E, New York, NY 10014, United States'
+      );
     });
 
     it('should display validation messages if the employee creation form is invalid', () => {
@@ -811,7 +855,6 @@ describe('Onboarding Flow Tests', () => {
       interceptFetchCompanyLicenseRequest();
       interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
       interceptFetchProfileFailedRequest();
-      interceptCreateProfileFailedRequest();
       cy.visit(ROUTES.employeeOnboarding.path);
 
       cy.wait('@fetchProfileFailedRequest');
@@ -1144,9 +1187,9 @@ describe('Onboarding Flow Tests', () => {
       cy.url().should('include', ROUTES.uploadCompanyLicense.path);
       clickFlowsIcon();
       clickSubFlow('Company Offboarding');
-      interceptFetchCompanySettingsFailedRequest();
+      interceptFetchCompanySettingsFailedRequest('fetchCompanySettingsFailedSecondRequest');
       clickActionButton(Module.deleteCompanySettings, SubModule.companySettingsDetails);
-      cy.wait(['@deleteCompanySettingsRequest', '@fetchCompanySettingsFailedRequest']);
+      cy.wait(['@deleteCompanySettingsRequest', '@fetchCompanySettingsFailedSecondRequest']);
       clickFlowsIcon();
       clickSubFlow('Company Onboarding');
 
