@@ -137,8 +137,8 @@ export const interceptFetchCompanySettingsRequest = (alias = 'fetchCompanySettin
   });
 };
 
-export const interceptFetchCompanySettingsFailedRequest = () => {
-  cy.interceptWithAuth('GET', `${serverBaseUrl}/CompanySettings`, null, 'fetchCompanySettingsFailedRequest', 404);
+export const interceptFetchCompanySettingsFailedRequest = (alias = 'fetchCompanySettingsFailedRequest') => {
+  cy.interceptWithAuth('GET', `${serverBaseUrl}/CompanySettings`, null, alias, 404);
 };
 
 export const interceptCreateCompanySettingsRequest = () => {

@@ -194,6 +194,7 @@ export const createOnboardingBranch = createAsyncThunk<void, BranchDTO, { reject
     try {
       await axios.post<void>(ENDPOINTS.branches, branch);
 
+      dispatch(resetBranchesFetchStatus());
       await dispatch(fetchOnboardingBranches()).unwrap();
 
       dispatch(setSuccess(MESSAGES.success.branches.create));
@@ -218,7 +219,7 @@ export const createBranch = createAsyncThunk<void, BranchDTO, { rejectValue: Err
     try {
       await axios.post<void>(ENDPOINTS.branches, branch);
 
-      await dispatch(fetchBranches(APP_CONFIG.table.defaultPagination)).unwrap();
+      dispatch(resetBranchesFetchStatus());
       dispatch(setBranchesSucceededFlag());
 
       dispatch(setSuccess(MESSAGES.success.branches.create));
