@@ -1,5 +1,5 @@
-import { ROUTES } from '../../../src/shared/constants';
-import { Module, SubModule } from '../../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   getLinearLoader,
   getTablePaginationDisplayedRows,
@@ -8,7 +8,7 @@ import {
   search,
   selectAction,
   selectNavigationMenuItem,
-} from '../../support/helpers';
+} from 'support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -22,7 +22,7 @@ import {
   interceptFetchBranchByIdRequest,
   interceptFetchBranchesByIdsRequest,
   interceptFetchCompanySettingsRequest,
-} from '../../support/interceptors';
+} from 'support/interceptors';
 
 describe('Employee Catalog Tests', () => {
   beforeEach(() => {

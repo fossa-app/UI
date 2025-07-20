@@ -1,5 +1,5 @@
-import { ROUTES } from '../../../src/shared/constants';
-import { Module, SubModule } from '../../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   getLinearLoader,
   getLoadingButtonLoadingIcon,
@@ -12,7 +12,7 @@ import {
   selectAction,
   fillDepartmentDetailsForm,
   clearDepartmentDetailsForm,
-} from '../../support/helpers';
+} from 'support/helpers';
 import {
   interceptCreateDepartmentFailedRequest,
   interceptCreateDepartmentFailedWithErrorRequest,
@@ -34,7 +34,7 @@ import {
   interceptFetchEmployeesRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
-} from '../../support/interceptors';
+} from 'support/interceptors';
 
 const testDepartmentEmptyInputFields = () => {
   verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {

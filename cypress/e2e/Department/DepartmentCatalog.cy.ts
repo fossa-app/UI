@@ -1,5 +1,5 @@
-import { ROUTES } from '../../../src/shared/constants';
-import { Module, SubModule } from '../../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
   fillDepartmentDetailsForm,
@@ -9,7 +9,7 @@ import {
   getTestSelectorByModule,
   search,
   selectAction,
-} from '../../support/helpers';
+} from 'support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -27,7 +27,7 @@ import {
   interceptDeleteDepartmentFailedRequest,
   interceptDeleteDepartmentRequest,
   interceptFetchCompanySettingsRequest,
-} from '../../support/interceptors';
+} from 'support/interceptors';
 
 const departmentAdminRoutes = [ROUTES.newDepartment.path, `${ROUTES.departments.path}/edit/444444444444`];
 

@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import path from 'path';
 import react from '@vitejs/plugin-react-swc';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { visualizer } from 'rollup-plugin-visualizer';
@@ -25,6 +26,17 @@ export default defineConfig({
       brotliSize: true,
     }),
   ],
+  resolve: {
+    alias: {
+      store: path.resolve(__dirname, 'src/store'),
+      shared: path.resolve(__dirname, 'src/shared'),
+      routes: path.resolve(__dirname, 'src/routes'),
+      components: path.resolve(__dirname, 'src/components'),
+      layout: path.resolve(__dirname, 'src/layout'),
+      pages: path.resolve(__dirname, 'src/pages'),
+      support: path.resolve(__dirname, 'cypress/support'),
+    },
+  },
   build: {
     outDir: 'build',
     minify: 'esbuild',

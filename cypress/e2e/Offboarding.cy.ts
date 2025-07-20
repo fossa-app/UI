@@ -1,5 +1,5 @@
-import { COMPANY_SETTINGS_KEY, ROUTES } from '../../src/shared/constants';
-import { Module, SubModule } from '../../src/shared/models';
+import { COMPANY_SETTINGS_KEY, ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
   getTestSelectorByModule,
@@ -9,7 +9,7 @@ import {
   clickFlowsIcon,
   selectAction,
   verifyTextFields,
-} from '../support/helpers';
+} from 'support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -34,7 +34,7 @@ import {
   interceptFetchDepartmentsRequest,
   interceptFetchEmployeesByIdsRequest,
   interceptDeleteDepartmentRequest,
-} from '../support/interceptors';
+} from 'support/interceptors';
 
 const companyOffboardingRoutes = [ROUTES.deleteCompanySettings.path, ROUTES.companyOffboardingInstructions.path, ROUTES.deleteCompany.path];
 

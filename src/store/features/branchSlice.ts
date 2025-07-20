@@ -375,7 +375,6 @@ const branchSlice = createSlice({
         state.searchedBranches.fetchStatus = 'succeeded';
         state.searchedBranches.error = undefined;
       })
-
       .addCase(fetchAssignedBranches.pending, (state) => {
         state.assignedBranches.fetchStatus = 'loading';
       })

@@ -1,6 +1,6 @@
-import { ROUTES } from '../../../src/shared/constants';
-import { Module, SubModule } from '../../../src/shared/models';
-import { getLinearLoader, getTestSelectorByModule, selectAction, verifyInputFields, verifyTextFields } from '../../support/helpers';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
+import { getLinearLoader, getTestSelectorByModule, selectAction, verifyInputFields, verifyTextFields } from 'support/helpers';
 import {
   interceptEditBranchRequest,
   interceptFetchBranchByIdFailedRequest,
@@ -12,7 +12,7 @@ import {
   interceptFetchCompanySettingsRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
-} from '../../support/interceptors';
+} from 'support/interceptors';
 
 const testBranchFields = () => {
   verifyTextFields(Module.branchManagement, SubModule.branchViewDetails, {

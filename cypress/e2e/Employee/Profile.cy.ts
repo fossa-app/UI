@@ -1,5 +1,5 @@
-import { ROUTES } from '../../../src/shared/constants';
-import { Module, SubModule } from '../../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
   getLinearLoader,
@@ -8,7 +8,7 @@ import {
   openUserProfile,
   verifyFormValidationMessages,
   verifyTextFields,
-} from '../../support/helpers';
+} from 'support/helpers';
 import {
   interceptEditProfileFailedRequest,
   interceptEditProfileFailedWithErrorRequest,
@@ -21,7 +21,7 @@ import {
   interceptFetchProfileFailedRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
-} from '../../support/interceptors';
+} from 'support/interceptors';
 
 describe('Profile Tests', () => {
   beforeEach(() => {

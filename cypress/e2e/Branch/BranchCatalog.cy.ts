@@ -1,5 +1,5 @@
-import { ROUTES } from '../../../src/shared/constants';
-import { Module, SubModule } from '../../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
   clickField,
@@ -11,7 +11,7 @@ import {
   selectAction,
   selectNavigationMenuItem,
   selectOption,
-} from '../../support/helpers';
+} from 'support/helpers';
 import {
   interceptCreateBranchRequest,
   interceptDeleteBranchFailedRequest,
@@ -26,7 +26,7 @@ import {
   interceptFetchSystemLicenseRequest,
   interceptFetchBranchesByIdsRequest,
   interceptFetchCompanySettingsRequest,
-} from '../../support/interceptors';
+} from 'support/interceptors';
 
 const branchAdminRoutes = [ROUTES.newBranch.path, `${ROUTES.branches.path}/edit/222222222222`];
 

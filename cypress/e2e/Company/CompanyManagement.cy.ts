@@ -1,5 +1,5 @@
-import { ROUTES } from '../../../src/shared/constants';
-import { Module, SubModule } from '../../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
   getLinearLoader,
@@ -10,7 +10,7 @@ import {
   verifyFormValidationMessages,
   verifyNotExist,
   verifyTextFields,
-} from '../../support/helpers';
+} from 'support/helpers';
 import {
   interceptEditCompanyFailedRequest,
   interceptEditCompanyFailedWithErrorRequest,
@@ -23,7 +23,7 @@ import {
   interceptFetchCompanySettingsRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
-} from '../../support/interceptors';
+} from 'support/interceptors';
 
 const testCompaLicenseFields = () => {
   verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
