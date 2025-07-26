@@ -7,7 +7,7 @@ import { ROUTES } from 'shared/constants';
 const ProfileRouteGuard: React.FC<React.PropsWithChildren> = ({ children }) => {
   const { data: profile, fetchStatus } = useAppSelector(selectProfile);
 
-  if ((fetchStatus === 'failed' && !profile) || profile?.isDraft) {
+  if (fetchStatus === 'failed' || profile?.isDraft) {
     return <Navigate to={ROUTES.flows.path} replace />;
   }
 

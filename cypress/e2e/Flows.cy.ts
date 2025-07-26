@@ -339,7 +339,7 @@ describe('Flows Tests', () => {
       cy.location('pathname').should('eq', ROUTES.flows.path);
       checkIsSubFlowDisabled('Company Onboarding', false);
       checkIsSubFlowDisabled('View Company', false);
-      checkIsSubFlowDisabled('Company Settings', false);
+      checkIsSubFlowDisabled('Company Settings', true);
       checkIsSubFlowDisabled('Company Offboarding', false);
       checkIsSubFlowDisabled('Branches', true);
       checkIsSubFlowDisabled('Departments', true);

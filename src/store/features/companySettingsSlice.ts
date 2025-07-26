@@ -4,12 +4,13 @@ import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { CompanySettings, CompanySettingsDTO, ErrorResponse, ErrorResponseDTO } from 'shared/models';
-import { MESSAGES, ENDPOINTS, COMPANY_SETTINGS_KEY, DEFAULT_COMPANY_SETTINGS } from 'shared/constants';
+import { MESSAGES, ENDPOINTS, COMPANY_SETTINGS_KEY } from 'shared/constants';
 import { mapError, saveToLocalStorage, removeFromLocalStorage } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
 
 interface CompanySettingsState {
   companySettings: StateEntity<CompanySettings>;
+  previewColorSchemeId?: CompanySettings['colorSchemeId'];
 }
 
 const initialState: CompanySettingsState = {
@@ -21,6 +22,7 @@ const initialState: CompanySettingsState = {
     updateStatus: 'idle',
     deleteStatus: 'idle',
   },
+  previewColorSchemeId: undefined,
 };
 
 export const fetchCompanySettings = createAsyncThunk<CompanySettings, void, { rejectValue: ErrorResponseDTO }>(
@@ -95,7 +97,6 @@ export const deleteCompanySettings = createAsyncThunk<void, void, { rejectValue:
       await axios.delete<void>(ENDPOINTS.companySettings);
 
       removeFromLocalStorage(COMPANY_SETTINGS_KEY);
-      saveToLocalStorage(COMPANY_SETTINGS_KEY, DEFAULT_COMPANY_SETTINGS);
       dispatch(setSuccess(MESSAGES.success.companySettings.delete));
       try {
         await dispatch(fetchCompanySettings()).unwrap();
@@ -118,7 +119,14 @@ export const deleteCompanySettings = createAsyncThunk<void, void, { rejectValue:
 const companySettingsSlice = createSlice({
   name: 'company',
   initialState,
-  reducers: {},
+  reducers: {
+    setPreviewCompanyColorSchemeSettings: (state, action: PayloadAction<CompanySettings['colorSchemeId'] | undefined>) => {
+      state.previewColorSchemeId = action.payload;
+    },
+    resetPreviewCompanyColorSchemeSettings: (state) => {
+      state.previewColorSchemeId = undefined;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCompanySettings.pending, (state) => {
@@ -169,5 +177,8 @@ const companySettingsSlice = createSlice({
 });
 
 export const selectCompanySettings = (state: RootState) => state.companySettings.companySettings;
+export const selectPreviewColorSchemeId = (state: RootState) => state.companySettings.previewColorSchemeId;
+
+export const { setPreviewCompanyColorSchemeSettings, resetPreviewCompanyColorSchemeSettings } = companySettingsSlice.actions;
 
 export default companySettingsSlice.reducer;

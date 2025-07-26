@@ -45,6 +45,7 @@ const flowSlice = createSlice({
       })
       .addCase(fetchCompanySettings.rejected, (state) => {
         state.flows.company!.subFlows!.companyOnboarding!.disabled = false;
+        state.flows.company!.subFlows!.companySettings!.disabled = true;
       })
       .addCase(fetchCompanyLicense.rejected, (state) => {
         state.flows.company!.subFlows!.companyOnboarding!.disabled = false;
@@ -56,12 +57,12 @@ const flowSlice = createSlice({
         state.flags[OnboardingStep.company] = true;
         state.flows.company!.subFlows!.viewCompany!.disabled = false;
         state.flows.profile!.subFlows!.employeeOnboarding!.disabled = false;
-        state.flows.company!.subFlows!.companySettings!.disabled = false;
         state.flows.company!.subFlows!.companyOffboarding!.disabled = false;
         state.flows.company!.subFlows!.companyOnboarding!.disabled = checkAllFlagsSet(state.flags);
       })
       .addCase(fetchCompanySettings.fulfilled, (state) => {
         state.flags[OnboardingStep.companySettings] = true;
+        state.flows.company!.subFlows!.companySettings!.disabled = false;
         state.flows.company!.subFlows!.companyOnboarding!.disabled = checkAllFlagsSet(state.flags);
       })
       .addCase(fetchCompanyLicense.fulfilled, (state) => {

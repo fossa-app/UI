@@ -17,6 +17,7 @@ import {
   verifyRadioGroupValue,
   checkIsSubFlowDisabled,
   selectAction,
+  verifyAppTheme,
 } from 'support/helpers';
 import {
   interceptFetchBranchesRequest,
@@ -60,6 +61,7 @@ const employeeOnboardingRoutes = [ROUTES.createEmployee.path];
 
 describe('Onboarding Flow Tests', () => {
   beforeEach(() => {
+    cy.mockDarkTheme();
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
   });
@@ -1195,6 +1197,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.url().should('include', ROUTES.createCompanySettings.path);
       verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyAppTheme('dark', 'midnight');
     });
 
     it('should be able to skip the Company License upload step', () => {
@@ -1332,6 +1335,26 @@ describe('Onboarding Flow Tests', () => {
       getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-cancel-button').click();
 
       cy.url().should('include', ROUTES.createBranch.path);
+    });
+
+    it('should preview the color scheme when the company settings color scheme is changed', () => {
+      interceptFetchCompanyRequest();
+      interceptFetchCompanySettingsFailedRequest();
+      interceptFetchCompanyLicenseFailedRequest();
+      interceptFetchBranchesFailedRequest();
+      interceptFetchProfileFailedRequest();
+      cy.visit(ROUTES.createCompanySettings.path);
+
+      selectColorScheme(Module.createCompanySettings, SubModule.companySettingsDetails, 'color-scheme-forest');
+
+      verifyRadioGroupValue('color-scheme-group', 'forest', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyAppTheme('dark', 'forest');
+
+      getTestSelectorByModule(Module.shared, SubModule.header, 'theme-button').click();
+      selectColorScheme(Module.createCompanySettings, SubModule.companySettingsDetails, 'color-scheme-sunset');
+
+      verifyRadioGroupValue('color-scheme-group', 'sunset', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyAppTheme('light', 'sunset');
     });
   });
 });

@@ -1,4 +1,4 @@
-import { Branch, Department, Module, SubModule } from '../../src/shared/models';
+import { Branch, ColorSchemeId, Department, Module, SubModule, ThemeMode } from 'shared/models';
 
 export const getTestSelectorByModule = (module: Module, subModule: SubModule, selector: string, isPattern = false) => {
   return isPattern ? cy.get(`[data-cy*="${module}-${subModule}-${selector}"]`) : cy.get(`[data-cy="${module}-${subModule}-${selector}"]`);
@@ -175,6 +175,12 @@ export const verifyRadioGroupValue = (name: string, expectedValue: string, allVa
 
 export const selectColorScheme = (module: Module, subModule: SubModule, selector: string) => {
   getTestSelectorByModule(module, subModule, selector).click();
+};
+
+export const verifyAppTheme = (theme: ThemeMode, colorScheme: ColorSchemeId) => {
+  getTestSelectorByModule(Module.shared, SubModule.theme, 'app-theme')
+    .should('have.attr', 'data-theme', theme)
+    .and('have.attr', 'data-color-scheme-id', colorScheme);
 };
 
 export const uploadTestFile = (selector: string, fixtureName: string, fileType = 'application/octet-stream') => {
