@@ -1,6 +1,6 @@
-import { ROUTES } from '../../src/shared/constants';
-import { Module, SubModule } from '../../src/shared/models';
-import { getTestSelectorByModule } from '../support/helpers';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
+import { getTestSelectorByModule } from 'support/helpers';
 import {
   interceptFetchClientFailedRequest,
   interceptFetchClientRequest,
@@ -10,7 +10,7 @@ import {
   interceptLoginRequest,
   interceptLogoutRequest,
   interceptOpenidConfigurationRequest,
-} from '../support/interceptors';
+} from 'support/interceptors';
 
 describe('Authentication Flow Tests - Failed Client Request', () => {
   beforeEach(() => {
@@ -77,7 +77,7 @@ describe('Authentication Flow Tests - Successful Client Request', () => {
     cy.wait('@openidConfigurationRequest');
     cy.wait('@loginRequest');
 
-    cy.url().should('include', 'http://localhost:9011/oauth2/authorize?client_id=mock-client-id');
+    cy.url().should('include', 'http://localhost:9011/oauth2/authorize?client_id=PLACEHOLDER_CLIENT_ID');
   });
 
   it('should login successfully and display correct user name for user role', () => {

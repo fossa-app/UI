@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -20,18 +16,21 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": "src",
-    "types": [
-      "node",
-      "vite/client"
-    ]
+    "types": ["node", "vite/client"],
+    "paths": {
+      "store/*": ["store/*"],
+      "shared/*": ["shared/*"],
+      "routes/*": ["routes/*"],
+      "components/*": ["components/*"],
+      "layout/*": ["layout/*"],
+      "pages/*": ["pages/*"],
+      "support/*": ["../cypress/support/*"]
+    }
   },
   "ts-node": {
     "compilerOptions": {
       "module": "esnext"
     }
   },
-  "include": [
-    "src",
-    "cypress/**/*.ts",
-  ]
+  "include": ["src", "cypress/**/*.ts"]
 }

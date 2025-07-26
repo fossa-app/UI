@@ -55,14 +55,14 @@ Cypress.Commands.add('loginMock', (isAdmin = false, expiresIn?: number) => {
 
   const mockUser = {
     access_token,
-    id_token: 'mock-id-token',
-    refresh_token: 'mock-refresh-token',
+    id_token: 'PLACEHOLDER_ID_TOKEN',
+    refresh_token: 'PLACEHOLDER_REFRESH_TOKEN',
     token_type: 'Bearer',
     expires_at: Math.floor(Date.now() / 1000) + (expiresIn ?? 3600 * 24 * 365 * 100),
     scope: 'openid profile email offline_access',
     profile: {
-      sub: 'mock-user-id',
-      tid: 'mock-tenant-id',
+      sub: 'PLACEHOLDER_USER_ID',
+      tid: 'PLACEHOLDER_TENANT_ID',
       given_name: isAdmin ? 'Admin' : 'User',
       middle_name: 'Oidc',
       family_name: 'Mock',
@@ -71,11 +71,11 @@ Cypress.Commands.add('loginMock', (isAdmin = false, expiresIn?: number) => {
     },
   };
 
-  localStorage.setItem('oidc.user:http://localhost:9011:mock-client-id', JSON.stringify(mockUser));
+  localStorage.setItem('oidc.user:http://localhost:9011:PLACEHOLDER_CLIENT_ID', JSON.stringify(mockUser));
 });
 
 Cypress.Commands.add('logoutMock', () => {
-  localStorage.removeItem('oidc.user:http://localhost:9011:mock-client-id');
+  localStorage.removeItem('oidc.user:http://localhost:9011:PLACEHOLDER_CLIENT_ID');
 });
 
 Cypress.Commands.add('interceptWithAuth', (method, url, response, alias = '', statusCode = 200, delay = 300) => {

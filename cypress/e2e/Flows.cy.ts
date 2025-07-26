@@ -1,5 +1,5 @@
-import { ROUTES } from '../../src/shared/constants';
-import { Module, SubModule } from '../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   checkIsSubFlowDisabled,
   checkIsSubFlowHasDisabledAttribute,
@@ -13,7 +13,7 @@ import {
   selectColorScheme,
   selectOption,
   uploadTestFile,
-} from '../support/helpers';
+} from 'support/helpers';
 import {
   interceptCreateBranchRequest,
   interceptCreateCompanyRequest,
@@ -35,7 +35,7 @@ import {
   interceptLogoutRequest,
   interceptOpenidConfigurationRequest,
   interceptUploadCompanyLicenseRequest,
-} from '../support/interceptors';
+} from 'support/interceptors';
 
 describe('Flows Tests', () => {
   beforeEach(() => {

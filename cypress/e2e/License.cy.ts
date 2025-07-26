@@ -1,6 +1,6 @@
-import { ROUTES } from '../../src/shared/constants';
-import { Module, SubModule } from '../../src/shared/models';
-import { getTestSelectorByModule } from '../support/helpers';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
+import { getTestSelectorByModule } from 'support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -10,7 +10,7 @@ import {
   interceptFetchCompanyLicenseRequest,
   interceptUploadCompanyLicenseFailedRequest,
   interceptFetchCompanyLicenseFailedRequest,
-} from '../support/interceptors';
+} from 'support/interceptors';
 
 describe('License Tests', () => {
   beforeEach(() => {

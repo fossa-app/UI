@@ -1,5 +1,5 @@
-import { ROUTES } from '../../src/shared/constants';
-import { Module, SubModule } from '../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
   clickField,
@@ -17,7 +17,7 @@ import {
   verifyRadioGroupValue,
   checkIsSubFlowDisabled,
   selectAction,
-} from '../support/helpers';
+} from 'support/helpers';
 import {
   interceptFetchBranchesRequest,
   interceptFetchClientRequest,
@@ -48,7 +48,7 @@ import {
   interceptDeleteBranchRequest,
   interceptFetchEmployeesRequest,
   interceptFetchDepartmentsRequest,
-} from '../support/interceptors';
+} from 'support/interceptors';
 
 const companyOnboardingRoutes = [
   ROUTES.createCompany.path,

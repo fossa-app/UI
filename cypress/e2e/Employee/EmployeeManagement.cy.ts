@@ -1,5 +1,5 @@
-import { ROUTES } from '../../../src/shared/constants';
-import { Module, SubModule } from '../../../src/shared/models';
+import { ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
   getLinearLoader,
@@ -8,7 +8,7 @@ import {
   verifyFormValidationMessages,
   verifyInputFields,
   verifyTextFields,
-} from '../../support/helpers';
+} from 'support/helpers';
 import {
   interceptEditEmployeeFailedRequest,
   interceptEditEmployeeRequest,
@@ -24,7 +24,7 @@ import {
   interceptFetchBranchesByIdsRequest,
   interceptEditEmployeeFailedWithErrorRequest,
   interceptFetchCompanySettingsRequest,
-} from '../../support/interceptors';
+} from 'support/interceptors';
 
 const testEmployeeViewFields = () => {
   verifyTextFields(Module.employeeManagement, SubModule.employeeViewDetails, {

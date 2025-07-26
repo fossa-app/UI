@@ -1,5 +1,5 @@
-import { COMPANY_SETTINGS_KEY, ROUTES } from '../../../src/shared/constants';
-import { Module, SubModule } from '../../../src/shared/models';
+import { COMPANY_SETTINGS_KEY, ROUTES } from 'shared/constants';
+import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
   clickFlowsIcon,
@@ -9,7 +9,7 @@ import {
   selectColorScheme,
   verifyRadioGroupValue,
   verifyTextFields,
-} from '../../support/helpers';
+} from 'support/helpers';
 import {
   interceptCreateCompanySettingsFailedRequest,
   interceptCreateCompanySettingsRequest,
@@ -26,7 +26,7 @@ import {
   interceptFetchSystemLicenseRequest,
   interceptLogoutRequest,
   interceptOpenidConfigurationRequest,
-} from '../../support/interceptors';
+} from 'support/interceptors';
 
 describe('Company Settings Tests', () => {
   beforeEach(() => {
