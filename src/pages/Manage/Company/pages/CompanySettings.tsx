@@ -1,18 +1,21 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectUserRoles, selectCompanySettings, editCompanySettings, selectAppConfig, createCompanySettings } from 'store/features';
 import {
-  DEFAULT_COMPANY_SETTINGS,
-  COMPANY_SETTINGS_FIELDS,
-  COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA,
-  ROUTES,
-} from 'shared/constants';
+  selectUserRoles,
+  selectCompanySettings,
+  editCompanySettings,
+  selectAppConfig,
+  setPreviewCompanyColorSchemeSettings,
+  resetPreviewCompanyColorSchemeSettings,
+} from 'store/features';
+import { COMPANY_SETTINGS_FIELDS, COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
 import { CompanySettings, CompanySettingsDTO, ThemeMode } from 'shared/models';
 import { mapDisabledFields } from 'shared/helpers';
 import { COLOR_SCHEMES } from 'shared/themes';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
+import CompanySettingsRouteGuard from 'routes/guards/CompanySettingsRouteGuard';
 
 const testModule = COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA.module;
 const testSubModule = COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA.subModule;
@@ -24,22 +27,27 @@ const CompanySettingsPage: React.FC = () => {
   const { data: companySettings, fetchStatus, updateStatus } = useAppSelector(selectCompanySettings);
   const { isDarkTheme } = useAppSelector(selectAppConfig);
   const mode: ThemeMode = isDarkTheme ? 'dark' : 'light';
-  const isEmptySettings = Object.values(companySettings).every((value) => !value);
 
   const handleSubmit = React.useCallback(
     (data: Omit<CompanySettingsDTO, 'id'>) => {
-      if (isEmptySettings) {
-        dispatch(createCompanySettings(data));
-      } else {
-        dispatch(editCompanySettings({ ...companySettings, ...data }));
+      dispatch(editCompanySettings({ ...companySettings, ...data }));
+    },
+    [companySettings, dispatch]
+  );
+
+  const handleChange = React.useCallback(
+    (data: CompanySettingsDTO) => {
+      if (data.colorSchemeId && data.colorSchemeId !== companySettings.colorSchemeId) {
+        dispatch(setPreviewCompanyColorSchemeSettings(data.colorSchemeId));
       }
     },
-    [companySettings, isEmptySettings, dispatch]
+    [companySettings.colorSchemeId, dispatch]
   );
 
   const handleCancel = React.useCallback(() => {
     navigate(ROUTES.flows.path);
-  }, [navigate]);
+    dispatch(resetPreviewCompanyColorSchemeSettings());
+  }, [navigate, dispatch]);
 
   const filteredSchemes = React.useMemo(() => {
     return Object.fromEntries(Object.entries(COLOR_SCHEMES).filter(([, scheme]) => scheme[mode]));
@@ -77,22 +85,24 @@ const CompanySettingsPage: React.FC = () => {
   );
 
   return (
-    <PageLayout module={testModule} subModule={testSubModule} pageTitle="Company Settings">
-      <Form<CompanySettings>
-        module={testModule}
-        subModule={testSubModule}
-        defaultValues={DEFAULT_COMPANY_SETTINGS}
-        values={companySettings}
-        loading={fetchStatus === 'loading'}
-        onSubmit={handleSubmit}
-      >
-        <Form.Header>{COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA.title}</Form.Header>
+    <CompanySettingsRouteGuard>
+      <PageLayout module={testModule} subModule={testSubModule} pageTitle="Company Settings">
+        <Form<CompanySettings>
+          module={testModule}
+          subModule={testSubModule}
+          values={companySettings}
+          loading={fetchStatus === 'loading'}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+        >
+          <Form.Header>{COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA.title}</Form.Header>
 
-        <Form.Content fields={fields} />
+          <Form.Content fields={fields} />
 
-        <Form.Actions actions={actions} />
-      </Form>
-    </PageLayout>
+          <Form.Actions actions={actions} />
+        </Form>
+      </PageLayout>
+    </CompanySettingsRouteGuard>
   );
 };
 

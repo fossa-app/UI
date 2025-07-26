@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectUserRoles, selectCompanySettings, selectAppConfig, createCompanySettings, selectIsUserAdmin } from 'store/features';
+import {
+  selectUserRoles,
+  selectCompanySettings,
+  selectAppConfig,
+  createCompanySettings,
+  selectIsUserAdmin,
+  setPreviewCompanyColorSchemeSettings,
+} from 'store/features';
 import {
   DEFAULT_COMPANY_SETTINGS,
   COMPANY_SETTINGS_FIELDS,
@@ -27,16 +34,18 @@ const CreateCompanySettingsPage: React.FC = () => {
 
   const handleSubmit = React.useCallback(
     (data: Omit<CompanySettingsDTO, 'id'>) => {
-      const isEmptySettings = Object.values(data).every((value) => !value);
-
-      if (isEmptySettings) {
-        dispatch(createCompanySettings(DEFAULT_COMPANY_SETTINGS));
-      } else {
-        dispatch(createCompanySettings(data));
-      }
+      dispatch(createCompanySettings(data));
     },
     [dispatch]
   );
+
+  const handleChange = (data: Omit<CompanySettingsDTO, 'id'>) => {
+    const { colorSchemeId } = data;
+
+    if (colorSchemeId) {
+      dispatch(setPreviewCompanyColorSchemeSettings(colorSchemeId));
+    }
+  };
 
   const filteredSchemes = React.useMemo(() => {
     return Object.fromEntries(Object.entries(COLOR_SCHEMES).filter(([, scheme]) => scheme[mode]));
@@ -83,6 +92,7 @@ const CreateCompanySettingsPage: React.FC = () => {
         subModule={testSubModule}
         defaultValues={DEFAULT_COMPANY_SETTINGS}
         errors={errors}
+        onChange={handleChange}
         onSubmit={handleSubmit}
       >
         <Form.Header>{CREATE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.title}</Form.Header>

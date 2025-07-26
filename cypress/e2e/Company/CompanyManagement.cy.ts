@@ -150,7 +150,7 @@ describe('Company Management Tests', () => {
       cy.loginMock();
     });
 
-    it('should not be able to navigate to the edit company page', () => {
+    it('should not be able to navigate to the Edit Company page', () => {
       cy.visit(ROUTES.viewCompany.path);
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('not.exist');
@@ -160,7 +160,7 @@ describe('Company Management Tests', () => {
       cy.url().should('include', ROUTES.viewCompany.path);
     });
 
-    it('should not be able to navigate to the company settings page', () => {
+    it('should not be able to navigate to the Company Settings page', () => {
       cy.visit(ROUTES.companySettings.path);
 
       cy.url().should('include', ROUTES.viewCompany.path);
@@ -173,7 +173,7 @@ describe('Company Management Tests', () => {
       cy.loginMock(true);
     });
 
-    it('should reset the form and navigate to view company page if the cancel button is clicked', () => {
+    it('should reset the form and navigate to the View Company page if the cancel button is clicked', () => {
       cy.visit(ROUTES.viewCompany.path);
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('exist').click();
@@ -260,7 +260,7 @@ describe('Company Management Tests', () => {
       cy.url().should('include', ROUTES.editCompany.path);
     });
 
-    it('should be able to edit the company and be navigated to view company page if the form is valid and company update succeeded', () => {
+    it('should be able to edit the company and be navigated to the View Company page if the form is valid and company update succeeded', () => {
       interceptEditCompanyRequest();
       cy.visit(ROUTES.viewCompany.path);
 

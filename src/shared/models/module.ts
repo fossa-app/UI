@@ -49,4 +49,5 @@ export enum SubModule {
   upload = 'upload',
   header = 'header',
   menu = 'menu',
+  theme = 'theme',
 }

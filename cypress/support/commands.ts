@@ -1,4 +1,8 @@
 /// <reference types="cypress" />
+
+import { SinonStub } from 'cypress/types/sinon';
+import { ThemeMode } from 'shared/models';
+
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
@@ -93,4 +97,35 @@ Cypress.Commands.add('interceptWithAuth', (method, url, response, alias = '', st
       body: response,
     }
   ).as(alias);
+});
+
+Cypress.Commands.add('mockTheme', (mode: ThemeMode = 'dark') => {
+  Cypress.on('window:before:load', (win) => {
+    const stub = win.matchMedia as unknown;
+
+    if (typeof stub === 'function' && (stub as SinonStub).restore) {
+      (stub as SinonStub).restore();
+    }
+
+    cy.stub(win, 'matchMedia').callsFake((query: string) => {
+      return {
+        matches: mode === 'dark' && query === '(prefers-color-scheme: dark)',
+        media: query,
+        onchange: null,
+        addListener: () => {},
+        removeListener: () => {},
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        dispatchEvent: () => false,
+      };
+    });
+  });
+});
+
+Cypress.Commands.add('mockDarkTheme', () => {
+  cy.mockTheme('dark');
+});
+
+Cypress.Commands.add('mockLightTheme', () => {
+  cy.mockTheme('light');
 });

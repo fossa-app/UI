@@ -9,6 +9,7 @@ import {
   clickFlowsIcon,
   selectAction,
   verifyTextFields,
+  verifyAppTheme,
 } from 'support/helpers';
 import {
   interceptFetchBranchesRequest,
@@ -40,6 +41,7 @@ const companyOffboardingRoutes = [ROUTES.deleteCompanySettings.path, ROUTES.comp
 
 describe('Offboarding Flow Tests', () => {
   beforeEach(() => {
+    cy.mockDarkTheme();
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
   });
@@ -560,7 +562,7 @@ describe('Offboarding Flow Tests', () => {
 
     it('should be redirected to the Delete Company page if the company settings deletion succeeded', () => {
       interceptFetchCompanyRequest();
-      interceptFetchCompanySettingsRequest();
+      interceptFetchCompanySettingsRequest('fetchCompanySettingsUpdatedRequest', 'company/company-settings-updated');
       interceptFetchCompanyLicenseRequest();
       interceptFetchBranchesFailedRequest();
       interceptFetchDepartmentsRequest(
@@ -576,6 +578,9 @@ describe('Offboarding Flow Tests', () => {
       cy.visit(ROUTES.flows.path);
 
       clickSubFlow('Company Offboarding');
+      cy.wait('@fetchCompanySettingsUpdatedRequest');
+
+      verifyAppTheme('dark', 'ocean');
       interceptFetchCompanySettingsFailedRequest();
       clickActionButton(Module.deleteCompanySettings, SubModule.companySettingsDetails);
       cy.wait(['@deleteCompanySettingsRequest', '@fetchCompanySettingsFailedRequest']);
@@ -584,14 +589,11 @@ describe('Offboarding Flow Tests', () => {
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
         .should('exist')
         .and('contain.text', 'Company Settings has been successfully deleted');
+      verifyAppTheme('dark', 'midnight');
       cy.window().then((win) => {
         const stored = win.localStorage.getItem(COMPANY_SETTINGS_KEY);
         // @ts-expect-error Jest types are leaking into Cypress context; expect is not typed as Chai
-        expect(stored).to.not.be.null;
-
-        const parsed = JSON.parse(stored!);
-        // @ts-expect-error Jest types are leaking into Cypress context; expect is not typed as Chai
-        expect(parsed.colorSchemeId).to.equal('midnight');
+        expect(stored).to.be.null;
       });
     });
 
