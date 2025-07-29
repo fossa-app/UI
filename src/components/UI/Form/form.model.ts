@@ -10,7 +10,6 @@ import { GridBaseProps } from '@mui/material/Grid2';
 import { TypographyProps } from '@mui/material/Typography';
 import { Module, SubModule, ThemeMode, UserRole } from 'shared/models';
 import { LoadingButtonProps } from '../LoadingButton';
-import { FileUploadProps } from '../FileUpload';
 
 type Validate<T> = {
   [key: string]: (value: T) => boolean | string | Promise<boolean | string>;
@@ -104,8 +103,9 @@ export type SwitchFieldProps = BaseFormFieldProps & {
 export type FileUploadFieldProps = BaseFormFieldProps & {
   type: FormFieldType.fileUpload;
   accept?: string;
+  disabled?: boolean;
   onFileSelect?: (file: File) => void;
-} & Partial<FileUploadProps>;
+};
 
 export type ColorSchemeFieldProps = BaseFormFieldProps & {
   type: FormFieldType.colorScheme;

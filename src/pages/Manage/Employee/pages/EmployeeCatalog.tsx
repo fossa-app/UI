@@ -18,7 +18,7 @@ import Table from 'components/UI/Table';
 import TableLayout from 'components/layouts/TableLayout';
 import { useSearch } from 'components/Search';
 import ActionsMenu from 'components/UI/Table/ActionsMenu';
-import { renderPrimaryLinkText } from 'components/UI/PrimaryLinkText';
+import { renderPrimaryLinkText } from 'components/UI/helpers/renderPrimaryLinkText';
 
 const testModule = Module.employeeManagement;
 const testSubModule = SubModule.employeeCatalog;

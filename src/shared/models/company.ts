@@ -11,6 +11,12 @@ export interface Company extends CompanyDTO {
   countryName?: Country['name'];
 }
 
+export interface CompanyOffboardingInstructionData {
+  branches?: number;
+  employees?: number;
+  departments?: number;
+}
+
 export type CompanyFieldConfig = {
   [K in keyof Company]: { field: K; name: string };
 };

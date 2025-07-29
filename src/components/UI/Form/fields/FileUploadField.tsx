@@ -23,6 +23,7 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({ name, label, ...props
             module={module}
             subModule={subModule}
             file={value}
+            disabled={props.disabled}
             onFileSelect={(file: File) => {
               onChange(file);
               onBlur();

@@ -29,16 +29,19 @@ const FormContent = <T,>({ fields, values, children }: FormContentProps<T>) => {
     throw new Error('FormContent must be used within a Form component using FormContext.');
   }
 
-  const { module, subModule } = context;
+  const { module, subModule, loading } = context;
   const {
     formState: { errors },
   } = reactHookFormContext();
   const generalErrorMessage = getGeneralErrorMessage<T>(errors, fields);
 
-  // TODO: hide form content while loading, cleanup CompanyOffboardingInstructionsPage
+  if (loading) {
+    return null;
+  }
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1, padding: 6, overflowY: 'auto' }}>
-      {fields ? (
+      {fields?.length ? (
         <Grid container spacing={4}>
           {fields.map((field) => (
             <Grid key={field.name} {...field.grid}>

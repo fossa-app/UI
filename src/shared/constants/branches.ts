@@ -2,8 +2,8 @@ import { Branch, BranchFieldConfig, IconType, Module, SubModule, UserRole } from
 import { FormActionType, FormFieldType, FormActionName, FormProps } from 'components/UI/Form';
 import { Action, Column } from 'components/UI/Table';
 import { ViewDetailActionName, ViewDetailActionType, ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
-import { renderBranchField } from 'pages/Manage/Branch/components/BranchField';
-import { renderBranchMapField } from 'pages/Manage/Branch/components/BranchMapField';
+import { renderBranchField } from 'pages/Manage/Branch/helpers/renderBranchField';
+import { renderBranchMapField } from 'pages/Manage/Branch/helpers/renderBranchMapField';
 import { ACTION_FIELD, ACTION_FIELDS } from './common';
 
 export const BRANCH_FIELDS: BranchFieldConfig = {

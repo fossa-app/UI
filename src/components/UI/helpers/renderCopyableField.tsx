@@ -4,14 +4,14 @@ import Typography from '@mui/material/Typography';
 import { Module, SubModule } from 'shared/models';
 import CopyToClipboard from 'components/UI/CopyToClipboard';
 
-interface CopyableFieldProps {
+interface CopyableFieldParams {
   module: Module;
   subModule: SubModule;
   text: string;
   label?: string;
 }
 
-export const renderCopyableField: React.FC<CopyableFieldProps> = ({ module, subModule, label, text }) => (
+export const renderCopyableField: React.FC<CopyableFieldParams> = ({ module, subModule, label, text }) => (
   <>
     {label && (
       <Typography data-cy={`${module}-${subModule}-copyable-field-label`} variant="body2" color="textSecondary">

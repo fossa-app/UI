@@ -27,7 +27,7 @@ import Table from 'components/UI/Table';
 import ActionsMenu from 'components/UI/Table/ActionsMenu';
 import TableLayout from 'components/layouts/TableLayout';
 import { useSearch } from 'components/Search';
-import { renderPrimaryLinkText } from 'components/UI/PrimaryLinkText';
+import { renderPrimaryLinkText } from 'components/UI/helpers/renderPrimaryLinkText';
 
 const testModule = Module.departmentManagement;
 const testSubModule = SubModule.departmentCatalog;

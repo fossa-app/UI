@@ -300,7 +300,7 @@ describe('Department Catalog Tests', () => {
           );
         });
 
-        it(`should ${isAdminRole ? '' : 'not '}be able to manually navigate to department management page`, () => {
+        it(`should ${isAdminRole ? '' : 'not '}be able to manually navigate to the Department Management page`, () => {
           interceptFetchDepartmentsRequest();
           interceptFetchEmployeesRequest();
           interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
@@ -314,7 +314,7 @@ describe('Department Catalog Tests', () => {
           });
         });
 
-        it('should be able to navigate by buttons to the department view page', () => {
+        it('should be able to navigate by buttons to the View Department page', () => {
           interceptFetchDepartmentsRequest();
           interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
           interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
@@ -367,7 +367,7 @@ describe('Department Catalog Tests', () => {
           );
         });
 
-        it('should be able to navigate to the department view page by clicking the department name cell', () => {
+        it('should be able to navigate to the View Department page by clicking the department name cell', () => {
           interceptFetchDepartmentsRequest();
           interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
           interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
@@ -456,7 +456,7 @@ describe('Department Catalog Tests', () => {
       getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should('have.length', 5);
     });
 
-    it('should be able to navigate by buttons to the department management page', () => {
+    it('should be able to navigate by buttons to the Department Management page', () => {
       interceptFetchDepartmentsRequest();
       interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
       interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
@@ -528,6 +528,26 @@ describe('Department Catalog Tests', () => {
         'not.exist'
       );
       getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('not.exist');
+
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 10 },
+        { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
+      );
+
+      getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
+      getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-parentDepartmentId').click();
+
+      getTestSelectorByModule(
+        Module.departmentManagement,
+        SubModule.departmentDetails,
+        'form-field-parentDepartmentId-option',
+        true
+      ).should('have.length', 4);
+      getTestSelectorByModule(
+        Module.departmentManagement,
+        SubModule.departmentDetails,
+        'form-field-parentDepartmentId-option-444444444448'
+      ).should('not.exist');
     });
   });
 });

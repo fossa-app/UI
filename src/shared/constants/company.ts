@@ -3,6 +3,7 @@ import {
   CompanyFieldConfig,
   CompanyLicense,
   CompanyLicenseFieldConfig,
+  CompanyOffboardingInstructionData,
   CompanySettingsFieldConfig,
   IconType,
   Module,
@@ -11,7 +12,8 @@ import {
 } from 'shared/models';
 import { FormActionType, FormFieldType, FormActionName, FormProps } from 'components/UI/Form';
 import { ViewDetailActionName, ViewDetailActionType, ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
-import { renderCopyableField } from 'components/UI/CopyableField';
+import { renderCopyableField } from 'components/UI/helpers/renderCopyableField';
+import { renderInstructionField } from 'pages/Manage/Offboarding/helpers/renderInstructionField';
 
 export const COMPANY_FIELDS: CompanyFieldConfig = {
   id: {
@@ -374,9 +376,6 @@ export const COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<CompanyS
       variant: 'text',
       color: 'secondary',
       'aria-label': 'Cancel Company Settings Button',
-      sx: {
-        marginLeft: 'auto',
-      },
     },
     {
       actionType: FormActionType.loadingButton,
@@ -408,11 +407,66 @@ export const CREATE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA: FormProps<CompanySetti
   ],
 };
 
-export const COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA: FormProps<any> = {
+export const COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA: FormProps<CompanyOffboardingInstructionData> = {
   module: Module.companyOffboardingInstructions,
   subModule: SubModule.offboardingDetails,
   title: 'Delete Branches, Departments & Offboard Employees',
-  fields: [],
+  fields: [
+    {
+      type: FormFieldType.section,
+      name: 'basicInfo',
+      label:
+        'Please ensure all branches and departments are deleted, and all employees are offboarded before proceeding to delete the company.',
+      grid: { size: { xs: 12 } },
+      roles: [UserRole.administrator],
+      variant: 'subtitle1',
+    },
+    {
+      type: FormFieldType.labelValue,
+      name: 'branches',
+      label: 'Remaining Branches',
+      grid: { size: { xs: 12 } },
+      roles: [UserRole.administrator],
+      renderField: (instructions) =>
+        renderInstructionField({
+          module: Module.companyOffboardingInstructions,
+          subModule: SubModule.offboardingDetails,
+          field: 'branches',
+          text: instructions?.branches ? `Remaining Branches: ${instructions.branches}` : 'All branches have been removed!',
+          color: instructions?.branches ? 'error' : 'success',
+        }),
+    },
+    {
+      type: FormFieldType.labelValue,
+      name: 'departments',
+      label: 'Remaining Departments',
+      grid: { size: { xs: 12 } },
+      roles: [UserRole.administrator],
+      renderField: (instructions) =>
+        renderInstructionField({
+          module: Module.companyOffboardingInstructions,
+          subModule: SubModule.offboardingDetails,
+          field: 'departments',
+          text: instructions?.departments ? `Remaining Departments: ${instructions.departments}` : 'All departments have been removed!',
+          color: instructions?.departments ? 'error' : 'success',
+        }),
+    },
+    {
+      type: FormFieldType.labelValue,
+      name: 'employees',
+      label: 'Active Employees',
+      grid: { size: { xs: 12 } },
+      roles: [UserRole.administrator],
+      renderField: (instructions) =>
+        renderInstructionField({
+          module: Module.companyOffboardingInstructions,
+          subModule: SubModule.offboardingDetails,
+          field: 'employees',
+          text: instructions?.employees ? `Active Employees: ${instructions.employees}` : 'All employees have been offboarded!',
+          color: instructions?.employees ? 'error' : 'success',
+        }),
+    },
+  ],
   actions: [],
 };
 
