@@ -1,13 +1,13 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 
-type RenderPrimaryLinkTextProps<T> = {
+type RenderPrimaryLinkTextParams<T> = {
   item: T;
   getText: (item: T) => string;
   onClick: (item: T) => void;
 };
 
-export const renderPrimaryLinkText = <T,>({ item, getText, onClick }: RenderPrimaryLinkTextProps<T>) => (
+export const renderPrimaryLinkText = <T,>({ item, getText, onClick }: RenderPrimaryLinkTextParams<T>) => (
   <Typography
     variant="body1"
     color="primary"

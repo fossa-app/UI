@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FieldValues, FieldErrors } from 'react-hook-form';
-import { renderCopyableField } from 'components/UI/CopyableField';
+import { renderCopyableField } from 'components/UI/helpers/renderCopyableField';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompany } from 'store/features/companySlice';
 import { selectCompanyLicense, uploadCompanyLicense } from 'store/features/licenseSlice';
@@ -53,6 +53,11 @@ const UploadCompanyLicensePage: React.FC = () => {
                 text: String(company?.id),
               }),
           };
+        case 'licenseFile':
+          return {
+            ...field,
+            disabled: !hasAllowedRole(field.roles, userRoles),
+          };
         default:
           return field;
       }
@@ -61,7 +66,7 @@ const UploadCompanyLicensePage: React.FC = () => {
 
   const errors = React.useMemo(() => {
     if (!isUserAdmin) {
-      return USER_PERMISSION_GENERAL_MESSAGE as unknown as FieldErrors<FieldValues>;
+      return USER_PERMISSION_GENERAL_MESSAGE;
     }
 
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
@@ -77,7 +82,7 @@ const UploadCompanyLicensePage: React.FC = () => {
             loading: updateStatus === 'loading',
           };
         case FormActionName.cancel:
-          return { ...action, onClick: handleSkip };
+          return { ...action, disabled: !hasAllowedRole(action.roles, userRoles), onClick: handleSkip };
         default:
           return action;
       }

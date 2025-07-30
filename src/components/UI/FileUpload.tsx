@@ -8,12 +8,13 @@ import { Module, SubModule } from 'shared/models';
 export type FileUploadProps = {
   module: Module;
   subModule: SubModule;
+  disabled?: boolean;
   accept?: string;
   file?: File;
   onFileSelect: (file: File) => void;
 } & BoxProps;
 
-const FileUpload: React.FC<FileUploadProps> = ({ module, subModule, file, accept = '*/*', onFileSelect, ...props }) => {
+const FileUpload: React.FC<FileUploadProps> = ({ module, subModule, file, accept = '*/*', disabled, onFileSelect, ...props }) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
 
@@ -25,8 +26,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ module, subModule, file, accept
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ...props.sx }} {...props}>
       <Input id="file-upload-input" type="file" onChange={handleFileChange} inputProps={{ accept }} style={{ display: 'none' }} />
-      <label htmlFor="file-upload-input">
-        <Button aria-label="Choose File" variant="contained" component="span">
+      <label htmlFor="file-upload-input" style={{ pointerEvents: disabled ? 'none' : 'auto' }}>
+        <Button aria-label="Choose File" variant="contained" component="span" disabled={disabled}>
           Choose File
         </Button>
       </label>

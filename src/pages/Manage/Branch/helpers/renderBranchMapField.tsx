@@ -3,11 +3,11 @@ import Typography from '@mui/material/Typography';
 import { Branch, Module, SubModule } from 'shared/models';
 import MapView from 'components/UI/Map';
 
-interface RenderBranchMapFieldProps {
+interface RenderBranchMapFieldParams {
   branch: Branch;
 }
 
-export const renderBranchMapField = ({ branch }: RenderBranchMapFieldProps) => {
+export const renderBranchMapField = ({ branch }: RenderBranchMapFieldParams) => {
   const noLocationTemplate = (
     <Typography data-cy={`${Module.branchManagement}-${SubModule.branchLocationDetails}-default-location`} variant="body1" color="error">
       Branch location map is unavailable.

@@ -3,14 +3,14 @@ import Typography from '@mui/material/Typography';
 import { Department } from 'shared/models';
 import { APP_CONFIG } from 'shared/constants';
 
-interface RenderDepartmentFieldProps {
+interface RenderDepartmentFieldParams {
   department: Department;
   field: keyof Department;
   tooltip?: string;
   onAction?: (department: Department) => void;
 }
 
-export const renderDepartmentField = ({ department, field, onAction }: RenderDepartmentFieldProps) => {
+export const renderDepartmentField = ({ department, field, onAction }: RenderDepartmentFieldParams) => {
   const value = department[field];
   const fieldValue = value ? `${value}` : APP_CONFIG.emptyValue;
 

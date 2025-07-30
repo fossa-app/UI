@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FieldErrors, FieldValues } from 'react-hook-form';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid2';
 import Button from '@mui/material/Button';
 import { useAppSelector } from 'store';
 import { selectCompanyOffboardingInstructionsFlags, selectIsUserAdmin } from 'store/features';
 import { COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA, ROUTES, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
+import { CompanyOffboardingInstructionData, RouteItem } from 'shared/models';
 import Form from 'components/UI/Form';
 
 const testModule = COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA.module;
@@ -16,61 +14,24 @@ const CompanyOffboardingInstructionsPage: React.FC = () => {
   const navigate = useNavigate();
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { status, branches, employees, departments } = useAppSelector(selectCompanyOffboardingInstructionsFlags);
-  const loading = React.useMemo(() => {
-    return status === 'idle' || status === 'loading';
-  }, [status]);
+  const loading = status === 'idle' || status === 'loading';
+  const values = React.useMemo(() => ({ branches, employees, departments }), [branches, employees, departments]);
 
   const errors = React.useMemo(() => {
     if (!isUserAdmin) {
-      return USER_PERMISSION_GENERAL_MESSAGE as unknown as FieldErrors<FieldValues>;
+      return USER_PERMISSION_GENERAL_MESSAGE;
     }
   }, [isUserAdmin]);
 
-  const handleNavigate = (path: string) => {
+  const handleNavigate = (path: RouteItem['path']) => {
     navigate(path);
   };
 
   return (
-    <Form module={testModule} subModule={testSubModule} errors={errors} loading={loading}>
+    <Form<CompanyOffboardingInstructionData> module={testModule} subModule={testSubModule} errors={errors} loading={loading}>
       <Form.Header>{COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA.title}</Form.Header>
 
-      {!loading && (
-        <Form.Content>
-          <Typography data-cy={`${testModule}-${testSubModule}-form-section-field-basicInfo`} variant="subtitle1">
-            Please ensure all branches and departments are deleted, and all employees are offboarded before proceeding to delete the
-            company.
-          </Typography>
-          <Grid container spacing={4}>
-            <Grid size={12}>
-              <Typography
-                data-cy={`${testModule}-${testSubModule}-form-field-value-branches`}
-                variant="subtitle1"
-                color={branches ? 'error' : 'success'}
-              >
-                {branches ? `Remaining Branches: ${branches}` : 'All branches have been removed!'}
-              </Typography>
-            </Grid>
-            <Grid size={12}>
-              <Typography
-                data-cy={`${testModule}-${testSubModule}-form-field-value-departments`}
-                variant="subtitle1"
-                color={departments ? 'error' : 'success'}
-              >
-                {departments ? `Remaining Departments: ${departments}` : 'All departments have been removed!'}
-              </Typography>
-            </Grid>
-            <Grid size={12}>
-              <Typography
-                data-cy={`${testModule}-${testSubModule}-form-field-value-employees`}
-                variant="subtitle1"
-                color={employees ? 'error' : 'success'}
-              >
-                {employees ? `Active Employees: ${employees}` : 'All employees have been offboarded!'}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Form.Content>
-      )}
+      <Form.Content fields={COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA.fields} values={values} />
 
       <Form.Actions>
         {branches ? (

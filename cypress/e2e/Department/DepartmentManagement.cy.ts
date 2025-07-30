@@ -155,7 +155,7 @@ describe('Department Management Tests', () => {
     cy.url().should('include', ROUTES.newDepartment.path);
   });
 
-  it('should be able to create a new department and be navigated back to department catalog page if the form is valid and the department creation succeeded', () => {
+  it('should be able to create a new department and be navigated back to the Department Catalog page if the form is valid and the department creation succeeded', () => {
     interceptFetchDepartmentsRequest();
     interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
     interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334] });
@@ -198,9 +198,20 @@ describe('Department Management Tests', () => {
       'have.text',
       'Set Design'
     );
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-parentDepartmentId').click();
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-parentDepartmentId-option', true).should(
+      'have.length',
+      5
+    );
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-parentDepartmentId-option-444444444448')
+      .should('exist')
+      .and('have.text', 'Set Design');
   });
 
-  it('should display not found page if the department was not found', () => {
+  it('should display Not Found page if the department was not found', () => {
     interceptFetchDepartmentsRequest();
     interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
     interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
@@ -214,7 +225,7 @@ describe('Department Management Tests', () => {
     cy.location('pathname').should('eq', ROUTES.flows.path);
   });
 
-  it('should reset the form and be navigated back to the department catalog page if the cancel button is clicked', () => {
+  it('should reset the form and be navigated back to the Department Catalog page if the cancel button is clicked', () => {
     interceptFetchDepartmentsRequest();
     interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
     interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
@@ -359,7 +370,7 @@ describe('Department Management Tests', () => {
       .and('contain.text', 'Failed to create a Department');
   });
 
-  it('should be able to edit the department and be navigated back to the department catalog page if the form is valid and department updating succeeded', () => {
+  it('should be able to edit the department and be navigated back to the Department Catalog page if the form is valid and department updating succeeded', () => {
     interceptFetchDepartmentsRequest();
     interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
     interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
@@ -429,6 +440,17 @@ describe('Department Management Tests', () => {
     getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
       .should('exist')
       .and('contain.text', 'Department has been successfully updated');
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-parentDepartmentId').click();
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-parentDepartmentId-option', true).should(
+      'have.length',
+      4
+    );
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-parentDepartmentId-option-444444444447')
+      .should('exist')
+      .and('have.text', 'Costume Updated');
   });
 
   it('should be able to navigate back when the back button is clicked', () => {

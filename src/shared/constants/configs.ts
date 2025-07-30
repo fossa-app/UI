@@ -1,4 +1,5 @@
 import { OidcClientSettings } from 'oidc-client-ts';
+import { FieldErrors, FieldValues } from 'react-hook-form';
 import { ColorSchemeId, CompanySettings, PaginationParams } from 'shared/models';
 
 export const OIDC_INITIAL_CONFIG: OidcClientSettings = {
@@ -114,9 +115,9 @@ export const MESSAGES = {
 export const USER_PERMISSION_GENERAL_MESSAGE = {
   '': {
     type: 'pattern',
-    message: [MESSAGES.error.general.permission],
+    message: MESSAGES.error.general.permission,
   },
-};
+} as FieldErrors<FieldValues>;
 
 export const STEP_KEY = 'step';
 

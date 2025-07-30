@@ -193,6 +193,10 @@ describe('Onboarding Flow Tests', () => {
             'have.attr',
             'disabled'
           );
+          getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-cancel-button').should(
+            'have.attr',
+            'disabled'
+          );
         }
 
         getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');

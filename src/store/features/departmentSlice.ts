@@ -207,6 +207,8 @@ export const createDepartment = createAsyncThunk<void, DepartmentDTO, { rejectVa
     try {
       await axios.post<void>(ENDPOINTS.departments, department);
 
+      dispatch(resetParentDepartments());
+
       dispatch(setSuccess(MESSAGES.success.departments.create));
     } catch (error) {
       dispatch(
@@ -228,6 +230,8 @@ export const editDepartment = createAsyncThunk<void, [string, Omit<DepartmentDTO
   async ([id, department], { dispatch, rejectWithValue }) => {
     try {
       await axios.put<void>(`${ENDPOINTS.departments}/${id}`, department);
+
+      dispatch(resetParentDepartments());
 
       dispatch(setSuccess(MESSAGES.success.departments.update));
     } catch (error) {
@@ -252,6 +256,7 @@ export const deleteDepartment = createAsyncThunk<void, DepartmentDTO['id'], { st
       await axios.delete<void>(`${ENDPOINTS.departments}/${id}`);
 
       dispatch(resetDepartmentsFetchStatus());
+      dispatch(resetParentDepartments());
       dispatch(setSuccess(MESSAGES.success.departments.delete));
     } catch (error) {
       dispatch(
@@ -284,6 +289,10 @@ const departmentSlice = createSlice({
     },
     resetParentDepartmentsFetchStatus(state) {
       state.parentDepartments.fetchStatus = initialState.parentDepartments.fetchStatus;
+    },
+    resetParentDepartments(state) {
+      state.parentDepartments.fetchStatus = initialState.parentDepartments.fetchStatus;
+      state.parentDepartments.data = initialState.parentDepartments.data;
     },
     resetDepartment(state) {
       state.department = initialState.department as WritableDraft<StateEntity<Department>>;
@@ -412,6 +421,7 @@ export const {
   resetDepartmentsPagination,
   updateParentDepartmentsPagination,
   resetDepartmentsFetchStatus,
+  resetParentDepartments,
   resetParentDepartmentsFetchStatus,
   resetDepartment,
 } = departmentSlice.actions;

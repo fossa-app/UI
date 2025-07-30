@@ -34,7 +34,7 @@ const CreateCompanyPage: React.FC = () => {
 
   const errors = React.useMemo(() => {
     if (!isUserAdmin) {
-      return USER_PERMISSION_GENERAL_MESSAGE as unknown as FieldErrors<FieldValues>;
+      return USER_PERMISSION_GENERAL_MESSAGE;
     }
 
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);

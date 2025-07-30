@@ -2,7 +2,7 @@ import { Department, DepartmentFieldConfig, IconType, Module, SubModule, UserRol
 import { FormActionType, FormFieldType, FormActionName, FormProps } from 'components/UI/Form';
 import { Action, Column } from 'components/UI/Table';
 import { ViewDetailActionName, ViewDetailActionType, ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
-import { renderDepartmentField } from 'pages/Manage/Department/components/DepartmentField';
+import { renderDepartmentField } from 'pages/Manage/Department/helpers/renderDepartmentField';
 import { ACTION_FIELD, ACTION_FIELDS } from './common';
 
 export const DEPARTMENT_FIELDS: DepartmentFieldConfig = {

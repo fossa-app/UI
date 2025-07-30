@@ -5,14 +5,14 @@ import { Branch } from 'shared/models';
 import { getNestedValue } from 'shared/helpers';
 import { APP_CONFIG } from 'shared/constants';
 
-interface RenderBranchFieldProps {
+interface RenderBranchFieldParams {
   branch: Branch;
   field: keyof Branch | string;
   tooltip?: string;
   onAction?: (branch: Branch) => void;
 }
 
-export const renderBranchField = ({ branch, field, tooltip, onAction }: RenderBranchFieldProps) => {
+export const renderBranchField = ({ branch, field, tooltip, onAction }: RenderBranchFieldParams) => {
   const value = getNestedValue(branch, field);
   const fieldValue = value ? `${value}` : APP_CONFIG.emptyValue;
   const isValid = (branch.isValid && value) || !value;

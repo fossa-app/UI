@@ -51,7 +51,7 @@ const Form = <T extends Item>({
   }, [watchedValues, onChange]);
 
   return (
-    <FormContext.Provider value={{ module, subModule }}>
+    <FormContext.Provider value={{ module, subModule, loading }}>
       <ReactHookFormProvider {...methods}>
         <Paper
           data-cy={`${module}-${subModule}-form`}

@@ -31,6 +31,8 @@ export const fetchCompanySettings = createAsyncThunk<CompanySettings, void, { re
     try {
       const { data } = await axios.get<CompanySettingsDTO>(ENDPOINTS.companySettings);
 
+      saveToLocalStorage(COMPANY_SETTINGS_KEY, data);
+
       return data || {};
     } catch (error) {
       return rejectWithValue({
@@ -124,7 +126,7 @@ const companySettingsSlice = createSlice({
       state.previewColorSchemeId = action.payload;
     },
     resetPreviewCompanyColorSchemeSettings: (state) => {
-      state.previewColorSchemeId = undefined;
+      state.previewColorSchemeId = initialState.previewColorSchemeId;
     },
   },
   extraReducers: (builder) => {
@@ -171,6 +173,7 @@ const companySettingsSlice = createSlice({
       })
       .addCase(deleteCompanySettings.fulfilled, (state) => {
         state.companySettings.data = initialState.companySettings.data;
+        state.previewColorSchemeId = initialState.previewColorSchemeId;
         state.companySettings.deleteStatus = 'succeeded';
       });
   },
