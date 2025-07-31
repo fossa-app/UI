@@ -20,7 +20,11 @@ interface OnboardingState {
       [OnboardingStep.companyLicense]: boolean;
     };
   };
-  employee: StateEntity<OnboardingStep>;
+  employee: StateEntity<OnboardingStep> & {
+    flags: {
+      [OnboardingStep.employee]: boolean;
+    };
+  };
 }
 
 const initialState: OnboardingState = {
@@ -40,6 +44,9 @@ const initialState: OnboardingState = {
   employee: {
     data: OnboardingStep.company,
     status: 'idle',
+    flags: {
+      [OnboardingStep.employee]: false,
+    },
   },
 };
 
@@ -61,6 +68,18 @@ const evaluateCompanyOnboardingStep = (state: WritableDraft<OnboardingState>) =>
   } else {
     state.company.data = OnboardingStep.company;
     state.company.status = 'failed';
+  }
+};
+
+const evaluateEmployeeOnboardingStep = (state: WritableDraft<OnboardingState>) => {
+  const { employee } = state.employee.flags;
+
+  if (employee) {
+    state.employee.data = OnboardingStep.completed;
+    state.employee.status = 'succeeded';
+  } else {
+    state.employee.data = OnboardingStep.employee;
+    state.employee.status = 'failed';
   }
 };
 
@@ -142,7 +161,8 @@ const onboardingSlice = createSlice({
         state.company.status = 'failed';
       })
       .addCase(fetchProfile.rejected, (state) => {
-        state.employee.status = 'failed';
+        state.employee.flags[OnboardingStep.employee] = false;
+        evaluateEmployeeOnboardingStep(state);
       })
       .addCase(fetchCompany.fulfilled, (state) => {
         state.company.flags[OnboardingStep.company] = true;
@@ -162,8 +182,8 @@ const onboardingSlice = createSlice({
         evaluateCompanyOnboardingStep(state);
       })
       .addCase(fetchProfile.fulfilled, (state) => {
-        state.employee.status = 'succeeded';
-        state.employee.data = OnboardingStep.completed;
+        state.employee.flags[OnboardingStep.employee] = true;
+        evaluateEmployeeOnboardingStep(state);
       })
       .addCase(deleteCompany.fulfilled, (state) => {
         state.company.data = OnboardingStep.company;

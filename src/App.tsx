@@ -4,7 +4,7 @@ import router from 'routes/router';
 import './setLeafletDefaultIcon';
 
 const App: React.FC = () => {
-  return <RouterProvider router={router} future={{ v7_startTransition: true }} />;
+  return <RouterProvider router={router} />;
 };
 
 export default App;

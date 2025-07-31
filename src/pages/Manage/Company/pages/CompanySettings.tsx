@@ -13,6 +13,7 @@ import { COMPANY_SETTINGS_FIELDS, COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEM
 import { CompanySettings, CompanySettingsDTO, ThemeMode } from 'shared/models';
 import { mapDisabledFields } from 'shared/helpers';
 import { COLOR_SCHEMES } from 'shared/themes';
+import { useUnmount } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
 import CompanySettingsRouteGuard from 'routes/guards/CompanySettingsRouteGuard';
@@ -37,17 +38,16 @@ const CompanySettingsPage: React.FC = () => {
 
   const handleChange = React.useCallback(
     (data: CompanySettingsDTO) => {
-      if (data.colorSchemeId && data.colorSchemeId !== companySettings.colorSchemeId) {
+      if (data.colorSchemeId) {
         dispatch(setPreviewCompanyColorSchemeSettings(data.colorSchemeId));
       }
     },
-    [companySettings.colorSchemeId, dispatch]
+    [dispatch]
   );
 
   const handleCancel = React.useCallback(() => {
     navigate(ROUTES.flows.path);
-    dispatch(resetPreviewCompanyColorSchemeSettings());
-  }, [navigate, dispatch]);
+  }, [navigate]);
 
   const filteredSchemes = React.useMemo(() => {
     return Object.fromEntries(Object.entries(COLOR_SCHEMES).filter(([, scheme]) => scheme[mode]));
@@ -83,6 +83,10 @@ const CompanySettingsPage: React.FC = () => {
       }),
     [updateStatus, handleCancel]
   );
+
+  useUnmount(() => {
+    dispatch(resetPreviewCompanyColorSchemeSettings());
+  });
 
   return (
     <CompanySettingsRouteGuard>

@@ -10,6 +10,7 @@ import {
   interceptFetchCompanyLicenseRequest,
   interceptUploadCompanyLicenseFailedRequest,
   interceptFetchCompanyLicenseFailedRequest,
+  interceptFetchCompanySettingsRequest,
 } from 'support/interceptors';
 
 describe('License Tests', () => {
@@ -50,6 +51,7 @@ describe('License Tests', () => {
 
       it('should not display the company license if the onboarding has not been completed', () => {
         interceptFetchCompanyRequest();
+        interceptFetchCompanySettingsRequest();
         interceptFetchCompanyLicenseFailedRequest();
         interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
         interceptFetchProfileRequest();
@@ -61,6 +63,7 @@ describe('License Tests', () => {
 
       it('should display correct company license if the company license has been successfully uploaded', () => {
         interceptFetchCompanyRequest();
+        interceptFetchCompanySettingsRequest();
         interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 });
         interceptFetchProfileRequest();
         interceptFetchCompanyLicenseRequest();

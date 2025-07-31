@@ -2,6 +2,7 @@ import { COMPANY_SETTINGS_KEY, ROUTES } from 'shared/constants';
 import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
+  clickFlowsIcon,
   clickSubFlow,
   getLinearLoader,
   getTestSelectorByModule,
@@ -239,6 +240,29 @@ describe('Company Settings Tests', () => {
 
       verifyRadioGroupValue('color-scheme-group', 'sunset', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
       verifyAppTheme('light', 'sunset');
+
+      getTestSelectorByModule(Module.shared, SubModule.header, 'theme-button').click();
+      selectColorScheme(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-lavender');
+
+      verifyRadioGroupValue('color-scheme-group', 'lavender', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyAppTheme('dark', 'lavender');
+
+      getTestSelectorByModule(Module.companyManagement, SubModule.companySettingsDetails, 'form-cancel-button').click();
+
+      cy.location('pathname').should('eq', ROUTES.flows.path);
+      verifyAppTheme('dark', 'midnight');
+
+      clickSubFlow('Company Settings');
+
+      cy.url().should('include', ROUTES.companySettings.path);
+      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyAppTheme('dark', 'midnight');
+
+      selectColorScheme(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-sunrise');
+      clickFlowsIcon();
+
+      cy.location('pathname').should('eq', ROUTES.flows.path);
+      verifyAppTheme('dark', 'midnight');
     });
   });
 });

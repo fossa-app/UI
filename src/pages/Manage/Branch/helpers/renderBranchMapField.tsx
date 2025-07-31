@@ -4,7 +4,7 @@ import { Branch, Module, SubModule } from 'shared/models';
 import MapView from 'components/UI/Map';
 
 interface RenderBranchMapFieldParams {
-  branch: Branch;
+  branch?: Branch;
 }
 
 export const renderBranchMapField = ({ branch }: RenderBranchMapFieldParams) => {

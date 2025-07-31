@@ -24,13 +24,23 @@ interface BaseViewDetailActionProps {
   roles?: UserRole[];
 }
 
-export interface ViewDetailFieldProps<T> {
+interface BaseViewDetailFieldProps {
   label: string;
   name: string;
-  type: ViewDetailType;
   grid?: GridBaseProps;
-  renderDetailField?: (item: T) => React.ReactNode;
 }
+
+interface CustomRenderDetailFieldProps<T> extends BaseViewDetailFieldProps {
+  type?: never;
+  renderDetailField: (item?: T) => React.ReactNode;
+}
+
+interface StandardViewDetailFieldProps extends BaseViewDetailFieldProps {
+  type: ViewDetailType;
+  renderDetailField?: never;
+}
+
+export type ViewDetailFieldProps<T> = StandardViewDetailFieldProps | CustomRenderDetailFieldProps<T>;
 
 type ViewDetailActionButtonProps = BaseViewDetailActionProps & {
   actionType: ViewDetailActionType.button;

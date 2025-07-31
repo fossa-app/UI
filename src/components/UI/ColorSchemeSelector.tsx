@@ -34,7 +34,7 @@ const ColorSchemeSelector: React.FC<ColorSchemeSelectorProps> = ({
   };
 
   return (
-    <RadioGroup value={selectedScheme} onChange={handleChange} name="color-scheme-group">
+    <RadioGroup value={selectedScheme ?? ''} onChange={handleChange} name="color-scheme-group">
       <Grid container spacing={3}>
         {availableSchemes.map(([schemeId, scheme]) => {
           const colors = scheme[mode]!;

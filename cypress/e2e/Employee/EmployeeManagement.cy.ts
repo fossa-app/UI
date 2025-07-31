@@ -410,8 +410,8 @@ describe('Employee Management Tests', () => {
         { alias: 'fetchAssignedBranchesRequestPage2', fixture: 'branch/branches-multiple-page-two' }
       );
 
-      cy.get('[role="listbox"]').should('exist');
-      cy.get('[role="listbox"]').then(($listbox) => {
+      cy.get('[role="list-box"]').should('exist');
+      cy.get('[role="list-box"]').then(($listbox) => {
         $listbox[0].scrollTop = $listbox[0].scrollHeight;
         $listbox[0].dispatchEvent(new Event('scroll', { bubbles: true }));
       });
@@ -428,7 +428,7 @@ describe('Employee Management Tests', () => {
         { alias: 'fetchAssignedBranchesRequestPage3', fixture: 'branch/branches-multiple-page-three' }
       );
 
-      cy.get('[role="listbox"]').then(($listbox) => {
+      cy.get('[role="list-box"]').then(($listbox) => {
         $listbox[0].scrollTop = $listbox[0].scrollHeight;
         $listbox[0].dispatchEvent(new Event('scroll', { bubbles: true }));
       });
@@ -442,7 +442,7 @@ describe('Employee Management Tests', () => {
 
       cy.intercept('GET', '**/Branches?pageNumber=4&pageSize=10').as('fetchAssignedBranchesRequestPage4');
 
-      cy.get('[role="listbox"]').scrollTo('bottom');
+      cy.get('[role="list-box"]').scrollTo('bottom');
 
       cy.get('@fetchAssignedBranchesRequestPage4.all').should('have.length', 0);
     });

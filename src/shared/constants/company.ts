@@ -192,11 +192,10 @@ export const UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA: FormProps<CompanyLicens
   title: 'Company License Details',
   fields: [
     {
-      // TODO: this type is unnecessary, it won't render the LabelValueField component in any case
-      type: FormFieldType.labelValue,
       name: 'companyId',
       label: 'Company ID',
       grid: { size: { xs: 12 } },
+      renderField: () => null,
     },
     {
       type: FormFieldType.fileUpload,
@@ -258,12 +257,12 @@ export const COMPANY_VIEW_DETAILS_SCHEMA: ViewDetailProps<Company> = {
     {
       name: COMPANY_FIELDS.id!.field,
       label: COMPANY_FIELDS.id!.name,
-      type: ViewDetailType.labelValue,
       grid: { size: { xs: 12 } },
       renderDetailField: (company) =>
         renderCopyableField({
           module: COMPANY_VIEW_DETAILS_SCHEMA.module,
           subModule: COMPANY_VIEW_DETAILS_SCHEMA.subModule,
+          label: COMPANY_FIELDS.id!.name,
           text: String(company?.id),
         }),
     },
@@ -422,45 +421,42 @@ export const COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA: FormProps<CompanyOffb
       variant: 'subtitle1',
     },
     {
-      type: FormFieldType.labelValue,
       name: 'branches',
       label: 'Remaining Branches',
       grid: { size: { xs: 12 } },
       roles: [UserRole.administrator],
       renderField: (instructions) =>
         renderInstructionField({
-          module: Module.companyOffboardingInstructions,
-          subModule: SubModule.offboardingDetails,
+          module: COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA.module,
+          subModule: COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA.subModule,
           field: 'branches',
           text: instructions?.branches ? `Remaining Branches: ${instructions.branches}` : 'All branches have been removed!',
           color: instructions?.branches ? 'error' : 'success',
         }),
     },
     {
-      type: FormFieldType.labelValue,
       name: 'departments',
       label: 'Remaining Departments',
       grid: { size: { xs: 12 } },
       roles: [UserRole.administrator],
       renderField: (instructions) =>
         renderInstructionField({
-          module: Module.companyOffboardingInstructions,
-          subModule: SubModule.offboardingDetails,
+          module: COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA.module,
+          subModule: COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA.subModule,
           field: 'departments',
           text: instructions?.departments ? `Remaining Departments: ${instructions.departments}` : 'All departments have been removed!',
           color: instructions?.departments ? 'error' : 'success',
         }),
     },
     {
-      type: FormFieldType.labelValue,
       name: 'employees',
       label: 'Active Employees',
       grid: { size: { xs: 12 } },
       roles: [UserRole.administrator],
       renderField: (instructions) =>
         renderInstructionField({
-          module: Module.companyOffboardingInstructions,
-          subModule: SubModule.offboardingDetails,
+          module: COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA.module,
+          subModule: COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA.subModule,
           field: 'employees',
           text: instructions?.employees ? `Active Employees: ${instructions.employees}` : 'All employees have been offboarded!',
           color: instructions?.employees ? 'error' : 'success',
