@@ -80,9 +80,10 @@ describe('Branch View Tests', () => {
         cy.wait('@fetchBranchByIdRequest');
 
         testBranchFields();
-        getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-value-timeZoneName')
-          .find('p')
-          .should('not.have.attr', 'data-invalid');
+        getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-details-value-timeZoneName').should(
+          'not.have.attr',
+          'data-invalid'
+        );
 
         getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'page-title-back-button').click();
 
@@ -136,9 +137,10 @@ describe('Branch View Tests', () => {
         ];
 
         invalidFields.forEach((field) => {
-          getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, `view-details-value-${field}`)
-            .find('p')
-            .should('have.attr', 'data-invalid');
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, `view-details-value-${field}`).should(
+            'have.attr',
+            'data-invalid'
+          );
         });
       });
 
@@ -158,9 +160,10 @@ describe('Branch View Tests', () => {
         ];
 
         emptyFields.forEach((field) => {
-          getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, `view-details-value-${field}`)
-            .find('p')
-            .should('have.text', '-');
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, `view-details-value-${field}`).should(
+            'have.text',
+            '-'
+          );
         });
       });
 

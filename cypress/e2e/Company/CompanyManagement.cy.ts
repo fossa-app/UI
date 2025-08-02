@@ -107,16 +107,13 @@ describe('Company Management Tests', () => {
         verifyTextFields(Module.companyManagement, SubModule.companyViewDetails, {
           'view-details-header': 'Company Details',
           'view-details-section-basicInfo': 'Basic Information',
-          'view-details-label-id': 'ID',
           'view-details-label-name': 'Name',
           'view-details-value-name': 'Good Omens',
           'view-details-label-countryName': 'Country',
           'view-details-value-countryName': 'United States',
+          'copyable-field-label': 'ID',
+          'copyable-field-value': '111111111111',
         });
-        getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'copyable-field-label').should('not.exist');
-        getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'copyable-field-value')
-          .should('exist')
-          .and('have.text', '111111111111');
         getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should(
           viewActionButtonExists ? 'exist' : 'not.exist'
         );
@@ -199,7 +196,6 @@ describe('Company Management Tests', () => {
         .should('have.value', 'US');
     });
 
-    // TODO: flaky test
     it('should not be able to edit the company if the form is invalid or company update failed', () => {
       interceptEditCompanyFailedRequest();
       cy.visit(ROUTES.viewCompany.path);
@@ -212,7 +208,10 @@ describe('Company Management Tests', () => {
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-submit-button').should('not.have.attr', 'disabled');
 
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name').find('input').clear();
+      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name')
+        .find('input')
+        .should('have.value', 'Good Omens')
+        .clear();
 
       clickActionButton(Module.companyManagement, SubModule.companyDetails);
 
@@ -232,6 +231,7 @@ describe('Company Management Tests', () => {
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
         .should('exist')
         .and('contain.text', 'Failed to update the Company');
+      cy.url().should('include', ROUTES.editCompany.path);
     });
 
     it('should display async validation messages if the company update failed with validation errors', () => {

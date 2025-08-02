@@ -6,6 +6,8 @@ import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 import { APP_CONFIG } from 'shared/constants';
 import { AutocompleteFieldProps, FieldOption } from '../form.model';
 import { useFormContext } from '../FormContext';
@@ -32,11 +34,9 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ label, name, opti
     const { scrollTop, scrollHeight, clientHeight } = listboxRef.current;
     const isAtBottom = scrollHeight - scrollTop <= clientHeight + 10;
 
-    if (isAtBottom && !hasReachedEnd.current) {
+    if (isAtBottom && !hasReachedEnd.current && !loading) {
       hasReachedEnd.current = true;
       onScrollEnd();
-    } else if (!isAtBottom && hasReachedEnd.current) {
-      hasReachedEnd.current = false;
     }
   };
 
@@ -47,6 +47,12 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ label, name, opti
       }, APP_CONFIG.searchDebounceTime),
     [onInputChange]
   );
+
+  React.useEffect(() => {
+    if (!loading) {
+      hasReachedEnd.current = false;
+    }
+  }, [loading]);
 
   return (
     <FormControl fullWidth variant="filled" error={!!error}>
@@ -72,6 +78,7 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ label, name, opti
             }}
             slotProps={{
               listbox: {
+                role: 'list-box',
                 ref: (node: HTMLElement | null) => {
                   if (listboxRef.current && listboxRef.current !== node) {
                     listboxRef.current.removeEventListener('scroll', handleScroll);
@@ -92,6 +99,30 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ label, name, opti
                 label={label}
                 variant="filled"
                 error={!!error}
+                slotProps={{
+                  input: {
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        {loading ? (
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              position: 'absolute',
+                              right: 64,
+                              top: '50%',
+                              transform: 'translate(0, -50%)',
+                            }}
+                          >
+                            <CircularProgress size={20} color="inherit" />
+                          </Box>
+                        ) : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  },
+                }}
               />
             )}
             renderOption={(renderOptionProps, option) => (

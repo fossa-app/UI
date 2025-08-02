@@ -288,7 +288,6 @@ export const deleteBranch = createAsyncThunk<void, BranchDTO['id'], { state: Roo
   }
 );
 
-// TODO: move to a separate slice
 export const fetchGeoAddress = createAsyncThunk<GeoAddress | undefined, string | undefined>('location/geocodeAddress', async (address) => {
   if (!address) {
     return;

@@ -123,9 +123,11 @@ describe('Department View Tests', () => {
 
         cy.wait('@fetchDepartmentByIdRequest');
 
-        getTestSelectorByModule(Module.departmentManagement, SubModule.departmentViewDetails, 'view-details-value-parentDepartmentName')
-          .find('p')
-          .should('have.text', '-');
+        getTestSelectorByModule(
+          Module.departmentManagement,
+          SubModule.departmentViewDetails,
+          'view-details-value-parentDepartmentName'
+        ).should('have.text', '-');
       });
 
       it('should display not found page if the department was not found', () => {
@@ -170,8 +172,7 @@ describe('Department View Tests', () => {
 
       selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'view', '444444444444');
 
-      cy.wait('@fetchDepartmentByIdRequest');
-      cy.wait('@fetchEmployeeByIdRequest');
+      cy.wait(['@fetchDepartmentByIdRequest', '@fetchEmployeeByIdRequest']);
       // TODO: flaky test, waiting solves the issue
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(200);

@@ -279,9 +279,16 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewDetailProps<Branch> = {
     {
       name: BRANCH_FIELDS.timeZoneName!.field,
       label: 'TimeZone',
-      type: ViewDetailType.labelValue,
       grid: { size: { xs: 12, md: 6 } },
-      renderDetailField: (branch) => renderBranchField({ branch, field: BRANCH_FIELDS.timeZoneName!.field, tooltip: 'Invalid TimeZone' }),
+      renderDetailField: (branch) =>
+        renderBranchField({
+          branch,
+          module: BRANCH_VIEW_DETAILS_SCHEMA.module,
+          subModule: BRANCH_VIEW_DETAILS_SCHEMA.subModule,
+          field: BRANCH_FIELDS.timeZoneName!.field,
+          label: 'TimeZone',
+          tooltip: 'Invalid TimeZone',
+        }),
     },
     {
       name: BRANCH_FIELDS.address.field,
@@ -292,72 +299,84 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewDetailProps<Branch> = {
     {
       name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
       label: 'Address Line 1',
-      type: ViewDetailType.labelValue,
       grid: { size: { xs: 12, md: 6 } },
       renderDetailField: (branch) =>
         renderBranchField({
           branch,
+          module: BRANCH_VIEW_DETAILS_SCHEMA.module,
+          subModule: BRANCH_VIEW_DETAILS_SCHEMA.subModule,
           field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
+          label: 'Address Line 1',
           tooltip: 'Invalid Address Line 1',
         }),
     },
     {
       name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
       label: 'Address Line 2',
-      type: ViewDetailType.labelValue,
       grid: { size: { xs: 12, md: 6 } },
       renderDetailField: (branch) =>
         renderBranchField({
           branch,
+          module: BRANCH_VIEW_DETAILS_SCHEMA.module,
+          subModule: BRANCH_VIEW_DETAILS_SCHEMA.subModule,
           field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
+          label: 'Address Line 2',
           tooltip: 'Invalid Address Line 2',
         }),
     },
     {
       name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.city!.field}`,
       label: 'City',
-      type: ViewDetailType.labelValue,
       grid: { size: { xs: 12, md: 6 } },
       renderDetailField: (branch) =>
         renderBranchField({
           branch,
+          module: BRANCH_VIEW_DETAILS_SCHEMA.module,
+          subModule: BRANCH_VIEW_DETAILS_SCHEMA.subModule,
           field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.city!.field}`,
+          label: 'City',
           tooltip: 'Invalid City',
         }),
     },
     {
       name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.subdivision!.field}`,
       label: 'State',
-      type: ViewDetailType.labelValue,
       grid: { size: { xs: 12, md: 6 } },
       renderDetailField: (branch) =>
         renderBranchField({
           branch,
+          module: BRANCH_VIEW_DETAILS_SCHEMA.module,
+          subModule: BRANCH_VIEW_DETAILS_SCHEMA.subModule,
           field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.subdivision!.field}`,
+          label: 'State',
           tooltip: 'Invalid State',
         }),
     },
     {
       name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryName!.field}`,
       label: 'Country',
-      type: ViewDetailType.labelValue,
       grid: { size: { xs: 12, md: 6 } },
       renderDetailField: (branch) =>
         renderBranchField({
           branch,
+          module: BRANCH_VIEW_DETAILS_SCHEMA.module,
+          subModule: BRANCH_VIEW_DETAILS_SCHEMA.subModule,
           field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.countryName!.field}`,
+          label: 'Country',
           tooltip: 'Invalid Country',
         }),
     },
     {
       name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
       label: 'Postal Code',
-      type: ViewDetailType.labelValue,
       grid: { size: { xs: 12, md: 6 } },
       renderDetailField: (branch) =>
         renderBranchField({
           branch,
+          module: BRANCH_VIEW_DETAILS_SCHEMA.module,
+          subModule: BRANCH_VIEW_DETAILS_SCHEMA.subModule,
           field: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.postalCode!.field}`,
+          label: 'Postal Code',
           tooltip: 'Invalid Postal Code',
         }),
     },
@@ -370,7 +389,6 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewDetailProps<Branch> = {
     {
       name: `${BRANCH_FIELDS.geoAddress.field}.${BRANCH_FIELDS.geoAddress.label.field}`,
       label: '',
-      type: ViewDetailType.labelValue,
       grid: { size: { xs: 8 } },
       renderDetailField: (branch) => renderBranchMapField({ branch }),
     },
@@ -398,13 +416,27 @@ export const BRANCH_TABLE_SCHEMA: Column<Branch>[] = [
     name: BRANCH_FIELDS.timeZoneName!.name,
     field: BRANCH_FIELDS.timeZoneName!.field,
     width: 240,
-    renderBodyCell: (branch) => renderBranchField({ branch, field: BRANCH_FIELDS.timeZoneName!.field, tooltip: 'Invalid TimeZone' }),
+    renderBodyCell: (branch) =>
+      renderBranchField({
+        branch,
+        module: Module.branchManagement,
+        subModule: SubModule.branchCatalog,
+        field: BRANCH_FIELDS.timeZoneName!.field,
+        tooltip: 'Invalid TimeZone',
+      }),
   },
   {
     name: BRANCH_FIELDS.fullAddress!.name,
     field: BRANCH_FIELDS.fullAddress!.field,
     width: 'auto',
-    renderBodyCell: (branch) => renderBranchField({ branch, field: BRANCH_FIELDS.fullAddress!.field, tooltip: 'Invalid Address' }),
+    renderBodyCell: (branch) =>
+      renderBranchField({
+        branch,
+        module: Module.branchManagement,
+        subModule: SubModule.branchCatalog,
+        field: BRANCH_FIELDS.fullAddress!.field,
+        tooltip: 'Invalid Address',
+      }),
   },
   {
     name: ACTION_FIELD.name,

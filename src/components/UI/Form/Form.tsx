@@ -36,12 +36,17 @@ const Form = <T extends Item>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
     defaultValues,
-    values,
     errors,
   });
 
   const watchedValues = methods.watch();
   const prevValuesRef = React.useRef<T>();
+
+  React.useEffect(() => {
+    if (values && !methods.formState.isDirty) {
+      methods.reset(values);
+    }
+  }, [values, methods]);
 
   React.useEffect(() => {
     if (onChange && !deepEqual(watchedValues, prevValuesRef.current!)) {

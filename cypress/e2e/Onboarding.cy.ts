@@ -865,19 +865,28 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchProfileFailedRequest');
 
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-firstName').find('input').clear();
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-lastName').find('input').clear();
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-fullName').find('input').clear();
+      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-firstName')
+        .find('input')
+        .should('have.value', 'Admin')
+        .clear();
+      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-lastName')
+        .find('input')
+        .should('have.value', 'Mock')
+        .clear();
+      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-fullName')
+        .find('input')
+        .should('have.value', 'Admin Oidc Mock')
+        .clear();
 
       clickActionButton(Module.createEmployee, SubModule.employeeDetails);
 
       getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-firstName-validation')
         .should('exist')
         .and('have.text', 'First Name is required');
-
       getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-lastName-validation')
         .should('exist')
         .and('have.text', 'Last Name is required');
+      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-fullName-validation').should('not.exist');
     });
 
     it('should display async validation messages if the employee creation failed with validation errors', () => {
@@ -891,12 +900,21 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchProfileFailedRequest');
 
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-firstName').find('input').clear();
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-firstName').find('input').type('Joe');
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-lastName').find('input').clear();
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-lastName').find('input').type('Joe');
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-fullName').find('input').clear();
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-fullName').find('input').type('Joe Joe');
+      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-firstName')
+        .find('input')
+        .should('have.value', 'Admin')
+        .clear()
+        .type('Joe');
+      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-lastName')
+        .find('input')
+        .should('have.value', 'Mock')
+        .clear()
+        .type('Joe');
+      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-fullName')
+        .find('input')
+        .should('have.value', 'Admin Oidc Mock')
+        .clear()
+        .type('Joe Joe');
 
       clickActionButton(Module.createEmployee, SubModule.employeeDetails);
 
@@ -1359,6 +1377,11 @@ describe('Onboarding Flow Tests', () => {
 
       verifyRadioGroupValue('color-scheme-group', 'sunset', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
       verifyAppTheme('light', 'sunset');
+
+      clickFlowsIcon();
+
+      cy.location('pathname').should('eq', ROUTES.flows.path);
+      verifyAppTheme('light', 'midnight');
     });
   });
 });

@@ -50,7 +50,7 @@ const ViewDetailsContent = <T,>({ fields, values, noValuesTemplate, children }: 
 
               return (
                 <Grid key={field.name} {...field.grid}>
-                  <Detail values={values} {...field} />
+                  {field.renderDetailField ? field.renderDetailField(values) : <Detail values={values} {...field} />}
                 </Grid>
               );
             })}

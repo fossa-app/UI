@@ -8,6 +8,7 @@ import {
   createCompanySettings,
   selectIsUserAdmin,
   setPreviewCompanyColorSchemeSettings,
+  resetPreviewCompanyColorSchemeSettings,
 } from 'store/features';
 import {
   DEFAULT_COMPANY_SETTINGS,
@@ -18,6 +19,7 @@ import {
 import { CompanySettings, CompanySettingsDTO, ThemeMode } from 'shared/models';
 import { deepCopyObject, hasAllowedRole, mapDisabledFields } from 'shared/helpers';
 import { COLOR_SCHEMES } from 'shared/themes';
+import { useUnmount } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
 
@@ -84,6 +86,10 @@ const CreateCompanySettingsPage: React.FC = () => {
 
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
   }, [error?.errors, isUserAdmin]);
+
+  useUnmount(() => {
+    dispatch(resetPreviewCompanyColorSchemeSettings());
+  });
 
   return (
     <PageLayout module={testModule} subModule={testSubModule} pageTitle="Company Settings">

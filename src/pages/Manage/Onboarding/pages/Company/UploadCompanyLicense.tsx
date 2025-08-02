@@ -45,6 +45,7 @@ const UploadCompanyLicensePage: React.FC = () => {
         case 'companyId':
           return {
             ...field,
+            type: undefined,
             renderField: () =>
               renderCopyableField({
                 module: testModule,

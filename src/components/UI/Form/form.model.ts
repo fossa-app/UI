@@ -45,10 +45,19 @@ export enum FormActionName {
 interface BaseFormFieldProps {
   label: string;
   name: string;
-  type: FormFieldType;
   roles?: UserRole[];
   grid?: GridBaseProps;
   rules?: FormControlRules;
+}
+
+interface CustomRenderFormFieldProps<T> extends BaseFormFieldProps {
+  type?: never;
+  renderField: (item?: T) => React.ReactNode;
+}
+
+interface StandardFormFieldProps extends BaseFormFieldProps {
+  type: FormFieldType;
+  renderField?: never;
 }
 
 interface FormBaseActionProps {
@@ -113,17 +122,20 @@ export type ColorSchemeFieldProps = BaseFormFieldProps & {
   disabled?: boolean;
 };
 
-export type FormFieldProps<T> = { renderField?: (item?: T) => React.ReactNode } & (
-  | SectionFieldProps
-  | LabelValueFieldProps
-  | InputFieldProps
-  | AutocompleteFieldProps
-  | SelectFieldProps
-  | CheckboxFieldProps
-  | SwitchFieldProps
-  | FileUploadFieldProps
-  | ColorSchemeFieldProps
-);
+export type FormFieldProps<T> =
+  | (StandardFormFieldProps &
+      (
+        | SectionFieldProps
+        | LabelValueFieldProps
+        | InputFieldProps
+        | AutocompleteFieldProps
+        | SelectFieldProps
+        | CheckboxFieldProps
+        | SwitchFieldProps
+        | FileUploadFieldProps
+        | ColorSchemeFieldProps
+      ))
+  | CustomRenderFormFieldProps<T>;
 
 type FormActionButtonProps = FormBaseActionProps & {
   actionType: FormActionType.button;

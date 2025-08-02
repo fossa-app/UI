@@ -606,8 +606,8 @@ describe('Department Management Tests', () => {
       { alias: 'fetchParentDepartmentsRequestPage2', fixture: 'department/departments-multiple-page-two' }
     );
 
-    cy.get('[role="listbox"]').should('exist');
-    cy.get('[role="listbox"]').then(($listbox) => {
+    cy.get('[role="list-box"]').should('exist');
+    cy.get('[role="list-box"]').then(($listbox) => {
       $listbox[0].scrollTop = $listbox[0].scrollHeight;
       $listbox[0].dispatchEvent(new Event('scroll', { bubbles: true }));
     });
@@ -621,7 +621,7 @@ describe('Department Management Tests', () => {
 
     cy.intercept('GET', '**/Departments?pageNumber=3&pageSize=10').as('fetchParentDepartmentsRequestPage3');
 
-    cy.get('[role="listbox"]').then(($listbox) => {
+    cy.get('[role="list-box"]').then(($listbox) => {
       $listbox[0].scrollTop = $listbox[0].scrollHeight;
       $listbox[0].dispatchEvent(new Event('scroll', { bubbles: true }));
     });
