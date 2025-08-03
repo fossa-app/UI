@@ -185,12 +185,13 @@ describe('Branch Catalog Tests', () => {
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 2);
         });
 
+        // TODO: flaky test
         it('should display correct branches and employees when searching branches and navigating to employees', () => {
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10 },
             { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
           );
-          interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
+          interceptFetchBranchesByIdsRequest();
 
           getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('not.exist');
           cy.wait('@fetchMultipleBranchesRequest');

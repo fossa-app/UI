@@ -411,7 +411,6 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-layout-action-button').click();
 
     cy.url().should('include', ROUTES.newBranch.path);
-    // TODO: flaky part
     verifyInputFields(Module.branchManagement, SubModule.branchDetails, {
       'form-field-name': '',
       'form-field-timeZoneId': '',
@@ -458,7 +457,7 @@ describe('Branch Management Tests', () => {
   it('should reset the form when navigating to an employee page and back to the branch creation page', () => {
     interceptFetchEmployeeByIdRequest('333333333335');
     interceptFetchBranchByIdRequest('222222222222');
-    interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
+    interceptFetchBranchesByIdsRequest();
     interceptFetchEmployeesRequest(
       { pageNumber: 1, pageSize: 10 },
       { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }

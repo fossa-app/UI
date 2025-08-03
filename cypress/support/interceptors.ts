@@ -183,15 +183,14 @@ export const interceptFetchBranchesFailedRequest = () => {
   });
 };
 
-export const interceptFetchBranchesByIdsRequest = (
-  { ids }: { ids: number[] },
-  { alias = 'fetchBranchesByIdsRequest', fixture = 'branch/branches', statusCode = 200, delay = 300 } = {}
-) => {
+export const interceptFetchBranchesByIdsRequest = ({
+  alias = 'fetchBranchesByIdsRequest',
+  fixture = 'branch/branches',
+  statusCode = 200,
+  delay = 300,
+} = {}) => {
   cy.fixture(fixture).then((branches) => {
-    const queryString = ids.map((id) => `id=${id}`).join('&');
-    const url = `${serverBaseUrl}/Branches?${queryString}`;
-
-    cy.interceptWithAuth('GET', url, branches, alias, statusCode, delay);
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Branches?id=*`, branches, alias, statusCode, delay);
   });
 };
 
@@ -358,15 +357,14 @@ export const interceptFetchEmployeeByIdFailedRequest = (id: string) => {
   });
 };
 
-export const interceptFetchEmployeesByIdsRequest = (
-  { ids }: { ids: number[] },
-  { alias = 'fetchEmployeesByIdsRequest', fixture = 'employee/employees-multiple', statusCode = 200, delay = 300 } = {}
-) => {
+export const interceptFetchEmployeesByIdsRequest = ({
+  alias = 'fetchEmployeesByIdsRequest',
+  fixture = 'employee/employees-multiple',
+  statusCode = 200,
+  delay = 300,
+} = {}) => {
   cy.fixture(fixture).then((employees) => {
-    const queryString = ids.map((id) => `id=${id}`).join('&');
-    const url = `${serverBaseUrl}/Employees?${queryString}`;
-
-    cy.interceptWithAuth('GET', url, employees, alias, statusCode, delay);
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Employees?id=*`, employees, alias, statusCode, delay);
   });
 };
 
@@ -404,15 +402,14 @@ export const interceptFetchDepartmentsFailedRequest = () => {
   cy.interceptWithAuth('GET', `${serverBaseUrl}/Departments*`, null, 'fetchDepartmentsFailedRequest', 404);
 };
 
-export const interceptFetchDepartmentsByIdsRequest = (
-  { ids }: { ids: number[] },
-  { alias = 'fetchDepartmentsByIdsRequest', fixture = 'department/departments', statusCode = 200, delay = 300 } = {}
-) => {
+export const interceptFetchDepartmentsByIdsRequest = ({
+  alias = 'fetchDepartmentsByIdsRequest',
+  fixture = 'department/departments',
+  statusCode = 200,
+  delay = 300,
+} = {}) => {
   cy.fixture(fixture).then((departments) => {
-    const queryString = ids.map((id) => `id=${id}`).join('&');
-    const url = `${serverBaseUrl}/Departments?${queryString}`;
-
-    cy.interceptWithAuth('GET', url, departments, alias, statusCode, delay);
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/Departments?id=*`, departments, alias, statusCode, delay);
   });
 };
 

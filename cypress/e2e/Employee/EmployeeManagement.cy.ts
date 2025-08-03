@@ -83,10 +83,10 @@ describe('Employee Management Tests', () => {
         loginMock();
       });
 
-      it('should be able to navigate and view the employee page', () => {
+      it('should be able to navigate and view the View Employee page', () => {
         interceptFetchEmployeeByIdRequest('333333333335');
         interceptFetchBranchByIdRequest('222222222222');
-        interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
+        interceptFetchBranchesByIdsRequest();
         cy.visit(ROUTES.employees.path);
 
         selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'view', '333333333335');
@@ -104,10 +104,10 @@ describe('Employee Management Tests', () => {
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'view-profile-button').should('not.exist');
       });
 
-      it('should render the profile button and be able to navigate to profile page if the employee is the current user', () => {
+      it('should render the profile button and be able to navigate to the Profile page if the employee is the current user', () => {
         interceptFetchEmployeeByIdRequest('333333333333', 'fetchEmployeeByIdRequest', 'employee/employees-multiple');
         interceptFetchBranchByIdRequest('222222222222');
-        interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
+        interceptFetchBranchesByIdsRequest();
         cy.visit(ROUTES.employees.path);
 
         selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'view', '333333333333');
@@ -133,7 +133,7 @@ describe('Employee Management Tests', () => {
     it('should be able to navigate back when the back button is clicked', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
-      interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
+      interceptFetchBranchesByIdsRequest();
       cy.visit(ROUTES.employees.path);
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-firstName')
@@ -157,10 +157,10 @@ describe('Employee Management Tests', () => {
       cy.url().should('include', ROUTES.employees.path);
     });
 
-    it('should reset the form and navigate to employee catalog page if the cancel button is clicked', () => {
+    it('should reset the form and navigate to the Employee Catalog page if the cancel button is clicked', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
-      interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
+      interceptFetchBranchesByIdsRequest();
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchAssignedBranchesRequest', fixture: 'branch/branches-multiple' }
@@ -199,7 +199,7 @@ describe('Employee Management Tests', () => {
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
       );
       interceptFetchBranchByIdRequest('222222222222');
-      interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
+      interceptFetchBranchesByIdsRequest();
       interceptFetchEmployeeByIdRequest('333333333334', 'fetchFirstEmployeeByIdRequest', 'employee/employees-multiple');
       interceptFetchEmployeeByIdRequest('333333333335', 'fetchSecondEmployeeByIdRequest', 'employee/employees-multiple');
       cy.visit(ROUTES.employees.path);
@@ -252,7 +252,7 @@ describe('Employee Management Tests', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
       interceptEditEmployeeFailedWithErrorRequest('333333333335');
-      interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
+      interceptFetchBranchesByIdsRequest();
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchAssignedBranchesRequest', fixture: 'branch/branches-multiple' }
@@ -283,11 +283,11 @@ describe('Employee Management Tests', () => {
       cy.url().should('include', `${ROUTES.employees.path}/edit/333333333335`);
     });
 
-    it('should be able to edit the employee and be navigated to employee catalog page if the employee update succeeded', () => {
+    it('should be able to edit the employee and be navigated to the Employee Catalog page if the employee update succeeded', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
       interceptEditEmployeeRequest('333333333335');
-      interceptFetchBranchesByIdsRequest({ ids: [222222222222] });
+      interceptFetchBranchesByIdsRequest();
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchAssignedBranchesRequest', fixture: 'branch/branches-multiple' }
@@ -327,10 +327,7 @@ describe('Employee Management Tests', () => {
         { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchMultipleEmployeesUpdatedRequest', fixture: 'employee/employees-multiple-updated' }
       );
-      interceptFetchBranchesByIdsRequest(
-        { ids: [222222222223] },
-        { alias: 'fetchBranchesByIdsRequest', fixture: 'branch/branches-multiple' }
-      );
+      interceptFetchBranchesByIdsRequest({ alias: 'fetchBranchesByIdsRequest', fixture: 'branch/branches-multiple' });
 
       cy.url().should('include', ROUTES.employees.path);
       getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
@@ -473,7 +470,7 @@ describe('Employee Management Tests', () => {
         .and('have.text', 'Anchorage Branch');
     });
 
-    it('should not fetch the branch geo address, even though the fetching of the geo address is part of the FetchBranchByIdRequest', () => {
+    it('should not fetch the branch geo address, even though the fetching of the geo address is part of the fetchBranchByIdRequest', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
       interceptFetchBranchesRequest(

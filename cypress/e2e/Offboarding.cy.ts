@@ -425,7 +425,7 @@ describe('Offboarding Flow Tests', () => {
         { alias: 'fetchOnboardingDepartmentsRequest', fixture: 'department/departments-single' }
       );
       interceptFetchEmployeesRequest({ pageNumber: 1, pageSize: 1 });
-      interceptFetchEmployeesByIdsRequest({ ids: [333333333335] });
+      interceptFetchEmployeesByIdsRequest();
       interceptDeleteDepartmentRequest('444444444444');
       interceptFetchProfileRequest();
       interceptDeleteBranchRequest('222222222222');

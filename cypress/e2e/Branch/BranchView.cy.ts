@@ -234,7 +234,6 @@ describe('Branch View Tests', () => {
       getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-layout-action-button').click();
 
       cy.url().should('include', ROUTES.newBranch.path);
-      // TODO: flaky part
       verifyInputFields(Module.branchManagement, SubModule.branchDetails, {
         'form-field-name': '',
         'form-field-timeZoneId': '',

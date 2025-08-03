@@ -73,8 +73,8 @@ describe('Department Catalog Tests', () => {
 
         it('should display the linear loader if fetching departments is in progress', () => {
           interceptFetchDepartmentsRequest();
-          interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
-          interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+          interceptFetchDepartmentsByIdsRequest();
+          interceptFetchEmployeesByIdsRequest();
 
           getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'page-subtitle').should('not.exist');
@@ -91,16 +91,16 @@ describe('Department Catalog Tests', () => {
             { pageNumber: 1, pageSize: 10, search: '' },
             { alias: 'fetchDepartmentsQuickRequest', statusCode: 200, delay: 50 }
           );
-          interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
-          interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+          interceptFetchDepartmentsByIdsRequest();
+          interceptFetchEmployeesByIdsRequest();
 
           getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('not.exist');
         });
 
         it('should render departments table if there are fetched departments', () => {
           interceptFetchDepartmentsRequest();
-          interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
-          interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+          interceptFetchDepartmentsByIdsRequest();
+          interceptFetchEmployeesByIdsRequest();
 
           cy.wait('@fetchDepartmentsRequest').its('request.url').should('include', 'Departments?pageNumber=1&pageSize=10');
           cy.wait('@fetchDepartmentsByIdsRequest');
@@ -164,8 +164,8 @@ describe('Department Catalog Tests', () => {
 
         it('should send correct request when pagination changes', () => {
           interceptFetchDepartmentsRequest();
-          interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
-          interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+          interceptFetchDepartmentsByIdsRequest();
+          interceptFetchEmployeesByIdsRequest();
 
           cy.wait('@fetchDepartmentsRequest');
           cy.wait('@fetchDepartmentsByIdsRequest');
@@ -184,7 +184,7 @@ describe('Department Catalog Tests', () => {
             { pageNumber: 1, pageSize: 20, search: '' },
             { alias: 'fetch20DepartmentsRequest', fixture: 'department/departments-multiple' }
           );
-          interceptFetchDepartmentsByIdsRequest({ ids: [444444444444, 444444444448, 444444444447] });
+          interceptFetchDepartmentsByIdsRequest();
           cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="20"]').click();
 
           cy.wait('@fetch20DepartmentsRequest').its('request.url').should('include', 'Departments?pageNumber=1&pageSize=20');
@@ -205,8 +205,8 @@ describe('Department Catalog Tests', () => {
 
         it('should send correct request when search changes', () => {
           interceptFetchDepartmentsRequest();
-          interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-          interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+          interceptFetchEmployeesByIdsRequest();
+          interceptFetchDepartmentsByIdsRequest();
 
           cy.wait('@fetchDepartmentsRequest');
 
@@ -221,7 +221,6 @@ describe('Department Catalog Tests', () => {
             { pageNumber: 1, pageSize: 10, search: 'Production' },
             { alias: 'fetchSearchedDepartmentsRequest', fixture: 'department/departments-searched' }
           );
-          interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334] });
 
           getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
           cy.wait('@fetchSearchedDepartmentsRequest')
@@ -272,19 +271,19 @@ describe('Department Catalog Tests', () => {
             { pageNumber: 1, pageSize: 10, search: 'Production' },
             { alias: 'fetchSearchedDepartmentsRequest', fixture: 'department/departments-searched' }
           );
-          interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-          interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+          interceptFetchEmployeesByIdsRequest();
+          interceptFetchDepartmentsByIdsRequest();
 
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments')
             .find('input')
             .type('Production');
 
+          cy.wait(['@fetchSearchedDepartmentsRequest', '@fetchEmployeesByIdsRequest']);
+
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
             'have.length',
             4
           );
-
-          interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334] });
 
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments-clear').click();
 
@@ -292,7 +291,7 @@ describe('Department Catalog Tests', () => {
             .find('input')
             .should('have.value', '');
 
-          cy.wait('@fetchDepartmentsRequest');
+          cy.wait(['@fetchDepartmentsRequest', '@fetchEmployeesByIdsRequest']);
 
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
             'have.length',
@@ -303,8 +302,8 @@ describe('Department Catalog Tests', () => {
         it(`should ${isAdminRole ? '' : 'not '}be able to manually navigate to the Department Management page`, () => {
           interceptFetchDepartmentsRequest();
           interceptFetchEmployeesRequest();
-          interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-          interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+          interceptFetchEmployeesByIdsRequest();
+          interceptFetchDepartmentsByIdsRequest();
           interceptFetchDepartmentByIdRequest('444444444444');
           interceptFetchEmployeeByIdRequest('333333333335');
 
@@ -316,8 +315,8 @@ describe('Department Catalog Tests', () => {
 
         it('should be able to navigate by buttons to the View Department page', () => {
           interceptFetchDepartmentsRequest();
-          interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-          interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+          interceptFetchEmployeesByIdsRequest();
+          interceptFetchDepartmentsByIdsRequest();
           interceptFetchDepartmentByIdRequest('444444444444');
           interceptFetchEmployeeByIdRequest('333333333335');
 
@@ -343,8 +342,8 @@ describe('Department Catalog Tests', () => {
 
         it('should display department management buttons', () => {
           interceptFetchDepartmentsRequest();
-          interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-          interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+          interceptFetchEmployeesByIdsRequest();
+          interceptFetchDepartmentsByIdsRequest();
 
           if (tableLayoutActionButtonExists) {
             getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button')
@@ -369,8 +368,8 @@ describe('Department Catalog Tests', () => {
 
         it('should be able to navigate to the View Department page by clicking the department name cell', () => {
           interceptFetchDepartmentsRequest();
-          interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-          interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+          interceptFetchEmployeesByIdsRequest();
+          interceptFetchDepartmentsByIdsRequest();
           interceptFetchDepartmentByIdRequest('444444444444');
           interceptFetchEmployeeByIdRequest('333333333335');
 
@@ -383,8 +382,8 @@ describe('Department Catalog Tests', () => {
 
         it('should display default values if there is no parent department provided', () => {
           interceptFetchDepartmentsRequest();
-          interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-          interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+          interceptFetchEmployeesByIdsRequest();
+          interceptFetchDepartmentsByIdsRequest();
 
           cy.wait('@fetchDepartmentsRequest');
 
@@ -405,15 +404,15 @@ describe('Department Catalog Tests', () => {
       cy.loginMock(true);
     });
 
+    // TODO: flaky test
     it('should reset the search state after a new department has been created', () => {
-      interceptFetchDepartmentsRequest();
+      interceptFetchDepartmentsRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetchDepartmentsRequest' });
       interceptFetchDepartmentsRequest(
         { pageNumber: 1, pageSize: 10, search: 'Production' },
         { alias: 'fetchSearchedDepartmentsRequest', fixture: 'department/departments-searched' }
       );
-      interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-      interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334] });
-      interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+      interceptFetchEmployeesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
       interceptFetchDepartmentByIdRequest('444444444447');
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchEmployeesRequest(
@@ -434,22 +433,29 @@ describe('Department Catalog Tests', () => {
       getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should('have.length', 4);
 
       getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
+
+      interceptFetchDepartmentsByIdsRequest();
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 10 },
+        { alias: 'fetchCreatedDepartmentsRequest', fixture: 'department/departments-created' }
+      );
+
       fillDepartmentDetailsForm({
         name: 'Set Design',
         parentDepartmentId: 444444444446,
         managerId: 333333333333,
       });
 
-      interceptFetchDepartmentsRequest(
-        { pageNumber: 1, pageSize: 10, search: '' },
-        { alias: 'fetchCreatedDepartmentsRequest', fixture: 'department/departments-created' }
-      );
-      interceptFetchDepartmentsByIdsRequest({ ids: [444444444444, 444444444446] });
       clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
 
       cy.wait('@createDepartmentRequest');
+
+      cy.location('pathname').should('eq', ROUTES.departments.path);
+
+      getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
       cy.wait('@fetchCreatedDepartmentsRequest');
 
+      getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('not.exist');
       getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments')
         .find('input')
         .should('have.value', '');
@@ -458,8 +464,8 @@ describe('Department Catalog Tests', () => {
 
     it('should be able to navigate by buttons to the Department Management page', () => {
       interceptFetchDepartmentsRequest();
-      interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-      interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+      interceptFetchEmployeesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
       interceptFetchDepartmentByIdRequest('444444444444');
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchEmployeesRequest(
@@ -478,8 +484,8 @@ describe('Department Catalog Tests', () => {
 
     it('should not be able to delete a department if the department deletion failed', () => {
       interceptFetchDepartmentsRequest();
-      interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-      interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+      interceptFetchEmployeesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
       interceptDeleteDepartmentFailedRequest('444444444444');
 
       getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should('have.length', 4);
@@ -501,8 +507,8 @@ describe('Department Catalog Tests', () => {
         { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchCreatedDepartmentsRequest', fixture: 'department/departments-created' }
       );
-      interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-      interceptFetchDepartmentsByIdsRequest({ ids: [444444444444, 444444444446] });
+      interceptFetchEmployeesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
       interceptDeleteDepartmentRequest('444444444448');
 
       getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
@@ -514,7 +520,6 @@ describe('Department Catalog Tests', () => {
         { pageNumber: 1, pageSize: 10, search: '' },
         { alias: 'fetchDepartmentsRequest', fixture: 'department/departments' }
       );
-      interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
       selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'delete', '444444444448');
 
       getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
