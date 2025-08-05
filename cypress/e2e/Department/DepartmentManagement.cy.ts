@@ -66,9 +66,9 @@ describe('Department Management Tests', () => {
 
   it('should display an empty form on department creation page', () => {
     interceptFetchDepartmentsRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchEmployeesByIdsRequest();
     interceptFetchEmployeesRequest();
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchDepartmentByIdRequest('444444444444');
     interceptFetchEmployeeByIdRequest('333333333335');
     cy.visit(ROUTES.newDepartment.path);
@@ -83,9 +83,9 @@ describe('Department Management Tests', () => {
 
   it('should display validation messages if the form is invalid', () => {
     interceptFetchDepartmentsRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchEmployeesByIdsRequest();
     interceptFetchEmployeesRequest();
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchDepartmentByIdRequest('444444444444');
     interceptFetchEmployeeByIdRequest('333333333335');
     interceptCreateDepartmentFailedRequest();
@@ -126,9 +126,9 @@ describe('Department Management Tests', () => {
 
   it('should not be able to create a new department if department creation failed', () => {
     interceptFetchDepartmentsRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchEmployeesByIdsRequest();
     interceptFetchEmployeesRequest();
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchDepartmentByIdRequest('444444444444');
     interceptFetchEmployeeByIdRequest('333333333335');
     interceptCreateDepartmentFailedRequest();
@@ -157,13 +157,12 @@ describe('Department Management Tests', () => {
 
   it('should be able to create a new department and be navigated back to the Department Catalog page if the form is valid and the department creation succeeded', () => {
     interceptFetchDepartmentsRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334] });
+    interceptFetchEmployeesByIdsRequest();
     interceptFetchEmployeesRequest(
       { pageNumber: 1, pageSize: 10 },
       { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
     );
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchDepartmentByIdRequest('444444444444');
     interceptFetchEmployeeByIdRequest('333333333335');
     interceptCreateDepartmentRequest();
@@ -183,7 +182,7 @@ describe('Department Management Tests', () => {
       { pageNumber: 1, pageSize: 10, search: '' },
       { alias: 'fetchCreatedDepartmentsRequest', fixture: 'department/departments-created' }
     );
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444, 444444444446] });
+    interceptFetchDepartmentsByIdsRequest();
     clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
 
     cy.wait('@createDepartmentRequest');
@@ -213,8 +212,8 @@ describe('Department Management Tests', () => {
 
   it('should display Not Found page if the department was not found', () => {
     interceptFetchDepartmentsRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesByIdsRequest();
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchEmployeesRequest();
     interceptFetchDepartmentByIdFailedRequest('444444444443');
     interceptFetchEmployeeByIdRequest('333333333333');
@@ -227,8 +226,8 @@ describe('Department Management Tests', () => {
 
   it('should reset the form and be navigated back to the Department Catalog page if the cancel button is clicked', () => {
     interceptFetchDepartmentsRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesByIdsRequest();
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchEmployeesRequest();
     interceptFetchDepartmentByIdRequest('444444444444');
     interceptFetchEmployeeByIdRequest('333333333335');
@@ -262,8 +261,8 @@ describe('Department Management Tests', () => {
 
   it('should not be able to edit the department if the form is invalid or department updating failed', () => {
     interceptFetchDepartmentsRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesByIdsRequest();
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchEmployeesRequest(
       { pageNumber: 1, pageSize: 10 },
       { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
@@ -306,8 +305,8 @@ describe('Department Management Tests', () => {
 
   it('should display async validation messages if the department update failed with validation errors', () => {
     interceptFetchDepartmentsRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesByIdsRequest();
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchEmployeesRequest(
       { pageNumber: 1, pageSize: 10 },
       { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
@@ -342,8 +341,8 @@ describe('Department Management Tests', () => {
 
   it('should display async general validation messages if the department creation failed with validation errors', () => {
     interceptFetchDepartmentsRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesByIdsRequest();
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchEmployeesRequest(
       { pageNumber: 1, pageSize: 10 },
       { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
@@ -372,8 +371,8 @@ describe('Department Management Tests', () => {
 
   it('should be able to edit the department and be navigated back to the Department Catalog page if the form is valid and department updating succeeded', () => {
     interceptFetchDepartmentsRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesByIdsRequest();
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchEmployeesRequest(
       { pageNumber: 1, pageSize: 10 },
       { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
@@ -409,8 +408,8 @@ describe('Department Management Tests', () => {
       parentDepartmentId: 444444444446,
       managerId: 333333333335,
     });
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334] });
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444, 444444444446] });
+    interceptFetchEmployeesByIdsRequest();
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchDepartmentsRequest(
       { pageNumber: 1, pageSize: 10, search: '' },
       { alias: 'fetchUpdatedDepartmentsRequest', fixture: 'department/departments-updated' }
@@ -455,8 +454,8 @@ describe('Department Management Tests', () => {
 
   it('should be able to navigate back when the back button is clicked', () => {
     interceptFetchDepartmentsRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesByIdsRequest();
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchEmployeesRequest();
     interceptFetchDepartmentByIdRequest('444444444444');
     interceptFetchEmployeeByIdRequest('333333333335');
@@ -474,10 +473,11 @@ describe('Department Management Tests', () => {
     getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('not.exist');
   });
 
+  // TODO: flaky test
   it('should reset the department after editing and navigating back', () => {
     interceptFetchDepartmentsRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesByIdsRequest();
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchEmployeesRequest(
       { pageNumber: 1, pageSize: 10 },
       { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
@@ -496,10 +496,6 @@ describe('Department Management Tests', () => {
       'form-field-managerId': 'Gabriel',
     });
 
-    // TODO: flaky test, waiting solves the issue
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(200);
-
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'page-title-back-button').click();
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
 
@@ -509,8 +505,8 @@ describe('Department Management Tests', () => {
 
   it('should reset the form when navigating between different departments', () => {
     interceptFetchDepartmentsRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesByIdsRequest();
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchEmployeesRequest(
       { pageNumber: 1, pageSize: 10 },
       { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
@@ -543,8 +539,8 @@ describe('Department Management Tests', () => {
 
   it('should fetch and display the department form details by id when refreshing the page', () => {
     interceptFetchDepartmentsRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchEmployeesByIdsRequest();
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchEmployeesRequest(
       { pageNumber: 1, pageSize: 10 },
       { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
@@ -568,9 +564,9 @@ describe('Department Management Tests', () => {
   it('should not display the loader if the request resolves quickly', () => {
     interceptFetchDepartmentsRequest();
     interceptFetchEmployeesRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchEmployeesByIdsRequest();
     interceptFetchEmployeeByIdRequest('333333333335');
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchDepartmentByIdRequest('444444444444', 'fetchDepartmentByIdQuickRequest', 'department/departments', 200, 50);
     cy.visit(`${ROUTES.departments.path}/edit/444444444444`);
 
@@ -580,9 +576,9 @@ describe('Department Management Tests', () => {
 
   it('should fetch and display the parent departments when scrolling down the parent department field', () => {
     interceptFetchEmployeesRequest();
-    interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+    interceptFetchEmployeesByIdsRequest();
     interceptFetchEmployeeByIdRequest('333333333335');
-    interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+    interceptFetchDepartmentsByIdsRequest();
     interceptFetchDepartmentByIdRequest('444444444444');
     cy.visit(`${ROUTES.departments.path}/edit/444444444444`);
     interceptFetchDepartmentsRequest(

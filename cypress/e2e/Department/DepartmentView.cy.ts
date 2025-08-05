@@ -69,8 +69,8 @@ describe('Department View Tests', () => {
 
       it('should be able to view the department and navigate back', () => {
         interceptFetchDepartmentsRequest();
-        interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
-        interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+        interceptFetchEmployeesByIdsRequest();
+        interceptFetchDepartmentsByIdsRequest();
         interceptFetchDepartmentByIdRequest('444444444444');
         interceptFetchEmployeeByIdRequest('333333333335');
         cy.visit(ROUTES.departments.path);
@@ -163,9 +163,9 @@ describe('Department View Tests', () => {
 
     it('should reset the department after viewing and navigating back', () => {
       interceptFetchDepartmentsRequest();
-      interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+      interceptFetchEmployeesByIdsRequest();
       interceptFetchEmployeesRequest();
-      interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+      interceptFetchDepartmentsByIdsRequest();
       interceptFetchDepartmentByIdRequest('444444444444');
       interceptFetchEmployeeByIdRequest('333333333335');
       cy.visit(ROUTES.departments.path);
@@ -188,9 +188,9 @@ describe('Department View Tests', () => {
 
     it('should render the Edit department button', () => {
       interceptFetchDepartmentsRequest();
-      interceptFetchEmployeesByIdsRequest({ ids: [333333333335, 333333333334, 333333333333] });
+      interceptFetchEmployeesByIdsRequest();
       interceptFetchEmployeesRequest();
-      interceptFetchDepartmentsByIdsRequest({ ids: [444444444444] });
+      interceptFetchDepartmentsByIdsRequest();
       interceptFetchDepartmentByIdRequest('444444444444');
       interceptFetchEmployeeByIdRequest('333333333335');
       cy.visit(`${ROUTES.departments.path}/view/444444444444`);
