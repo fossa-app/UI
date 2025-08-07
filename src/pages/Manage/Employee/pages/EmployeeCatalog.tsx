@@ -88,7 +88,7 @@ const EmployeeCatalogPage: React.FC = () => {
 
   React.useEffect(() => {
     if (fetchStatus === 'idle') {
-      dispatch(fetchEmployees([page]));
+      dispatch(fetchEmployees({ pagination: page }));
     }
   }, [fetchStatus, page, dispatch]);
 

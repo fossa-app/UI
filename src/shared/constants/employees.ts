@@ -29,18 +29,26 @@ export const EMPLOYEE_FIELDS: EmployeeFieldConfig = {
     field: 'assignedBranchName',
     name: 'Assigned Branch',
   },
+  assignedDepartmentId: {
+    field: 'assignedDepartmentId',
+    name: 'Assigned Department ID',
+  },
+  assignedDepartmentName: {
+    field: 'assignedDepartmentName',
+    name: 'Assigned Department',
+  },
 };
 
 export const EMPLOYEE_TABLE_SCHEMA: Column<Employee>[] = [
   {
     name: EMPLOYEE_FIELDS.firstName.name,
     field: EMPLOYEE_FIELDS.firstName.field,
-    width: 240,
+    width: 200,
   },
   {
     name: EMPLOYEE_FIELDS.lastName.name,
     field: EMPLOYEE_FIELDS.lastName.field,
-    width: 240,
+    width: 200,
   },
   {
     name: EMPLOYEE_FIELDS.fullName.name,
@@ -50,7 +58,12 @@ export const EMPLOYEE_TABLE_SCHEMA: Column<Employee>[] = [
   {
     name: EMPLOYEE_FIELDS.assignedBranchName!.name,
     field: EMPLOYEE_FIELDS.assignedBranchName!.field,
-    width: 240,
+    width: 200,
+  },
+  {
+    name: EMPLOYEE_FIELDS.assignedDepartmentName!.name,
+    field: EMPLOYEE_FIELDS.assignedDepartmentName!.field,
+    width: 200,
   },
   {
     name: ACTION_FIELD.name,
@@ -213,14 +226,20 @@ export const EMPLOYEE_VIEW_DETAILS_SCHEMA: ViewDetailProps<Employee> = {
       grid: { size: { xs: 12 } },
     },
     {
-      name: 'branchInfo',
-      label: 'Branch Information',
+      name: 'additionalInfo',
+      label: 'Additional Information',
       type: ViewDetailType.section,
       grid: { size: { xs: 12 } },
     },
     {
       name: EMPLOYEE_FIELDS.assignedBranchName!.field,
       label: 'Assigned Branch',
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+    },
+    {
+      name: EMPLOYEE_FIELDS.assignedDepartmentName!.field,
+      label: 'Assigned Department',
       type: ViewDetailType.labelValue,
       grid: { size: { xs: 12, md: 6 } },
     },
@@ -258,14 +277,22 @@ export const EMPLOYEE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
     },
     {
       type: FormFieldType.section,
-      name: 'branchInfo',
-      label: 'Branch Information',
+      name: 'additionalInfo',
+      label: 'Additional Information',
       grid: { size: { xs: 12 } },
     },
     {
       type: FormFieldType.autocomplete,
       name: EMPLOYEE_FIELDS.assignedBranchId!.field,
       label: 'Select Branch',
+      grid: { size: { xs: 12, md: 6 } },
+      options: [],
+      roles: [UserRole.administrator],
+    },
+    {
+      type: FormFieldType.autocomplete,
+      name: EMPLOYEE_FIELDS.assignedDepartmentId!.field,
+      label: 'Select Department',
       grid: { size: { xs: 12, md: 6 } },
       options: [],
       roles: [UserRole.administrator],
@@ -325,4 +352,5 @@ export const EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES: Employee = {
   lastName: '',
   fullName: '',
   assignedBranchId: null,
+  assignedDepartmentId: null,
 };

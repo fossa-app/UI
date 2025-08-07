@@ -24,6 +24,9 @@ import {
   interceptFetchBranchesByIdsRequest,
   interceptEditEmployeeFailedWithErrorRequest,
   interceptFetchCompanySettingsRequest,
+  interceptFetchDepartmentsByIdsRequest,
+  interceptFetchDepartmentByIdRequest,
+  interceptFetchDepartmentsRequest,
 } from 'support/interceptors';
 
 const testEmployeeViewFields = () => {
@@ -36,9 +39,11 @@ const testEmployeeViewFields = () => {
     'view-details-value-lastName': 'Crowley',
     'view-details-label-fullName': 'Full Name',
     'view-details-value-fullName': 'Anthony User Crowley',
-    'view-details-section-branchInfo': 'Branch Information',
+    'view-details-section-additionalInfo': 'Additional Information',
     'view-details-label-assignedBranchName': 'Assigned Branch',
     'view-details-value-assignedBranchName': 'New York Branch',
+    'view-details-label-assignedDepartmentName': 'Assigned Department',
+    'view-details-value-assignedDepartmentName': 'Production',
   });
 };
 
@@ -53,6 +58,7 @@ const testEmployeeFormFields = () => {
   });
   verifyInputFields(Module.employeeManagement, SubModule.employeeDetails, {
     'form-field-assignedBranchId-input': 'New York Branch',
+    'form-field-assignedDepartmentId-input': 'Production',
   });
 };
 
@@ -64,6 +70,7 @@ describe('Employee Management Tests', () => {
     interceptFetchCompanySettingsRequest();
     interceptFetchCompanyLicenseRequest();
     interceptFetchBranchesRequest();
+    interceptFetchDepartmentsRequest();
     interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
     interceptFetchProfileRequest();
     interceptFetchEmployeesRequest(
@@ -86,7 +93,9 @@ describe('Employee Management Tests', () => {
       it('should be able to navigate and view the View Employee page', () => {
         interceptFetchEmployeeByIdRequest('333333333335');
         interceptFetchBranchByIdRequest('222222222222');
+        interceptFetchDepartmentByIdRequest('444444444444');
         interceptFetchBranchesByIdsRequest();
+        interceptFetchDepartmentsByIdsRequest();
         cy.visit(ROUTES.employees.path);
 
         selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'view', '333333333335');
@@ -108,6 +117,7 @@ describe('Employee Management Tests', () => {
         interceptFetchEmployeeByIdRequest('333333333333', 'fetchEmployeeByIdRequest', 'employee/employees-multiple');
         interceptFetchBranchByIdRequest('222222222222');
         interceptFetchBranchesByIdsRequest();
+        interceptFetchDepartmentsByIdsRequest();
         cy.visit(ROUTES.employees.path);
 
         selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'view', '333333333333');
@@ -133,7 +143,9 @@ describe('Employee Management Tests', () => {
     it('should be able to navigate back when the back button is clicked', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchDepartmentByIdRequest('444444444444');
       interceptFetchBranchesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
       cy.visit(ROUTES.employees.path);
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-firstName')
@@ -160,7 +172,9 @@ describe('Employee Management Tests', () => {
     it('should reset the form and navigate to the Employee Catalog page if the cancel button is clicked', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchDepartmentByIdRequest('444444444444');
       interceptFetchBranchesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchAssignedBranchesRequest', fixture: 'branch/branches-multiple' }
@@ -182,6 +196,13 @@ describe('Employee Management Tests', () => {
         'form-field-assignedBranchId-option-222222222223'
       ).click();
 
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedDepartmentId').click();
+      getTestSelectorByModule(
+        Module.employeeManagement,
+        SubModule.employeeDetails,
+        'form-field-assignedDepartmentId-option-444444444445'
+      ).click();
+
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-cancel-button').should('exist').click();
 
       cy.url().should('include', ROUTES.employees.path);
@@ -190,6 +211,7 @@ describe('Employee Management Tests', () => {
 
       verifyInputFields(Module.employeeManagement, SubModule.employeeDetails, {
         'form-field-assignedBranchId-input': 'New York Branch',
+        'form-field-assignedDepartmentId-input': 'Production',
       });
     });
 
@@ -199,7 +221,9 @@ describe('Employee Management Tests', () => {
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
       );
       interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchDepartmentByIdRequest('444444444444');
       interceptFetchBranchesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
       interceptFetchEmployeeByIdRequest('333333333334', 'fetchFirstEmployeeByIdRequest', 'employee/employees-multiple');
       interceptFetchEmployeeByIdRequest('333333333335', 'fetchSecondEmployeeByIdRequest', 'employee/employees-multiple');
       cy.visit(ROUTES.employees.path);
@@ -217,6 +241,7 @@ describe('Employee Management Tests', () => {
       });
       verifyInputFields(Module.employeeManagement, SubModule.employeeDetails, {
         'form-field-assignedBranchId-input': '',
+        'form-field-assignedDepartmentId-input': '',
       });
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-cancel-button').click();
@@ -230,6 +255,7 @@ describe('Employee Management Tests', () => {
     it('should not be able to edit the employee if the employee update failed', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchDepartmentByIdRequest('444444444444');
       interceptEditEmployeeFailedRequest('333333333335');
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100 },
@@ -251,21 +277,35 @@ describe('Employee Management Tests', () => {
     it('should display async validation messages if the employee update failed with validation errors', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchDepartmentByIdRequest('444444444444');
       interceptEditEmployeeFailedWithErrorRequest('333333333335');
       interceptFetchBranchesByIdsRequest();
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchAssignedBranchesRequest', fixture: 'branch/branches-multiple' }
       );
+      interceptFetchDepartmentsRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetchAssignedDepartmentsRequest' });
       cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
-      cy.wait(['@fetchEmployeeByIdRequest', '@fetchBranchByIdRequest', '@fetchAssignedBranchesRequest']);
+      cy.wait([
+        '@fetchEmployeeByIdRequest',
+        '@fetchBranchByIdRequest',
+        '@fetchAssignedBranchesRequest',
+        '@fetchAssignedDepartmentsRequest',
+      ]);
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId').click();
       getTestSelectorByModule(
         Module.employeeManagement,
         SubModule.employeeDetails,
         'form-field-assignedBranchId-option-222222222223'
+      ).click();
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedDepartmentId').click();
+      getTestSelectorByModule(
+        Module.employeeManagement,
+        SubModule.employeeDetails,
+        'form-field-assignedDepartmentId-option-444444444445'
       ).click();
 
       clickActionButton(Module.employeeManagement, SubModule.employeeDetails);
@@ -279,6 +319,10 @@ describe('Employee Management Tests', () => {
           field: 'form-field-assignedBranchId-validation',
           message: `'Hawaii Branch' has been removed. Please choose different branch.`,
         },
+        {
+          field: 'form-field-assignedDepartmentId-validation',
+          message: `'Line Production' has been removed. Please choose different department.`,
+        },
       ]);
       cy.url().should('include', `${ROUTES.employees.path}/edit/333333333335`);
     });
@@ -286,12 +330,15 @@ describe('Employee Management Tests', () => {
     it('should be able to edit the employee and be navigated to the Employee Catalog page if the employee update succeeded', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchDepartmentByIdRequest('444444444444');
       interceptEditEmployeeRequest('333333333335');
       interceptFetchBranchesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchAssignedBranchesRequest', fixture: 'branch/branches-multiple' }
       );
+      interceptFetchDepartmentsRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetchAssignedDepartmentsRequest' });
       cy.visit(ROUTES.employees.path);
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 3);
@@ -308,16 +355,31 @@ describe('Employee Management Tests', () => {
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedBranchName')
         .should('exist')
         .and('have.text', 'New York Branch');
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedDepartmentName')
+        .should('exist')
+        .and('have.text', 'Production');
 
       selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'edit', '333333333335');
 
-      cy.wait(['@fetchEmployeeByIdRequest', '@fetchBranchByIdRequest', '@fetchAssignedBranchesRequest']);
+      cy.wait([
+        '@fetchEmployeeByIdRequest',
+        '@fetchBranchByIdRequest',
+        '@fetchAssignedBranchesRequest',
+        '@fetchAssignedDepartmentsRequest',
+      ]);
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId').click();
       getTestSelectorByModule(
         Module.employeeManagement,
         SubModule.employeeDetails,
         'form-field-assignedBranchId-option-222222222223'
+      ).click();
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedDepartmentId').click();
+      getTestSelectorByModule(
+        Module.employeeManagement,
+        SubModule.employeeDetails,
+        'form-field-assignedDepartmentId-option-444444444445'
       ).click();
 
       clickActionButton(Module.employeeManagement, SubModule.employeeDetails);
@@ -348,6 +410,9 @@ describe('Employee Management Tests', () => {
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedBranchName')
         .should('exist')
         .and('have.text', 'Hawaii Branch');
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedDepartmentName')
+        .should('exist')
+        .and('have.text', 'Line Production');
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
         .should('exist')
         .and('contain.text', 'Employee has been successfully updated');
@@ -356,6 +421,7 @@ describe('Employee Management Tests', () => {
     it('should fetch and display the employee view details by id when refreshing the page', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchDepartmentByIdRequest('444444444444');
       cy.visit(`${ROUTES.employees.path}/view/333333333335`);
 
       cy.reload();
@@ -369,6 +435,7 @@ describe('Employee Management Tests', () => {
     it('should fetch and display the employee form details by id when refreshing the page', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchDepartmentByIdRequest('444444444444');
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100 },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
@@ -386,6 +453,7 @@ describe('Employee Management Tests', () => {
     it('should fetch and display the assigned branches when scrolling down the assigned branch field', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchDepartmentByIdRequest('444444444444');
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchAssignedBranchesRequestPage1', fixture: 'branch/branches-multiple-page-one' }
@@ -444,19 +512,83 @@ describe('Employee Management Tests', () => {
       cy.get('@fetchAssignedBranchesRequestPage4.all').should('have.length', 0);
     });
 
-    it('should display the assigned branch even if it is not in the first page of the assigned branches field', () => {
-      interceptFetchEmployeeByIdRequest('333333333335', 'fetchEmployeeByIdRequest', 'employee/employees-different-page-assigned-branch');
+    it('should fetch and display the assigned departments when scrolling down the assigned department field', () => {
+      interceptFetchEmployeeByIdRequest('333333333335');
+      interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchDepartmentByIdRequest('444444444444');
+
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 10 },
+        {
+          alias: 'fetchAssignedDepartmentsRequestPage1',
+          fixture: 'department/departments-multiple-page-one',
+        }
+      );
+
+      cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
+
+      cy.wait(['@fetchEmployeeByIdRequest', '@fetchBranchByIdRequest', '@fetchDepartmentByIdRequest']);
+      cy.wait('@fetchAssignedDepartmentsRequestPage1').its('request.url').should('include', 'Departments?pageNumber=1&pageSize=10');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedDepartmentId').click();
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedDepartmentId-option', true).should(
+        'have.length',
+        10
+      );
+
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 2, pageSize: 10 },
+        {
+          alias: 'fetchAssignedDepartmentsRequestPage2',
+          fixture: 'department/departments-multiple-page-two',
+        }
+      );
+
+      cy.get('[role="list-box"]').should('exist');
+      cy.get('[role="list-box"]').then(($listbox) => {
+        $listbox[0].scrollTop = $listbox[0].scrollHeight;
+        $listbox[0].dispatchEvent(new Event('scroll', { bubbles: true }));
+      });
+
+      cy.wait('@fetchAssignedDepartmentsRequestPage2').its('request.url').should('include', 'Departments?pageNumber=2&pageSize=10');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedDepartmentId-option', true).should(
+        'have.length',
+        12
+      );
+
+      cy.intercept('GET', '**/Departments?pageNumber=3&pageSize=10').as('fetchAssignedDepartmentsRequestPage3');
+
+      cy.get('[role="list-box"]').scrollTo('bottom');
+
+      cy.get('@fetchAssignedDepartmentsRequestPage3.all').should('have.length', 0);
+    });
+
+    it('should display the assigned branch and the assigned department even if it is not in the first page of the assigned branches and assigned department field', () => {
+      interceptFetchEmployeeByIdRequest('333333333335', 'fetchEmployeeByIdRequest', 'employee/employees-different-page-assigned-data');
       interceptFetchBranchByIdRequest('222222222241', 'fetchBranchByIdRequest', 'branch/branches-multiple-page-two');
+      interceptFetchDepartmentByIdRequest('444444444455', 'fetchDepartmentByIdRequest', 'department/departments-multiple-page-two');
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchAssignedBranchesRequestPage1', fixture: 'branch/branches-multiple-page-one' }
       );
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 10 },
+        { alias: 'fetchAssignedDepartmentsRequestPage1', fixture: 'department/departments-multiple-page-one' }
+      );
       cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
-      cy.wait(['@fetchEmployeeByIdRequest', '@fetchBranchByIdRequest', '@fetchAssignedBranchesRequestPage1']);
+      cy.wait([
+        '@fetchEmployeeByIdRequest',
+        '@fetchBranchByIdRequest',
+        '@fetchAssignedBranchesRequestPage1',
+        '@fetchAssignedDepartmentsRequestPage1',
+      ]);
 
       verifyInputFields(Module.employeeManagement, SubModule.employeeDetails, {
         'form-field-assignedBranchId-input': 'Anchorage Branch',
+        'form-field-assignedDepartmentId-input': 'Visual Effects',
       });
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId').click();
@@ -468,11 +600,22 @@ describe('Employee Management Tests', () => {
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId-option-222222222241')
         .should('exist')
         .and('have.text', 'Anchorage Branch');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedDepartmentId').click();
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedDepartmentId-option', true).should(
+        'have.length',
+        11
+      );
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedDepartmentId-option-444444444455')
+        .should('exist')
+        .and('have.text', 'Visual Effects');
     });
 
     it('should not fetch the branch geo address, even though the fetching of the geo address is part of the fetchBranchByIdRequest', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchDepartmentByIdRequest('444444444444');
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 100 },
         { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
