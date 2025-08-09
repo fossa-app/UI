@@ -34,6 +34,9 @@ import {
   interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
   interceptFetchCompanySettingsRequest,
+  interceptFetchDepartmentByIdRequest,
+  interceptFetchDepartmentsByIdsRequest,
+  interceptFetchDepartmentsRequest,
   interceptFetchEmployeeByIdRequest,
   interceptFetchEmployeesRequest,
   interceptFetchProfileRequest,
@@ -457,7 +460,10 @@ describe('Branch Management Tests', () => {
   it('should reset the form when navigating to an employee page and back to the branch creation page', () => {
     interceptFetchEmployeeByIdRequest('333333333335');
     interceptFetchBranchByIdRequest('222222222222');
+    interceptFetchDepartmentByIdRequest('444444444444');
     interceptFetchBranchesByIdsRequest();
+    interceptFetchDepartmentsByIdsRequest();
+    interceptFetchDepartmentsRequest();
     interceptFetchEmployeesRequest(
       { pageNumber: 1, pageSize: 10 },
       { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }

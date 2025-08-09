@@ -8,7 +8,8 @@
       "firstName": "Anthony",
       "lastName": "Crowley",
       "fullName": "Anthony User Crowley",
-      "assignedBranchId": 222222222222
+      "assignedBranchId": 222222222222,
+      "assignedDepartmentId": 444444444444
     }
   ],
   "totalItems": 1,

@@ -111,6 +111,13 @@ export const mapTimeZoneToFieldOption = (timeZone: TimeZone): FieldOption => {
   };
 };
 
+export const mapBranchToFieldOption = (branch: Branch): FieldOption => {
+  return {
+    label: branch.name,
+    value: String(branch?.id),
+  };
+};
+
 export const getFullAddress = (address?: Branch['address'], includeLine2 = true): Branch['fullAddress'] => {
   if (!address) {
     return '';

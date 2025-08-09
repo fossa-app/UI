@@ -22,6 +22,9 @@ import {
   interceptFetchBranchByIdRequest,
   interceptFetchBranchesByIdsRequest,
   interceptFetchCompanySettingsRequest,
+  interceptFetchDepartmentsByIdsRequest,
+  interceptFetchDepartmentsRequest,
+  interceptFetchDepartmentByIdRequest,
 } from 'support/interceptors';
 
 describe('Employee Catalog Tests', () => {
@@ -57,6 +60,8 @@ describe('Employee Catalog Tests', () => {
     describe(`${role} Role`, () => {
       beforeEach(() => {
         loginMock();
+        interceptFetchBranchesByIdsRequest();
+        interceptFetchDepartmentsByIdsRequest();
       });
 
       it('should display the default message within the table if there are no employees', () => {
@@ -71,7 +76,6 @@ describe('Employee Catalog Tests', () => {
 
       it('should display the loader if fetching employees is in progress', () => {
         interceptFetchEmployeesRequest();
-        interceptFetchBranchesByIdsRequest();
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
         cy.wait('@fetchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
@@ -94,7 +98,6 @@ describe('Employee Catalog Tests', () => {
           { pageNumber: 1, pageSize: 10 },
           { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
         );
-        interceptFetchBranchesByIdsRequest();
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
         cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
@@ -127,6 +130,9 @@ describe('Employee Catalog Tests', () => {
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedBranchName')
           .should('exist')
           .and('have.text', 'New York Branch');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedDepartmentName')
+          .should('exist')
+          .and('have.text', 'Production');
         getTablePaginationSizeInput(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('have.value', '10');
         getTablePaginationDisplayedRows(Module.employeeManagement, SubModule.employeeCatalog, 'table-pagination').should(
           'have.text',
@@ -136,7 +142,6 @@ describe('Employee Catalog Tests', () => {
 
       it('should send correct request when pagination changes', () => {
         interceptFetchEmployeesRequest();
-        interceptFetchBranchesByIdsRequest();
         cy.wait('@fetchEmployeesRequest');
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-pagination')
@@ -162,7 +167,6 @@ describe('Employee Catalog Tests', () => {
           { pageNumber: 1, pageSize: 10 },
           { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
         );
-        interceptFetchBranchesByIdsRequest();
 
         cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
 
@@ -214,14 +218,10 @@ describe('Employee Catalog Tests', () => {
           { pageNumber: 1, pageSize: 10, search: 'Anthony' },
           { alias: 'fetchSearchedEmployeesRequest', fixture: 'employee/employees' }
         );
-        interceptFetchBranchesByIdsRequest();
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees').find('input').type('Anthony');
-
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 1);
-
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees-clear').click();
-
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees')
           .find('input')
           .should('have.value', '');
@@ -236,7 +236,6 @@ describe('Employee Catalog Tests', () => {
           { pageNumber: 1, pageSize: 10 },
           { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
         );
-        interceptFetchBranchesByIdsRequest();
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
         cy.wait('@fetchMultipleEmployeesRequest');
@@ -289,7 +288,6 @@ describe('Employee Catalog Tests', () => {
 
       it('should display action column and correct actions', () => {
         interceptFetchEmployeesRequest();
-        interceptFetchBranchesByIdsRequest();
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-layout-action-button').should('not.exist');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'actions-menu-icon-333333333335')
@@ -308,9 +306,9 @@ describe('Employee Catalog Tests', () => {
 
       it('should be able to navigate to the View Employee page', () => {
         interceptFetchEmployeesRequest();
-        interceptFetchBranchesByIdsRequest();
         interceptFetchEmployeeByIdRequest('333333333335');
         interceptFetchBranchByIdRequest('222222222222');
+        interceptFetchDepartmentByIdRequest('444444444444');
 
         cy.visit(`${ROUTES.employees.path}/view/333333333335`);
 
@@ -349,7 +347,9 @@ describe('Employee Catalog Tests', () => {
     it('should be able to navigate to the Edit Employee page', () => {
       interceptFetchEmployeesRequest();
       interceptFetchBranchesByIdsRequest();
-      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 100 });
+      interceptFetchDepartmentsByIdsRequest();
+      interceptFetchBranchesRequest();
+      interceptFetchDepartmentsRequest();
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
 
