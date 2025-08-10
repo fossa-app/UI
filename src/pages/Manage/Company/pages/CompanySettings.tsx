@@ -100,9 +100,7 @@ const CompanySettingsPage: React.FC = () => {
           onSubmit={handleSubmit}
         >
           <Form.Header>{COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA.title}</Form.Header>
-
           <Form.Content fields={fields} />
-
           <Form.Actions actions={actions} />
         </Form>
       </PageLayout>

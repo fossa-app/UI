@@ -30,7 +30,7 @@ describe('Profile Tests', () => {
     interceptFetchCompanyRequest();
     interceptFetchCompanySettingsRequest();
     interceptFetchCompanyLicenseRequest();
-    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
+    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchBranchesTotalRequest' });
     cy.loginMock();
   });
 

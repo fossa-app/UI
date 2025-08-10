@@ -104,9 +104,7 @@ const EditCompanyPage: React.FC = () => {
         onSubmit={handleSubmit}
       >
         <Form.Header>{COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA.title}</Form.Header>
-
         <Form.Content fields={fields} />
-
         <Form.Actions actions={actions}></Form.Actions>
       </Form>
     </PageLayout>

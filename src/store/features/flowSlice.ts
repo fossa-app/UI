@@ -3,7 +3,7 @@ import { RootState } from 'store';
 import { FlowsMap, OnboardingStep } from 'shared/models';
 import { FLOWS_MAP } from 'shared/constants';
 import { deleteCompany, fetchCompany } from './companySlice';
-import { fetchOnboardingBranches } from './branchSlice';
+import { fetchBranchesTotal } from './branchSlice';
 import { deleteProfile, fetchProfile } from './profileSlice';
 import { fetchCompanyLicense } from './licenseSlice';
 import { fetchCompanySettings } from './companySettingsSlice';
@@ -50,7 +50,7 @@ const flowSlice = createSlice({
       .addCase(fetchCompanyLicense.rejected, (state) => {
         state.flows.company!.subFlows!.companyOnboarding!.disabled = false;
       })
-      .addCase(fetchOnboardingBranches.rejected, (state) => {
+      .addCase(fetchBranchesTotal.rejected, (state) => {
         state.flows.company!.subFlows!.companyOnboarding!.disabled = false;
       })
       .addCase(fetchCompany.fulfilled, (state) => {
@@ -69,7 +69,7 @@ const flowSlice = createSlice({
         state.flags[OnboardingStep.companyLicense] = true;
         state.flows.company!.subFlows!.companyOnboarding!.disabled = checkAllFlagsSet(state.flags);
       })
-      .addCase(fetchOnboardingBranches.fulfilled, (state, action) => {
+      .addCase(fetchBranchesTotal.fulfilled, (state, action) => {
         state.flags[OnboardingStep.branch] = true;
         state.flows.company!.subFlows!.companyOnboarding!.disabled = !!action.payload?.items?.length && checkAllFlagsSet(state.flags);
       })

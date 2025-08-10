@@ -66,9 +66,7 @@ const EditProfilePage: React.FC = () => {
     <PageLayout module={testModule} subModule={testSubModule} pageTitle="Edit Profile">
       <Form<Employee> module={testModule} subModule={testSubModule} defaultValues={defaultValues} errors={errors} onSubmit={handleSubmit}>
         <Form.Header>{PROFILE_DETAILS_FORM_SCHEMA.title}</Form.Header>
-
         <Form.Content fields={PROFILE_DETAILS_FORM_SCHEMA.fields} />
-
         <Form.Actions actions={actions}></Form.Actions>
       </Form>
     </PageLayout>

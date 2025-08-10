@@ -3,7 +3,7 @@ import {
   CompanyFieldConfig,
   CompanyLicense,
   CompanyLicenseFieldConfig,
-  CompanyOffboardingInstructionData,
+  CompanyDatasourceTotals,
   CompanySettingsFieldConfig,
   IconType,
   Module,
@@ -14,6 +14,7 @@ import { FormActionType, FormFieldType, FormActionName, FormProps } from 'compon
 import { ViewDetailActionName, ViewDetailActionType, ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
 import { renderCopyableField } from 'components/UI/helpers/renderCopyableField';
 import { renderInstructionField } from 'pages/Manage/Offboarding/helpers/renderInstructionField';
+import { renderValidForField } from 'pages/Manage/Branch/helpers/renderValidForField';
 
 export const COMPANY_FIELDS: CompanyFieldConfig = {
   id: {
@@ -70,6 +71,10 @@ export const COMPANY_LICENSE_FIELDS: CompanyLicenseFieldConfig = {
       field: 'notAfter',
       name: 'Valid To',
     },
+    // notAfterDays: {
+    //   field: 'notAfterDays',
+    //   name: 'Valid For (Days)',
+    // },
   },
   entitlements: {
     field: 'entitlements',
@@ -312,8 +317,15 @@ export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewDetailProps<CompanyLicense
     {
       name: `${COMPANY_LICENSE_FIELDS.terms.field}.${COMPANY_LICENSE_FIELDS.terms.notAfter.field}`,
       label: COMPANY_LICENSE_FIELDS.terms.notAfter.name,
-      type: ViewDetailType.labelValue,
       grid: { size: { xs: 12, md: 6 } },
+      renderDetailField: (companyLicense) =>
+        renderValidForField({
+          module: COMPANY_LICENSE_VIEW_DETAILS_SCHEMA.module,
+          subModule: COMPANY_LICENSE_VIEW_DETAILS_SCHEMA.subModule,
+          field: `${COMPANY_LICENSE_FIELDS.terms.field}.${COMPANY_LICENSE_FIELDS.terms.notAfter.field}`,
+          label: 'Valid To',
+          validToDateString: companyLicense?.terms.notAfter,
+        }),
     },
     {
       name: COMPANY_LICENSE_FIELDS.entitlements.field,
@@ -324,20 +336,20 @@ export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewDetailProps<CompanyLicense
     {
       name: `${COMPANY_LICENSE_FIELDS.entitlements.field}.${COMPANY_LICENSE_FIELDS.entitlements.maximumBranchCount.field}`,
       label: COMPANY_LICENSE_FIELDS.entitlements.maximumBranchCount.name,
-      type: ViewDetailType.labelValue,
       grid: { size: { xs: 12, md: 4 } },
+      renderDetailField: () => null,
     },
     {
       name: `${COMPANY_LICENSE_FIELDS.entitlements.field}.${COMPANY_LICENSE_FIELDS.entitlements.maximumEmployeeCount.field}`,
       label: COMPANY_LICENSE_FIELDS.entitlements.maximumEmployeeCount.name,
-      type: ViewDetailType.labelValue,
       grid: { size: { xs: 12, md: 4 } },
+      renderDetailField: () => null,
     },
     {
       name: `${COMPANY_LICENSE_FIELDS.entitlements.field}.${COMPANY_LICENSE_FIELDS.entitlements.maximumDepartmentCount.field}`,
       label: COMPANY_LICENSE_FIELDS.entitlements.maximumDepartmentCount.name,
-      type: ViewDetailType.labelValue,
       grid: { size: { xs: 12, md: 4 } },
+      renderDetailField: () => null,
     },
   ],
 };
@@ -406,7 +418,7 @@ export const CREATE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA: FormProps<CompanySetti
   ],
 };
 
-export const COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA: FormProps<CompanyOffboardingInstructionData> = {
+export const COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA: FormProps<CompanyDatasourceTotals> = {
   module: Module.companyOffboardingInstructions,
   subModule: SubModule.offboardingDetails,
   title: 'Delete Branches, Departments & Offboard Employees',

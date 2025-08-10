@@ -1,12 +1,13 @@
 import { CompanyLicense } from 'shared/models';
+import { formatDateToLocaleString } from './date.helpers';
 
 export const mapCompanyLicense = (license: CompanyLicense): CompanyLicense => {
   return {
     ...license,
     terms: {
       ...license.terms,
-      notBefore: new Date(license.terms.notBefore).toLocaleDateString(),
-      notAfter: new Date(license.terms.notAfter).toLocaleDateString(),
+      notBefore: formatDateToLocaleString(license.terms.notBefore),
+      notAfter: formatDateToLocaleString(license.terms.notAfter),
     },
   };
 };

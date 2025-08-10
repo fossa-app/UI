@@ -3,7 +3,7 @@ import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import { CompanyOnboardingStep, ErrorResponseDTO, OnboardingStep } from 'shared/models';
 import { deleteCompany, fetchCompany } from './companySlice';
-import { fetchOnboardingBranches } from './branchSlice';
+import { fetchBranchesTotal } from './branchSlice';
 import { deleteProfile, fetchProfile } from './profileSlice';
 import { fetchCompanyLicense } from './licenseSlice';
 import { fetchCompanySettings } from './companySettingsSlice';
@@ -106,7 +106,7 @@ export const fetchOnboardingData = createAsyncThunk<void, void, { rejectValue: E
       }
 
       try {
-        await dispatch(fetchOnboardingBranches()).unwrap();
+        await dispatch(fetchBranchesTotal()).unwrap();
       } catch {
         // We expect an error here
       }
@@ -157,7 +157,7 @@ const onboardingSlice = createSlice({
       .addCase(fetchCompanyLicense.rejected, (state) => {
         state.company.status = 'failed';
       })
-      .addCase(fetchOnboardingBranches.rejected, (state) => {
+      .addCase(fetchBranchesTotal.rejected, (state) => {
         state.company.status = 'failed';
       })
       .addCase(fetchProfile.rejected, (state) => {
@@ -177,7 +177,7 @@ const onboardingSlice = createSlice({
         state.company.flags[OnboardingStep.companyLicense] = true;
         evaluateCompanyOnboardingStep(state);
       })
-      .addCase(fetchOnboardingBranches.fulfilled, (state) => {
+      .addCase(fetchBranchesTotal.fulfilled, (state) => {
         state.company.flags[OnboardingStep.branch] = true;
         evaluateCompanyOnboardingStep(state);
       })

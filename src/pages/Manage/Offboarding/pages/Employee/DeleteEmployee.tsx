@@ -33,9 +33,7 @@ const DeleteEmployeePage: React.FC = () => {
   return (
     <Form<File> module={testModule} subModule={testSubModule} onSubmit={handleSubmit}>
       <Form.Header>{DELETE_EMPLOYEE_DETAILS_FORM_SCHEMA.title}</Form.Header>
-
       <Form.Content fields={fields} />
-
       <Form.Actions actions={actions}></Form.Actions>
     </Form>
   );

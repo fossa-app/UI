@@ -39,7 +39,7 @@ describe('Branch Catalog Tests', () => {
     interceptFetchCompanySettingsRequest();
     interceptFetchCompanyLicenseRequest();
     interceptFetchProfileRequest();
-    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
+    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchBranchesTotalRequest' });
     cy.visit(ROUTES.branches.path);
   });
 

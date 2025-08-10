@@ -6,7 +6,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchOffboardingData, selectCompanyOffboardingStep } from 'store/features';
+import { fetchCompanyDatasourceTotals, selectCompanyOffboardingStep } from 'store/features';
 import { COMPANY_OFFBOARDING_STEPS, COMPANY_OFFBOARDING_STEP_MAP } from 'shared/constants';
 import { Module, SubModule } from 'shared/models';
 
@@ -29,7 +29,7 @@ const CompanyOffboardingPage: React.FC = () => {
   }, [step]);
 
   React.useEffect(() => {
-    dispatch(fetchOffboardingData());
+    dispatch(fetchCompanyDatasourceTotals());
   }, [dispatch]);
 
   return (

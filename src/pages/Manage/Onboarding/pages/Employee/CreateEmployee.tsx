@@ -47,9 +47,7 @@ const CreateEmployeePage: React.FC = () => {
       onSubmit={handleSubmit}
     >
       <Form.Header>{CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA.title}</Form.Header>
-
       <Form.Content fields={CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA.fields} />
-
       <Form.Actions actions={actions}></Form.Actions>
     </Form>
   );

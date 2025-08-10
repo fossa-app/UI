@@ -11,7 +11,7 @@ export interface Company extends CompanyDTO {
   countryName?: Country['name'];
 }
 
-export interface CompanyOffboardingInstructionData {
+export interface CompanyDatasourceTotals {
   branches?: number;
   employees?: number;
   departments?: number;

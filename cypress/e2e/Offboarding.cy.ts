@@ -418,11 +418,11 @@ describe('Offboarding Flow Tests', () => {
       interceptFetchCompanyRequest();
       interceptFetchCompanySettingsRequest();
       interceptFetchCompanyLicenseRequest();
-      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchBranchesTotalRequest' });
       interceptFetchBranchesRequest();
       interceptFetchDepartmentsRequest(
         { pageNumber: 1, pageSize: 1 },
-        { alias: 'fetchOnboardingDepartmentsRequest', fixture: 'department/departments-single' }
+        { alias: 'fetchDepartmentsTotalRequest', fixture: 'department/departments-single' }
       );
       interceptFetchEmployeesRequest({ pageNumber: 1, pageSize: 1 });
       interceptFetchEmployeesByIdsRequest();
@@ -707,7 +707,7 @@ describe('Offboarding Flow Tests', () => {
       interceptFetchCompanyRequest();
       interceptFetchCompanySettingsRequest();
       interceptFetchCompanyLicenseRequest();
-      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchBranchesTotalRequest' });
       interceptFetchDepartmentsRequest(
         { pageNumber: 1, pageSize: 1 },
         { alias: 'fetchEmptyOnboardingDepartmentsRequest', fixture: 'department/departments-empty' }

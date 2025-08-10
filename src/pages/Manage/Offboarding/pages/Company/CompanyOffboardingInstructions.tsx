@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import { useAppSelector } from 'store';
 import { selectCompanyOffboardingInstructionsFlags, selectIsUserAdmin } from 'store/features';
 import { COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA, ROUTES, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
-import { CompanyOffboardingInstructionData, RouteItem } from 'shared/models';
+import { CompanyDatasourceTotals, RouteItem } from 'shared/models';
 import Form from 'components/UI/Form';
 
 const testModule = COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA.module;
@@ -28,11 +28,9 @@ const CompanyOffboardingInstructionsPage: React.FC = () => {
   };
 
   return (
-    <Form<CompanyOffboardingInstructionData> module={testModule} subModule={testSubModule} errors={errors} loading={loading}>
+    <Form<CompanyDatasourceTotals> module={testModule} subModule={testSubModule} errors={errors} loading={loading}>
       <Form.Header>{COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA.title}</Form.Header>
-
       <Form.Content fields={COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA.fields} values={values} />
-
       <Form.Actions>
         {branches ? (
           <Button

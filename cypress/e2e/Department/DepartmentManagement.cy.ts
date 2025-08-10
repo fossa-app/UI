@@ -59,7 +59,7 @@ describe('Department Management Tests', () => {
     interceptFetchCompanyRequest();
     interceptFetchCompanySettingsRequest();
     interceptFetchCompanyLicenseRequest();
-    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
+    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchBranchesTotalRequest' });
     interceptFetchProfileRequest();
     cy.loginMock(true);
   });
