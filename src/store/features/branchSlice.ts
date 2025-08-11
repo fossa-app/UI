@@ -47,8 +47,8 @@ const initialState: BranchState = {
   },
 };
 
-export const fetchOnboardingBranches = createAsyncThunk<PaginatedResponse<BranchDTO> | undefined, void, { rejectValue: ErrorResponseDTO }>(
-  'branch/fetchOnboardingBranches',
+export const fetchBranchesTotal = createAsyncThunk<PaginatedResponse<BranchDTO> | undefined, void, { rejectValue: ErrorResponseDTO }>(
+  'branch/fetchBranchesTotal',
   async (_, { rejectWithValue }) => {
     try {
       const queryParams = prepareQueryParams({ pageNumber: 1, pageSize: 1 });
@@ -195,7 +195,7 @@ export const createOnboardingBranch = createAsyncThunk<void, BranchDTO, { reject
       await axios.post<void>(ENDPOINTS.branches, branch);
 
       dispatch(resetBranchesFetchStatus());
-      await dispatch(fetchOnboardingBranches()).unwrap();
+      await dispatch(fetchBranchesTotal()).unwrap();
 
       dispatch(setSuccess(MESSAGES.success.branches.create));
     } catch (error) {

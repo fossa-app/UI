@@ -86,9 +86,7 @@ const CreateBranchPage: React.FC = () => {
       onSubmit={handleSubmit}
     >
       <Form.Header>{CREATE_BRANCH_DETAILS_FORM_SCHEMA.title}</Form.Header>
-
       <Form.Content fields={fields} />
-
       <Form.Actions actions={actions}></Form.Actions>
     </Form>
   );

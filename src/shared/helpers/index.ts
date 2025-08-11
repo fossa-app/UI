@@ -16,5 +16,6 @@ export * from './error.helpers';
 export * from './role.helpers';
 export * from './flow.helpers';
 export * from './department.helpers';
+export * from './date.helpers';
 export * from './scrollbar-styles.helpers';
 export * from './theme.helpers';

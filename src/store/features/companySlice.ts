@@ -3,13 +3,27 @@ import { WritableDraft } from 'immer';
 import { FieldValues } from 'react-hook-form';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Company, CompanyDTO, ErrorResponse, ErrorResponseDTO } from 'shared/models';
-import { filterUniqueByField, mapCompany, mapError } from 'shared/helpers';
+import {
+  BranchDTO,
+  Company,
+  CompanyDatasourceTotals,
+  CompanyDTO,
+  DepartmentDTO,
+  EmployeeDTO,
+  ErrorResponse,
+  ErrorResponseDTO,
+  PaginatedResponse,
+} from 'shared/models';
+import { calculateUsagePercent, filterUniqueByField, mapCompany, mapError } from 'shared/helpers';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import { setError, setSuccess } from './messageSlice';
+import { fetchBranchesTotal } from './branchSlice';
+import { fetchEmployeesTotal } from './employeeSlice';
+import { fetchDepartmentsTotal } from './departmentSlice';
 
 interface CompanyState {
   company: StateEntity<Company | undefined>;
+  companyDatasourceTotals: StateEntity<CompanyDatasourceTotals>;
 }
 
 const initialState: CompanyState = {
@@ -17,6 +31,14 @@ const initialState: CompanyState = {
     data: undefined,
     fetchStatus: 'idle',
     updateStatus: 'idle',
+  },
+  companyDatasourceTotals: {
+    fetchStatus: 'idle',
+    data: {
+      branches: undefined,
+      employees: undefined,
+      departments: undefined,
+    },
   },
 };
 
@@ -121,6 +143,29 @@ export const deleteCompany = createAsyncThunk<void, void, { rejectValue: ErrorRe
   }
 );
 
+export const fetchCompanyDatasourceTotals = createAsyncThunk<void, void, { rejectValue: ErrorResponseDTO }>(
+  'company/fetchCompanyDatasourceTotals',
+  async (_, { dispatch }) => {
+    try {
+      await dispatch(fetchBranchesTotal()).unwrap();
+    } catch {
+      // We expect an error here
+    }
+
+    try {
+      await dispatch(fetchEmployeesTotal()).unwrap();
+    } catch {
+      // We expect an error here
+    }
+
+    try {
+      await dispatch(fetchDepartmentsTotal()).unwrap();
+    } catch {
+      // We expect an error here
+    }
+  }
+);
+
 const companySlice = createSlice({
   name: 'company',
   initialState,
@@ -175,6 +220,33 @@ const companySlice = createSlice({
       .addCase(deleteCompany.fulfilled, (state) => {
         state.company.data = undefined;
         state.company.deleteStatus = 'succeeded';
+      })
+      .addCase(fetchBranchesTotal.rejected, (state) => {
+        state.companyDatasourceTotals.data.branches = 0;
+      })
+      .addCase(fetchEmployeesTotal.rejected, (state) => {
+        state.companyDatasourceTotals.data.employees = 0;
+      })
+      .addCase(fetchDepartmentsTotal.rejected, (state) => {
+        state.companyDatasourceTotals.data.departments = 0;
+      })
+      .addCase(fetchBranchesTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<BranchDTO> | undefined>) => {
+        state.companyDatasourceTotals.data.branches = action.payload?.totalItems;
+      })
+      .addCase(fetchEmployeesTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<EmployeeDTO> | undefined>) => {
+        state.companyDatasourceTotals.data.employees = action.payload?.totalItems;
+      })
+      .addCase(fetchDepartmentsTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<DepartmentDTO> | undefined>) => {
+        state.companyDatasourceTotals.data.departments = action.payload?.totalItems;
+      })
+      .addCase(fetchCompanyDatasourceTotals.pending, (state) => {
+        state.companyDatasourceTotals.fetchStatus = 'loading';
+      })
+      .addCase(fetchCompanyDatasourceTotals.rejected, (state) => {
+        state.companyDatasourceTotals.fetchStatus = 'failed';
+      })
+      .addCase(fetchCompanyDatasourceTotals.fulfilled, (state) => {
+        state.companyDatasourceTotals.fetchStatus = 'succeeded';
       });
   },
 });
@@ -191,6 +263,41 @@ export const selectCompanyTimeZones = createSelector(
 
     return filterUniqueByField(timeZones?.filter((timeZone) => timeZone.countryCode === countryCode) || [], 'name');
   }
+);
+
+export const selectCompanyDatasourceTotals = (state: RootState) => state.company.companyDatasourceTotals.data;
+
+export const selectBranchUsagePercent = createSelector(
+  [
+    (state: RootState) => state.company.companyDatasourceTotals.data.branches,
+    (state: RootState) => state.license.company.data?.entitlements.maximumBranchCount,
+  ],
+  (branches, maximumBranchCount) => calculateUsagePercent(branches, maximumBranchCount)
+);
+
+export const selectEmployeeUsagePercent = createSelector(
+  [
+    (state: RootState) => state.company.companyDatasourceTotals.data.employees,
+    (state: RootState) => state.license.company.data?.entitlements.maximumEmployeeCount,
+  ],
+  (employees, maximumEmployeeCount) => calculateUsagePercent(employees, maximumEmployeeCount)
+);
+
+export const selectDepartmentUsagePercent = createSelector(
+  [
+    (state: RootState) => state.company.companyDatasourceTotals.data.departments,
+    (state: RootState) => state.license.company.data?.entitlements.maximumDepartmentCount,
+  ],
+  (departments, maximumDepartmentCount) => calculateUsagePercent(departments, maximumDepartmentCount)
+);
+
+export const selectCompanyLicenseLoading = createSelector(
+  [(state: RootState) => state.license.company.fetchStatus, (state: RootState) => state.company.companyDatasourceTotals.fetchStatus],
+  (companyLicenseFetchStatus, companyDatasourceTotalsFetchStatus) =>
+    companyLicenseFetchStatus === 'idle' ||
+    companyLicenseFetchStatus === 'loading' ||
+    companyDatasourceTotalsFetchStatus === 'idle' ||
+    companyDatasourceTotalsFetchStatus === 'loading'
 );
 
 export const { resetCompanyFetchStatus } = companySlice.actions;

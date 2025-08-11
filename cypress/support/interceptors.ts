@@ -96,9 +96,17 @@ export const interceptDeleteCompanyFailedRequest = () => {
   cy.interceptWithAuth('DELETE', `${serverBaseUrl}/Company`, { status: 424 }, 'deleteCompanyFailedRequest', 424);
 };
 
-export const interceptFetchCompanyLicenseRequest = () => {
+export const interceptFetchCompanyLicenseRequest = ({
+  notBefore = '2024-09-01T00:00:00+00:00',
+  notAfter = '2025-09-01T00:00:00+00:00',
+} = {}) => {
   cy.fixture('company/company-license').then((companyLicense) => {
-    cy.interceptWithAuth('GET', `${serverBaseUrl}/License/Company`, companyLicense, 'fetchCompanyLicenseRequest');
+    const modifiedLicense = JSON.parse(JSON.stringify(companyLicense));
+
+    modifiedLicense.terms.notBefore = notBefore;
+    modifiedLicense.terms.notAfter = notAfter;
+
+    cy.interceptWithAuth('GET', `${serverBaseUrl}/License/Company`, modifiedLicense, 'fetchCompanyLicenseRequest');
   });
 };
 

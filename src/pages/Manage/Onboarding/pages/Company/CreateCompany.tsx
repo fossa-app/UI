@@ -53,9 +53,7 @@ const CreateCompanyPage: React.FC = () => {
       onSubmit={handleSubmit}
     >
       <Form.Header>{CREATE_COMPANY_DETAILS_FORM_SCHEMA.title}</Form.Header>
-
       <Form.Content fields={fields} />
-
       <Form.Actions actions={actions}></Form.Actions>
     </Form>
   );

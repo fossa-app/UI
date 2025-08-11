@@ -2,6 +2,8 @@ import { ROUTES } from 'shared/constants';
 import { Module, SubModule } from 'shared/models';
 import {
   clickActionButton,
+  createMockLicensePeriod,
+  formatMockDateToLocaleString,
   getLinearLoader,
   getLoadingButtonLoadingIcon,
   getTestSelectorByModule,
@@ -21,6 +23,8 @@ import {
   interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
   interceptFetchCompanySettingsRequest,
+  interceptFetchDepartmentsRequest,
+  interceptFetchEmployeesRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
 } from 'support/interceptors';
@@ -37,13 +41,9 @@ const testCompaLicenseFields = () => {
     'view-details-label-terms.notBefore': 'Valid From',
     'view-details-value-terms.notBefore': '9/1/2024',
     'view-details-label-terms.notAfter': 'Valid To',
-    'view-details-value-terms.notAfter': '9/1/2025',
-    'view-details-label-entitlements.maximumBranchCount': 'Maximum Branch Count',
-    'view-details-value-entitlements.maximumBranchCount': '10',
-    'view-details-label-entitlements.maximumEmployeeCount': 'Maximum Employee Count',
-    'view-details-value-entitlements.maximumEmployeeCount': '100',
-    'view-details-label-entitlements.maximumDepartmentCount': 'Maximum Department Count',
-    'view-details-value-entitlements.maximumDepartmentCount': '20',
+    'view-details-label-entitlements.maximumBranchCount': 'Branch usage: 1 of 10',
+    'view-details-label-entitlements.maximumEmployeeCount': 'Employee usage: 1 of 100',
+    'view-details-label-entitlements.maximumDepartmentCount': 'Department usage: 4 of 20',
   });
 };
 
@@ -73,7 +73,9 @@ describe('Company Management Tests', () => {
     interceptFetchClientRequest();
     interceptFetchSystemLicenseRequest();
     interceptFetchCompanyLicenseRequest();
-    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
+    interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchBranchesTotalRequest' });
+    interceptFetchEmployeesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchEmployeesTotalRequest' });
+    interceptFetchDepartmentsRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchDepartmentsTotalRequest' });
     interceptFetchProfileRequest();
     interceptFetchCompanyRequest();
     interceptFetchCompanySettingsRequest();
@@ -123,10 +125,73 @@ describe('Company Management Tests', () => {
         cy.visit(ROUTES.viewCompany.path);
         interceptFetchCompanyLicenseRequest();
 
+        cy.wait('@fetchCompanyLicenseRequest');
+
         testCompaLicenseFields();
+        getTestSelectorByModule(
+          Module.companyManagement,
+          SubModule.companyLicenseViewDetails,
+          'view-details-value-entitlements.maximumBranchCount'
+        ).should('have.attr', 'aria-valuenow', '10');
+        getTestSelectorByModule(
+          Module.companyManagement,
+          SubModule.companyLicenseViewDetails,
+          'view-details-value-entitlements.maximumEmployeeCount'
+        ).should('have.attr', 'aria-valuenow', '1');
+        getTestSelectorByModule(
+          Module.companyManagement,
+          SubModule.companyLicenseViewDetails,
+          'view-details-value-entitlements.maximumDepartmentCount'
+        ).should('have.attr', 'aria-valuenow', '20');
       });
 
-      it('should display a default template if the company license has not been uploaded', () => {
+      it('should show branch usage over the allowed limit in license details', () => {
+        cy.visit(ROUTES.viewCompany.path);
+        interceptFetchCompanyLicenseRequest();
+        interceptFetchBranchesRequest(
+          { pageNumber: 1, pageSize: 1 },
+          { alias: 'fetchBranchesTotalRequest', fixture: 'branch/branches-multiple-page-one' }
+        );
+
+        cy.wait('@fetchCompanyLicenseRequest');
+
+        verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
+          'view-details-label-entitlements.maximumBranchCount': 'Branch usage: 22 of 10',
+        });
+        getTestSelectorByModule(
+          Module.companyManagement,
+          SubModule.companyLicenseViewDetails,
+          'view-details-value-entitlements.maximumBranchCount'
+        ).should('have.attr', 'aria-valuenow', '100');
+      });
+
+      it('should correctly mark the license as expiring or expired', () => {
+        cy.visit(ROUTES.viewCompany.path);
+
+        const mockLicenseExpiring = createMockLicensePeriod(25);
+        const mockNotAfterExpiring = formatMockDateToLocaleString(mockLicenseExpiring.notAfter);
+        interceptFetchCompanyLicenseRequest(mockLicenseExpiring);
+
+        cy.wait('@fetchCompanyLicenseRequest');
+
+        verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
+          'view-details-value-terms.notAfter': `${mockNotAfterExpiring} (25 days left)`,
+        });
+
+        cy.visit(ROUTES.viewCompany.path);
+
+        const mockLicenseExpired = createMockLicensePeriod(-3);
+        const mockNotAfterExpired = formatMockDateToLocaleString(mockLicenseExpired.notAfter);
+        interceptFetchCompanyLicenseRequest(mockLicenseExpired);
+
+        cy.wait('@fetchCompanyLicenseRequest');
+
+        verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
+          'view-details-value-terms.notAfter': `${mockNotAfterExpired} (expired)`,
+        });
+      });
+
+      it('should display the empty template if the company license has not been uploaded', () => {
         cy.visit(ROUTES.viewCompany.path);
         interceptFetchCompanyLicenseFailedRequest();
 
@@ -134,9 +199,12 @@ describe('Company Management Tests', () => {
           'view-details-header': 'Company License Details',
         });
         testCompaLicenseFieldsNotExist();
-        getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'page-subtitle')
+        getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'page-title')
           .should('exist')
           .and('have.text', 'Company License has not been uploaded.');
+        getTestSelectorByModule(Module.companyManagement, SubModule.companyLicenseViewDetails, 'page-subtitle')
+          .should('exist')
+          .and('have.text', 'Please go to the Company Onboarding and upload the License.');
       });
     });
   });

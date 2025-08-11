@@ -165,9 +165,7 @@ const ManageBranchPage: React.FC = () => {
         onSubmit={handleSubmit}
       >
         <Form.Header>{BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.title}</Form.Header>
-
         <Form.Content fields={fields} />
-
         <Form.Actions actions={actions}></Form.Actions>
       </Form>
     </PageLayout>

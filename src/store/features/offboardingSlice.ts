@@ -1,33 +1,28 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import {
   BranchDTO,
+  CompanyDatasourceTotals,
   CompanyOffboardingStep,
   DepartmentDTO,
   EmployeeDTO,
-  ErrorResponseDTO,
   OffboardingStep,
   PaginatedResponse,
   Status,
 } from 'shared/models';
-import { fetchOnboardingBranches } from './branchSlice';
+import { fetchBranchesTotal } from './branchSlice';
 import { fetchCompanySettings } from './companySettingsSlice';
-import { fetchCompany } from './companySlice';
+import { fetchCompany, fetchCompanyDatasourceTotals } from './companySlice';
 import { deleteProfile, fetchProfile } from './profileSlice';
-import { fetchOnboardingDepartments } from './departmentSlice';
-import { fetchOnboardingEmployees } from './employeeSlice';
+import { fetchDepartmentsTotal } from './departmentSlice';
+import { fetchEmployeesTotal } from './employeeSlice';
 
 interface OffboardingState {
   company: StateEntity<CompanyOffboardingStep> & {
     flags: {
       [OffboardingStep.companySettings]: boolean;
-      [OffboardingStep.instructions]: {
-        status: Status;
-        branches?: number;
-        employees?: number;
-        departments?: number;
-      };
+      [OffboardingStep.instructions]: { status: Status } & CompanyDatasourceTotals;
       [OffboardingStep.company]: boolean;
     };
   };
@@ -73,29 +68,6 @@ const evaluateCompanyOffboardingStep = (state: WritableDraft<OffboardingState>) 
   }
 };
 
-export const fetchOffboardingData = createAsyncThunk<void, void, { rejectValue: ErrorResponseDTO }>(
-  'offboarding/fetchOffboardingData',
-  async (_, { dispatch }) => {
-    try {
-      await dispatch(fetchOnboardingBranches()).unwrap();
-    } catch {
-      // We expect an error here
-    }
-
-    try {
-      await dispatch(fetchOnboardingEmployees()).unwrap();
-    } catch {
-      // We expect an error here
-    }
-
-    try {
-      await dispatch(fetchOnboardingDepartments()).unwrap();
-    } catch {
-      // We expect an error here
-    }
-  }
-);
-
 const offboardingSlice = createSlice({
   name: 'offboarding',
   initialState,
@@ -106,15 +78,15 @@ const offboardingSlice = createSlice({
         state.company.flags[OffboardingStep.companySettings] = false;
         evaluateCompanyOffboardingStep(state);
       })
-      .addCase(fetchOnboardingBranches.rejected, (state) => {
+      .addCase(fetchBranchesTotal.rejected, (state) => {
         state.company.flags[OffboardingStep.instructions].branches = 0;
         evaluateCompanyOffboardingStep(state);
       })
-      .addCase(fetchOnboardingEmployees.rejected, (state) => {
+      .addCase(fetchEmployeesTotal.rejected, (state) => {
         state.company.flags[OffboardingStep.instructions].employees = 0;
         evaluateCompanyOffboardingStep(state);
       })
-      .addCase(fetchOnboardingDepartments.rejected, (state) => {
+      .addCase(fetchDepartmentsTotal.rejected, (state) => {
         state.company.flags[OffboardingStep.instructions].departments = 0;
         evaluateCompanyOffboardingStep(state);
       })
@@ -133,7 +105,7 @@ const offboardingSlice = createSlice({
         state.company.flags[OffboardingStep.companySettings] = true;
         evaluateCompanyOffboardingStep(state);
       })
-      .addCase(fetchOnboardingBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<BranchDTO> | undefined>) => {
+      .addCase(fetchBranchesTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<BranchDTO> | undefined>) => {
         state.company.flags[OffboardingStep.instructions].branches = action.payload?.totalItems;
         evaluateCompanyOffboardingStep(state);
       })
@@ -144,21 +116,21 @@ const offboardingSlice = createSlice({
         state.company.flags[OffboardingStep.company] = true;
         evaluateCompanyOffboardingStep(state);
       })
-      .addCase(fetchOnboardingEmployees.fulfilled, (state, action: PayloadAction<PaginatedResponse<EmployeeDTO> | undefined>) => {
+      .addCase(fetchEmployeesTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<EmployeeDTO> | undefined>) => {
         state.company.flags[OffboardingStep.instructions].employees = action.payload?.totalItems;
         evaluateCompanyOffboardingStep(state);
       })
-      .addCase(fetchOnboardingDepartments.fulfilled, (state, action: PayloadAction<PaginatedResponse<DepartmentDTO> | undefined>) => {
+      .addCase(fetchDepartmentsTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<DepartmentDTO> | undefined>) => {
         state.company.flags[OffboardingStep.instructions].departments = action.payload?.totalItems;
         evaluateCompanyOffboardingStep(state);
       })
-      .addCase(fetchOffboardingData.pending, (state) => {
+      .addCase(fetchCompanyDatasourceTotals.pending, (state) => {
         state.company.flags[OffboardingStep.instructions].status = 'loading';
       })
-      .addCase(fetchOffboardingData.rejected, (state) => {
+      .addCase(fetchCompanyDatasourceTotals.rejected, (state) => {
         state.company.flags[OffboardingStep.instructions].status = 'failed';
       })
-      .addCase(fetchOffboardingData.fulfilled, (state) => {
+      .addCase(fetchCompanyDatasourceTotals.fulfilled, (state) => {
         state.company.flags[OffboardingStep.instructions].status = 'succeeded';
       });
   },

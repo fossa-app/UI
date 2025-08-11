@@ -827,13 +827,13 @@ describe('Onboarding Flow Tests', () => {
 
       cy.url().should('include', ROUTES.createBranch.path);
 
-      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchOnboardingBranchesRequest' });
+      interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchBranchesTotalRequest' });
       getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-name').type('America/New_York');
       selectOption(Module.createBranch, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
       clickField(Module.createBranch, SubModule.branchDetails, 'form-field-noPhysicalAddress');
       clickActionButton(Module.createBranch, SubModule.branchDetails);
 
-      cy.wait(['@createBranchRequest', '@fetchOnboardingBranchesRequest']);
+      cy.wait(['@createBranchRequest', '@fetchBranchesTotalRequest']);
 
       cy.location('pathname').should('eq', ROUTES.flows.path);
 

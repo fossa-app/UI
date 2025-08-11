@@ -46,9 +46,7 @@ const DeleteCompanySettingsPage: React.FC = () => {
   return (
     <Form module={testModule} subModule={testSubModule} errors={errors} onSubmit={handleSubmit}>
       <Form.Header>{DELETE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.title}</Form.Header>
-
       <Form.Content fields={fields} />
-
       <Form.Actions actions={actions}></Form.Actions>
     </Form>
   );

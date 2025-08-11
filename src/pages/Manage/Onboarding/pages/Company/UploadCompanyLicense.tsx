@@ -99,9 +99,7 @@ const UploadCompanyLicensePage: React.FC = () => {
   return (
     <Form<File> module={testModule} subModule={testSubModule} errors={errors} onSubmit={handleSubmit}>
       <Form.Header>{UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.title}</Form.Header>
-
       <Form.Content fields={fields} />
-
       <Form.Actions actions={actions}></Form.Actions>
     </Form>
   );

@@ -60,3 +60,11 @@ export const deepEqual = <T extends object>(obj1: T, obj2: T): boolean => {
 export const deepCopyObject = <T>(obj: T | undefined): T | undefined => {
   return obj ? structuredClone(obj) : obj;
 };
+
+export const calculateUsagePercent = (current?: number, max?: number): number => {
+  if (!current || !max) {
+    return 0;
+  }
+
+  return Math.round((current / max) * 100);
+};
