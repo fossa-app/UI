@@ -2,3 +2,12 @@ linters:
   eslint:
     enabled: true
     config: eslint.config.mjs
+    dir:
+      - "src/**/*.{ts,tsx}"
+    config_type: flat
+  typescript_eslint:
+    enabled: true
+    config: eslint.config.mjs
+    dir:
+      - "src/**/*.{ts,tsx}"
+    config_type: flat
