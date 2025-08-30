@@ -203,7 +203,7 @@ describe('Department Catalog Tests', () => {
           );
         });
 
-        it('should send correct request when search changes', () => {
+        it('should send correct request when the search changes', () => {
           interceptFetchDepartmentsRequest();
           interceptFetchEmployeesByIdsRequest();
           interceptFetchDepartmentsByIdsRequest();
@@ -250,15 +250,15 @@ describe('Department Catalog Tests', () => {
             .should('exist')
             .and('have.text', 'No Departments Found');
 
-          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments').find('input').clear();
-
           interceptFetchDepartmentsRequest(
             { pageNumber: 1, pageSize: 10, search: '' },
-            { alias: 'fetchClearDepartmentsRequest', fixture: 'department/departments' }
+            { alias: 'fetchMultipleDepartmentsRequest', fixture: 'department/departments' }
           );
 
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments').find('input').clear();
+
           getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
-          cy.wait('@fetchClearDepartmentsRequest').its('request.url').should('include', 'Departments?pageNumber=1&pageSize=10');
+          cy.wait('@fetchMultipleDepartmentsRequest').its('request.url').should('include', 'Departments?pageNumber=1&pageSize=10');
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
             'have.length',
             4

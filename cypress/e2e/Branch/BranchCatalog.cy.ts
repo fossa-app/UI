@@ -142,7 +142,7 @@ describe('Branch Catalog Tests', () => {
           getTablePaginationSizeInput(Module.branchManagement, SubModule.branchCatalog, 'table-pagination').should('have.value', '20');
         });
 
-        it('should send correct request when search changes', () => {
+        it('should send correct request when the search changes', () => {
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: '' },
             { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
@@ -173,13 +173,16 @@ describe('Branch Catalog Tests', () => {
           getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('exist');
           cy.wait('@fetchSearchedNoBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10&search=Old');
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 0);
-
-          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'search-branches').find('input').clear();
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'page-subtitle')
+            .should('exist')
+            .and('have.text', 'No Branches Found');
 
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: '' },
             { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
           );
+
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'search-branches').find('input').clear();
 
           getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('exist');
           cy.wait('@fetchMultipleBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');

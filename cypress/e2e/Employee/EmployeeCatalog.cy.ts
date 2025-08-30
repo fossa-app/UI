@@ -195,17 +195,19 @@ describe('Employee Catalog Tests', () => {
 
         cy.wait('@fetchSearchedNoEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10&search=Joe');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 0);
-
-        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees').find('input').clear();
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'page-subtitle')
+          .should('exist')
+          .and('have.text', 'No Employees Found');
 
         interceptFetchEmployeesRequest(
-          { pageNumber: 1, pageSize: 10 },
+          { pageNumber: 1, pageSize: 10, search: '' },
           { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
         );
 
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees').find('input').clear();
+
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
         cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
-
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 3);
       });
 
@@ -352,6 +354,7 @@ describe('Employee Catalog Tests', () => {
       interceptFetchDepartmentsRequest();
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchDepartmentByIdRequest('444444444444');
 
       cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
