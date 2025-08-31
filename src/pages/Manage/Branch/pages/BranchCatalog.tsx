@@ -31,7 +31,7 @@ const BranchCatalogPage: React.FC = () => {
   const { fetchStatus, data: branches, page = APP_CONFIG.table.defaultPagination as PaginationParams } = useAppSelector(selectBranches);
   const { deleteStatus } = useAppSelector(selectBranch);
   const userRoles = useAppSelector(selectUserRoles);
-  const { search, searchChanged, setSearchChanged, setProps } = useSearch();
+  const { searchTerm: search, searchTermChanged, setSearchTermChanged, setPortalProps } = useSearch();
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
   const loading = fetchStatus === 'loading' || deleteStatus === 'loading';
   const handleNavigate = React.useCallback((path: string) => navigate(path), [navigate]);
@@ -103,23 +103,21 @@ const BranchCatalogPage: React.FC = () => {
   }, [fetchStatus, page, dispatch]);
 
   React.useEffect(() => {
-    setProps({
+    setPortalProps({
       label: 'Search Branches',
       testSelector: getTestSelectorByModule(testModule, testSubModule, 'search-branches'),
     });
-  }, [setProps]);
+  }, [setPortalProps]);
 
   React.useEffect(() => {
-    if (searchChanged) {
+    if (searchTermChanged) {
       handlePageChange({ search, pageNumber: 1 });
-      setSearchChanged(false);
+      setSearchTermChanged(false);
     }
-  }, [search, searchChanged, handlePageChange, setSearchChanged]);
+  }, [search, searchTermChanged, handlePageChange, setSearchTermChanged]);
 
   useUnmount(() => {
-    // TODO: search is not being reset correctly which causes multiple fetching
     if (search) {
-      setSearchChanged(false);
       dispatch(resetBranchesFetchStatus());
       dispatch(resetBranchesPagination());
     }

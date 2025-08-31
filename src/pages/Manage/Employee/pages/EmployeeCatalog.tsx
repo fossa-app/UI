@@ -28,7 +28,7 @@ const EmployeeCatalogPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { fetchStatus, data: employees, page = APP_CONFIG.table.defaultPagination as PaginationParams } = useAppSelector(selectEmployees);
   const userRoles = useAppSelector(selectUserRoles);
-  const { search, searchChanged, setSearchChanged, setProps } = useSearch();
+  const { searchTerm: search, searchTermChanged, setSearchTermChanged, setPortalProps } = useSearch();
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
   const handleNavigate = React.useCallback((path: string) => navigate(path), [navigate]);
 
@@ -93,23 +93,21 @@ const EmployeeCatalogPage: React.FC = () => {
   }, [fetchStatus, page, dispatch]);
 
   React.useEffect(() => {
-    setProps({
+    setPortalProps({
       label: 'Search Employees',
       testSelector: getTestSelectorByModule(testModule, testSubModule, 'search-employees'),
     });
-  }, [setProps]);
+  }, [setPortalProps]);
 
   React.useEffect(() => {
-    if (searchChanged) {
+    if (searchTermChanged) {
       handlePageChange({ search, pageNumber: 1 });
-      setSearchChanged(false);
+      setSearchTermChanged(false);
     }
-  }, [search, searchChanged, handlePageChange, setSearchChanged]);
+  }, [search, searchTermChanged, handlePageChange, setSearchTermChanged]);
 
   useUnmount(() => {
-    // TODO: search is not being reset correctly which causes multiple fetching
     if (search) {
-      setSearchChanged(false);
       dispatch(resetEmployeesFetchStatus());
       dispatch(resetEmployeesPagination());
     }

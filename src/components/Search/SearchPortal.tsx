@@ -12,46 +12,61 @@ import { StyledTextField } from './StyledTextField';
 export type SearchPortalProps = { testSelector?: string } & TextFieldProps;
 
 const SearchPortal: React.FC<SearchPortalProps> = (searchPortalProps) => {
-  const { search, props, setSearch, setSearchChanged, setProps } = useSearch();
+  const { searchTerm, portalProps, setSearchTerm, setSearchTermChanged, setPortalProps } = useSearch();
   const location = useLocation();
-  const debouncedSearch = useDebounce(search);
+  const debouncedSearch = useDebounce(searchTerm);
   const searchContainer = document.getElementById(SEARCH_PORTAL_ID);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setSearch(event.target.value);
+    const searchPhrase = event.target.value;
+
+    setSearchTerm(searchPhrase);
+
+    if (!searchPhrase) {
+      setSearchTermChanged(true);
+    }
   };
 
   const handleClear = () => {
-    setSearch('');
+    setSearchTerm('');
+    setSearchTermChanged(true);
   };
 
   React.useEffect(() => {
-    setSearchChanged(true);
-  }, [debouncedSearch, setSearchChanged]);
+    if (searchTerm && debouncedSearch && searchTerm === debouncedSearch) {
+      setSearchTermChanged(true);
+    }
+  }, [searchTerm, debouncedSearch, setSearchTermChanged]);
 
   React.useEffect(() => {
-    setSearch('');
-    setSearchChanged(false);
-    setProps({});
-  }, [location.pathname, setSearch, setSearchChanged, setProps]);
+    const resetSearch = () => {
+      setSearchTerm('');
+      setSearchTermChanged(false);
+      setPortalProps({});
+    };
 
-  if (!searchContainer || !Object.keys(props).length) {
+    resetSearch();
+
+    return resetSearch;
+  }, [location.pathname, setSearchTerm, setSearchTermChanged, setPortalProps]);
+
+  if (!searchContainer || !Object.keys(portalProps).length) {
     return null;
   }
 
   return ReactDOM.createPortal(
     <StyledTextField
       variant="filled"
-      label={props.label}
-      data-cy={props.testSelector}
-      value={search}
+      label={portalProps.label}
+      data-cy={portalProps.testSelector}
+      value={searchTerm}
       onChange={handleChange}
       slotProps={{
         input: {
           endAdornment: (
             <IconButton
               aria-label="Clear Search"
-              data-cy={`${props.testSelector}-clear`}
+              data-cy={`${portalProps.testSelector}-clear`}
               size="small"
               sx={{
                 color: (theme) => theme.palette.primary.contrastText,

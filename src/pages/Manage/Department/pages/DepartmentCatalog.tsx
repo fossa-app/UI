@@ -42,7 +42,7 @@ const DepartmentCatalogPage: React.FC = () => {
   } = useAppSelector(selectDepartments);
   const { deleteStatus } = useAppSelector(selectDepartment);
   const userRoles = useAppSelector(selectUserRoles);
-  const { search, searchChanged, setSearchChanged, setProps } = useSearch();
+  const { searchTerm: search, searchTermChanged, setSearchTermChanged, setPortalProps } = useSearch();
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
   const loading = fetchStatus === 'loading' || deleteStatus === 'loading';
   const handleNavigate = React.useCallback((path: string) => navigate(path), [navigate]);
@@ -120,23 +120,21 @@ const DepartmentCatalogPage: React.FC = () => {
   }, [fetchStatus, page, dispatch]);
 
   React.useEffect(() => {
-    setProps({
+    setPortalProps({
       label: 'Search Departments',
       testSelector: getTestSelectorByModule(testModule, testSubModule, 'search-departments'),
     });
-  }, [setProps]);
+  }, [setPortalProps]);
 
   React.useEffect(() => {
-    if (searchChanged) {
+    if (searchTermChanged) {
       handlePageChange({ search, pageNumber: 1 });
-      setSearchChanged(false);
+      setSearchTermChanged(false);
     }
-  }, [search, searchChanged, handlePageChange, setSearchChanged]);
+  }, [search, searchTermChanged, handlePageChange, setSearchTermChanged]);
 
   useUnmount(() => {
-    // TODO: search is not being reset correctly which causes multiple fetching
     if (search) {
-      setSearchChanged(false);
       dispatch(resetDepartmentsFetchStatus());
       dispatch(resetDepartmentsPagination());
     }

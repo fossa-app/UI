@@ -2,24 +2,24 @@ import * as React from 'react';
 import { SearchPortalProps } from './SearchPortal';
 
 interface SearchContextType {
-  search: string;
+  searchTerm: string;
   // TODO: find better solution
-  searchChanged: boolean;
-  props: SearchPortalProps;
-  setSearch: (search: string) => void;
-  setSearchChanged: (changed: boolean) => void;
-  setProps: (props: SearchPortalProps) => void;
+  searchTermChanged: boolean;
+  portalProps: SearchPortalProps;
+  setSearchTerm: (term: string) => void;
+  setSearchTermChanged: (changed: boolean) => void;
+  setPortalProps: (props: SearchPortalProps) => void;
 }
 
 const SearchContext = React.createContext<SearchContextType | undefined>(undefined);
 
 export const SearchProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const [search, setSearch] = React.useState('');
-  const [props, setProps] = React.useState<SearchPortalProps>({});
-  const [searchChanged, setSearchChanged] = React.useState(false);
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [searchTermChanged, setSearchTermChanged] = React.useState(false);
+  const [portalProps, setPortalProps] = React.useState<SearchPortalProps>({});
 
   return (
-    <SearchContext.Provider value={{ search, searchChanged, props, setSearch, setSearchChanged, setProps }}>
+    <SearchContext.Provider value={{ searchTerm, searchTermChanged, portalProps, setSearchTerm, setSearchTermChanged, setPortalProps }}>
       {children}
     </SearchContext.Provider>
   );
