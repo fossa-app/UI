@@ -116,7 +116,6 @@ describe('Employee Catalog Tests', () => {
           'have.text',
           'Full Name'
         );
-        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 3);
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-firstName')
           .find('p')
           .should('exist')
@@ -172,24 +171,24 @@ describe('Employee Catalog Tests', () => {
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 3);
 
-        search(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees', 'Anthony');
-
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10, search: 'Anthony' },
           { alias: 'fetchSearchedEmployeesRequest', fixture: 'employee/employees' }
         );
+
+        search(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees', 'Anthony');
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
 
         cy.wait('@fetchSearchedEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10&search=Anthony');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 1);
 
-        search(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees', 'Joe');
-
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10, search: 'Joe' },
           { alias: 'fetchSearchedNoEmployeesRequest', fixture: 'employee/employees-empty' }
         );
+
+        search(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees', 'Joe');
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
 
@@ -206,7 +205,6 @@ describe('Employee Catalog Tests', () => {
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees').find('input').clear();
 
-        getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
         cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 3);
       });
@@ -231,6 +229,12 @@ describe('Employee Catalog Tests', () => {
         cy.wait('@fetchMultipleEmployeesRequest');
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 3);
+
+        cy.intercept('GET', '**/Employees?pageNumber=1&pageSize=10').as('fetchEmployeesClearedSearchRequest');
+
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees-clear').click();
+
+        cy.get('@fetchEmployeesClearedSearchRequest.all').should('have.length', 0);
       });
 
       it('should display correct employees and branches when searching employees and navigating to branches', () => {
@@ -244,12 +248,12 @@ describe('Employee Catalog Tests', () => {
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 3);
 
-        search(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees', 'Test');
-
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10, search: 'Test' },
           { alias: 'fetchSearchedNoEmployeesRequest', fixture: 'employee/employees-empty' }
         );
+
+        search(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees', 'Test');
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
 
@@ -320,6 +324,77 @@ describe('Employee Catalog Tests', () => {
         selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'view', '333333333335');
 
         cy.url().should('include', `${ROUTES.employees.path}/view/333333333335`);
+      });
+
+      it('should render the mobile view if there are fetched employees', () => {
+        cy.mockMobileView();
+        interceptFetchEmployeesRequest(
+          { pageNumber: 1, pageSize: 10 },
+          { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
+        );
+
+        getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
+        cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'page-subtitle').should('not.exist');
+        getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('not.exist');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-data-card-item', true).should(
+          'have.length',
+          3
+        );
+        getTestSelectorByModule(
+          Module.employeeManagement,
+          SubModule.employeeCatalog,
+          'table-data-card-label-333333333335-firstName'
+        ).should('have.text', 'First Name');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-data-card-label-333333333335-lastName').should(
+          'have.text',
+          'Last Name'
+        );
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-data-card-label-333333333335-fullName').should(
+          'have.text',
+          'Full Name'
+        );
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-data-card-value-333333333335-firstName')
+          .find('p')
+          .should('exist')
+          .and('have.text', 'Anthony');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-data-card-value-333333333335-lastName')
+          .should('exist')
+          .and('have.text', 'Crowley');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-data-card-value-333333333335-fullName')
+          .should('exist')
+          .and('have.text', 'Anthony User Crowley');
+        getTestSelectorByModule(
+          Module.employeeManagement,
+          SubModule.employeeCatalog,
+          'table-data-card-value-333333333335-assignedBranchName'
+        )
+          .should('exist')
+          .and('have.text', 'New York Branch');
+        getTestSelectorByModule(
+          Module.employeeManagement,
+          SubModule.employeeCatalog,
+          'table-data-card-value-333333333335-assignedDepartmentName'
+        )
+          .should('exist')
+          .and('have.text', 'Production');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'actions-menu-icon-333333333335')
+          .should('exist')
+          .click();
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'action-view-333333333335').should(
+          viewActionButtonExists ? 'exist' : 'not.exist'
+        );
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'action-edit-333333333335').should(
+          editActionButtonExists ? 'exist' : 'not.exist'
+        );
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'action-delete-333333333335').should(
+          deleteActionButtonExists ? 'exist' : 'not.exist'
+        );
+        getTablePaginationSizeInput(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('have.value', '10');
+        getTablePaginationDisplayedRows(Module.employeeManagement, SubModule.employeeCatalog, 'table-pagination').should(
+          'have.text',
+          '1–3 of 3'
+        );
       });
     });
   });

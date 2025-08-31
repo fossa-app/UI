@@ -215,12 +215,12 @@ describe('Department Catalog Tests', () => {
             4
           );
 
-          search(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments', 'Production');
-
           interceptFetchDepartmentsRequest(
             { pageNumber: 1, pageSize: 10, search: 'Production' },
             { alias: 'fetchSearchedDepartmentsRequest', fixture: 'department/departments-searched' }
           );
+
+          search(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments', 'Production');
 
           getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
           cy.wait('@fetchSearchedDepartmentsRequest')
@@ -231,12 +231,12 @@ describe('Department Catalog Tests', () => {
             3
           );
 
-          search(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments', 'Sound');
-
           interceptFetchDepartmentsRequest(
             { pageNumber: 1, pageSize: 10, search: 'Sound' },
             { alias: 'fetchSearchedNoDepartmentsRequest', fixture: 'department/departments-empty' }
           );
+
+          search(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments', 'Sound');
 
           getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
           cy.wait('@fetchSearchedNoDepartmentsRequest')
@@ -257,7 +257,6 @@ describe('Department Catalog Tests', () => {
 
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments').find('input').clear();
 
-          getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
           cy.wait('@fetchMultipleDepartmentsRequest').its('request.url').should('include', 'Departments?pageNumber=1&pageSize=10');
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
             'have.length',
@@ -297,6 +296,12 @@ describe('Department Catalog Tests', () => {
             'have.length',
             4
           );
+
+          cy.intercept('GET', '**/Departments?pageNumber=1&pageSize=10').as('fetchDepartmentsClearedSearchRequest');
+
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments-clear').click();
+
+          cy.get('@fetchDepartmentsClearedSearchRequest.all').should('have.length', 0);
         });
 
         it(`should ${isAdminRole ? '' : 'not '}be able to manually navigate to the Department Management page`, () => {
@@ -395,6 +400,88 @@ describe('Department Catalog Tests', () => {
             .find('p')
             .should('have.text', '-');
         });
+
+        it('should render the mobile view if there are fetched departments', () => {
+          cy.mockMobileView();
+          interceptFetchDepartmentsRequest();
+          interceptFetchDepartmentsByIdsRequest();
+          interceptFetchEmployeesByIdsRequest();
+
+          cy.wait('@fetchDepartmentsRequest').its('request.url').should('include', 'Departments?pageNumber=1&pageSize=10');
+          cy.wait('@fetchDepartmentsByIdsRequest');
+          cy.wait('@fetchEmployeesByIdsRequest');
+
+          getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('not.exist');
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-data-card-item', true).should(
+            'have.length',
+            4
+          );
+          getTestSelectorByModule(
+            Module.departmentManagement,
+            SubModule.departmentCatalog,
+            'table-data-card-label-444444444444-name'
+          ).should('have.text', 'Name');
+          getTestSelectorByModule(
+            Module.departmentManagement,
+            SubModule.departmentCatalog,
+            'table-data-card-label-444444444444-parentDepartmentName'
+          ).should('have.text', 'Parent Department');
+          getTestSelectorByModule(
+            Module.departmentManagement,
+            SubModule.departmentCatalog,
+            'table-data-card-label-444444444444-managerName'
+          ).should('have.text', 'Manager');
+          getTestSelectorByModule(
+            Module.departmentManagement,
+            SubModule.departmentCatalog,
+            'table-data-card-value-444444444444-name'
+          ).should('have.text', 'Production');
+          getTestSelectorByModule(
+            Module.departmentManagement,
+            SubModule.departmentCatalog,
+            'table-data-card-value-444444444444-parentDepartmentName'
+          ).should('have.text', '-');
+          getTestSelectorByModule(
+            Module.departmentManagement,
+            SubModule.departmentCatalog,
+            'table-data-card-value-444444444444-managerName'
+          ).should('have.text', 'Anthony User Crowley');
+          getTestSelectorByModule(
+            Module.departmentManagement,
+            SubModule.departmentCatalog,
+            'table-data-card-value-444444444445-name'
+          ).should('have.text', 'Line Production');
+          getTestSelectorByModule(
+            Module.departmentManagement,
+            SubModule.departmentCatalog,
+            'table-data-card-value-444444444445-parentDepartmentName'
+          ).should('have.text', 'Production');
+          getTestSelectorByModule(
+            Module.departmentManagement,
+            SubModule.departmentCatalog,
+            'table-data-card-value-444444444445-managerName'
+          ).should('have.text', 'Anthony User Crowley');
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'actions-menu-icon-444444444444')
+            .should('exist')
+            .click();
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'action-view-444444444444').should(
+            viewActionButtonExists ? 'exist' : 'not.exist'
+          );
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'action-edit-444444444444').should(
+            editActionButtonExists ? 'exist' : 'not.exist'
+          );
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'action-delete-444444444444').should(
+            deleteActionButtonExists ? 'exist' : 'not.exist'
+          );
+          getTablePaginationSizeInput(Module.departmentManagement, SubModule.departmentCatalog, 'table-pagination').should(
+            'have.value',
+            '10'
+          );
+          getTablePaginationDisplayedRows(Module.departmentManagement, SubModule.departmentCatalog, 'table-pagination').should(
+            'have.text',
+            '1–4 of 4'
+          );
+        });
       });
     }
   );
@@ -435,16 +522,17 @@ describe('Department Catalog Tests', () => {
       getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
 
       interceptFetchDepartmentsByIdsRequest();
-      interceptFetchDepartmentsRequest(
-        { pageNumber: 1, pageSize: 10 },
-        { alias: 'fetchCreatedDepartmentsRequest', fixture: 'department/departments-created' }
-      );
 
       fillDepartmentDetailsForm({
         name: 'Set Design',
         parentDepartmentId: 444444444446,
         managerId: 333333333333,
       });
+
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 10 },
+        { alias: 'fetchCreatedDepartmentsRequest', fixture: 'department/departments-created' }
+      );
 
       clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
 
