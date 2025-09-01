@@ -1,0 +1,7 @@
+scan:
+  skip-dirs:
+    - 'node_modules'
+  skip-files:
+    - 'node_modules/**'
+    - '**/node_modules/**'
+    - '**/node_modules/**/*.Dockerfile'

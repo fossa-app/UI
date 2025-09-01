@@ -10,6 +10,7 @@ docker run --rm `
     -e FIX_DOTNET_SLN_FORMAT_STYLE=true `
     -e FIX_DOTNET_SLN_FORMAT_WHITESPACE=true `
     -e FIX_ENV=true `
+    -e FIX_GITHUB_ACTIONS_ZIZMOR=true `
     -e FIX_JAVASCRIPT_ES=true `
     -e FIX_JAVASCRIPT_PRETTIER=true `
     -e FIX_JSON=true `
