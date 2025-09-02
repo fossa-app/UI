@@ -57,7 +57,18 @@ const Header: React.FC = () => {
   return (
     <AppBar position="sticky" component="nav">
       <Toolbar>
-        <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexGrow: 1 }}>
+        <Grid
+          container
+          spacing={{ xs: 2, sm: 4 }}
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexGrow: 1,
+            flexWrap: 'wrap',
+            py: 2,
+          }}
+        >
           <Grid size="auto">
             <IconButton
               data-cy={getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon')}
@@ -70,6 +81,7 @@ const Header: React.FC = () => {
               <MenuIcon />
             </IconButton>
           </Grid>
+
           {profile && (
             <Grid size="auto">
               <IconButton
@@ -83,6 +95,7 @@ const Header: React.FC = () => {
               </IconButton>
             </Grid>
           )}
+
           <Grid size="grow">
             {companyName && (
               <Typography
@@ -91,19 +104,22 @@ const Header: React.FC = () => {
                 noWrap
                 variant="h6"
                 onClick={handleCompanyClick}
-                sx={{ maxWidth: { sm: 320, xs: 120, cursor: 'pointer' } }}
+                sx={{ cursor: 'pointer' }}
               >
                 {companyName}
               </Typography>
             )}
           </Grid>
+
           <Grid size="auto">
             <div id={SEARCH_PORTAL_ID} />
             <SearchPortal fullWidth size="small" />
           </Grid>
+
           <Grid size="auto">
             <ThemeButton isDarkTheme={isDarkTheme} onClick={handleThemeChange} />
           </Grid>
+
           <Grid size="auto">
             {profile && <ProfileMenu profile={profile} onLogoutClick={handleLogout} onProfileClick={handleProfileClick} />}
           </Grid>

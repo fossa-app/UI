@@ -8,5 +8,6 @@ declare namespace Cypress {
     mockTheme(mode?: 'light' | 'dark'): Chainable<void>;
     mockDarkTheme(): Chainable<void>;
     mockLightTheme(): Chainable<void>;
+    mockMobileView(): Chainable<void>;
   }
 }

@@ -129,3 +129,7 @@ Cypress.Commands.add('mockDarkTheme', () => {
 Cypress.Commands.add('mockLightTheme', () => {
   cy.mockTheme('light');
 });
+
+Cypress.Commands.add('mockMobileView', () => {
+  cy.viewport(390, 844);
+});

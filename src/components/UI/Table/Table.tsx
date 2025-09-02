@@ -6,13 +6,15 @@ import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import TablePagination from '@mui/material/TablePagination';
 import Paper, { PaperProps } from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import { useResponsive } from 'shared/hooks';
 import { Item, Module, SubModule } from 'shared/models';
-import { APP_CONFIG } from 'shared/constants';
 import { CUSTOM_STYLES } from 'shared/themes';
 import Page from 'components/UI/Page';
 import { Column } from './table.model';
 import { StyledTable } from './StyledTable';
 import LinearLoader from '../LinearLoader';
+import ResponsiveRow from './ResponsiveRow';
 
 type TableProps<T> = {
   module: Module;
@@ -44,6 +46,9 @@ const Table = <T extends Item>({
   onPageSizeChange,
   ...props
 }: TableProps<T>) => {
+  const { isMobile } = useResponsive();
+  const noData = !loading && items.length === 0;
+
   const handlePageNumberChange = (_: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
     onPageNumberChange(page + 1);
   };
@@ -52,35 +57,14 @@ const Table = <T extends Item>({
     onPageSizeChange(Number(event.target.value));
   };
 
-  const tableContent = (
-    <TableBody>
-      {!loading && items.length === 0 ? (
-        <TableRow>
-          <TableCell colSpan={columns.length} align="center">
-            {noRecordsTemplate ?? (
-              <Page module={module} subModule={subModule} sx={{ margin: 0 }}>
-                <Page.Subtitle>No Records Found</Page.Subtitle>
-              </Page>
-            )}
-          </TableCell>
-        </TableRow>
-      ) : (
-        items.map((row) => (
-          <TableRow hover data-cy={`${module}-${subModule}-table-body-row-${row.id}`} key={row.id}>
-            {columns.map((column) => (
-              <TableCell
-                data-cy={`${module}-${subModule}-table-body-cell-${row.id}-${column.field}`}
-                key={column.field}
-                align={column.align || 'left'}
-                sx={{ width: column.width || 'auto' }}
-              >
-                {column.renderBodyCell ? column.renderBodyCell(row) : (row[column.field] ?? APP_CONFIG.emptyValue)}
-              </TableCell>
-            ))}
-          </TableRow>
-        ))
+  const renderEmptyState = () => (
+    <Box sx={{ p: 2 }}>
+      {noRecordsTemplate ?? (
+        <Page module={module} subModule={subModule} sx={{ margin: 0 }}>
+          <Page.Subtitle>No Records Found</Page.Subtitle>
+        </Page>
       )}
-    </TableBody>
+    </Box>
   );
 
   return (
@@ -101,25 +85,52 @@ const Table = <T extends Item>({
       }}
       {...props}
     >
-      <TableContainer sx={{ flexGrow: 1, maxHeight: 'calc(100% - 70px)' }}>
-        <StyledTable stickyHeader>
-          <TableHead>
-            <TableRow data-cy={`${module}-${subModule}-table-head-row`}>
-              {columns.map((column) => (
-                <TableCell
-                  data-cy={`${module}-${subModule}-table-header-cell-${column.field}`}
-                  key={column.field}
-                  align={column.align || 'left'}
-                  sx={{ width: column.width, fontSize: 16 }}
-                >
-                  {column.name}
-                </TableCell>
+      {isMobile ? (
+        <Box sx={{ flexGrow: 1, maxHeight: 'calc(100% - 70px)', overflow: 'auto' }}>
+          {noData ? (
+            renderEmptyState()
+          ) : (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, p: 2 }}>
+              {items.map((item) => (
+                <ResponsiveRow key={item.id} module={module} subModule={subModule} item={item} columns={columns} isMobile={isMobile} />
               ))}
-            </TableRow>
-          </TableHead>
-          {tableContent}
-        </StyledTable>
-      </TableContainer>
+            </Box>
+          )}
+        </Box>
+      ) : (
+        <TableContainer sx={{ flexGrow: 1, maxHeight: 'calc(100% - 70px)' }}>
+          <StyledTable stickyHeader>
+            <TableHead>
+              <TableRow data-cy={`${module}-${subModule}-table-head-row`}>
+                {columns.map((column) => (
+                  <TableCell
+                    data-cy={`${module}-${subModule}-table-header-cell-${column.field}`}
+                    key={column.field}
+                    align={column.align || 'left'}
+                    sx={{ width: column.width, fontSize: 16 }}
+                  >
+                    {column.name}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {noData ? (
+                <TableRow>
+                  <TableCell colSpan={columns.length} align="center">
+                    {renderEmptyState()}
+                  </TableCell>
+                </TableRow>
+              ) : (
+                items.map((item) => (
+                  <ResponsiveRow key={item.id} module={module} subModule={subModule} item={item} columns={columns} isMobile={isMobile} />
+                ))
+              )}
+            </TableBody>
+          </StyledTable>
+        </TableContainer>
+      )}
+
       <TablePagination
         data-cy={`${module}-${subModule}-table-pagination`}
         component="div"
@@ -130,6 +141,7 @@ const Table = <T extends Item>({
         onPageChange={handlePageNumberChange}
         onRowsPerPageChange={handlePageSizeChange}
       />
+
       <LinearLoader open={loading} />
     </Paper>
   );

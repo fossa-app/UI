@@ -152,23 +152,23 @@ describe('Branch Catalog Tests', () => {
 
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 2);
 
-          search(Module.branchManagement, SubModule.branchCatalog, 'search-branches', 'New');
-
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: 'New' },
             { alias: 'fetchSearchedBranchesRequest', fixture: 'branch/branches' }
           );
 
+          search(Module.branchManagement, SubModule.branchCatalog, 'search-branches', 'New');
+
           getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('exist');
           cy.wait('@fetchSearchedBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10&search=New');
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 1);
-
-          search(Module.branchManagement, SubModule.branchCatalog, 'search-branches', 'Old');
 
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: 'Old' },
             { alias: 'fetchSearchedNoBranchesRequest', fixture: 'branch/branches-empty' }
           );
+
+          search(Module.branchManagement, SubModule.branchCatalog, 'search-branches', 'Old');
 
           getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('exist');
           cy.wait('@fetchSearchedNoBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10&search=Old');
@@ -184,12 +184,10 @@ describe('Branch Catalog Tests', () => {
 
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'search-branches').find('input').clear();
 
-          getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('exist');
           cy.wait('@fetchMultipleBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 2);
         });
 
-        // TODO: flaky test
         it('should display correct branches and employees when searching branches and navigating to employees', () => {
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10 },
@@ -203,12 +201,12 @@ describe('Branch Catalog Tests', () => {
 
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 2);
 
-          search(Module.branchManagement, SubModule.branchCatalog, 'search-branches', 'Test');
-
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: 'Test' },
             { alias: 'fetchSearchedNoBranchesRequest', fixture: 'branch/branches-empty' }
           );
+
+          search(Module.branchManagement, SubModule.branchCatalog, 'search-branches', 'Test');
 
           getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('exist');
 
@@ -354,6 +352,12 @@ describe('Branch Catalog Tests', () => {
           cy.wait('@fetchMultipleBranchesRequest');
 
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 2);
+
+          cy.intercept('GET', '**/Branches?pageNumber=1&pageSize=10').as('fetchBranchesClearedSearchRequest');
+
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'search-branches-clear').click();
+
+          cy.get('@fetchBranchesClearedSearchRequest.all').should('have.length', 0);
         });
 
         it('should mark the fields as invalid if the company country is different than the branch address country', () => {
@@ -383,6 +387,55 @@ describe('Branch Catalog Tests', () => {
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-cell-222222222225-fullAddress')
             .find('p')
             .should('have.text', '-');
+        });
+
+        it('should render the mobile view if there are fetched branches', () => {
+          cy.mockMobileView();
+          interceptFetchBranchesRequest();
+
+          cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'page-subtitle').should('not.exist');
+          getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('not.exist');
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-data-card-item', true).should('have.length', 1);
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-data-card-label-222222222222-name').should(
+            'have.text',
+            'Name'
+          );
+          getTestSelectorByModule(
+            Module.branchManagement,
+            SubModule.branchCatalog,
+            'table-data-card-label-222222222222-timeZoneName'
+          ).should('have.text', 'TimeZone');
+          getTestSelectorByModule(
+            Module.branchManagement,
+            SubModule.branchCatalog,
+            'table-data-card-label-222222222222-fullAddress'
+          ).should('have.text', 'Address');
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-data-card-value-222222222222-timeZoneName')
+            .find('p')
+            .should('not.have.attr', 'data-invalid');
+          getTestSelectorByModule(
+            Module.branchManagement,
+            SubModule.branchCatalog,
+            'table-data-card-value-222222222222-fullAddress'
+          ).should('have.text', '270 W 11th Street, Apt 2E, New York, NY 10014, United States');
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'actions-menu-icon-222222222222')
+            .should('exist')
+            .click();
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'action-view-222222222222').should(
+            viewActionButtonExists ? 'exist' : 'not.exist'
+          );
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'action-edit-222222222222').should(
+            editActionButtonExists ? 'exist' : 'not.exist'
+          );
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'action-delete-222222222222').should(
+            deleteActionButtonExists ? 'exist' : 'not.exist'
+          );
+          getTablePaginationSizeInput(Module.branchManagement, SubModule.branchCatalog, 'table-pagination').should('have.value', '10');
+          getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchCatalog, 'table-pagination').should(
+            'have.text',
+            '1–1 of 1'
+          );
         });
       });
     }

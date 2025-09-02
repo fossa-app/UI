@@ -1,13 +1,14 @@
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 
-export const StyledTextField = styled(TextField)(({
-  theme: {
+export const StyledTextField = styled(TextField)(({ theme }) => {
+  const {
     palette: {
       primary: { contrastText },
     },
-  },
-}) => {
+    breakpoints,
+  } = theme;
+
   return {
     '& label.Mui-focused': {
       color: contrastText,
@@ -26,6 +27,9 @@ export const StyledTextField = styled(TextField)(({
     },
     '& .MuiInputBase-input': {
       color: contrastText,
+    },
+    [breakpoints.down('sm')]: {
+      width: '200px',
     },
   };
 });

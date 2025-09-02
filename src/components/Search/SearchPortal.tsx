@@ -28,8 +28,11 @@ const SearchPortal: React.FC<SearchPortalProps> = (searchPortalProps) => {
   };
 
   const handleClear = () => {
+    if (searchTerm) {
+      setSearchTermChanged(true);
+    }
+
     setSearchTerm('');
-    setSearchTermChanged(true);
   };
 
   React.useEffect(() => {
