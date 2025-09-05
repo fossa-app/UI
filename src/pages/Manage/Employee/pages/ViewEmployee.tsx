@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchEmployeeById, selectEmployee, resetEmployee, selectProfile, selectUserRoles } from 'store/features';
 import { UserRole } from 'shared/models';
-import { EMPLOYEE_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
+import { EMPLOYEE_VIEW_DETAILS_SCHEMA, ROUTES, ACTION_BUTTON_STYLES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
 import WithRolesLayout from 'components/layouts/WithRolesLayout';
 import ViewDetails from 'components/UI/ViewDetails';
@@ -59,13 +59,14 @@ const ViewEmployeePage: React.FC = () => {
       <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>
         <ViewDetails.Header>{EMPLOYEE_VIEW_DETAILS_SCHEMA.title}</ViewDetails.Header>
         <ViewDetails.Content fields={EMPLOYEE_VIEW_DETAILS_SCHEMA.fields} values={employee} />
-        <ViewDetails.Actions>
+        <ViewDetails.Actions sx={{ flexWrap: 'wrap', gap: 4 }}>
           {profile?.id === employee?.id && (
             <Button
               data-cy={`${testModule}-${testSubModule}-view-profile-button`}
               aria-label="View Profile Button"
               variant="outlined"
               color="secondary"
+              sx={ACTION_BUTTON_STYLES}
               onClick={handleProfileClick}
             >
               Profile
@@ -77,6 +78,7 @@ const ViewEmployeePage: React.FC = () => {
               aria-label="Edit Employee Button"
               variant="contained"
               color="primary"
+              sx={ACTION_BUTTON_STYLES}
               onClick={handleEditClick}
             >
               Edit

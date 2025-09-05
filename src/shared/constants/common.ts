@@ -1,3 +1,5 @@
+import { SxProps, Theme } from '@mui/material/styles';
+
 export const ACTION_FIELDS = {
   view: {
     field: 'view',
@@ -19,3 +21,5 @@ export const ACTION_FIELD = {
 };
 
 export const SEARCH_PORTAL_ID = 'search-field';
+
+export const ACTION_BUTTON_STYLES: SxProps<Theme> = { width: { xs: '100%', sm: 'auto' } };

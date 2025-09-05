@@ -41,7 +41,7 @@ const ViewCompanyPage: React.FC = () => {
 
   const companyLicenseNoValuesTemplate = (
     <Page module={Module.companyManagement} subModule={SubModule.companyLicenseViewDetails} sx={{ margin: 0 }}>
-      <Page.Title>Company License has not been uploaded.</Page.Title>
+      <Page.Title typographyProps={{ variant: 'h6' }}>Company License has not been uploaded.</Page.Title>
       <Page.Subtitle>Please go to the Company Onboarding and upload the License.</Page.Subtitle>
     </Page>
   );

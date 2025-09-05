@@ -24,7 +24,7 @@ const FormActions: React.FC<FormActionsProps> = ({ actions, children, ...props }
   }
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 4, padding: 6, ...props.sx }}>
+    <Box sx={{ display: 'flex', justifyContent: 'flex-end', flexWrap: 'wrap', gap: 4, padding: { xs: 3, sm: 6 }, ...props.sx }}>
       {actions ? actions.map((action) => <FormAction key={action.name} {...action} />) : children}
     </Box>
   );

@@ -24,17 +24,17 @@ const renderCellContent = <T extends Item>(item: T, column: Column<T>): React.Re
 const ResponsiveRow = <T extends Item>({ module, subModule, item, columns, isMobile }: ResponsiveRowProps<T>) => {
   if (isMobile) {
     return (
-      <Card data-cy={`${module}-${subModule}-table-data-card-item-${item.id}`}>
+      <Card data-cy={`${module}-${subModule}-table-body-row-${item.id}`}>
         <CardContent>
           {columns.map((column) => {
             const content = renderCellContent(item, column);
 
             return (
               <Box key={column.field} sx={{ display: 'flex', flexDirection: 'column', mb: 3 }}>
-                <Typography data-cy={`${module}-${subModule}-table-data-card-label-${item.id}-${column.field}`} variant="body2">
+                <Typography data-cy={`${module}-${subModule}-table-header-cell-${item.id}-${column.field}`} variant="body2">
                   {column.name}
                 </Typography>
-                <Box data-cy={`${module}-${subModule}-table-data-card-value-${item.id}-${column.field}`} sx={{ flex: 1 }}>
+                <Box data-cy={`${module}-${subModule}-table-body-cell-${item.id}-${column.field}`} sx={{ flex: 1 }}>
                   {React.isValidElement(content) ? content : <Typography variant="body1">{content}</Typography>}
                 </Box>
               </Box>

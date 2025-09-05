@@ -15,7 +15,7 @@ const FormHeader: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <AppBar position="static" component="header" color="primary" data-cy={`${module}-${subModule}-form-header`}>
-      <Toolbar disableGutters sx={{ px: 6 }}>
+      <Toolbar disableGutters sx={{ px: { xs: 3, sm: 6 } }}>
         <Typography variant="h6">{children}</Typography>
       </Toolbar>
     </AppBar>

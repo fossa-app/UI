@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import LoadingButton from 'components/UI/LoadingButton';
-import { ICONS } from 'shared/constants';
+import { ICONS, ACTION_BUTTON_STYLES } from 'shared/constants';
 import { FormActionProps, FormActionType } from '../form.model';
 import { useFormContext } from '../FormContext';
 
@@ -14,7 +14,12 @@ const FormAction: React.FC<FormActionProps> = (props: FormActionProps) => {
   switch (props.actionType) {
     case FormActionType.button:
       return (
-        <Button {...buttonProps} data-cy={`${module}-${subModule}-form-${props.name}-button`} aria-label={ariaLabel}>
+        <Button
+          {...buttonProps}
+          data-cy={`${module}-${subModule}-form-${props.name}-button`}
+          aria-label={ariaLabel}
+          sx={ACTION_BUTTON_STYLES}
+        >
           {props.label}
         </Button>
       );
@@ -26,6 +31,7 @@ const FormAction: React.FC<FormActionProps> = (props: FormActionProps) => {
           loading={props.loading}
           endIcon={Icon ? <Icon /> : null}
           aria-label={ariaLabel}
+          sx={ACTION_BUTTON_STYLES}
         >
           {props.label}
         </LoadingButton>

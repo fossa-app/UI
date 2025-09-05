@@ -4,7 +4,7 @@ import { usePageContext } from './PageContext';
 
 type PageSubtitleProps = TypographyProps;
 
-const PageSubtitle = ({ children, ...props }: React.PropsWithChildren<PageSubtitleProps>) => {
+const PageSubtitle = ({ variant = 'subtitle1', children, ...props }: React.PropsWithChildren<PageSubtitleProps>) => {
   const context = usePageContext();
 
   if (!context) {
@@ -16,8 +16,8 @@ const PageSubtitle = ({ children, ...props }: React.PropsWithChildren<PageSubtit
   return (
     <Typography
       data-cy={`${module}-${subModule}-page-subtitle`}
-      variant="subtitle1"
-      component="h2"
+      variant={variant}
+      component="p"
       color="textSecondary"
       sx={{ textAlign: 'center' }}
       {...props}

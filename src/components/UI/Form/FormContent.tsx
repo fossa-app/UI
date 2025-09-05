@@ -40,7 +40,16 @@ const FormContent = <T,>({ fields, values, children }: FormContentProps<T>) => {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1, padding: 6, overflowY: 'auto' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        flexGrow: 1,
+        padding: { xs: 3, sm: 6 },
+        overflowY: 'auto',
+      }}
+    >
       {fields?.length ? (
         <Grid container spacing={4}>
           {fields.map((field) => (

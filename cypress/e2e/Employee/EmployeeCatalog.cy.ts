@@ -337,45 +337,33 @@ describe('Employee Catalog Tests', () => {
         cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'page-subtitle').should('not.exist');
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('not.exist');
-        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-data-card-item', true).should(
-          'have.length',
-          3
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 3);
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-header-cell-333333333335-firstName').should(
+          'have.text',
+          'First Name'
         );
-        getTestSelectorByModule(
-          Module.employeeManagement,
-          SubModule.employeeCatalog,
-          'table-data-card-label-333333333335-firstName'
-        ).should('have.text', 'First Name');
-        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-data-card-label-333333333335-lastName').should(
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-header-cell-333333333335-lastName').should(
           'have.text',
           'Last Name'
         );
-        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-data-card-label-333333333335-fullName').should(
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-header-cell-333333333335-fullName').should(
           'have.text',
           'Full Name'
         );
-        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-data-card-value-333333333335-firstName')
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-firstName')
           .find('p')
           .should('exist')
           .and('have.text', 'Anthony');
-        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-data-card-value-333333333335-lastName')
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-lastName')
           .should('exist')
           .and('have.text', 'Crowley');
-        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-data-card-value-333333333335-fullName')
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-fullName')
           .should('exist')
           .and('have.text', 'Anthony User Crowley');
-        getTestSelectorByModule(
-          Module.employeeManagement,
-          SubModule.employeeCatalog,
-          'table-data-card-value-333333333335-assignedBranchName'
-        )
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedBranchName')
           .should('exist')
           .and('have.text', 'New York Branch');
-        getTestSelectorByModule(
-          Module.employeeManagement,
-          SubModule.employeeCatalog,
-          'table-data-card-value-333333333335-assignedDepartmentName'
-        )
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedDepartmentName')
           .should('exist')
           .and('have.text', 'Production');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'actions-menu-icon-333333333335')

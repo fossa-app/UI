@@ -7,6 +7,7 @@ import CardActions from '@mui/material/CardActions';
 import Divider from '@mui/material/Divider';
 import LockIcon from '@mui/icons-material/Lock';
 import { getUserManager } from 'shared/helpers';
+import { ACTION_BUTTON_STYLES } from 'shared/constants';
 
 const LoginPage: React.FC = () => {
   const userManager = getUserManager();
@@ -22,8 +23,8 @@ const LoginPage: React.FC = () => {
           data-cy="login-form-title"
           title="Login"
           avatar={<LockIcon color="primary" />}
-          titleTypographyProps={{
-            variant: 'h5',
+          slotProps={{
+            title: { variant: 'h6' },
           }}
         />
         <Divider />
@@ -34,6 +35,7 @@ const LoginPage: React.FC = () => {
             aria-label="Login"
             variant="contained"
             color="primary"
+            sx={ACTION_BUTTON_STYLES}
             onClick={handleLogin}
           >
             Login
