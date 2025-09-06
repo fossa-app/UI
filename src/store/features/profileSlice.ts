@@ -31,7 +31,7 @@ export const fetchProfile = createAsyncThunk<Employee | undefined, void, { rejec
         const state = getState() as RootState;
         const user = state.auth.user.data;
 
-        return mapEmployee(data, user);
+        return mapEmployee({ user, employee: data });
       }
     } catch (error) {
       return rejectWithValue({

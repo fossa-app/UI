@@ -1,6 +1,7 @@
 import { DEPARTMENT_FIELDS } from 'shared/constants';
 import { Department, DepartmentDTO, Employee, EmployeeDTO } from 'shared/models';
 import { FormFieldProps, FieldOption } from 'components/UI/Form';
+import { mapEmployeeToFieldOption } from './employee.helpers';
 
 export const mapDepartment = (department: DepartmentDTO, parentDepartment?: DepartmentDTO, employee?: EmployeeDTO): Department => {
   const managerName = employee?.fullName;
@@ -55,13 +56,6 @@ export const mapDepartmentToFieldOption = (department: Department): FieldOption 
   return {
     label: department.name,
     value: String(department.id),
-  };
-};
-
-export const mapEmployeeToFieldOption = (employee: Employee): FieldOption => {
-  return {
-    label: employee.firstName,
-    value: String(employee.id),
   };
 };
 

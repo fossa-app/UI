@@ -23,7 +23,8 @@
       "lastName": "Crowley",
       "fullName": "Anthony User Crowley",
       "assignedBranchId": 222222222223,
-      "assignedDepartmentId": 444444444445
+      "assignedDepartmentId": 444444444445,
+      "reportsToId": 333333333334
     }
   ],
   "totalItems": 3,

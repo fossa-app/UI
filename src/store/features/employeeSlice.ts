@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk, ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
@@ -24,6 +24,7 @@ import {
   mapError,
   prepareCommaSeparatedQueryParamsByKey,
   getEmployeesAssignedDepartmentIds,
+  getEmployeesManagerIds,
 } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
 import { fetchBranchById, fetchBranchesByIds } from './branchSlice';
@@ -53,14 +54,27 @@ const initialState: EmployeeState = {
   },
 };
 
+const fetchManager = async (dispatch: ThunkDispatch<unknown, unknown, UnknownAction>, id: string) => {
+  return dispatch(
+    fetchEmployeeById({
+      id,
+      skipState: true,
+      shouldFetchBranch: false,
+      shouldFetchDepartment: false,
+      shouldFetchEmployeeManager: false,
+      shouldFetchBranchGeoAddress: false,
+    })
+  ).unwrap();
+};
+
 export const fetchEmployees = createAsyncThunk<
   PaginatedResponse<Employee> | undefined,
-  { pagination: Partial<PaginationParams>; shouldFetchBranches?: boolean; shouldFetchDepartments?: boolean },
+  { pagination: Partial<PaginationParams>; shouldFetchBranches?: boolean; shouldFetchDepartments?: boolean; shouldFetchManagers?: boolean },
   { rejectValue: ErrorResponseDTO }
 >(
   'employee/fetchEmployees',
   async (
-    { pagination: { pageNumber, pageSize, search }, shouldFetchBranches = true, shouldFetchDepartments = true },
+    { pagination: { pageNumber, pageSize, search }, shouldFetchBranches = true, shouldFetchDepartments = true, shouldFetchManagers = true },
     { dispatch, rejectWithValue }
   ) => {
     try {
@@ -70,8 +84,10 @@ export const fetchEmployees = createAsyncThunk<
       if (data) {
         const assignedBranchIds = getEmployeesAssignedBranchIds(data.items);
         const assignedDepartmentIds = getEmployeesAssignedDepartmentIds(data.items);
+        const managerIds = getEmployeesManagerIds(data.items);
         let branches: PaginatedResponse<BranchDTO> | undefined;
         let departments: PaginatedResponse<DepartmentDTO> | undefined;
+        let managers: PaginatedResponse<EmployeeDTO> | undefined;
 
         if (shouldFetchBranches && assignedBranchIds.length) {
           branches = await dispatch(fetchBranchesByIds(assignedBranchIds)).unwrap();
@@ -81,9 +97,18 @@ export const fetchEmployees = createAsyncThunk<
           departments = await dispatch(fetchDepartmentsByIds(assignedDepartmentIds)).unwrap();
         }
 
+        if (shouldFetchManagers && managerIds.length) {
+          managers = await dispatch(fetchEmployeesByIds(managerIds)).unwrap();
+        }
+
         return {
           ...data,
-          items: mapEmployees(data.items, branches?.items, departments?.items),
+          items: mapEmployees({
+            employees: data.items,
+            branches: branches?.items,
+            departments: departments?.items,
+            managers: managers?.items,
+          }),
         };
       }
     } catch (error) {
@@ -132,18 +157,26 @@ export const fetchEmployeesTotal = createAsyncThunk<PaginatedResponse<EmployeeDT
 
 export const fetchEmployeeById = createAsyncThunk<
   Employee,
-  { id: string; skipState?: boolean; shouldFetchBranch?: boolean; shouldFetchBranchGeoAddress?: boolean; shouldFetchDepartment?: boolean },
+  {
+    id: string;
+    skipState?: boolean;
+    shouldFetchBranch?: boolean;
+    shouldFetchBranchGeoAddress?: boolean;
+    shouldFetchDepartment?: boolean;
+    shouldFetchEmployeeManager?: boolean;
+  },
   { rejectValue: ErrorResponseDTO }
 >(
   'employee/fetchEmployeeById',
   async (
-    { id, shouldFetchBranch = true, shouldFetchBranchGeoAddress = true, shouldFetchDepartment = true },
+    { id, shouldFetchBranch = true, shouldFetchBranchGeoAddress = true, shouldFetchDepartment = true, shouldFetchEmployeeManager = true },
     { dispatch, rejectWithValue }
   ) => {
     try {
       const { data } = await axios.get<EmployeeDTO>(`${ENDPOINTS.employees}/${id}`);
       let branch: Branch | undefined;
       let department: Department | undefined;
+      let manager: Employee | undefined;
 
       if (data.assignedBranchId && shouldFetchBranch) {
         branch = await dispatch(
@@ -155,7 +188,11 @@ export const fetchEmployeeById = createAsyncThunk<
         department = await dispatch(fetchDepartmentById({ id: String(data.assignedDepartmentId), skipState: true })).unwrap();
       }
 
-      return mapEmployee(data, undefined, branch, department);
+      if (data.reportsToId && shouldFetchEmployeeManager) {
+        manager = (await fetchManager(dispatch, String(data.reportsToId))) as Employee;
+      }
+
+      return mapEmployee({ branch, department, manager, employee: data, user: undefined });
     } catch (error) {
       return rejectWithValue(error as ErrorResponseDTO);
     }

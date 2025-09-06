@@ -48,7 +48,7 @@ const testDepartmentInputFields = () => {
   verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
     'form-field-name': 'Line Production',
     'form-field-parentDepartmentId': 'Production',
-    'form-field-managerId': 'Anthony',
+    'form-field-managerId': 'Anthony User Crowley',
   });
 };
 
@@ -255,7 +255,7 @@ describe('Department Management Tests', () => {
     verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
       'form-field-name': 'Production',
       'form-field-parentDepartmentId': '',
-      'form-field-managerId': 'Anthony',
+      'form-field-managerId': 'Anthony User Crowley',
     });
   });
 
@@ -493,7 +493,7 @@ describe('Department Management Tests', () => {
     verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
       'form-field-name': 'Costume',
       'form-field-parentDepartmentId': '',
-      'form-field-managerId': 'Gabriel',
+      'form-field-managerId': 'Gabriel Admin Archangel',
     });
 
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'page-title-back-button').click();
@@ -533,7 +533,7 @@ describe('Department Management Tests', () => {
     verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
       'form-field-name': 'Costume',
       'form-field-parentDepartmentId': '',
-      'form-field-managerId': 'Gabriel',
+      'form-field-managerId': 'Gabriel Admin Archangel',
     });
   });
 

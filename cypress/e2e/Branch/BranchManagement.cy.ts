@@ -38,6 +38,7 @@ import {
   interceptFetchDepartmentsByIdsRequest,
   interceptFetchDepartmentsRequest,
   interceptFetchEmployeeByIdRequest,
+  interceptFetchEmployeesByIdsRequest,
   interceptFetchEmployeesRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
@@ -459,6 +460,7 @@ describe('Branch Management Tests', () => {
 
   it('should reset the form when navigating to an employee page and back to the branch creation page', () => {
     interceptFetchEmployeeByIdRequest('333333333335');
+    interceptFetchEmployeeByIdRequest('333333333333');
     interceptFetchBranchByIdRequest('222222222222');
     interceptFetchDepartmentByIdRequest('444444444444');
     interceptFetchBranchesByIdsRequest();
@@ -472,6 +474,7 @@ describe('Branch Management Tests', () => {
       { pageNumber: 1, pageSize: 10, search: '' },
       { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
     );
+    interceptFetchEmployeesByIdsRequest();
     cy.visit(ROUTES.employees.path);
 
     cy.wait('@fetchMultipleEmployeesRequest');

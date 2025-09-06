@@ -3,6 +3,7 @@ export interface EmployeeDTO {
   companyId?: number;
   assignedBranchId: number | null;
   assignedDepartmentId: number | null;
+  reportsToId: number | null;
   firstName: string;
   lastName: string;
   fullName: string;
@@ -13,6 +14,7 @@ export interface Employee extends EmployeeDTO {
   isDraft?: boolean;
   assignedBranchName?: string;
   assignedDepartmentName?: string;
+  reportsToName?: string;
 }
 
 export type EmployeeFieldConfig = {

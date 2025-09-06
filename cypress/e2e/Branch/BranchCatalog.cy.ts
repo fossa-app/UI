@@ -27,6 +27,7 @@ import {
   interceptFetchBranchesByIdsRequest,
   interceptFetchCompanySettingsRequest,
   interceptFetchDepartmentsByIdsRequest,
+  interceptFetchEmployeesByIdsRequest,
 } from 'support/interceptors';
 
 const branchAdminRoutes = [ROUTES.newBranch.path, `${ROUTES.branches.path}/edit/222222222222`];
@@ -195,6 +196,7 @@ describe('Branch Catalog Tests', () => {
           );
           interceptFetchBranchesByIdsRequest();
           interceptFetchDepartmentsByIdsRequest();
+          interceptFetchEmployeesByIdsRequest();
 
           getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('not.exist');
           cy.wait('@fetchMultipleBranchesRequest');
