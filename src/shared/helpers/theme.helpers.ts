@@ -1,4 +1,4 @@
-import { PaletteOptions } from '@mui/material';
+import { PaletteOptions } from '@mui/material/styles';
 import { COLOR_SCHEMES } from 'shared/themes';
 import { ColorSchemeId, ThemeMode } from 'shared/models';
 

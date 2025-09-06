@@ -101,7 +101,7 @@ const Table = <T extends Item>({
         <TableContainer sx={{ flexGrow: 1, maxHeight: 'calc(100% - 70px)' }}>
           <StyledTable stickyHeader>
             <TableHead>
-              <TableRow data-cy={`${module}-${subModule}-table-head-row`}>
+              <TableRow>
                 {columns.map((column) => (
                   <TableCell
                     data-cy={`${module}-${subModule}-table-header-cell-${column.field}`}

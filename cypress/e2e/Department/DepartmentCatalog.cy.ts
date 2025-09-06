@@ -412,54 +412,51 @@ describe('Department Catalog Tests', () => {
           cy.wait('@fetchEmployeesByIdsRequest');
 
           getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('not.exist');
-          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-data-card-item', true).should(
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
             'have.length',
             4
+          );
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-header-cell-444444444444-name').should(
+            'have.text',
+            'Name'
           );
           getTestSelectorByModule(
             Module.departmentManagement,
             SubModule.departmentCatalog,
-            'table-data-card-label-444444444444-name'
-          ).should('have.text', 'Name');
-          getTestSelectorByModule(
-            Module.departmentManagement,
-            SubModule.departmentCatalog,
-            'table-data-card-label-444444444444-parentDepartmentName'
+            'table-header-cell-444444444444-parentDepartmentName'
           ).should('have.text', 'Parent Department');
           getTestSelectorByModule(
             Module.departmentManagement,
             SubModule.departmentCatalog,
-            'table-data-card-label-444444444444-managerName'
+            'table-header-cell-444444444444-managerName'
           ).should('have.text', 'Manager');
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-cell-444444444444-name').should(
+            'have.text',
+            'Production'
+          );
           getTestSelectorByModule(
             Module.departmentManagement,
             SubModule.departmentCatalog,
-            'table-data-card-value-444444444444-name'
-          ).should('have.text', 'Production');
-          getTestSelectorByModule(
-            Module.departmentManagement,
-            SubModule.departmentCatalog,
-            'table-data-card-value-444444444444-parentDepartmentName'
+            'table-body-cell-444444444444-parentDepartmentName'
           ).should('have.text', '-');
           getTestSelectorByModule(
             Module.departmentManagement,
             SubModule.departmentCatalog,
-            'table-data-card-value-444444444444-managerName'
+            'table-body-cell-444444444444-managerName'
           ).should('have.text', 'Anthony User Crowley');
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-cell-444444444445-name').should(
+            'have.text',
+            'Line Production'
+          );
           getTestSelectorByModule(
             Module.departmentManagement,
             SubModule.departmentCatalog,
-            'table-data-card-value-444444444445-name'
-          ).should('have.text', 'Line Production');
-          getTestSelectorByModule(
-            Module.departmentManagement,
-            SubModule.departmentCatalog,
-            'table-data-card-value-444444444445-parentDepartmentName'
+            'table-body-cell-444444444445-parentDepartmentName'
           ).should('have.text', 'Production');
           getTestSelectorByModule(
             Module.departmentManagement,
             SubModule.departmentCatalog,
-            'table-data-card-value-444444444445-managerName'
+            'table-body-cell-444444444445-managerName'
           ).should('have.text', 'Anthony User Crowley');
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'actions-menu-icon-444444444444')
             .should('exist')

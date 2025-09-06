@@ -3,7 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { useAppSelector } from 'store';
 import { selectCompanyOffboardingInstructionsFlags, selectIsUserAdmin } from 'store/features';
-import { COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA, ROUTES, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
+import {
+  COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA,
+  ROUTES,
+  USER_PERMISSION_GENERAL_MESSAGE,
+  ACTION_BUTTON_STYLES,
+} from 'shared/constants';
 import { CompanyDatasourceTotals, RouteItem } from 'shared/models';
 import Form from 'components/UI/Form';
 
@@ -39,6 +44,7 @@ const CompanyOffboardingInstructionsPage: React.FC = () => {
             aria-label="Branch Catalog Navigation Button"
             variant="contained"
             color="error"
+            sx={ACTION_BUTTON_STYLES}
             onClick={() => handleNavigate(ROUTES.branches.path)}
           >
             Go to Branch Catalog
@@ -50,6 +56,7 @@ const CompanyOffboardingInstructionsPage: React.FC = () => {
             aria-label="Department Catalog Navigation Button"
             variant="contained"
             color="error"
+            sx={ACTION_BUTTON_STYLES}
             onClick={() => handleNavigate(ROUTES.departments.path)}
           >
             Go to Department Catalog
@@ -60,6 +67,7 @@ const CompanyOffboardingInstructionsPage: React.FC = () => {
             aria-label="Employee Offboarding Navigation Button"
             variant="contained"
             color="error"
+            sx={ACTION_BUTTON_STYLES}
             onClick={() => handleNavigate(ROUTES.deleteEmployee.path)}
           >
             Go to Employee Offboarding

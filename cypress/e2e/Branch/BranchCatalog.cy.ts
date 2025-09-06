@@ -396,29 +396,26 @@ describe('Branch Catalog Tests', () => {
           cy.wait('@fetchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'page-subtitle').should('not.exist');
           getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('not.exist');
-          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-data-card-item', true).should('have.length', 1);
-          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-data-card-label-222222222222-name').should(
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 1);
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-header-cell-222222222222-name').should(
             'have.text',
             'Name'
           );
-          getTestSelectorByModule(
-            Module.branchManagement,
-            SubModule.branchCatalog,
-            'table-data-card-label-222222222222-timeZoneName'
-          ).should('have.text', 'TimeZone');
-          getTestSelectorByModule(
-            Module.branchManagement,
-            SubModule.branchCatalog,
-            'table-data-card-label-222222222222-fullAddress'
-          ).should('have.text', 'Address');
-          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-data-card-value-222222222222-timeZoneName')
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-header-cell-222222222222-timeZoneName').should(
+            'have.text',
+            'TimeZone'
+          );
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-header-cell-222222222222-fullAddress').should(
+            'have.text',
+            'Address'
+          );
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-cell-222222222222-timeZoneName')
             .find('p')
             .should('not.have.attr', 'data-invalid');
-          getTestSelectorByModule(
-            Module.branchManagement,
-            SubModule.branchCatalog,
-            'table-data-card-value-222222222222-fullAddress'
-          ).should('have.text', '270 W 11th Street, Apt 2E, New York, NY 10014, United States');
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-cell-222222222222-fullAddress').should(
+            'have.text',
+            '270 W 11th Street, Apt 2E, New York, NY 10014, United States'
+          );
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'actions-menu-icon-222222222222')
             .should('exist')
             .click();

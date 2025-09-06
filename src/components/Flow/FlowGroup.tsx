@@ -83,10 +83,11 @@ const FlowGroup: React.FC<FlowGroupProps> = ({
         }}
         iconProps={{
           ...iconProps,
-          sx: { ...iconProps?.sx, color, justifyContent: 'center', fontSize: '2.25rem' },
+          sx: { ...iconProps?.sx, color, justifyContent: 'center' },
         }}
         textProps={{
           ...textProps,
+          slotProps: { primary: { variant: 'h6' } },
           sx: { ...textProps?.sx, color },
         }}
       >
@@ -110,7 +111,7 @@ const FlowGroup: React.FC<FlowGroupProps> = ({
                 {...subFlow}
                 buttonProps={{ ...buttonProps, disabled: isSubFlowDisabled(subFlow), sx: { display: 'flex', alignItems: 'center' } }}
                 iconProps={{ ...iconProps, sx: { ...iconProps?.sx, color, minWidth: 'auto', mr: 1 } }}
-                textProps={{ ...textProps, sx: { ...textProps?.sx, color, flexGrow: 1 }, slotProps: { primary: { fontSize: '0.875rem' } } }}
+                textProps={{ ...textProps, sx: { ...textProps?.sx, color, flexGrow: 1 }, slotProps: { primary: { variant: 'subtitle1' } } }}
                 onPostNavigate={onPostNavigate}
               />
             ))}

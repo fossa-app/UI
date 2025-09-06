@@ -45,6 +45,12 @@ const ColorSchemeSelector: React.FC<ColorSchemeSelectorProps> = ({
                 data-cy={`${module}-${subModule}-color-scheme-radio-${schemeId}`}
                 value={schemeId}
                 control={<Radio disabled={disabled} />}
+                sx={{ width: '100%' }}
+                slotProps={{
+                  typography: {
+                    sx: { width: '100%' },
+                  },
+                }}
                 label={
                   <Box data-cy={`${module}-${subModule}-color-scheme-${schemeId}`} sx={{ cursor: 'pointer' }}>
                     <Typography gutterBottom variant="subtitle1" data-cy={`${module}-${subModule}-color-scheme-label-${schemeId}`}>

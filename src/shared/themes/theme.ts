@@ -14,6 +14,10 @@ const components = {
         paddingBottom: theme.spacing(1),
         borderBottom: '1px solid',
         borderColor: theme.palette.divider,
+        [theme.breakpoints.down('sm')]: {
+          paddingLeft: theme.spacing(3),
+          paddingRight: theme.spacing(3),
+        },
       }),
     },
   },
@@ -21,6 +25,9 @@ const components = {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
         padding: theme.spacing(6),
+        [theme.breakpoints.down('sm')]: {
+          padding: theme.spacing(3),
+        },
       }),
     },
   },
@@ -28,6 +35,33 @@ const components = {
     styleOverrides: {
       root: ({ theme }: { theme: Theme }) => ({
         padding: theme.spacing(6),
+        [theme.breakpoints.down('sm')]: {
+          padding: theme.spacing(3),
+        },
+        '& > :not(style) ~ :not(style)': {
+          marginLeft: 0,
+        },
+      }),
+    },
+  },
+  MuiStepLabel: {
+    styleOverrides: {
+      label: ({ theme }: { theme: Theme }) => ({
+        [theme.breakpoints.down('sm')]: {
+          display: 'none',
+        },
+      }),
+    },
+  },
+  MuiListItemButton: {
+    styleOverrides: {
+      root: ({ theme }: { theme: Theme }) => ({
+        paddingLeft: theme.spacing(6),
+        paddingRight: theme.spacing(6),
+        [theme.breakpoints.down('sm')]: {
+          paddingLeft: theme.spacing(3),
+          paddingRight: theme.spacing(3),
+        },
       }),
     },
   },

@@ -32,7 +32,9 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
         subModule={subModule}
         sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 5, minHeight: 38 }}
       >
-        <Page.Title sx={{ flexGrow: 1, textAlign: 'left' }}>{pageTitle}</Page.Title>
+        <Page.Title sx={{ flexGrow: 1 }} typographyProps={{ sx: { textAlign: 'left' } }}>
+          {pageTitle}
+        </Page.Title>
         <WithRolesLayout allowedRoles={allowedRoles} userRoles={userRoles}>
           <Button
             data-cy={`${module}-${subModule}-table-layout-action-button`}

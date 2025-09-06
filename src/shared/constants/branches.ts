@@ -389,7 +389,7 @@ export const BRANCH_VIEW_DETAILS_SCHEMA: ViewDetailProps<Branch> = {
     {
       name: `${BRANCH_FIELDS.geoAddress.field}.${BRANCH_FIELDS.geoAddress.label.field}`,
       label: '',
-      grid: { size: { xs: 8 } },
+      grid: { size: { xs: 12, sm: 8 } },
       renderDetailField: (branch) => renderBranchMapField({ branch }),
     },
   ],

@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from 'store';
 import { fetchProfile, selectProfile } from 'store/features';
 import { Module, SubModule } from 'shared/models';
-import { PROFILE_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
+import { PROFILE_VIEW_DETAILS_SCHEMA, ROUTES, ACTION_BUTTON_STYLES } from 'shared/constants';
 import PageLayout from 'components/layouts/PageLayout';
 import ViewDetails, { ViewDetailActionName } from 'components/UI/ViewDetails';
 import DeleteProfileDialog from '../components/DeleteProfileDialog';
@@ -79,7 +79,7 @@ const ViewProfilePage: React.FC = () => {
               <ViewDetails.Header sx={{ color: 'error.main' }} expandIconSxProps={{ color: 'error.main' }}>
                 Danger Zone
               </ViewDetails.Header>
-              <ViewDetails.Actions sx={{ justifyContent: 'space-between' }}>
+              <ViewDetails.Actions sx={{ justifyContent: 'space-between', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
                 <Box>
                   <Typography data-cy={`${Module.profile}-${SubModule.profileViewSettings}-view-action-title`} variant="subtitle1">
                     Delete Profile
@@ -97,6 +97,7 @@ const ViewProfilePage: React.FC = () => {
                   aria-label="Delete Profile Button"
                   variant="contained"
                   color="error"
+                  sx={ACTION_BUTTON_STYLES}
                   onClick={handleDeleteClick}
                 >
                   Delete Profile
