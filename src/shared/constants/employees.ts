@@ -37,6 +37,14 @@ export const EMPLOYEE_FIELDS: EmployeeFieldConfig = {
     field: 'assignedDepartmentName',
     name: 'Assigned Department',
   },
+  reportsToId: {
+    field: 'reportsToId',
+    name: 'Reports To ID',
+  },
+  reportsToName: {
+    field: 'reportsToName',
+    name: 'Manager',
+  },
 };
 
 export const EMPLOYEE_TABLE_SCHEMA: Column<Employee>[] = [
@@ -63,6 +71,11 @@ export const EMPLOYEE_TABLE_SCHEMA: Column<Employee>[] = [
   {
     name: EMPLOYEE_FIELDS.assignedDepartmentName!.name,
     field: EMPLOYEE_FIELDS.assignedDepartmentName!.field,
+    width: 200,
+  },
+  {
+    name: EMPLOYEE_FIELDS.reportsToName!.name,
+    field: EMPLOYEE_FIELDS.reportsToName!.field,
     width: 200,
   },
   {
@@ -243,6 +256,12 @@ export const EMPLOYEE_VIEW_DETAILS_SCHEMA: ViewDetailProps<Employee> = {
       type: ViewDetailType.labelValue,
       grid: { size: { xs: 12, md: 6 } },
     },
+    {
+      name: EMPLOYEE_FIELDS.reportsToName!.field,
+      label: 'Manager',
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
+    },
   ],
 };
 
@@ -293,6 +312,14 @@ export const EMPLOYEE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
       type: FormFieldType.autocomplete,
       name: EMPLOYEE_FIELDS.assignedDepartmentId!.field,
       label: 'Select Department',
+      grid: { size: { xs: 12, md: 6 } },
+      options: [],
+      roles: [UserRole.administrator],
+    },
+    {
+      type: FormFieldType.autocomplete,
+      name: EMPLOYEE_FIELDS.reportsToId!.field,
+      label: 'Select Manager',
       grid: { size: { xs: 12, md: 6 } },
       options: [],
       roles: [UserRole.administrator],
@@ -353,4 +380,5 @@ export const EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES: Employee = {
   fullName: '',
   assignedBranchId: null,
   assignedDepartmentId: null,
+  reportsToId: null,
 };

@@ -25,6 +25,7 @@ import {
   interceptFetchDepartmentsByIdsRequest,
   interceptFetchDepartmentsRequest,
   interceptFetchDepartmentByIdRequest,
+  interceptFetchEmployeesByIdsRequest,
 } from 'support/interceptors';
 
 describe('Employee Catalog Tests', () => {
@@ -76,6 +77,7 @@ describe('Employee Catalog Tests', () => {
 
       it('should display the loader if fetching employees is in progress', () => {
         interceptFetchEmployeesRequest();
+        interceptFetchEmployeesByIdsRequest();
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
         cy.wait('@fetchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
@@ -89,6 +91,7 @@ describe('Employee Catalog Tests', () => {
           { pageNumber: 1, pageSize: 10 },
           { alias: 'fetchEmployeesQuickRequest', fixture: 'employee/employees', statusCode: 200, delay: 50 }
         );
+        interceptFetchEmployeesByIdsRequest();
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('not.exist');
       });
@@ -98,6 +101,7 @@ describe('Employee Catalog Tests', () => {
           { pageNumber: 1, pageSize: 10 },
           { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
         );
+        interceptFetchEmployeesByIdsRequest();
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
         cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
@@ -116,6 +120,18 @@ describe('Employee Catalog Tests', () => {
           'have.text',
           'Full Name'
         );
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-header-cell-assignedBranchName').should(
+          'have.text',
+          'Assigned Branch'
+        );
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-header-cell-assignedDepartmentName').should(
+          'have.text',
+          'Assigned Department'
+        );
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-header-cell-reportsToName').should(
+          'have.text',
+          'Manager'
+        );
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-firstName')
           .find('p')
           .should('exist')
@@ -129,6 +145,9 @@ describe('Employee Catalog Tests', () => {
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedBranchName')
           .should('exist')
           .and('have.text', 'New York Branch');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-reportsToName')
+          .should('exist')
+          .and('have.text', 'Gabriel Admin Archangel');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedDepartmentName')
           .should('exist')
           .and('have.text', 'Production');
@@ -141,6 +160,7 @@ describe('Employee Catalog Tests', () => {
 
       it('should send correct request when pagination changes', () => {
         interceptFetchEmployeesRequest();
+        interceptFetchEmployeesByIdsRequest();
         cy.wait('@fetchEmployeesRequest');
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-pagination')
@@ -166,6 +186,7 @@ describe('Employee Catalog Tests', () => {
           { pageNumber: 1, pageSize: 10 },
           { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
         );
+        interceptFetchEmployeesByIdsRequest();
 
         cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
 
@@ -218,6 +239,7 @@ describe('Employee Catalog Tests', () => {
           { pageNumber: 1, pageSize: 10, search: 'Anthony' },
           { alias: 'fetchSearchedEmployeesRequest', fixture: 'employee/employees' }
         );
+        interceptFetchEmployeesByIdsRequest();
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees').find('input').type('Anthony');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 1);
@@ -242,6 +264,7 @@ describe('Employee Catalog Tests', () => {
           { pageNumber: 1, pageSize: 10 },
           { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
         );
+        interceptFetchEmployeesByIdsRequest();
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
         cy.wait('@fetchMultipleEmployeesRequest');
@@ -294,6 +317,7 @@ describe('Employee Catalog Tests', () => {
 
       it('should display action column and correct actions', () => {
         interceptFetchEmployeesRequest();
+        interceptFetchEmployeesByIdsRequest();
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-layout-action-button').should('not.exist');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'actions-menu-icon-333333333335')
@@ -312,7 +336,9 @@ describe('Employee Catalog Tests', () => {
 
       it('should be able to navigate to the View Employee page', () => {
         interceptFetchEmployeesRequest();
+        interceptFetchEmployeesByIdsRequest();
         interceptFetchEmployeeByIdRequest('333333333335');
+        interceptFetchEmployeeByIdRequest('333333333333');
         interceptFetchBranchByIdRequest('222222222222');
         interceptFetchDepartmentByIdRequest('444444444444');
 
@@ -332,6 +358,7 @@ describe('Employee Catalog Tests', () => {
           { pageNumber: 1, pageSize: 10 },
           { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
         );
+        interceptFetchEmployeesByIdsRequest();
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
         cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
@@ -350,6 +377,21 @@ describe('Employee Catalog Tests', () => {
           'have.text',
           'Full Name'
         );
+        getTestSelectorByModule(
+          Module.employeeManagement,
+          SubModule.employeeCatalog,
+          'table-header-cell-333333333335-assignedBranchName'
+        ).should('have.text', 'Assigned Branch');
+        getTestSelectorByModule(
+          Module.employeeManagement,
+          SubModule.employeeCatalog,
+          'table-header-cell-333333333335-assignedDepartmentName'
+        ).should('have.text', 'Assigned Department');
+        getTestSelectorByModule(
+          Module.employeeManagement,
+          SubModule.employeeCatalog,
+          'table-header-cell-333333333335-reportsToName'
+        ).should('have.text', 'Manager');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-firstName')
           .find('p')
           .should('exist')
@@ -366,6 +408,9 @@ describe('Employee Catalog Tests', () => {
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedDepartmentName')
           .should('exist')
           .and('have.text', 'Production');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-reportsToName')
+          .should('exist')
+          .and('have.text', 'Gabriel Admin Archangel');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'actions-menu-icon-333333333335')
           .should('exist')
           .click();
@@ -390,6 +435,8 @@ describe('Employee Catalog Tests', () => {
   describe('User Role', () => {
     beforeEach(() => {
       cy.loginMock();
+      interceptFetchEmployeesRequest({ pageNumber: 1, pageSize: 1 });
+      interceptFetchDepartmentsRequest({ pageNumber: 1, pageSize: 1 });
     });
 
     it('should not be able to navigate to the Edit Employee page', () => {
@@ -411,11 +458,13 @@ describe('Employee Catalog Tests', () => {
 
     it('should be able to navigate to the Edit Employee page', () => {
       interceptFetchEmployeesRequest();
+      interceptFetchEmployeesByIdsRequest();
       interceptFetchBranchesByIdsRequest();
       interceptFetchDepartmentsByIdsRequest();
       interceptFetchBranchesRequest();
       interceptFetchDepartmentsRequest();
       interceptFetchEmployeeByIdRequest('333333333335');
+      interceptFetchEmployeeByIdRequest('333333333333');
       interceptFetchBranchByIdRequest('222222222222');
       interceptFetchDepartmentByIdRequest('444444444444');
 

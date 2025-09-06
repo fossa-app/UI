@@ -1,31 +1,58 @@
 import { AppUser, Branch, BranchDTO, Department, DepartmentDTO, Employee, EmployeeDTO } from 'shared/models';
+import { FieldOption } from 'components/UI/Form';
 import { mapUserProfileToEmployee } from './user.helpers';
 
-export const mapEmployee = (employee: EmployeeDTO, user?: AppUser, branch?: Branch, department?: Department): Employee => {
+export const mapEmployee = ({
+  employee,
+  user,
+  branch,
+  department,
+  manager,
+}: {
+  employee: EmployeeDTO;
+  user?: AppUser;
+  branch?: Branch;
+  department?: Department;
+  manager?: Employee;
+}): Employee => {
   const assignedBranchName = branch?.name;
   const assignedDepartmentName = department?.name;
+  const reportsToName = manager?.fullName;
 
   return {
     ...(user ? mapUserProfileToEmployee(user.profile) : {}),
     ...employee,
     assignedBranchName,
     assignedDepartmentName,
+    reportsToName,
   };
 };
 
-export const mapEmployees = (employees: EmployeeDTO[], branches: BranchDTO[] = [], departments: DepartmentDTO[] = []): Employee[] => {
+export const mapEmployees = ({
+  employees,
+  branches = [],
+  departments = [],
+  managers = [],
+}: {
+  employees: EmployeeDTO[];
+  branches?: BranchDTO[];
+  departments?: DepartmentDTO[];
+  managers?: EmployeeDTO[];
+}): Employee[] => {
   return employees.map((employee) => {
     const branch = branches.find(({ id }) => id === employee.assignedBranchId);
     const department = departments.find(({ id }) => id === employee.assignedDepartmentId);
+    const manager = managers.find(({ id }) => id === employee.reportsToId);
 
-    return mapEmployee(employee, undefined, branch, department);
+    return mapEmployee({ employee, branch, department, manager });
   });
 };
 
-export const mapEmployeeDTO = (employee: Employee): Pick<EmployeeDTO, 'assignedBranchId' | 'assignedDepartmentId'> => {
+export const mapEmployeeDTO = (employee: Employee): Pick<EmployeeDTO, 'assignedBranchId' | 'assignedDepartmentId' | 'reportsToId'> => {
   return {
     assignedBranchId: employee.assignedBranchId || null,
     assignedDepartmentId: employee.assignedDepartmentId || null,
+    reportsToId: employee.reportsToId || null,
   };
 };
 
@@ -36,6 +63,14 @@ export const mapProfileDTO = (employee: Employee): EmployeeDTO => {
     fullName: employee.fullName,
     assignedBranchId: employee.assignedBranchId || null,
     assignedDepartmentId: employee.assignedDepartmentId || null,
+    reportsToId: employee.reportsToId || null,
+  };
+};
+
+export const mapEmployeeToFieldOption = (employee: EmployeeDTO): FieldOption => {
+  return {
+    label: employee.fullName,
+    value: String(employee.id),
   };
 };
 
@@ -47,4 +82,8 @@ export const getEmployeesAssignedDepartmentIds = (employees: EmployeeDTO[]): num
   return employees
     .filter(({ assignedDepartmentId }) => assignedDepartmentId)
     .map(({ assignedDepartmentId }) => assignedDepartmentId) as number[];
+};
+
+export const getEmployeesManagerIds = (employees: EmployeeDTO[]): number[] => {
+  return employees.filter(({ reportsToId }) => reportsToId).map(({ reportsToId }) => reportsToId) as number[];
 };

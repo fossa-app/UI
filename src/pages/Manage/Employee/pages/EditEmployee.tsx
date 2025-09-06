@@ -16,10 +16,20 @@ import {
   updateAssignedDepartmentsPagination,
   resetAssignedDepartmentsFetchStatus,
   fetchAssignedDepartments,
+  selectManagers,
+  fetchManagers,
+  updateManagersPagination,
+  resetManagersFetchStatus,
 } from 'store/features';
 import { APP_CONFIG, EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
 import { Branch, Department, Employee } from 'shared/models';
-import { deepCopyObject, mapBranchToFieldOption, mapDepartmentToFieldOption, mapEmployeeDTO } from 'shared/helpers';
+import {
+  deepCopyObject,
+  mapBranchToFieldOption,
+  mapDepartmentToFieldOption,
+  mapEmployeeDTO,
+  mapEmployeeToFieldOption,
+} from 'shared/helpers';
 import { useOnFormSubmitEffect } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
@@ -42,6 +52,11 @@ const EditEmployeePage: React.FC = () => {
     fetchStatus: assignedDepartmentsFetchStatus,
     page: assignedDepartmentsPage = APP_CONFIG.table.defaultPagination,
   } = useAppSelector(selectAssignedDepartments);
+  const {
+    data: managers,
+    fetchStatus: managersFetchStatus,
+    page: managersPage = APP_CONFIG.table.defaultPagination,
+  } = useAppSelector(selectManagers);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
   const defaultValues: Employee = employee || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
 
@@ -58,6 +73,13 @@ const EditEmployeePage: React.FC = () => {
       dispatch(resetAssignedDepartmentsFetchStatus());
     }
   }, [assignedDepartmentsPage, dispatch]);
+
+  const handleManagersScrollEnd = React.useCallback(() => {
+    if (managersPage.pageNumber! < managersPage.totalPages!) {
+      dispatch(updateManagersPagination({ pageNumber: managersPage.pageNumber! + 1 }));
+      dispatch(resetManagersFetchStatus());
+    }
+  }, [managersPage, dispatch]);
 
   const branchItems = React.useMemo(() => {
     const branchList = assignedBranches?.items || [];
@@ -78,6 +100,15 @@ const EditEmployeePage: React.FC = () => {
       ? [{ id: employee.assignedDepartmentId, name: employee.assignedDepartmentName } as Department, ...departmentList]
       : departmentList;
   }, [assignedDepartments?.items, employee?.assignedDepartmentId, employee?.assignedDepartmentName]);
+
+  const managerItems = React.useMemo(() => {
+    const managerList = managers?.items || [];
+    const isManagerOptionAvailable = managerList.some((managerItem) => String(managerItem.id) === String(employee?.reportsToId));
+
+    return employee?.reportsToId && !isManagerOptionAvailable
+      ? [{ id: employee.reportsToId, name: employee.reportsToName } as unknown as Employee, ...managerList]
+      : managerList;
+  }, [managers?.items, employee?.reportsToId, employee?.reportsToName]);
 
   const errors = React.useMemo(() => {
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
@@ -111,6 +142,14 @@ const EditEmployeePage: React.FC = () => {
             onScrollEnd: handleAssignedDepartmentsScrollEnd,
           };
 
+        case EMPLOYEE_FIELDS.reportsToId?.field:
+          return {
+            ...field,
+            loading: managersFetchStatus === 'loading',
+            options: managerItems.map(mapEmployeeToFieldOption) ?? [],
+            onScrollEnd: handleManagersScrollEnd,
+          };
+
         default:
           return field;
       }
@@ -122,6 +161,9 @@ const EditEmployeePage: React.FC = () => {
     departmentItems,
     assignedDepartmentsFetchStatus,
     handleAssignedDepartmentsScrollEnd,
+    managerItems,
+    managersFetchStatus,
+    handleManagersScrollEnd,
   ]);
 
   const actions = React.useMemo(
@@ -152,6 +194,12 @@ const EditEmployeePage: React.FC = () => {
   }, [assignedDepartmentsFetchStatus, assignedDepartmentsPage, dispatch]);
 
   React.useEffect(() => {
+    if (managersFetchStatus === 'idle') {
+      dispatch(fetchManagers(managersPage));
+    }
+  }, [managersFetchStatus, managersPage, dispatch]);
+
+  React.useEffect(() => {
     if (id && fetchStatus === 'idle') {
       dispatch(fetchEmployeeById({ id, shouldFetchBranchGeoAddress: false }));
     }
@@ -177,7 +225,7 @@ const EditEmployeePage: React.FC = () => {
       withBackButton
       module={testModule}
       subModule={testSubModule}
-      pageTitle="Edit Employee Branch"
+      pageTitle="Edit Employee"
       displayNotFoundPage={fetchStatus === 'failed' && !employee}
       onBackButtonClick={handleCancel}
     >
