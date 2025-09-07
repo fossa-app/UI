@@ -154,7 +154,7 @@ export const DEPARTMENT_TABLE_SCHEMA: Column<Department>[] = [
   {
     name: DEPARTMENT_FIELDS.parentDepartmentName!.name,
     field: DEPARTMENT_FIELDS.parentDepartmentName!.field,
-    width: 'auto',
+    width: 240,
     renderBodyCell: (department) => renderDepartmentField({ department, field: DEPARTMENT_FIELDS.parentDepartmentName!.field }),
   },
   {

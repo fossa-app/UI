@@ -61,7 +61,7 @@ export const EMPLOYEE_TABLE_SCHEMA: Column<Employee>[] = [
   {
     name: EMPLOYEE_FIELDS.fullName.name,
     field: EMPLOYEE_FIELDS.fullName.field,
-    width: 'auto',
+    width: 200,
   },
   {
     name: EMPLOYEE_FIELDS.assignedBranchName!.name,

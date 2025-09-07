@@ -17,10 +17,13 @@ export const APP_CONFIG = {
   table: {
     defaultPagination: { pageNumber: 1, pageSize: 10, search: '', totalItems: undefined } as PaginationParams,
     defaultPageSizeOptions: [10, 20, 50],
+    containerWidth: 'calc(100vw - 32px)',
+    containerMaxHeight: 'calc(100% - 70px)',
   },
   searchDebounceTime: 300,
   emptyValue: '-',
   containerWidth: 1156,
+  scrollableContentHeight: 'calc(100vh - 250px)',
 };
 
 export const MESSAGES = {

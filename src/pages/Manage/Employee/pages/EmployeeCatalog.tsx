@@ -11,13 +11,12 @@ import {
 } from 'store/features';
 import { Employee, Module, PaginationParams, SubModule } from 'shared/models';
 import { ACTION_FIELDS, APP_CONFIG, EMPLOYEE_FIELDS, EMPLOYEE_TABLE_ACTIONS_SCHEMA, EMPLOYEE_TABLE_SCHEMA, ROUTES } from 'shared/constants';
-import { getTestSelectorByModule, mapTableActionsColumn } from 'shared/helpers';
+import { getTestSelectorByModule } from 'shared/helpers';
 import { useUnmount } from 'shared/hooks';
 import Page from 'components/UI/Page';
-import Table from 'components/UI/Table';
+import Table, { ActionsMenu, mapTableActionsColumn } from 'components/UI/Table';
 import TableLayout from 'components/layouts/TableLayout';
 import { useSearch } from 'components/Search';
-import ActionsMenu from 'components/UI/Table/ActionsMenu';
 import { renderPrimaryLinkText } from 'components/UI/helpers/renderPrimaryLinkText';
 
 const testModule = Module.employeeManagement;

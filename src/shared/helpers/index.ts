@@ -6,7 +6,6 @@ export * from './jwt.helpers';
 export * from './data.helpers';
 export * from './test.helpers';
 export * from './form.helpers';
-export * from './table.helpers';
 export * from './utility.helpers';
 export * from './company.helpers';
 export * from './branch.helpers';

@@ -13,11 +13,10 @@ import {
 } from 'store/features';
 import { Branch, Module, PaginationParams, SubModule, UserRole } from 'shared/models';
 import { ACTION_FIELDS, APP_CONFIG, BRANCH_FIELDS, BRANCH_TABLE_ACTIONS_SCHEMA, BRANCH_TABLE_SCHEMA, ROUTES } from 'shared/constants';
-import { getTestSelectorByModule, mapTableActionsColumn } from 'shared/helpers';
+import { getTestSelectorByModule } from 'shared/helpers';
 import { useUnmount } from 'shared/hooks';
 import Page from 'components/UI/Page';
-import Table from 'components/UI/Table';
-import ActionsMenu from 'components/UI/Table/ActionsMenu';
+import Table, { mapTableActionsColumn, ActionsMenu } from 'components/UI/Table';
 import TableLayout from 'components/layouts/TableLayout';
 import { useSearch } from 'components/Search';
 import { renderPrimaryLinkText } from 'components/UI/helpers/renderPrimaryLinkText';

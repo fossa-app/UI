@@ -2,14 +2,13 @@ import * as React from 'react';
 import { TableCellProps } from '@mui/material/TableCell';
 import { Item, UserRole } from 'shared/models';
 
-export interface Column<T = Item> {
+export type Column<T = Item> = {
   name: React.ReactNode;
   field: string;
   width?: number | string;
-  align?: TableCellProps['align'];
   roles?: UserRole[];
   renderBodyCell?: (item: T) => React.ReactNode;
-}
+} & TableCellProps;
 
 export interface Action<T = Item> {
   name: React.ReactNode;
