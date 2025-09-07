@@ -55,7 +55,7 @@ const ResponsiveRow = <T extends Item>({ module, subModule, item, columns, isMob
             data-cy={`${module}-${subModule}-table-body-cell-${item.id}-${column.field}`}
             key={column.field}
             align={column.align || 'left'}
-            sx={{ width: column.width || 'auto' }}
+            sx={{ width: column.width || 'auto', ...column.sx }}
           >
             {React.isValidElement(content) ? (
               content

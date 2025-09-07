@@ -9,7 +9,7 @@ import Paper, { PaperProps } from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import { useResponsive } from 'shared/hooks';
 import { Item, Module, SubModule } from 'shared/models';
-import { CUSTOM_STYLES } from 'shared/themes';
+import { APP_CONFIG } from 'shared/constants';
 import Page from 'components/UI/Page';
 import { Column } from './table.model';
 import { StyledTable } from './StyledTable';
@@ -81,12 +81,14 @@ const Table = <T extends Item>({
         pb: 1,
         pl: 3,
         position: 'relative',
-        height: CUSTOM_STYLES.scrollableContentHeight,
+        height: APP_CONFIG.scrollableContentHeight,
+        maxWidth: '100%',
+        width: APP_CONFIG.table.containerWidth,
       }}
       {...props}
     >
       {isMobile ? (
-        <Box sx={{ flexGrow: 1, maxHeight: 'calc(100% - 70px)', overflow: 'auto' }}>
+        <Box sx={{ flexGrow: 1, maxHeight: APP_CONFIG.table.containerMaxHeight, overflow: 'auto' }}>
           {noData ? (
             renderEmptyState()
           ) : (
@@ -98,8 +100,8 @@ const Table = <T extends Item>({
           )}
         </Box>
       ) : (
-        <TableContainer sx={{ flexGrow: 1, maxHeight: 'calc(100% - 70px)' }}>
-          <StyledTable stickyHeader>
+        <TableContainer sx={{ flexGrow: 1, maxHeight: APP_CONFIG.table.containerMaxHeight }}>
+          <StyledTable stickyHeader sx={{ minWidth: `calc(${APP_CONFIG.containerWidth}px - 34px)` }} aria-label="table">
             <TableHead>
               <TableRow>
                 {columns.map((column) => (
@@ -107,7 +109,7 @@ const Table = <T extends Item>({
                     data-cy={`${module}-${subModule}-table-header-cell-${column.field}`}
                     key={column.field}
                     align={column.align || 'left'}
-                    sx={{ width: column.width, fontSize: 16 }}
+                    sx={{ width: column.width || 'auto', ...column.sx }}
                   >
                     {column.name}
                   </TableCell>

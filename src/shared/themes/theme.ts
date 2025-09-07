@@ -67,10 +67,6 @@ const components = {
   },
 };
 
-export const CUSTOM_STYLES = {
-  scrollableContentHeight: 'calc(100vh - 250px)',
-};
-
 export const createCustomTheme = (mode: ThemeMode, schemeId?: ColorSchemeId): Theme => {
   const palette = getPaletteFromScheme(schemeId ?? DEFAULT_COLOR_SCHEME, mode);
 

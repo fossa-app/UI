@@ -43,6 +43,7 @@ const ActionsMenu = <T extends Item>({ module, subModule, actions, context, user
         aria-label="Actions Menu"
         size="small"
         color="default"
+        sx={{ p: { xs: 0, sm: 1 } }}
         onClick={handleOpenActionsMenu}
       >
         <MoreHorizIcon />
