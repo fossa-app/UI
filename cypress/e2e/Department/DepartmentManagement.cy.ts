@@ -648,4 +648,34 @@ describe('Department Management Tests', () => {
       .should('exist')
       .and('have.text', 'Visual Effects');
   });
+
+  it('should correctly navigate between the Department Catalog and Department Management pages', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest();
+    interceptFetchDepartmentsByIdsRequest();
+    interceptFetchEmployeesRequest();
+    interceptFetchDepartmentByIdRequest('444444444444');
+    interceptFetchEmployeeByIdRequest('333333333335');
+    cy.visit(`${ROUTES.departments.path}`);
+
+    selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444444');
+
+    cy.url().should('include', `${ROUTES.departments.path}/edit/444444444444`);
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-cancel-button').click();
+
+    cy.location('pathname').should('eq', ROUTES.departments.path);
+    selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'view', '444444444444');
+
+    cy.url().should('include', `${ROUTES.departments.path}/view/444444444444`);
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentViewDetails, 'page-title-back-button').click();
+
+    cy.location('pathname').should('eq', ROUTES.departments.path);
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
+
+    cy.url().should('include', ROUTES.newDepartment.path);
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-cancel-button').click();
+
+    cy.location('pathname').should('eq', ROUTES.departments.path);
+  });
 });

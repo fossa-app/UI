@@ -56,7 +56,7 @@ const Header: React.FC = () => {
 
   return (
     <AppBar position="sticky" component="nav">
-      <Toolbar>
+      <Toolbar sx={{ minHeight: 64 }}>
         <Grid
           container
           spacing={{ xs: 2, sm: 4 }}
@@ -95,8 +95,7 @@ const Header: React.FC = () => {
               </IconButton>
             </Grid>
           )}
-
-          <Grid size="grow">
+          <Grid size="grow" sx={{ display: 'flex', justifyContent: 'flex-start' }}>
             {companyName && (
               <Typography
                 data-testid="company-logo"
@@ -104,25 +103,24 @@ const Header: React.FC = () => {
                 noWrap
                 variant="h6"
                 onClick={handleCompanyClick}
-                sx={{ cursor: 'pointer' }}
+                sx={{ cursor: 'pointer', maxWidth: 320 }}
               >
                 {companyName}
               </Typography>
             )}
           </Grid>
-
           <Grid size="auto">
             <div id={SEARCH_PORTAL_ID} />
             <SearchPortal fullWidth size="small" />
           </Grid>
-
           <Grid size="auto">
             <ThemeButton isDarkTheme={isDarkTheme} onClick={handleThemeChange} />
           </Grid>
-
-          <Grid size="auto">
-            {profile && <ProfileMenu profile={profile} onLogoutClick={handleLogout} onProfileClick={handleProfileClick} />}
-          </Grid>
+          {profile && (
+            <Grid size="auto">
+              <ProfileMenu profile={profile} onLogoutClick={handleLogout} onProfileClick={handleProfileClick} />
+            </Grid>
+          )}
         </Grid>
       </Toolbar>
     </AppBar>

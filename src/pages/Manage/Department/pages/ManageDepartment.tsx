@@ -25,7 +25,6 @@ import {
   DEPARTMENT_DETAILS_FORM_DEFAULT_VALUES,
   DEPARTMENT_FIELDS,
   DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA,
-  ROUTES,
   USER_PERMISSION_GENERAL_MESSAGE,
 } from 'shared/constants';
 import { Department, Employee } from 'shared/models';
@@ -133,12 +132,12 @@ const ManageDepartmentPage: React.FC = () => {
   ]);
 
   const handleSuccess = React.useCallback(() => {
-    navigate(ROUTES.departments.path);
+    navigate(-1);
     dispatch(resetDepartmentsFetchStatus());
   }, [navigate, dispatch]);
 
   const handleCancel = React.useCallback(() => {
-    navigate(ROUTES.departments.path);
+    navigate(-1);
   }, [navigate]);
 
   const actions = React.useMemo(
@@ -201,7 +200,6 @@ const ManageDepartmentPage: React.FC = () => {
       subModule={testSubModule}
       pageTitle={id ? 'Edit Department' : 'Create Department'}
       displayNotFoundPage={fetchStatus === 'failed' && !department}
-      onBackButtonClick={handleCancel}
     >
       <Form<Department>
         module={testModule}

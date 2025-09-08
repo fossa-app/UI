@@ -71,10 +71,6 @@ export const COMPANY_LICENSE_FIELDS: CompanyLicenseFieldConfig = {
       field: 'notAfter',
       name: 'Valid To',
     },
-    // notAfterDays: {
-    //   field: 'notAfterDays',
-    //   name: 'Valid For (Days)',
-    // },
   },
   entitlements: {
     field: 'entitlements',

@@ -18,7 +18,6 @@ import {
 import {
   BRANCH_DETAILS_FORM_DEFAULT_VALUES,
   BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA,
-  ROUTES,
   USER_PERMISSION_GENERAL_MESSAGE,
 } from 'shared/constants';
 import { Branch, TimeZone } from 'shared/models';
@@ -75,12 +74,12 @@ const ManageBranchPage: React.FC = () => {
   }, [error?.errors, isUserAdmin]);
 
   const handleSuccess = React.useCallback(() => {
-    navigate(ROUTES.branches.path);
+    navigate(-1);
     dispatch(resetBranchesFetchStatus());
   }, [navigate, dispatch]);
 
   const handleCancel = React.useCallback(() => {
-    navigate(ROUTES.branches.path);
+    navigate(-1);
   }, [navigate]);
 
   const actions = React.useMemo(
@@ -152,7 +151,6 @@ const ManageBranchPage: React.FC = () => {
       subModule={testSubModule}
       pageTitle={id ? 'Edit Branch' : 'Create Branch'}
       displayNotFoundPage={fetchStatus === 'failed' && !branch}
-      onBackButtonClick={handleCancel}
     >
       <Form<Branch>
         module={testModule}

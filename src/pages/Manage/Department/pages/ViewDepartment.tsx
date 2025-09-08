@@ -25,10 +25,6 @@ const ViewDepartmentPage: React.FC = () => {
     navigate(editPath);
   }, [id, navigate]);
 
-  const handleCancel = React.useCallback(() => {
-    navigate(ROUTES.departments.path);
-  }, [navigate]);
-
   const actions = React.useMemo(
     () =>
       DEPARTMENT_VIEW_DETAILS_SCHEMA.actions
@@ -63,7 +59,6 @@ const ViewDepartmentPage: React.FC = () => {
       subModule={testSubModule}
       pageTitle="View Department"
       displayNotFoundPage={fetchStatus === 'failed' && !department}
-      onBackButtonClick={handleCancel}
     >
       <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>
         <ViewDetails.Header>{DEPARTMENT_VIEW_DETAILS_SCHEMA.title}</ViewDetails.Header>

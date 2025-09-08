@@ -1,0 +1,101 @@
+{
+  "pageNumber": 1,
+  "pageSize": 10,
+  "items": [
+    {
+      "id": 333333333333,
+      "companyId": 111111111111,
+      "firstName": "Gabriel",
+      "lastName": "Archangel",
+      "fullName": "Gabriel Admin Archangel"
+    },
+    {
+      "id": 333333333334,
+      "companyId": 111111111111,
+      "firstName": "Aziraphale",
+      "lastName": "Fell",
+      "fullName": "Aziraphale User Fell"
+    },
+    {
+      "id": 333333333335,
+      "companyId": 111111111111,
+      "firstName": "Anthony",
+      "lastName": "Crowley",
+      "fullName": "Anthony User Crowley",
+      "assignedBranchId": 222222222222,
+      "assignedDepartmentId": 444444444444,
+      "reportsToId": 333333333333
+    },
+    {
+      "id": 333333333336,
+      "companyId": 111111111111,
+      "firstName": "Beelzebub",
+      "lastName": "Lord",
+      "fullName": "Beelzebub Manager Lord",
+      "assignedBranchId": 222222222223,
+      "assignedDepartmentId": 444444444445
+    },
+    {
+      "id": 333333333337,
+      "companyId": 111111111111,
+      "firstName": "Michael",
+      "lastName": "Guardian",
+      "fullName": "Michael Supervisor Guardian",
+      "assignedBranchId": 222222222222,
+      "assignedDepartmentId": 444444444444,
+      "reportsToId": 333333333333
+    },
+    {
+      "id": 333333333338,
+      "companyId": 111111111111,
+      "firstName": "Uriel",
+      "lastName": "Watcher",
+      "fullName": "Uriel Analyst Watcher",
+      "assignedBranchId": 222222222224,
+      "assignedDepartmentId": 444444444446,
+      "reportsToId": 333333333337
+    },
+    {
+      "id": 333333333339,
+      "companyId": 111111111111,
+      "firstName": "Raphael",
+      "lastName": "Healer",
+      "fullName": "Raphael Specialist Healer",
+      "assignedBranchId": 222222222222,
+      "assignedDepartmentId": 444444444444,
+      "reportsToId": 333333333333
+    },
+    {
+      "id": 333333333340,
+      "companyId": 111111111111,
+      "firstName": "Ligur",
+      "lastName": "Demon",
+      "fullName": "Ligur User Demon",
+      "assignedBranchId": 222222222223,
+      "assignedDepartmentId": 444444444445,
+      "reportsToId": 333333333336
+    },
+    {
+      "id": 333333333341,
+      "companyId": 111111111111,
+      "firstName": "Hastur",
+      "lastName": "Demon",
+      "fullName": "Hastur User Demon",
+      "assignedBranchId": 222222222223,
+      "assignedDepartmentId": 444444444445,
+      "reportsToId": 333333333336
+    },
+    {
+      "id": 333333333342,
+      "companyId": 111111111111,
+      "firstName": "Muriel",
+      "lastName": "Angel",
+      "fullName": "Muriel Assistant Angel",
+      "assignedBranchId": 222222222224,
+      "assignedDepartmentId": 444444444446,
+      "reportsToId": 333333333337
+    }
+  ],
+  "totalItems": 15,
+  "totalPages": 2
+}

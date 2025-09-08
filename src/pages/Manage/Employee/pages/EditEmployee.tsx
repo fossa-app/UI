@@ -21,7 +21,7 @@ import {
   updateManagersPagination,
   resetManagersFetchStatus,
 } from 'store/features';
-import { APP_CONFIG, EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
+import { APP_CONFIG, EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS } from 'shared/constants';
 import { Branch, Department, Employee } from 'shared/models';
 import {
   deepCopyObject,
@@ -115,12 +115,12 @@ const EditEmployeePage: React.FC = () => {
   }, [error?.errors]);
 
   const handleSuccess = React.useCallback(() => {
-    navigate(ROUTES.employees.path);
+    navigate(-1);
     dispatch(resetEmployeesFetchStatus());
   }, [navigate, dispatch]);
 
   const handleCancel = React.useCallback(() => {
-    navigate(ROUTES.employees.path);
+    navigate(-1);
   }, [navigate]);
 
   const fields = React.useMemo(() => {
@@ -227,7 +227,6 @@ const EditEmployeePage: React.FC = () => {
       subModule={testSubModule}
       pageTitle="Edit Employee"
       displayNotFoundPage={fetchStatus === 'failed' && !employee}
-      onBackButtonClick={handleCancel}
     >
       <Form<Employee>
         module={testModule}

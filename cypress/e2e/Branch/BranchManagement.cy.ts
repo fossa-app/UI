@@ -639,4 +639,28 @@ describe('Branch Management Tests', () => {
       'form-field-address.countryCode',
     ]);
   });
+
+  it('should correctly navigate between the Branch Catalog and Branch Management pages', () => {
+    interceptFetchBranchByIdRequest('222222222222');
+    cy.visit(`${ROUTES.branches.path}`);
+
+    selectAction(Module.branchManagement, SubModule.branchCatalog, 'edit', '222222222222');
+
+    cy.url().should('include', `${ROUTES.branches.path}/edit/222222222222`);
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-cancel-button').click();
+
+    cy.location('pathname').should('eq', ROUTES.branches.path);
+    selectAction(Module.branchManagement, SubModule.branchCatalog, 'view', '222222222222');
+
+    cy.url().should('include', `${ROUTES.branches.path}/view/222222222222`);
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'page-title-back-button').click();
+
+    cy.location('pathname').should('eq', ROUTES.branches.path);
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-layout-action-button').click();
+
+    cy.url().should('include', ROUTES.newBranch.path);
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-cancel-button').click();
+
+    cy.location('pathname').should('eq', ROUTES.branches.path);
+  });
 });

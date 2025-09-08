@@ -123,8 +123,7 @@ describe('Branch View Tests', () => {
         interceptFetchBranchByIdRequest('222222222222');
         cy.visit(`${ROUTES.branches.path}/view/222222222222`);
 
-        cy.wait('@fetchUpdatedCompanyRequest');
-        cy.wait('@fetchBranchByIdRequest');
+        cy.wait(['@fetchUpdatedCompanyRequest', '@fetchBranchByIdRequest']);
 
         const invalidFields = [
           'timeZoneName',
@@ -199,6 +198,18 @@ describe('Branch View Tests', () => {
         cy.get('.leaflet-container').should('not.exist');
         cy.get('.leaflet-popup-content').should('not.exist');
       });
+
+      it('should correctly navigate between the Branch Catalog and Branch View pages', () => {
+        interceptFetchBranchByIdRequest('222222222222');
+        cy.visit(`${ROUTES.branches.path}`);
+
+        selectAction(Module.branchManagement, SubModule.branchCatalog, 'view', '222222222222');
+
+        cy.url().should('include', `${ROUTES.branches.path}/view/222222222222`);
+        getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'page-title-back-button').click();
+
+        cy.location('pathname').should('eq', ROUTES.branches.path);
+      });
     });
   });
 
@@ -257,6 +268,26 @@ describe('Branch View Tests', () => {
       getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-cancel-button').should('exist').click();
 
       cy.url().should('include', ROUTES.branches.path);
+    });
+
+    it('should correctly navigate between the Branch Catalog, Branch View and Branch Management pages', () => {
+      interceptFetchBranchByIdRequest('222222222222');
+      cy.visit(`${ROUTES.branches.path}`);
+
+      selectAction(Module.branchManagement, SubModule.branchCatalog, 'view', '222222222222');
+
+      cy.url().should('include', `${ROUTES.branches.path}/view/222222222222`);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-action-button').should('exist').click();
+
+      cy.url().should('include', `${ROUTES.branches.path}/edit/222222222222`);
+      cy.wait('@fetchBranchByIdRequest');
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-cancel-button').should('exist').click();
+
+      cy.url().should('include', `${ROUTES.branches.path}/view/222222222222`);
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'page-title-back-button').click();
+
+      cy.location('pathname').should('eq', ROUTES.branches.path);
     });
   });
 });

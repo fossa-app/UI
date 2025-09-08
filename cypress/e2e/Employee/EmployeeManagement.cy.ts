@@ -600,7 +600,59 @@ describe('Employee Management Tests', () => {
       cy.get('@fetchAssignedDepartmentsRequestPage3.all').should('have.length', 0);
     });
 
-    // TODO: add test case for managers infinite scroll
+    it('should fetch and display the managers when scrolling down the manager field', () => {
+      interceptFetchEmployeeByIdRequest('333333333335');
+      interceptFetchEmployeeByIdRequest('333333333333');
+      interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchDepartmentByIdRequest('444444444444');
+
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 10 },
+        {
+          alias: 'fetchManagersRequestPage1',
+          fixture: 'employee/employees-multiple-page-one',
+        }
+      );
+
+      cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
+
+      cy.wait(['@fetchEmployeeByIdRequest', '@fetchBranchByIdRequest', '@fetchDepartmentByIdRequest']);
+      cy.wait('@fetchManagersRequestPage1').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-reportsToId').click();
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-reportsToId-option', true).should(
+        'have.length',
+        10
+      );
+
+      interceptFetchEmployeesRequest(
+        { pageNumber: 2, pageSize: 10 },
+        {
+          alias: 'fetchManagersRequestPage2',
+          fixture: 'employee/employees-multiple-page-two',
+        }
+      );
+
+      cy.get('[role="list-box"]').should('exist');
+      cy.get('[role="list-box"]').then(($listbox) => {
+        $listbox[0].scrollTop = $listbox[0].scrollHeight;
+        $listbox[0].dispatchEvent(new Event('scroll', { bubbles: true }));
+      });
+
+      cy.wait('@fetchManagersRequestPage2').its('request.url').should('include', 'Employees?pageNumber=2&pageSize=10');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-reportsToId-option', true).should(
+        'have.length',
+        15
+      );
+
+      cy.intercept('GET', '**/Employees?pageNumber=3&pageSize=10').as('fetchManagersRequestPage3');
+
+      cy.get('[role="list-box"]').scrollTo('bottom');
+
+      cy.get('@fetchManagersRequestPage3.all').should('have.length', 0);
+    });
 
     it('should display the assigned branch and the assigned department even if it is not in the first page of the assigned branches and assigned department field', () => {
       interceptFetchEmployeeByIdRequest('333333333335', 'fetchEmployeeByIdRequest', 'employee/employees-different-page-assigned-data');
@@ -663,6 +715,30 @@ describe('Employee Management Tests', () => {
 
       cy.wait(['@fetchEmployeeByIdRequest', '@fetchBranchByIdRequest']);
       cy.get('@fetchBranchGeoAddressRequest.all').should('have.length', 0);
+    });
+
+    it('should correctly navigate between the Employee Catalog, Employee View and Employee Management pages', () => {
+      interceptFetchEmployeesByIdsRequest();
+      interceptFetchBranchesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
+      interceptFetchDepartmentByIdRequest('444444444444');
+      interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchEmployeeByIdRequest('333333333335');
+      interceptFetchEmployeeByIdRequest('333333333333');
+      cy.visit(`${ROUTES.employees.path}`);
+
+      selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'edit', '333333333335');
+
+      cy.url().should('include', `${ROUTES.employees.path}/edit/333333333335`);
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-cancel-button').click();
+
+      cy.location('pathname').should('eq', ROUTES.employees.path);
+      selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'view', '333333333335');
+
+      cy.url().should('include', `${ROUTES.employees.path}/view/333333333335`);
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'page-title-back-button').click();
+
+      cy.location('pathname').should('eq', ROUTES.employees.path);
     });
   });
 });

@@ -40,10 +40,6 @@ const ViewBranchPage: React.FC = () => {
     [userRoles, handleEdit]
   );
 
-  const handleCancel = React.useCallback(() => {
-    navigate(ROUTES.branches.path);
-  }, [navigate]);
-
   React.useEffect(() => {
     if (id && fetchStatus === 'idle') {
       dispatch(fetchBranchById({ id, skipState: false }));
@@ -63,7 +59,6 @@ const ViewBranchPage: React.FC = () => {
       subModule={testSubModule}
       pageTitle="View Branch"
       displayNotFoundPage={fetchStatus === 'failed' && !branch}
-      onBackButtonClick={handleCancel}
     >
       <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>
         <ViewDetails.Header>{BRANCH_VIEW_DETAILS_SCHEMA.title}</ViewDetails.Header>
