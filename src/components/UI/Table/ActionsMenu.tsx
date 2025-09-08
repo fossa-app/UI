@@ -65,7 +65,11 @@ const ActionsMenu = <T extends Item>({ module, subModule, actions, context, user
       >
         {actions.map((action) => (
           <WithRolesLayout key={action.field} allowedRoles={action.roles} userRoles={userRoles}>
-            <MenuItem data-cy={`${module}-${subModule}-action-${action.field}-${context.id}`} onClick={() => handleActionClick(action)}>
+            <MenuItem
+              data-cy={`${module}-${subModule}-action-${action.field}-${context.id}`}
+              sx={{ minHeight: 'auto' }}
+              onClick={() => handleActionClick(action)}
+            >
               <Typography variant="body2">{action.name}</Typography>
             </MenuItem>
           </WithRolesLayout>

@@ -139,6 +139,22 @@ describe('Department View Tests', () => {
         getTestSelectorByModule(Module.shared, SubModule.notFound, 'navigate-home-button').should('exist').click();
         cy.location('pathname').should('eq', ROUTES.flows.path);
       });
+
+      it('should correctly navigate between the Department Catalog and Department View pages', () => {
+        interceptFetchDepartmentsRequest();
+        interceptFetchEmployeesByIdsRequest();
+        interceptFetchDepartmentsByIdsRequest();
+        interceptFetchDepartmentByIdRequest('444444444444');
+        interceptFetchEmployeeByIdRequest('333333333335');
+        cy.visit(`${ROUTES.departments.path}`);
+
+        selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'view', '444444444444');
+
+        cy.url().should('include', `${ROUTES.departments.path}/view/444444444444`);
+        getTestSelectorByModule(Module.departmentManagement, SubModule.departmentViewDetails, 'page-title-back-button').click();
+
+        cy.location('pathname').should('eq', ROUTES.departments.path);
+      });
     });
   });
 
@@ -159,15 +175,15 @@ describe('Department View Tests', () => {
   describe('Admin Role', () => {
     beforeEach(() => {
       cy.loginMock(true);
-    });
-
-    it('should reset the department after viewing and navigating back', () => {
       interceptFetchDepartmentsRequest();
       interceptFetchEmployeesByIdsRequest();
       interceptFetchEmployeesRequest();
       interceptFetchDepartmentsByIdsRequest();
       interceptFetchDepartmentByIdRequest('444444444444');
       interceptFetchEmployeeByIdRequest('333333333335');
+    });
+
+    it('should reset the department after viewing and navigating back', () => {
       cy.visit(ROUTES.departments.path);
 
       selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'view', '444444444444');
@@ -187,12 +203,6 @@ describe('Department View Tests', () => {
     });
 
     it('should render the Edit department button', () => {
-      interceptFetchDepartmentsRequest();
-      interceptFetchEmployeesByIdsRequest();
-      interceptFetchEmployeesRequest();
-      interceptFetchDepartmentsByIdsRequest();
-      interceptFetchDepartmentByIdRequest('444444444444');
-      interceptFetchEmployeeByIdRequest('333333333335');
       cy.visit(`${ROUTES.departments.path}/view/444444444444`);
 
       getTestSelectorByModule(Module.departmentManagement, SubModule.departmentViewDetails, 'view-action-button').should('exist').click();
@@ -202,6 +212,25 @@ describe('Department View Tests', () => {
       getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-cancel-button').should('exist').click();
 
       cy.url().should('include', ROUTES.departments.path);
+    });
+
+    it('should correctly navigate between the Department Catalog, Department View and Department Management pages', () => {
+      cy.visit(`${ROUTES.departments.path}`);
+
+      selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'view', '444444444444');
+
+      cy.url().should('include', `${ROUTES.departments.path}/view/444444444444`);
+      getTestSelectorByModule(Module.departmentManagement, SubModule.departmentViewDetails, 'view-action-button').should('exist').click();
+
+      cy.url().should('include', `${ROUTES.departments.path}/edit/444444444444`);
+      cy.wait('@fetchDepartmentByIdRequest');
+
+      getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-cancel-button').should('exist').click();
+
+      cy.url().should('include', `${ROUTES.departments.path}/view/444444444444`);
+      getTestSelectorByModule(Module.departmentManagement, SubModule.departmentViewDetails, 'page-title-back-button').click();
+
+      cy.location('pathname').should('eq', ROUTES.departments.path);
     });
   });
 });

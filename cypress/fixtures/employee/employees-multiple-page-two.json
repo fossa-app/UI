@@ -1,0 +1,57 @@
+{
+  "pageNumber": 2,
+  "pageSize": 10,
+  "items": [
+    {
+      "id": 333333333343,
+      "companyId": 111111111111,
+      "firstName": "Sandalphon",
+      "lastName": "Messenger",
+      "fullName": "Sandalphon Coordinator Messenger",
+      "assignedBranchId": 222222222225,
+      "assignedDepartmentId": 444444444447,
+      "reportsToId": 333333333333
+    },
+    {
+      "id": 333333333344,
+      "companyId": 111111111111,
+      "firstName": "Metatron",
+      "lastName": "Scribe",
+      "fullName": "Metatron Admin Scribe",
+      "assignedBranchId": 222222222225,
+      "assignedDepartmentId": 444444444447
+    },
+    {
+      "id": 333333333345,
+      "companyId": 111111111111,
+      "firstName": "Thaddeus",
+      "lastName": "Clerk",
+      "fullName": "Thaddeus User Clerk",
+      "assignedBranchId": 222222222224,
+      "assignedDepartmentId": 444444444446,
+      "reportsToId": 333333333337
+    },
+    {
+      "id": 333333333346,
+      "companyId": 111111111111,
+      "firstName": "Remiel",
+      "lastName": "Guide",
+      "fullName": "Remiel Advisor Guide",
+      "assignedBranchId": 222222222225,
+      "assignedDepartmentId": 444444444447,
+      "reportsToId": 333333333344
+    },
+    {
+      "id": 333333333347,
+      "companyId": 111111111111,
+      "firstName": "Abaddon",
+      "lastName": "Destroyer",
+      "fullName": "Abaddon User Destroyer",
+      "assignedBranchId": 222222222223,
+      "assignedDepartmentId": 444444444445,
+      "reportsToId": 333333333336
+    }
+  ],
+  "totalItems": 15,
+  "totalPages": 2
+}

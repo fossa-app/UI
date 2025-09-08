@@ -7,7 +7,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { SEARCH_PORTAL_ID } from 'shared/constants';
 import { useDebounce } from 'shared/hooks';
 import { useSearch } from './SearchContext';
-import { StyledTextField } from './StyledTextField';
+import { StyledSearchPortal } from './StyledSearchPortal';
 
 export type SearchPortalProps = { testSelector?: string } & TextFieldProps;
 
@@ -58,7 +58,7 @@ const SearchPortal: React.FC<SearchPortalProps> = (searchPortalProps) => {
   }
 
   return ReactDOM.createPortal(
-    <StyledTextField
+    <StyledSearchPortal
       variant="filled"
       label={portalProps.label}
       data-cy={portalProps.testSelector}
