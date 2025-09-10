@@ -158,7 +158,7 @@ describe('Employee Catalog Tests', () => {
         );
       });
 
-      it('should send correct request when pagination changes', () => {
+      it('should send correct request when the pagination changes', () => {
         interceptFetchEmployeesRequest();
         interceptFetchEmployeesByIdsRequest();
         cy.wait('@fetchEmployeesRequest');

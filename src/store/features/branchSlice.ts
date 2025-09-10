@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
-import { RootState, StateEntity } from 'store';
+import { RootState, PaginatedStateEntity, StateEntityNew } from 'store';
 import axios from 'shared/configs/axios';
 import { Branch, BranchDTO, ErrorResponseDTO, ErrorResponse, PaginatedResponse, PaginationParams, GeoAddress } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
@@ -17,33 +17,33 @@ import { setError, setSuccess } from './messageSlice';
 import { setBranchesFailedFlag, setBranchesSucceededFlag } from './onboardingSlice';
 
 interface BranchState {
-  branch: StateEntity<Branch | undefined>;
-  branches: StateEntity<PaginatedResponse<Branch> | undefined>;
-  searchedBranches: StateEntity<PaginatedResponse<Branch> | undefined>;
-  assignedBranches: StateEntity<PaginatedResponse<BranchDTO> | undefined>;
+  branch: StateEntityNew<Branch>;
+  branchCatalog: PaginatedStateEntity<Branch>;
+  searchedBranches: PaginatedStateEntity<Branch>;
+  assignedBranches: PaginatedStateEntity<BranchDTO>;
 }
 
 const initialState: BranchState = {
   branch: {
-    data: undefined,
+    item: undefined,
     fetchStatus: 'idle',
     updateStatus: 'idle',
     deleteStatus: 'idle',
   },
-  branches: {
-    data: undefined,
+  branchCatalog: {
+    items: [],
     page: APP_CONFIG.table.defaultPagination,
-    fetchStatus: 'idle',
+    status: 'idle',
   },
   searchedBranches: {
-    data: undefined,
+    items: [],
     page: APP_CONFIG.table.defaultPagination,
-    fetchStatus: 'idle',
+    status: 'idle',
   },
   assignedBranches: {
-    data: undefined,
+    items: [],
     page: APP_CONFIG.table.defaultPagination,
-    fetchStatus: 'idle',
+    status: 'idle',
   },
 };
 
@@ -270,9 +270,9 @@ export const deleteBranch = createAsyncThunk<void, BranchDTO['id'], { state: Roo
       dispatch(setSuccess(MESSAGES.success.branches.delete));
 
       const state = getState() as RootState;
-      const branches = state.branch.branches.data;
+      const { branchCatalog } = state.branch;
 
-      if (branches?.totalItems === 1) {
+      if (branchCatalog.page.totalItems === 1) {
         dispatch(setBranchesFailedFlag());
       }
     } catch (error) {
@@ -324,75 +324,73 @@ const branchSlice = createSlice({
   initialState,
   reducers: {
     updateBranchesPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
-      state.branches.page = { ...state.branches.page, ...action.payload };
+      state.branchCatalog.page = { ...state.branchCatalog.page, ...action.payload };
     },
     resetBranchesPagination(state) {
-      state.branches.page = initialState.branches.page;
+      state.branchCatalog.page = initialState.branchCatalog.page;
     },
     updateAssignedBranchesPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
       state.assignedBranches.page = { ...state.assignedBranches.page, ...action.payload };
     },
     resetBranchesFetchStatus(state) {
-      state.branches.fetchStatus = initialState.branches.fetchStatus;
+      state.branchCatalog.status = initialState.branchCatalog.status;
     },
     resetAssignedBranchesFetchStatus(state) {
-      state.assignedBranches.fetchStatus = initialState.assignedBranches.fetchStatus;
+      state.assignedBranches.status = initialState.assignedBranches.status;
     },
     resetBranch(state) {
-      state.branch = initialState.branch as WritableDraft<StateEntity<Branch>>;
+      state.branch = initialState.branch as WritableDraft<StateEntityNew<Branch>>;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchBranches.pending, (state) => {
-        state.branches.fetchStatus = 'loading';
+        state.branchCatalog.status = 'loading';
       })
       .addCase(fetchBranches.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
-        state.branches.data = undefined;
-        state.branches.fetchStatus = 'failed';
-        state.branches.error = action.payload;
+        state.branchCatalog.items = [];
+        state.branchCatalog.status = 'failed';
+        state.branchCatalog.error = action.payload;
       })
       .addCase(fetchBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<Branch> | undefined>) => {
-        state.branches.data = action.payload;
-        state.branches.page!.totalItems = action.payload?.totalItems;
-        state.branches.page!.totalPages = action.payload?.totalPages;
-        state.branches.fetchStatus = 'succeeded';
-        state.branches.error = undefined;
+        const { items = [], ...page } = action.payload || {};
+
+        state.branchCatalog.items = items;
+        state.branchCatalog.page = page;
+        state.branchCatalog.status = 'succeeded';
+        state.branchCatalog.error = undefined;
       })
       .addCase(fetchSearchedBranches.pending, (state) => {
-        state.searchedBranches.fetchStatus = 'loading';
+        state.searchedBranches.status = 'loading';
       })
       .addCase(fetchSearchedBranches.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
-        state.searchedBranches.data = undefined;
-        state.searchedBranches.fetchStatus = 'failed';
+        state.searchedBranches.items = [];
+        state.searchedBranches.status = 'failed';
         state.searchedBranches.error = action.payload;
       })
       .addCase(fetchSearchedBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<Branch> | undefined>) => {
-        state.searchedBranches.data = action.payload;
-        state.searchedBranches.page!.totalItems = action.payload?.totalItems;
-        state.searchedBranches.page!.totalPages = action.payload?.totalPages;
-        state.searchedBranches.fetchStatus = 'succeeded';
+        const { items = [], ...page } = action.payload || {};
+
+        state.searchedBranches.items = items;
+        state.searchedBranches.page = page;
+        state.searchedBranches.status = 'succeeded';
         state.searchedBranches.error = undefined;
       })
       .addCase(fetchAssignedBranches.pending, (state) => {
-        state.assignedBranches.fetchStatus = 'loading';
+        state.assignedBranches.status = 'loading';
       })
       .addCase(fetchAssignedBranches.fulfilled, (state, action) => {
-        state.assignedBranches.page!.totalItems = action.payload?.totalItems;
-        state.assignedBranches.page!.totalPages = action.payload?.totalPages;
-        state.assignedBranches.page!.pageNumber = action.payload?.pageNumber;
-        state.assignedBranches.fetchStatus = 'succeeded';
+        const { items = [], ...page } = action.payload || {};
+        const existingItems = state.assignedBranches.items || [];
+        const existingIds = new Set(existingItems.map(({ id }) => id));
+        const newItems = items.filter(({ id }) => !existingIds.has(id));
 
-        const existingItems = state.assignedBranches.data?.items || [];
-        const newItems = action.payload?.items.filter((item) => !existingItems.some(({ id }) => id === item.id)) || [];
-
-        state.assignedBranches.data = {
-          ...action.payload,
-          items: [...existingItems, ...newItems],
-        };
+        state.assignedBranches.items = [...existingItems, ...newItems];
+        state.assignedBranches.page = page;
+        state.assignedBranches.status = 'succeeded';
       })
       .addCase(fetchAssignedBranches.rejected, (state) => {
-        state.assignedBranches.fetchStatus = 'failed';
+        state.assignedBranches.status = 'failed';
       })
       .addCase(fetchBranchById.pending, (state, action) => {
         if (action.meta.arg.skipState) {
@@ -406,18 +404,18 @@ const branchSlice = createSlice({
           return;
         }
 
-        state.branch.data = undefined;
+        state.branch.item = undefined;
         state.branch.fetchStatus = 'failed';
-        state.branch.error = action.payload;
+        state.branch.fetchError = action.payload;
       })
       .addCase(fetchBranchById.fulfilled, (state, action) => {
         if (action.meta.arg.skipState) {
           return;
         }
 
-        state.branch.data = action.payload;
+        state.branch.item = action.payload;
         state.branch.fetchStatus = 'succeeded';
-        state.branch.error = undefined;
+        state.branch.fetchError = undefined;
       })
       .addCase(createBranch.pending, (state) => {
         state.branch.updateStatus = 'loading';
@@ -457,17 +455,17 @@ const branchSlice = createSlice({
       })
       .addCase(deleteBranch.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.branch.deleteStatus = 'failed';
-        state.branch.error = action.payload;
+        state.branch.deleteError = action.payload;
       })
       .addCase(deleteBranch.fulfilled, (state) => {
         state.branch.deleteStatus = 'succeeded';
-        state.branch.error = undefined;
+        state.branch.deleteError = undefined;
       });
   },
 });
 
 export const selectBranch = (state: RootState) => state.branch.branch;
-export const selectBranches = (state: RootState) => state.branch.branches;
+export const selectBranchCatalog = (state: RootState) => state.branch.branchCatalog;
 export const selectSearchedBranches = (state: RootState) => state.branch.searchedBranches;
 export const selectAssignedBranches = (state: RootState) => state.branch.assignedBranches;
 

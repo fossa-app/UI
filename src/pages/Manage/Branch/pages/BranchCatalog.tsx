@@ -7,7 +7,7 @@ import {
   resetBranchesFetchStatus,
   resetBranchesPagination,
   selectBranch,
-  selectBranches,
+  selectBranchCatalog,
   selectUserRoles,
   updateBranchesPagination,
 } from 'store/features';
@@ -27,7 +27,7 @@ const testSubModule = SubModule.branchCatalog;
 const BranchCatalogPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { fetchStatus, data: branches, page = APP_CONFIG.table.defaultPagination as PaginationParams } = useAppSelector(selectBranches);
+  const { status: fetchStatus, items: branches, page = APP_CONFIG.table.defaultPagination } = useAppSelector(selectBranchCatalog);
   const { deleteStatus } = useAppSelector(selectBranch);
   const userRoles = useAppSelector(selectUserRoles);
   const { searchTerm: search, searchTermChanged, setSearchTermChanged, setPortalProps } = useSearch();
@@ -45,14 +45,14 @@ const BranchCatalogPage: React.FC = () => {
           handleNavigate(generatePath(ROUTES.editBranch.path, { id: branch.id }));
           break;
         case 'delete':
-          if (page.pageNumber! > 1 && branches?.items.length === 1) {
+          if (page.pageNumber! > 1 && branches.length === 1) {
             dispatch(updateBranchesPagination({ pageNumber: page.pageNumber! - 1 }));
           }
           dispatch(deleteBranch(branch.id));
           break;
       }
     },
-    [handleNavigate, dispatch, page.pageNumber, branches?.items.length]
+    [handleNavigate, dispatch, page.pageNumber, branches.length]
   );
 
   const handlePageChange = React.useCallback(
@@ -137,13 +137,13 @@ const BranchCatalogPage: React.FC = () => {
         subModule={testSubModule}
         loading={loading}
         columns={columns}
-        items={branches?.items}
+        items={branches}
         pageNumber={page.pageNumber!}
         pageSize={page.pageSize!}
         totalItems={page.totalItems}
         pageSizeOptions={pageSizeOptions}
         noRecordsTemplate={
-          <Page module={testModule} subModule={testSubModule} sx={{ margin: 0 }}>
+          <Page module={testModule} subModule={testSubModule} sx={{ m: 0 }}>
             <Page.Subtitle variant="h6">No Branches Found</Page.Subtitle>
           </Page>
         }
