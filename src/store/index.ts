@@ -1,7 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import { FieldValues } from 'react-hook-form';
-import { ErrorResponseDTO, ErrorResponse, PaginationParams, Status } from 'shared/models';
+import { PaginationParams, GeneralErrorResponse } from 'shared/models';
 import clientReducer from './features/identitySlice';
 import appConfigReducer from './features/appConfigSlice';
 import licenseReducer from './features/licenseSlice';
@@ -41,15 +40,35 @@ const store = configureStore({
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 
+export type Status = 'idle' | 'loading' | 'succeeded' | 'failed';
+
+// TODO: remove this legacy interface and use StateEntityNew/PaginatedStateEntity instead
 export interface StateEntity<T = unknown> {
   data: T;
   status?: Status;
   fetchStatus?: Status;
   updateStatus?: Status;
   deleteStatus?: Status;
-  error?: ErrorResponseDTO | ErrorResponse<FieldValues>;
-  updateError?: ErrorResponseDTO | ErrorResponse<FieldValues>;
+  error?: GeneralErrorResponse;
+  updateError?: GeneralErrorResponse;
   page?: Partial<PaginationParams>;
+}
+
+export interface StateEntityNew<T = unknown> {
+  item?: T;
+  fetchStatus: Status;
+  updateStatus: Status;
+  deleteStatus: Status;
+  fetchError?: GeneralErrorResponse;
+  updateError?: GeneralErrorResponse;
+  deleteError?: GeneralErrorResponse;
+}
+
+export interface PaginatedStateEntity<T = unknown> {
+  items: T[];
+  page: PaginationParams;
+  status: Status;
+  error?: GeneralErrorResponse;
 }
 
 export const useAppDispatch: () => AppDispatch = useDispatch;

@@ -122,10 +122,19 @@ describe('Branch Catalog Tests', () => {
           );
         });
 
-        it('should send correct request when pagination changes', () => {
-          interceptFetchBranchesRequest();
+        it('should send correct request when the pagination changes', () => {
+          interceptFetchBranchesRequest(
+            { pageNumber: 1, pageSize: 10, search: '' },
+            { alias: 'fetch10BranchesRequest', fixture: 'branch/branches-multiple-page-one' }
+          );
 
-          cy.wait('@fetchBranchesRequest');
+          cy.wait('@fetch10BranchesRequest');
+
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 10);
+          getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchCatalog, 'table-pagination').should(
+            'have.text',
+            '1–10 of 22'
+          );
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-pagination')
             .find('.MuiTablePagination-input')
             .click();
@@ -135,12 +144,20 @@ describe('Branch Catalog Tests', () => {
           cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(1).should('have.text', '20');
           cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(2).should('have.text', '50');
 
-          interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 20, search: '' }, { alias: 'fetch20BranchesRequest' });
+          interceptFetchBranchesRequest(
+            { pageNumber: 1, pageSize: 20, search: '' },
+            { alias: 'fetch20BranchesRequest', fixture: 'branch/branches-multiple-page-size-20' }
+          );
           cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="20"]').click();
 
           cy.wait('@fetch20BranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=20');
 
           getTablePaginationSizeInput(Module.branchManagement, SubModule.branchCatalog, 'table-pagination').should('have.value', '20');
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 20);
+          getTablePaginationDisplayedRows(Module.branchManagement, SubModule.branchCatalog, 'table-pagination').should(
+            'have.text',
+            '1–20 of 22'
+          );
         });
 
         it('should send correct request when the search changes', () => {

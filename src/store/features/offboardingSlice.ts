@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WritableDraft } from 'immer';
-import { RootState, StateEntity } from 'store';
+import { RootState, StateEntity, Status } from 'store';
 import {
   BranchDTO,
   CompanyDatasourceTotals,
@@ -9,7 +9,6 @@ import {
   EmployeeDTO,
   OffboardingStep,
   PaginatedResponse,
-  Status,
 } from 'shared/models';
 import { fetchBranchesTotal } from './branchSlice';
 import { fetchCompanySettings } from './companySettingsSlice';

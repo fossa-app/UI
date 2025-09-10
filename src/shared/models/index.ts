@@ -1,7 +1,6 @@
 export * from './client';
 export * from './route';
 export * from './license';
-export * from './status';
 export * from './response';
 export * from './user';
 export * from './onboarding';

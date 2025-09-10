@@ -44,7 +44,7 @@ const ManageBranchPage: React.FC = () => {
   const companyTimeZones = useAppSelector(selectCompanyTimeZones);
   const { data: company } = useAppSelector(selectCompany);
   const countries = useAppSelector(selectSystemCountries);
-  const { data: branch, updateError: error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectBranch);
+  const { item: branch, updateError, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectBranch);
   const [formSubmitted, setFormSubmitted] = React.useState(false);
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
   const [fields, setFields] = React.useState<FormFieldProps<Branch>[]>([]);
@@ -70,8 +70,8 @@ const ManageBranchPage: React.FC = () => {
       return USER_PERMISSION_GENERAL_MESSAGE;
     }
 
-    return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
-  }, [error?.errors, isUserAdmin]);
+    return deepCopyObject(updateError?.errors as FieldErrors<FieldValues>);
+  }, [updateError?.errors, isUserAdmin]);
 
   const handleSuccess = React.useCallback(() => {
     navigate(-1);

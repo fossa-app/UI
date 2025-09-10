@@ -14,7 +14,7 @@ const testSubModule = SubModule.branchViewDetails;
 const ViewBranchPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: branch, fetchStatus } = useAppSelector(selectBranch);
+  const { item: branch, fetchStatus } = useAppSelector(selectBranch);
   const userRoles = useAppSelector(selectUserRoles);
   const { id } = useParams();
   const loading = fetchStatus === 'idle' || fetchStatus === 'loading';

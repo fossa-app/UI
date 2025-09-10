@@ -58,13 +58,13 @@ const Table = <T extends Item>({
   };
 
   const renderEmptyState = () => (
-    <Box sx={{ p: 2 }}>
+    <>
       {noRecordsTemplate ?? (
         <Page module={module} subModule={subModule} sx={{ margin: 0 }}>
           <Page.Subtitle>No Records Found</Page.Subtitle>
         </Page>
       )}
-    </Box>
+    </>
   );
 
   return (

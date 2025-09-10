@@ -40,19 +40,17 @@ const ViewProfilePage: React.FC = () => {
   }, [fetchStatus, dispatch]);
 
   return (
-    <>
-      <PageLayout module={testModule} subModule={testSubModule} pageTitle="View Profile">
-        <Grid container spacing={5}>
-          <Grid size={12}>
-            <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>
-              <ViewDetails.Header>{PROFILE_VIEW_DETAILS_SCHEMA.title}</ViewDetails.Header>
-              <ViewDetails.Content fields={PROFILE_VIEW_DETAILS_SCHEMA.fields} values={profile} />
-              <ViewDetails.Actions actions={actions!}></ViewDetails.Actions>
-            </ViewDetails>
-          </Grid>
+    <PageLayout module={testModule} subModule={testSubModule} pageTitle="View Profile">
+      <Grid container spacing={5}>
+        <Grid size={12}>
+          <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>
+            <ViewDetails.Header>{PROFILE_VIEW_DETAILS_SCHEMA.title}</ViewDetails.Header>
+            <ViewDetails.Content fields={PROFILE_VIEW_DETAILS_SCHEMA.fields} values={profile} />
+            <ViewDetails.Actions actions={actions!}></ViewDetails.Actions>
+          </ViewDetails>
         </Grid>
-      </PageLayout>
-    </>
+      </Grid>
+    </PageLayout>
   );
 };
 

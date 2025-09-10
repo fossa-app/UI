@@ -43,8 +43,8 @@ const EditEmployeePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { data: employee, updateError: error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectEmployee);
   const {
-    data: assignedBranches,
-    fetchStatus: assignedBranchesFetchStatus,
+    status: assignedBranchesFetchStatus,
+    items: assignedBranches,
     page: assignedBranchesPage = APP_CONFIG.table.defaultPagination,
   } = useAppSelector(selectAssignedBranches);
   const {
@@ -82,13 +82,12 @@ const EditEmployeePage: React.FC = () => {
   }, [managersPage, dispatch]);
 
   const branchItems = React.useMemo(() => {
-    const branchList = assignedBranches?.items || [];
-    const isBranchOptionAvailable = branchList.some((branchItem) => String(branchItem.id) === String(employee?.assignedBranchId));
+    const isBranchOptionAvailable = assignedBranches.some((branchItem) => String(branchItem.id) === String(employee?.assignedBranchId));
 
     return employee?.assignedBranchId && !isBranchOptionAvailable
-      ? [{ id: employee.assignedBranchId, name: employee.assignedBranchName } as Branch, ...branchList]
-      : branchList;
-  }, [assignedBranches?.items, employee?.assignedBranchId, employee?.assignedBranchName]);
+      ? [{ id: employee.assignedBranchId, name: employee.assignedBranchName } as Branch, ...assignedBranches]
+      : assignedBranches;
+  }, [assignedBranches, employee?.assignedBranchId, employee?.assignedBranchName]);
 
   const departmentItems = React.useMemo(() => {
     const departmentList = assignedDepartments?.items || [];

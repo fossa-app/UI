@@ -12,6 +12,8 @@ export interface ErrorResponse<T extends FieldValues> extends Omit<ErrorResponse
   errors?: FieldErrors<T>;
 }
 
+export type GeneralErrorResponse = ErrorResponseDTO | ErrorResponse<FieldValues>;
+
 export interface PaginatedResponse<T> {
   pageNumber?: number;
   pageSize?: number;
