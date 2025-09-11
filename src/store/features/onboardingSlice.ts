@@ -29,8 +29,8 @@ interface OnboardingState {
 
 const initialState: OnboardingState = {
   company: {
-    data: OnboardingStep.company,
-    status: 'idle',
+    item: OnboardingStep.company,
+    fetchStatus: 'idle',
     flags: {
       [OnboardingStep.company]: false,
       [OnboardingStep.companySettings]: false,
@@ -42,8 +42,8 @@ const initialState: OnboardingState = {
     },
   },
   employee: {
-    data: OnboardingStep.company,
-    status: 'idle',
+    item: OnboardingStep.company,
+    fetchStatus: 'idle',
     flags: {
       [OnboardingStep.employee]: false,
     },
@@ -54,20 +54,20 @@ const evaluateCompanyOnboardingStep = (state: WritableDraft<OnboardingState>) =>
   const { company, companySettings, companyLicense, branch } = state.company.flags;
 
   if (company && companySettings && companyLicense && branch) {
-    state.company.data = OnboardingStep.completed;
-    state.company.status = 'succeeded';
+    state.company.item = OnboardingStep.completed;
+    state.company.fetchStatus = 'succeeded';
   } else if (company && companySettings && companyLicense) {
-    state.company.data = OnboardingStep.branch;
-    state.company.status = 'failed';
+    state.company.item = OnboardingStep.branch;
+    state.company.fetchStatus = 'failed';
   } else if (company && companySettings) {
-    state.company.data = OnboardingStep.companyLicense;
-    state.company.status = 'failed';
+    state.company.item = OnboardingStep.companyLicense;
+    state.company.fetchStatus = 'failed';
   } else if (company) {
-    state.company.data = OnboardingStep.companySettings;
-    state.company.status = 'failed';
+    state.company.item = OnboardingStep.companySettings;
+    state.company.fetchStatus = 'failed';
   } else {
-    state.company.data = OnboardingStep.company;
-    state.company.status = 'failed';
+    state.company.item = OnboardingStep.company;
+    state.company.fetchStatus = 'failed';
   }
 };
 
@@ -75,11 +75,11 @@ const evaluateEmployeeOnboardingStep = (state: WritableDraft<OnboardingState>) =
   const { employee } = state.employee.flags;
 
   if (employee) {
-    state.employee.data = OnboardingStep.completed;
-    state.employee.status = 'succeeded';
+    state.employee.item = OnboardingStep.completed;
+    state.employee.fetchStatus = 'succeeded';
   } else {
-    state.employee.data = OnboardingStep.employee;
-    state.employee.status = 'failed';
+    state.employee.item = OnboardingStep.employee;
+    state.employee.fetchStatus = 'failed';
   }
 };
 
@@ -127,8 +127,8 @@ const onboardingSlice = createSlice({
   initialState,
   reducers: {
     setOnboardingFailed(state) {
-      state.company.status = 'failed';
-      state.employee.status = 'failed';
+      state.company.fetchStatus = 'failed';
+      state.employee.fetchStatus = 'failed';
     },
     setCompanyLicenseSkipped(state) {
       state.company.skippedSteps[OnboardingStep.companyLicense] = true;
@@ -148,17 +148,17 @@ const onboardingSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchCompany.rejected, (state) => {
-        state.company.status = 'failed';
+        state.company.fetchStatus = 'failed';
       })
       .addCase(fetchCompanySettings.rejected, (state) => {
         state.company.flags[OnboardingStep.companySettings] = false;
         evaluateCompanyOnboardingStep(state);
       })
       .addCase(fetchCompanyLicense.rejected, (state) => {
-        state.company.status = 'failed';
+        state.company.fetchStatus = 'failed';
       })
       .addCase(fetchBranchesTotal.rejected, (state) => {
-        state.company.status = 'failed';
+        state.company.fetchStatus = 'failed';
       })
       .addCase(fetchProfile.rejected, (state) => {
         state.employee.flags[OnboardingStep.employee] = false;
@@ -167,7 +167,7 @@ const onboardingSlice = createSlice({
       .addCase(fetchCompany.fulfilled, (state) => {
         state.company.flags[OnboardingStep.company] = true;
         evaluateCompanyOnboardingStep(state);
-        state.employee.data = OnboardingStep.employee;
+        state.employee.item = OnboardingStep.employee;
       })
       .addCase(fetchCompanySettings.fulfilled, (state) => {
         state.company.flags[OnboardingStep.companySettings] = true;
@@ -186,10 +186,10 @@ const onboardingSlice = createSlice({
         evaluateEmployeeOnboardingStep(state);
       })
       .addCase(deleteCompany.fulfilled, (state) => {
-        state.company.data = OnboardingStep.company;
+        state.company.item = OnboardingStep.company;
       })
       .addCase(deleteProfile.fulfilled, (state) => {
-        state.employee.data = OnboardingStep.employee;
+        state.employee.item = OnboardingStep.employee;
       });
   },
 });
@@ -199,11 +199,11 @@ export const selectCompanyOnboardingFlags = (state: RootState) => state.onboardi
 export const selectCompanyOnboardingSkippedSteps = (state: RootState) => state.onboarding.company.skippedSteps;
 export const selectEmployeeOnboardingStep = (state: RootState) => state.onboarding.employee;
 export const selectOnboardingCompleted = (state: RootState) =>
-  state.onboarding.company.data === OnboardingStep.completed && state.onboarding.employee.data === OnboardingStep.completed;
+  state.onboarding.company.item === OnboardingStep.completed && state.onboarding.employee.item === OnboardingStep.completed;
 
 export const selectOnboardingLoading = (state: RootState) =>
-  !['succeeded', 'failed'].includes(state.onboarding.company.status ?? '') ||
-  !['succeeded', 'failed'].includes(state.onboarding.employee.status ?? '');
+  !['succeeded', 'failed'].includes(state.onboarding.company.fetchStatus ?? '') ||
+  !['succeeded', 'failed'].includes(state.onboarding.employee.fetchStatus ?? '');
 
 export const { setCompanyLicenseSkipped, resetCompanyLicenseSkipped, setBranchesFailedFlag, setBranchesSucceededFlag } =
   onboardingSlice.actions;

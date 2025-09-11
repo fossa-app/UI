@@ -25,7 +25,7 @@ const CompanySettingsPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const userRoles = useAppSelector(selectUserRoles);
-  const { data: companySettings, fetchStatus, updateStatus } = useAppSelector(selectCompanySettings);
+  const { item: companySettings, fetchStatus, updateStatus } = useAppSelector(selectCompanySettings);
   const { isDarkTheme } = useAppSelector(selectAppConfig);
   const mode: ThemeMode = isDarkTheme ? 'dark' : 'light';
 

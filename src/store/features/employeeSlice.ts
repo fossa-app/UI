@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk, ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
-import { PaginatedStateEntity, RootState, StateEntityNew } from 'store';
+import { PaginatedStateEntity, RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import {
   Branch,
@@ -32,7 +32,7 @@ import { fetchBranchById, fetchBranchesByIds } from './branchSlice';
 import { fetchDepartmentById, fetchDepartmentsByIds } from './departmentSlice';
 
 interface EmployeeState {
-  employee: StateEntityNew<Employee>;
+  employee: StateEntity<Employee | undefined>;
   employeeCatalog: PaginatedStateEntity<Employee>;
   managers: PaginatedStateEntity<EmployeeDTO>;
 }
@@ -262,7 +262,7 @@ const employeeSlice = createSlice({
       state.managers.status = initialState.managers.status;
     },
     resetEmployee(state) {
-      state.employee = initialState.employee as WritableDraft<StateEntityNew<Employee>>;
+      state.employee = initialState.employee as WritableDraft<StateEntity<Employee>>;
     },
   },
   extraReducers: (builder) => {

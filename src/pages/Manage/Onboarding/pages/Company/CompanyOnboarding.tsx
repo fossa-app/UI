@@ -18,7 +18,7 @@ import { COMPANY_ONBOARDING_STEP_MAP, COMPANY_ONBOARDING_STEPS } from 'shared/co
 const CompanyOnboardingPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: step, skippedSteps } = useAppSelector(selectCompanyOnboardingStep);
+  const { item: step, skippedSteps } = useAppSelector(selectCompanyOnboardingStep);
   const { companyLicense } = useAppSelector(selectCompanyOnboardingSkippedSteps);
   const { branch } = useAppSelector(selectCompanyOnboardingFlags);
   const [activeStep, setActiveStep] = React.useState(0);

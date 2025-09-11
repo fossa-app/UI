@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
-import { RootState, PaginatedStateEntity, StateEntityNew } from 'store';
+import { RootState, PaginatedStateEntity, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
 import { Branch, BranchDTO, ErrorResponseDTO, ErrorResponse, PaginatedResponse, PaginationParams, GeoAddress } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
@@ -18,7 +18,7 @@ import { setError, setSuccess } from './messageSlice';
 import { setBranchesFailedFlag, setBranchesSucceededFlag } from './onboardingSlice';
 
 interface BranchState {
-  branch: StateEntityNew<Branch>;
+  branch: StateEntity<Branch | undefined>;
   branchCatalog: PaginatedStateEntity<Branch>;
   searchedBranches: PaginatedStateEntity<Branch>;
   assignedBranches: PaginatedStateEntity<BranchDTO>;
@@ -89,9 +89,9 @@ export const fetchBranches = createAsyncThunk<
     }
 
     const state = getState() as RootState;
-    const timeZones = state.license.system.data?.entitlements.timeZones || [];
-    const countries = state.license.system.data?.entitlements.countries || [];
-    const companyCountryCode = state.company.company.data!.countryCode;
+    const timeZones = state.license.system.item?.entitlements.timeZones || [];
+    const countries = state.license.system.item?.entitlements.countries || [];
+    const companyCountryCode = state.company.company.item!.countryCode;
 
     return {
       ...data,
@@ -166,9 +166,9 @@ export const fetchBranchById = createAsyncThunk<
   try {
     const { data } = await axios.get<BranchDTO>(`${ENDPOINTS.branches}/${id}`);
     const state = getState() as RootState;
-    const timeZones = state.license.system.data?.entitlements.timeZones || [];
-    const countries = state.license.system.data?.entitlements.countries || [];
-    const companyCountryCode = state.company.company.data!.countryCode;
+    const timeZones = state.license.system.item?.entitlements.timeZones || [];
+    const countries = state.license.system.item?.entitlements.countries || [];
+    const companyCountryCode = state.company.company.item!.countryCode;
     const countryName = countries.find((country) => country.code === data.address?.countryCode)?.name;
     const fullAddress = data.address ? getFullAddress({ ...data.address, countryName }, false) : '';
     let geoAddress: GeoAddress | undefined;
@@ -339,7 +339,7 @@ const branchSlice = createSlice({
       state.assignedBranches.status = initialState.assignedBranches.status;
     },
     resetBranch(state) {
-      state.branch = initialState.branch as WritableDraft<StateEntityNew<Branch>>;
+      state.branch = initialState.branch as WritableDraft<StateEntity<Branch>>;
     },
   },
   extraReducers: (builder) => {

@@ -42,23 +42,11 @@ export type AppDispatch = typeof store.dispatch;
 
 export type Status = 'idle' | 'loading' | 'succeeded' | 'failed';
 
-// TODO: remove this legacy interface and use StateEntityNew/PaginatedStateEntity instead
 export interface StateEntity<T = unknown> {
-  data: T;
-  status?: Status;
-  fetchStatus?: Status;
+  item: T;
+  fetchStatus: Status;
   updateStatus?: Status;
   deleteStatus?: Status;
-  error?: GeneralErrorResponse;
-  updateError?: GeneralErrorResponse;
-  page?: Partial<PaginationParams>;
-}
-
-export interface StateEntityNew<T = unknown> {
-  item?: T;
-  fetchStatus: Status;
-  updateStatus: Status;
-  deleteStatus: Status;
   fetchError?: GeneralErrorResponse;
   updateError?: GeneralErrorResponse;
   deleteError?: GeneralErrorResponse;

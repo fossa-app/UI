@@ -13,7 +13,7 @@ import { EMPLOYEE_ONBOARDING_STEPS, ROUTES } from 'shared/constants';
 const EmployeeOnboarding: React.FC = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { data: step } = useAppSelector(selectEmployeeOnboardingStep);
+  const { item: step } = useAppSelector(selectEmployeeOnboardingStep);
   const [activeStep, setActiveStep] = React.useState(0);
 
   React.useEffect(() => {

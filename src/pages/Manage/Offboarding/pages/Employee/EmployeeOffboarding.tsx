@@ -9,7 +9,7 @@ import { ROUTES } from 'shared/constants';
 const EmployeeOffboardingPage: React.FC = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { data: step } = useAppSelector(selectEmployeeOffboardingStep);
+  const { item: step } = useAppSelector(selectEmployeeOffboardingStep);
 
   React.useEffect(() => {
     if (step === OffboardingStep.employee && pathname !== ROUTES.deleteEmployee.path) {

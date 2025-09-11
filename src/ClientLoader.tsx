@@ -18,8 +18,8 @@ const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), {
 
 const ClientLoader: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { data: client, status: clientStatus } = useAppSelector(selectClient);
-  const { status: systemLicenseStatus } = useAppSelector(selectSystemLicense);
+  const { item: client, fetchStatus: clientStatus } = useAppSelector(selectClient);
+  const { fetchStatus: systemLicenseStatus } = useAppSelector(selectSystemLicense);
   const loading = clientStatus === 'loading' || systemLicenseStatus === 'loading';
 
   React.useEffect(() => {

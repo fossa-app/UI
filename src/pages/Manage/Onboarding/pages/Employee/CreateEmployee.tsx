@@ -12,7 +12,7 @@ const testSubModule = CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA.subModule;
 
 const CreateEmployeePage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { data: user } = useAppSelector(selectUser);
+  const { item: user } = useAppSelector(selectUser);
   const { updateStatus, updateError: error } = useAppSelector(selectProfile);
 
   const employeeData = React.useMemo(() => {

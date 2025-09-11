@@ -8,17 +8,17 @@ import { ROUTES } from 'shared/constants';
 const ProtectedPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: user, status } = useAppSelector(selectUser);
+  const { item: user, fetchStatus } = useAppSelector(selectUser);
 
   React.useEffect(() => {
-    if (status === 'idle') {
+    if (fetchStatus === 'idle') {
       dispatch(fetchUser());
-    } else if (!user && status === 'failed') {
+    } else if (!user && fetchStatus === 'failed') {
       navigate(ROUTES.login.path);
     }
-  }, [user, status, dispatch, navigate]);
+  }, [user, fetchStatus, dispatch, navigate]);
 
-  if (status === 'failed') {
+  if (fetchStatus === 'failed') {
     return null;
   }
 

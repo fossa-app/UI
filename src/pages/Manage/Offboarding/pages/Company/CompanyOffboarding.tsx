@@ -13,7 +13,7 @@ import { Module, SubModule } from 'shared/models';
 const CompanyOffboardingPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: step } = useAppSelector(selectCompanyOffboardingStep);
+  const { item: step } = useAppSelector(selectCompanyOffboardingStep);
   const [activeStep, setActiveStep] = React.useState(0);
 
   React.useEffect(() => {

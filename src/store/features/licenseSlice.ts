@@ -9,23 +9,23 @@ import { mapCompanyLicense, mapError, parseResponse } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
 
 interface LicenseState {
-  system: StateEntity<SystemLicense | null>;
+  system: StateEntity<SystemLicense | undefined>;
   company: StateEntity<CompanyLicense | undefined>;
 }
 
 const initialState: LicenseState = {
   system: {
-    data: null,
-    status: 'idle',
+    item: undefined,
+    fetchStatus: 'idle',
   },
   company: {
-    data: undefined,
+    item: undefined,
     fetchStatus: 'idle',
     updateStatus: 'idle',
   },
 };
 
-export const fetchSystemLicense = createAsyncThunk<SystemLicense | null, void, { rejectValue: ErrorResponseDTO }>(
+export const fetchSystemLicense = createAsyncThunk<SystemLicense | undefined, void, { rejectValue: ErrorResponseDTO }>(
   'license/fetchSystemLicense',
   async (_, { rejectWithValue }) => {
     try {
@@ -95,34 +95,34 @@ const licenseSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchSystemLicense.pending, (state) => {
-        state.system.status = 'loading';
+        state.system.fetchStatus = 'loading';
       })
       .addCase(fetchSystemLicense.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
-        state.system.data = null;
-        state.system.status = 'failed';
-        state.system.error = action.payload;
+        state.system.item = undefined;
+        state.system.fetchStatus = 'failed';
+        state.system.fetchError = action.payload;
       })
-      .addCase(fetchSystemLicense.fulfilled, (state, action: PayloadAction<SystemLicense | null>) => {
-        state.system.data = action.payload;
-        state.system.status = 'succeeded';
+      .addCase(fetchSystemLicense.fulfilled, (state, action: PayloadAction<SystemLicense | undefined>) => {
+        state.system.item = action.payload;
+        state.system.fetchStatus = 'succeeded';
       })
       .addCase(fetchCompanyLicense.pending, (state) => {
         state.company.fetchStatus = 'loading';
       })
       .addCase(fetchCompanyLicense.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
-        state.company.data = undefined;
+        state.company.item = undefined;
         state.company.fetchStatus = 'failed';
-        state.company.error = action.payload;
+        state.company.fetchError = action.payload;
       })
       .addCase(fetchCompanyLicense.fulfilled, (state, action: PayloadAction<CompanyLicense | undefined>) => {
-        state.company.data = action.payload;
+        state.company.item = action.payload;
         state.company.fetchStatus = 'succeeded';
       })
       .addCase(uploadCompanyLicense.pending, (state) => {
         state.company.updateStatus = 'loading';
       })
       .addCase(uploadCompanyLicense.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
-        state.company.data = undefined;
+        state.company.item = undefined;
         state.company.updateStatus = 'failed';
         state.company.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
       })
@@ -135,5 +135,5 @@ const licenseSlice = createSlice({
 
 export const selectSystemLicense = (state: RootState) => state.license.system;
 export const selectCompanyLicense = (state: RootState) => state.license.company;
-export const selectSystemCountries = (state: RootState) => state.license.system.data?.entitlements?.countries;
+export const selectSystemCountries = (state: RootState) => state.license.system.item?.entitlements?.countries;
 export default licenseSlice.reducer;

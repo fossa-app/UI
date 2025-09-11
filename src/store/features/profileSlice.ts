@@ -15,7 +15,7 @@ interface ProfileState {
 
 const initialState: ProfileState = {
   profile: {
-    data: undefined,
+    item: undefined,
     fetchStatus: 'idle',
     updateStatus: 'idle',
   },
@@ -29,7 +29,7 @@ export const fetchProfile = createAsyncThunk<Employee | undefined, void, { rejec
 
       if (data) {
         const state = getState() as RootState;
-        const user = state.auth.user.data;
+        const user = state.auth.user.item;
 
         return mapEmployee({ user, employee: data });
       }
@@ -131,16 +131,16 @@ const profileSlice = createSlice({
       })
       .addCase(fetchProfile.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.profile.fetchStatus = 'failed';
-        state.profile.error = action.payload;
+        state.profile.fetchError = action.payload;
       })
       .addCase(fetchProfile.fulfilled, (state, action: PayloadAction<Employee | undefined>) => {
-        state.profile.data = action.payload;
-        state.profile.data!.isDraft = false;
+        state.profile.item = action.payload;
+        state.profile.item!.isDraft = false;
         state.profile.fetchStatus = 'succeeded';
       })
       .addCase(fetchUser.fulfilled, (state, action: PayloadAction<AppUser | undefined>) => {
-        state.profile.data = mapUserProfileToEmployee(action.payload?.profile);
-        state.profile.data!.isDraft = true;
+        state.profile.item = mapUserProfileToEmployee(action.payload?.profile);
+        state.profile.item!.isDraft = true;
         state.profile.fetchStatus = 'succeeded';
       })
       .addCase(createProfile.pending, (state) => {
@@ -170,7 +170,7 @@ const profileSlice = createSlice({
       })
       .addCase(deleteProfile.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.profile.deleteStatus = 'failed';
-        state.profile.error = action.payload;
+        state.profile.fetchError = action.payload;
       })
       .addCase(deleteProfile.fulfilled, (state) => {
         state.profile.deleteStatus = 'succeeded';

@@ -20,8 +20,8 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { isDarkTheme } = useAppSelector(selectAppConfig);
-  const { data: company } = useAppSelector(selectCompany);
-  const { data: profile } = useAppSelector(selectProfile);
+  const { item: company } = useAppSelector(selectCompany);
+  const { item: profile } = useAppSelector(selectProfile);
   const onboardingCompleted = useAppSelector(selectOnboardingCompleted);
   const userManager = getUserManager();
   const companyName = company?.name ?? '';

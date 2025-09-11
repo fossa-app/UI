@@ -13,15 +13,15 @@ describe('Header Component', () => {
     setMockState({
       profile: {
         profile: {
-          data: undefined,
+          item: undefined,
         },
       },
       onboarding: {
-        company: { data: OnboardingStep.completed, status: 'succeeded' },
-        employee: { data: OnboardingStep.completed, status: 'succeeded' },
+        company: { item: OnboardingStep.completed, fetchStatus: 'succeeded' },
+        employee: { item: OnboardingStep.completed, fetchStatus: 'succeeded' },
       },
       appConfig: { isDarkTheme: true },
-      company: { company: { data: { name: 'Test', countryCode: 'UA' } } },
+      company: { company: { item: { name: 'Test', countryCode: 'UA' } } },
     });
   });
 
@@ -71,7 +71,7 @@ describe('Header Component', () => {
 
   it('should display the profile name and logout button after login', async () => {
     setMockState({
-      profile: { profile: { data: { firstName: 'Test' } } } as any,
+      profile: { profile: { item: { firstName: 'Test' } } } as any,
     });
 
     render(
@@ -79,6 +79,9 @@ describe('Header Component', () => {
         <Header />
       </MockRouterWrapper>
     );
+
+    const avatarButton = await screen.findByLabelText('Avatar');
+    fireEvent.click(avatarButton);
 
     const profileName = await screen.findByTestId('profile-name');
     const logoutButton = await screen.findByTestId('logout-button');
@@ -91,7 +94,7 @@ describe('Header Component', () => {
     const mockUserManager = getUserManager();
 
     setMockState({
-      profile: { profile: { data: { firstName: 'Test' } } } as any,
+      profile: { profile: { item: { firstName: 'Test' } } } as any,
     });
 
     render(
@@ -100,12 +103,10 @@ describe('Header Component', () => {
       </MockRouterWrapper>
     );
 
-    const profileMenuButton = await screen.findByTestId('profile-menu');
-
-    fireEvent.click(profileMenuButton);
+    const avatarButton = await screen.findByLabelText('Avatar');
+    fireEvent.click(avatarButton);
 
     const logoutButton = await screen.findByTestId('logout-button');
-
     fireEvent.click(logoutButton);
 
     await waitFor(() => {

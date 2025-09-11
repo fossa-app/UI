@@ -12,7 +12,7 @@ const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {
   const navigate = useNavigate();
   const userManager = getUserManager();
   const dispatch = useAppDispatch();
-  const { data: authSettings } = useAppSelector(selectAuthSettings);
+  const { item: authSettings } = useAppSelector(selectAuthSettings);
   const [shouldNavigate, setShouldNavigate] = React.useState(false);
 
   const refreshToken = React.useCallback(

@@ -28,13 +28,13 @@ interface CompanyState {
 
 const initialState: CompanyState = {
   company: {
-    data: undefined,
+    item: undefined,
     fetchStatus: 'idle',
     updateStatus: 'idle',
   },
   companyDatasourceTotals: {
     fetchStatus: 'idle',
-    data: {
+    item: {
       branches: undefined,
       employees: undefined,
       departments: undefined,
@@ -50,7 +50,7 @@ export const fetchCompany = createAsyncThunk<Company | undefined, boolean | unde
 
       if (data) {
         const state = getState() as RootState;
-        const countries = state.license.system.data?.entitlements.countries || [];
+        const countries = state.license.system.item?.entitlements.countries || [];
 
         return mapCompany(data, countries);
       }
@@ -180,12 +180,12 @@ const companySlice = createSlice({
         state.company.fetchStatus = 'loading';
       })
       .addCase(fetchCompany.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
-        state.company.data = undefined;
+        state.company.item = undefined;
         state.company.fetchStatus = 'failed';
-        state.company.error = action.payload;
+        state.company.fetchError = action.payload;
       })
       .addCase(fetchCompany.fulfilled, (state, action: PayloadAction<CompanyDTO | undefined>) => {
-        state.company.data = action.payload;
+        state.company.item = action.payload;
         state.company.fetchStatus = 'succeeded';
       })
       .addCase(createCompany.pending, (state) => {
@@ -215,29 +215,29 @@ const companySlice = createSlice({
       })
       .addCase(deleteCompany.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.company.deleteStatus = 'failed';
-        state.company.error = action.payload;
+        state.company.deleteError = action.payload;
       })
       .addCase(deleteCompany.fulfilled, (state) => {
-        state.company.data = undefined;
+        state.company.item = undefined;
         state.company.deleteStatus = 'succeeded';
       })
       .addCase(fetchBranchesTotal.rejected, (state) => {
-        state.companyDatasourceTotals.data.branches = 0;
+        state.companyDatasourceTotals.item.branches = 0;
       })
       .addCase(fetchEmployeesTotal.rejected, (state) => {
-        state.companyDatasourceTotals.data.employees = 0;
+        state.companyDatasourceTotals.item.employees = 0;
       })
       .addCase(fetchDepartmentsTotal.rejected, (state) => {
-        state.companyDatasourceTotals.data.departments = 0;
+        state.companyDatasourceTotals.item.departments = 0;
       })
       .addCase(fetchBranchesTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<BranchDTO> | undefined>) => {
-        state.companyDatasourceTotals.data.branches = action.payload?.totalItems;
+        state.companyDatasourceTotals.item.branches = action.payload?.totalItems;
       })
       .addCase(fetchEmployeesTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<EmployeeDTO> | undefined>) => {
-        state.companyDatasourceTotals.data.employees = action.payload?.totalItems;
+        state.companyDatasourceTotals.item.employees = action.payload?.totalItems;
       })
       .addCase(fetchDepartmentsTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<DepartmentDTO> | undefined>) => {
-        state.companyDatasourceTotals.data.departments = action.payload?.totalItems;
+        state.companyDatasourceTotals.item.departments = action.payload?.totalItems;
       })
       .addCase(fetchCompanyDatasourceTotals.pending, (state) => {
         state.companyDatasourceTotals.fetchStatus = 'loading';
@@ -255,7 +255,7 @@ export const selectCompany = (state: RootState) => state.company.company;
 
 export const selectCompanyTimeZones = createSelector(
   // NOTE: always select state slices directly instead of passing selectors due to memoization issues
-  [(state: RootState) => state.license.system.data?.entitlements.timeZones, (state: RootState) => state.company.company.data?.countryCode],
+  [(state: RootState) => state.license.system.item?.entitlements.timeZones, (state: RootState) => state.company.company.item?.countryCode],
   (timeZones, countryCode) => {
     if (!countryCode || !timeZones?.length) {
       return [];
@@ -265,28 +265,28 @@ export const selectCompanyTimeZones = createSelector(
   }
 );
 
-export const selectCompanyDatasourceTotals = (state: RootState) => state.company.companyDatasourceTotals.data;
+export const selectCompanyDatasourceTotals = (state: RootState) => state.company.companyDatasourceTotals.item;
 
 export const selectBranchUsagePercent = createSelector(
   [
-    (state: RootState) => state.company.companyDatasourceTotals.data.branches,
-    (state: RootState) => state.license.company.data?.entitlements.maximumBranchCount,
+    (state: RootState) => state.company.companyDatasourceTotals.item.branches,
+    (state: RootState) => state.license.company.item?.entitlements.maximumBranchCount,
   ],
   (branches, maximumBranchCount) => calculateUsagePercent(branches, maximumBranchCount)
 );
 
 export const selectEmployeeUsagePercent = createSelector(
   [
-    (state: RootState) => state.company.companyDatasourceTotals.data.employees,
-    (state: RootState) => state.license.company.data?.entitlements.maximumEmployeeCount,
+    (state: RootState) => state.company.companyDatasourceTotals.item.employees,
+    (state: RootState) => state.license.company.item?.entitlements.maximumEmployeeCount,
   ],
   (employees, maximumEmployeeCount) => calculateUsagePercent(employees, maximumEmployeeCount)
 );
 
 export const selectDepartmentUsagePercent = createSelector(
   [
-    (state: RootState) => state.company.companyDatasourceTotals.data.departments,
-    (state: RootState) => state.license.company.data?.entitlements.maximumDepartmentCount,
+    (state: RootState) => state.company.companyDatasourceTotals.item.departments,
+    (state: RootState) => state.license.company.item?.entitlements.maximumDepartmentCount,
   ],
   (departments, maximumDepartmentCount) => calculateUsagePercent(departments, maximumDepartmentCount)
 );

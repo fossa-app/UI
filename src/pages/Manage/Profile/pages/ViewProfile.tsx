@@ -13,7 +13,7 @@ const testSubModule = PROFILE_VIEW_DETAILS_SCHEMA.subModule;
 const ViewProfilePage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: profile, fetchStatus } = useAppSelector(selectProfile);
+  const { item: profile, fetchStatus } = useAppSelector(selectProfile);
   const loading = fetchStatus === 'idle' || fetchStatus === 'loading';
 
   const handleEdit = React.useCallback(() => {
