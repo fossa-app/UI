@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk, ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
-import { RootState, StateEntity } from 'store';
+import { PaginatedStateEntity, RootState, StateEntityNew } from 'store';
 import axios from 'shared/configs/axios';
 import {
   Branch,
@@ -26,31 +26,33 @@ import {
   getEmployeesAssignedDepartmentIds,
   getEmployeesManagerIds,
 } from 'shared/helpers';
+import { mergePaginatedItems } from 'store/helpers';
 import { setError, setSuccess } from './messageSlice';
 import { fetchBranchById, fetchBranchesByIds } from './branchSlice';
 import { fetchDepartmentById, fetchDepartmentsByIds } from './departmentSlice';
 
 interface EmployeeState {
-  employees: StateEntity<PaginatedResponse<Employee> | undefined>;
-  managers: StateEntity<PaginatedResponse<EmployeeDTO> | undefined>;
-  employee: StateEntity<Employee | undefined>;
+  employee: StateEntityNew<Employee>;
+  employeeCatalog: PaginatedStateEntity<Employee>;
+  managers: PaginatedStateEntity<EmployeeDTO>;
 }
 
 const initialState: EmployeeState = {
-  employees: {
-    data: undefined,
-    page: APP_CONFIG.table.defaultPagination,
-    fetchStatus: 'idle',
-  },
-  managers: {
-    data: undefined,
-    page: APP_CONFIG.table.defaultPagination,
-    fetchStatus: 'idle',
-  },
   employee: {
-    data: undefined,
+    item: undefined,
     fetchStatus: 'idle',
     updateStatus: 'idle',
+    deleteStatus: 'idle',
+  },
+  employeeCatalog: {
+    items: [],
+    page: APP_CONFIG.table.defaultPagination,
+    status: 'idle',
+  },
+  managers: {
+    items: [],
+    page: APP_CONFIG.table.defaultPagination,
+    status: 'idle',
   },
 };
 
@@ -245,59 +247,54 @@ const employeeSlice = createSlice({
   initialState,
   reducers: {
     updateEmployeesPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
-      state.employees.page = { ...state.employees.page, ...action.payload };
+      state.employeeCatalog.page = { ...state.employeeCatalog.page, ...action.payload };
     },
     resetEmployeesPagination(state) {
-      state.employees.page = initialState.employees.page;
+      state.employeeCatalog.page = initialState.employeeCatalog.page;
     },
     updateManagersPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
       state.managers.page = { ...state.managers.page, ...action.payload };
     },
     resetEmployeesFetchStatus(state) {
-      state.employees.fetchStatus = initialState.employees.fetchStatus;
+      state.employeeCatalog.status = initialState.employeeCatalog.status;
     },
     resetManagersFetchStatus(state) {
-      state.managers.fetchStatus = initialState.managers.fetchStatus;
+      state.managers.status = initialState.managers.status;
     },
     resetEmployee(state) {
-      state.employee = initialState.employee as WritableDraft<StateEntity<Employee>>;
+      state.employee = initialState.employee as WritableDraft<StateEntityNew<Employee>>;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchEmployees.pending, (state) => {
-        state.employees.fetchStatus = 'loading';
+        state.employeeCatalog.status = 'loading';
       })
       .addCase(fetchEmployees.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
-        state.employees.data = undefined;
-        state.employees.fetchStatus = 'failed';
-        state.employees.error = action.payload;
+        state.employeeCatalog.items = [];
+        state.employeeCatalog.status = 'failed';
+        state.employeeCatalog.error = action.payload;
       })
       .addCase(fetchEmployees.fulfilled, (state, action: PayloadAction<PaginatedResponse<Employee> | undefined>) => {
-        state.employees.data = action.payload;
-        state.employees.page!.totalItems = action.payload?.totalItems;
-        state.employees.page!.totalPages = action.payload?.totalPages;
-        state.employees.fetchStatus = 'succeeded';
+        const { items = [], ...page } = action.payload || {};
+
+        state.employeeCatalog.items = items;
+        state.employeeCatalog.page = page;
+        state.employeeCatalog.status = 'succeeded';
+        state.employeeCatalog.error = undefined;
       })
       .addCase(fetchManagers.pending, (state) => {
-        state.managers.fetchStatus = 'loading';
+        state.managers.status = 'loading';
       })
       .addCase(fetchManagers.fulfilled, (state, action) => {
-        state.managers.page!.totalItems = action.payload?.totalItems;
-        state.managers.page!.totalPages = action.payload?.totalPages;
-        state.managers.page!.pageNumber = action.payload?.pageNumber;
-        state.managers.fetchStatus = 'succeeded';
+        const { items = [], ...page } = action.payload || {};
 
-        const existingItems = state.managers.data?.items || [];
-        const newItems = action.payload?.items.filter((item) => !existingItems.some(({ id }) => id === item.id)) || [];
-
-        state.managers.data = {
-          ...action.payload,
-          items: [...existingItems, ...newItems],
-        };
+        state.managers.items = mergePaginatedItems<EmployeeDTO>(state.managers.items, items);
+        state.managers.page = page;
+        state.managers.status = 'succeeded';
       })
       .addCase(fetchManagers.rejected, (state) => {
-        state.managers.fetchStatus = 'failed';
+        state.managers.status = 'failed';
       })
       .addCase(fetchEmployeeById.pending, (state, action) => {
         if (action.meta.arg.skipState) {
@@ -311,18 +308,18 @@ const employeeSlice = createSlice({
           return;
         }
 
-        state.employee.data = undefined;
+        state.employee.item = undefined;
         state.employee.fetchStatus = 'failed';
-        state.employee.error = action.payload;
+        state.employee.fetchError = action.payload;
       })
       .addCase(fetchEmployeeById.fulfilled, (state, action) => {
         if (action.meta.arg.skipState) {
           return;
         }
 
-        state.employee.data = action.payload;
+        state.employee.item = action.payload;
         state.employee.fetchStatus = 'succeeded';
-        state.employee.error = undefined;
+        state.employee.fetchError = undefined;
       })
       .addCase(editEmployee.pending, (state) => {
         state.employee.updateStatus = 'loading';
@@ -338,7 +335,7 @@ const employeeSlice = createSlice({
   },
 });
 
-export const selectEmployees = (state: RootState) => state.employee.employees;
+export const selectEmployeeCatalog = (state: RootState) => state.employee.employeeCatalog;
 export const selectManagers = (state: RootState) => state.employee.managers;
 export const selectEmployee = (state: RootState) => state.employee.employee;
 

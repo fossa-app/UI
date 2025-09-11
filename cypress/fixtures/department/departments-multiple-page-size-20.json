@@ -1,0 +1,281 @@
+{
+  "pageNumber": 1,
+  "pageSize": 20,
+  "items": [
+    {
+      "id": 222222222222,
+      "companyId": 111111111111,
+      "name": "New York Branch",
+      "timeZoneId": "America/New_York",
+      "address": {
+        "line1": "270 W 11th Street",
+        "line2": "Apt 2E",
+        "city": "New York",
+        "subdivision": "NY",
+        "postalCode": "10014",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222223,
+      "companyId": 111111111111,
+      "name": "Hawaii Branch",
+      "timeZoneId": "Pacific/Honolulu",
+      "address": {
+        "line1": "3211 Dewert Ln",
+        "line2": "",
+        "city": "Honolulu",
+        "subdivision": "HI",
+        "postalCode": "96818",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222224,
+      "companyId": 111111111111,
+      "name": "Warsaw Branch",
+      "timeZoneId": "Europe/Warsaw",
+      "address": {
+        "line1": "ul. Strumykowa, nr 6B",
+        "line2": "lok. 5",
+        "city": "Warszawa",
+        "subdivision": "MAZOWIECKIE",
+        "postalCode": "03-138",
+        "countryCode": "PL"
+      }
+    },
+    {
+      "id": 222222222225,
+      "companyId": 111111111111,
+      "name": "Berlin Branch",
+      "timeZoneId": "Europe/Berlin",
+      "address": null
+    },
+    {
+      "id": 222222222226,
+      "companyId": 111111111111,
+      "name": "Wrong Location Branch",
+      "timeZoneId": "Europe/Warsaw",
+      "address": {
+        "line1": "ul. Bobra, nr 69",
+        "line2": "lok. 66",
+        "city": "Szczecin",
+        "subdivision": "ZACHODNIOPOMORSKIE",
+        "postalCode": "09-999",
+        "countryCode": "PL"
+      }
+    },
+    {
+      "id": 222222222227,
+      "companyId": 111111111111,
+      "name": "Anchorage Branch",
+      "timeZoneId": "America/Anchorage",
+      "address": {
+        "line1": "456 N Central Ave",
+        "line2": "Suite 101",
+        "city": "Phoenix",
+        "subdivision": "AZ",
+        "postalCode": "85004",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222228,
+      "companyId": 111111111111,
+      "name": "Philadelphia Branch",
+      "timeZoneId": "America/New_York",
+      "address": {
+        "line1": "1500 Market St",
+        "line2": "",
+        "city": "Philadelphia",
+        "subdivision": "PA",
+        "postalCode": "19102",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222229,
+      "companyId": 111111111111,
+      "name": "San Antonio Branch",
+      "timeZoneId": "America/Chicago",
+      "address": {
+        "line1": "100 Military Plaza",
+        "line2": "",
+        "city": "San Antonio",
+        "subdivision": "TX",
+        "postalCode": "78205",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222230,
+      "companyId": 111111111111,
+      "name": "New York Branch",
+      "timeZoneId": "America/New_York",
+      "address": {
+        "line1": "200 Harbor Dr",
+        "line2": "Unit 1200",
+        "city": "San Diego",
+        "subdivision": "CA",
+        "postalCode": "92101",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222231,
+      "companyId": 111111111111,
+      "name": "Dallas Branch",
+      "timeZoneId": "America/Chicago",
+      "address": {
+        "line1": "500 Main St",
+        "line2": "",
+        "city": "Dallas",
+        "subdivision": "TX",
+        "postalCode": "75201",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222232,
+      "companyId": 111111111111,
+      "name": "Chicago Branch",
+      "timeZoneId": "America/Chicago",
+      "address": {
+        "line1": "333 Almaden Blvd",
+        "line2": "Floor 3",
+        "city": "San Jose",
+        "subdivision": "CA",
+        "postalCode": "95110",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222233,
+      "companyId": 111111111111,
+      "name": "Austin Branch",
+      "timeZoneId": "America/Chicago",
+      "address": {
+        "line1": "800 Congress Ave",
+        "line2": "",
+        "city": "Austin",
+        "subdivision": "TX",
+        "postalCode": "78701",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222234,
+      "companyId": 111111111111,
+      "name": "Jacksonville Branch",
+      "timeZoneId": "America/New_York",
+      "address": {
+        "line1": "123 Bay St",
+        "line2": "",
+        "city": "Jacksonville",
+        "subdivision": "FL",
+        "postalCode": "32202",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222235,
+      "companyId": 111111111111,
+      "name": "Fort Worth Branch",
+      "timeZoneId": "America/Chicago",
+      "address": {
+        "line1": "456 Sundance Square",
+        "line2": "",
+        "city": "Fort Worth",
+        "subdivision": "TX",
+        "postalCode": "76102",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222236,
+      "companyId": 111111111111,
+      "name": "Columbus Branch",
+      "timeZoneId": "America/New_York",
+      "address": {
+        "line1": "789 High St",
+        "line2": "",
+        "city": "Columbus",
+        "subdivision": "OH",
+        "postalCode": "43215",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222237,
+      "companyId": 111111111111,
+      "name": "Charlotte Branch",
+      "timeZoneId": "America/New_York",
+      "address": {
+        "line1": "600 S College St",
+        "line2": "",
+        "city": "Charlotte",
+        "subdivision": "NC",
+        "postalCode": "28202",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222238,
+      "companyId": 111111111111,
+      "name": "Brooklyn Branch",
+      "timeZoneId": "America/New_York",
+      "address": {
+        "line1": "1 Market St",
+        "line2": "Suite 400",
+        "city": "San Francisco",
+        "subdivision": "CA",
+        "postalCode": "94105",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222239,
+      "companyId": 111111111111,
+      "name": "Honolulu Branch",
+      "timeZoneId": "Pacific/Honolulu",
+      "address": {
+        "line1": "300 Monument Cir",
+        "line2": "",
+        "city": "Indianapolis",
+        "subdivision": "IN",
+        "postalCode": "46204",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222240,
+      "companyId": 111111111111,
+      "name": "Ocean Branch",
+      "timeZoneId": "Pacific/Honolulu",
+      "address": {
+        "line1": "700 Pine St",
+        "line2": "",
+        "city": "Seattle",
+        "subdivision": "WA",
+        "postalCode": "98101",
+        "countryCode": "US"
+      }
+    },
+    {
+      "id": 222222222241,
+      "companyId": 111111111111,
+      "name": "Anchorage Branch",
+      "timeZoneId": "America/Anchorage",
+      "address": {
+        "line1": "1000 16th St Mall",
+        "line2": "",
+        "city": "Denver",
+        "subdivision": "CO",
+        "postalCode": "80202",
+        "countryCode": "US"
+      }
+    }
+  ],
+  "totalItems": 22,
+  "totalPages": 2
+}

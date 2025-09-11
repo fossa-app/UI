@@ -13,6 +13,7 @@ import {
   prepareCommaSeparatedQueryParamsByKey,
   getFullAddress,
 } from 'shared/helpers';
+import { mergePaginatedItems } from 'store/helpers';
 import { setError, setSuccess } from './messageSlice';
 import { setBranchesFailedFlag, setBranchesSucceededFlag } from './onboardingSlice';
 
@@ -221,7 +222,6 @@ export const createBranch = createAsyncThunk<void, BranchDTO, { rejectValue: Err
 
       dispatch(resetBranchesFetchStatus());
       dispatch(setBranchesSucceededFlag());
-
       dispatch(setSuccess(MESSAGES.success.branches.create));
     } catch (error) {
       dispatch(
@@ -381,11 +381,8 @@ const branchSlice = createSlice({
       })
       .addCase(fetchAssignedBranches.fulfilled, (state, action) => {
         const { items = [], ...page } = action.payload || {};
-        const existingItems = state.assignedBranches.items || [];
-        const existingIds = new Set(existingItems.map(({ id }) => id));
-        const newItems = items.filter(({ id }) => !existingIds.has(id));
 
-        state.assignedBranches.items = [...existingItems, ...newItems];
+        state.assignedBranches.items = mergePaginatedItems<BranchDTO>(state.assignedBranches.items, items);
         state.assignedBranches.page = page;
         state.assignedBranches.status = 'succeeded';
       })

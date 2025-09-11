@@ -41,20 +41,20 @@ const EditEmployeePage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  const { data: employee, updateError: error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectEmployee);
+  const { item: employee, updateError, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectEmployee);
   const {
     status: assignedBranchesFetchStatus,
     items: assignedBranches,
     page: assignedBranchesPage = APP_CONFIG.table.defaultPagination,
   } = useAppSelector(selectAssignedBranches);
   const {
-    data: assignedDepartments,
-    fetchStatus: assignedDepartmentsFetchStatus,
+    items: assignedDepartments,
+    status: assignedDepartmentsFetchStatus,
     page: assignedDepartmentsPage = APP_CONFIG.table.defaultPagination,
   } = useAppSelector(selectAssignedDepartments);
   const {
-    data: managers,
-    fetchStatus: managersFetchStatus,
+    items: managers,
+    status: managersFetchStatus,
     page: managersPage = APP_CONFIG.table.defaultPagination,
   } = useAppSelector(selectManagers);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
@@ -90,28 +90,26 @@ const EditEmployeePage: React.FC = () => {
   }, [assignedBranches, employee?.assignedBranchId, employee?.assignedBranchName]);
 
   const departmentItems = React.useMemo(() => {
-    const departmentList = assignedDepartments?.items || [];
-    const isDepartmentOptionAvailable = departmentList.some(
+    const isDepartmentOptionAvailable = assignedDepartments.some(
       (departmentItem) => String(departmentItem.id) === String(employee?.assignedDepartmentId)
     );
 
     return employee?.assignedDepartmentId && !isDepartmentOptionAvailable
-      ? [{ id: employee.assignedDepartmentId, name: employee.assignedDepartmentName } as Department, ...departmentList]
-      : departmentList;
-  }, [assignedDepartments?.items, employee?.assignedDepartmentId, employee?.assignedDepartmentName]);
+      ? [{ id: employee.assignedDepartmentId, name: employee.assignedDepartmentName } as Department, ...assignedDepartments]
+      : assignedDepartments;
+  }, [assignedDepartments, employee?.assignedDepartmentId, employee?.assignedDepartmentName]);
 
   const managerItems = React.useMemo(() => {
-    const managerList = managers?.items || [];
-    const isManagerOptionAvailable = managerList.some((managerItem) => String(managerItem.id) === String(employee?.reportsToId));
+    const isManagerOptionAvailable = managers.some((managerItem) => String(managerItem.id) === String(employee?.reportsToId));
 
     return employee?.reportsToId && !isManagerOptionAvailable
-      ? [{ id: employee.reportsToId, name: employee.reportsToName } as unknown as Employee, ...managerList]
-      : managerList;
-  }, [managers?.items, employee?.reportsToId, employee?.reportsToName]);
+      ? [{ id: employee.reportsToId, name: employee.reportsToName } as unknown as Employee, ...managers]
+      : managers;
+  }, [managers, employee?.reportsToId, employee?.reportsToName]);
 
   const errors = React.useMemo(() => {
-    return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
-  }, [error?.errors]);
+    return deepCopyObject(updateError?.errors as FieldErrors<FieldValues>);
+  }, [updateError?.errors]);
 
   const handleSuccess = React.useCallback(() => {
     navigate(-1);

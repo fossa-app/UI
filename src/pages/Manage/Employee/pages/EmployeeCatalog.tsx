@@ -5,7 +5,7 @@ import {
   fetchEmployees,
   resetEmployeesFetchStatus,
   resetEmployeesPagination,
-  selectEmployees,
+  selectEmployeeCatalog,
   selectUserRoles,
   updateEmployeesPagination,
 } from 'store/features';
@@ -25,7 +25,11 @@ const testSubModule = SubModule.employeeCatalog;
 const EmployeeCatalogPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { fetchStatus, data: employees, page = APP_CONFIG.table.defaultPagination as PaginationParams } = useAppSelector(selectEmployees);
+  const {
+    status: fetchStatus,
+    items: employees,
+    page = APP_CONFIG.table.defaultPagination as PaginationParams,
+  } = useAppSelector(selectEmployeeCatalog);
   const userRoles = useAppSelector(selectUserRoles);
   const { searchTerm: search, searchTermChanged, setSearchTermChanged, setPortalProps } = useSearch();
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
@@ -119,7 +123,7 @@ const EmployeeCatalogPage: React.FC = () => {
         subModule={testSubModule}
         loading={fetchStatus === 'loading'}
         columns={columns}
-        items={employees?.items}
+        items={employees}
         pageNumber={page.pageNumber!}
         pageSize={page.pageSize!}
         totalItems={page.totalItems}

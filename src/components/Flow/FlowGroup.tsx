@@ -83,7 +83,7 @@ const FlowGroup: React.FC<FlowGroupProps> = ({
         }}
         iconProps={{
           ...iconProps,
-          sx: { ...iconProps?.sx, color, justifyContent: 'center' },
+          sx: { ...iconProps?.sx, color, justifyContent: 'center', fontSize: '2rem' },
         }}
         textProps={{
           ...textProps,

@@ -163,14 +163,23 @@ describe('Department Catalog Tests', () => {
         });
 
         it('should send correct request when the pagination changes', () => {
-          interceptFetchDepartmentsRequest();
+          interceptFetchDepartmentsRequest(
+            { pageNumber: 1, pageSize: 10, search: '' },
+            { alias: 'fetch10DepartmentsRequest', fixture: 'department/departments-multiple-page-one' }
+          );
           interceptFetchDepartmentsByIdsRequest();
           interceptFetchEmployeesByIdsRequest();
 
-          cy.wait('@fetchDepartmentsRequest');
-          cy.wait('@fetchDepartmentsByIdsRequest');
-          cy.wait('@fetchEmployeesByIdsRequest');
+          cy.wait(['@fetch10DepartmentsRequest', '@fetchDepartmentsByIdsRequest', '@fetchEmployeesByIdsRequest']);
 
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
+            'have.length',
+            10
+          );
+          getTablePaginationDisplayedRows(Module.departmentManagement, SubModule.departmentCatalog, 'table-pagination').should(
+            'have.text',
+            '1–10 of 12'
+          );
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-pagination')
             .find('.MuiTablePagination-input')
             .click();
@@ -182,24 +191,24 @@ describe('Department Catalog Tests', () => {
 
           interceptFetchDepartmentsRequest(
             { pageNumber: 1, pageSize: 20, search: '' },
-            { alias: 'fetch20DepartmentsRequest', fixture: 'department/departments-multiple' }
+            { alias: 'fetch20DepartmentsRequest', fixture: 'department/departments-multiple-page-size-20' }
           );
-          interceptFetchDepartmentsByIdsRequest();
           cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="20"]').click();
 
           cy.wait('@fetch20DepartmentsRequest').its('request.url').should('include', 'Departments?pageNumber=1&pageSize=20');
+          cy.wait(['@fetchDepartmentsByIdsRequest', '@fetchEmployeesByIdsRequest']);
 
           getTablePaginationSizeInput(Module.departmentManagement, SubModule.departmentCatalog, 'table-pagination').should(
             'have.value',
             '20'
           );
-          getTablePaginationDisplayedRows(Module.departmentManagement, SubModule.departmentCatalog, 'table-pagination').should(
-            'have.text',
-            '1–11 of 11'
-          );
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
             'have.length',
-            11
+            20
+          );
+          getTablePaginationDisplayedRows(Module.departmentManagement, SubModule.departmentCatalog, 'table-pagination').should(
+            'have.text',
+            '1–20 of 22'
           );
         });
 

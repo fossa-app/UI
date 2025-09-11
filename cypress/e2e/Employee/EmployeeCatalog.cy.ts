@@ -159,10 +159,19 @@ describe('Employee Catalog Tests', () => {
       });
 
       it('should send correct request when the pagination changes', () => {
-        interceptFetchEmployeesRequest();
+        interceptFetchEmployeesRequest(
+          { pageNumber: 1, pageSize: 10, search: '' },
+          { alias: 'fetch10EmployeesRequest', fixture: 'employee/employees-multiple-page-one' }
+        );
         interceptFetchEmployeesByIdsRequest();
-        cy.wait('@fetchEmployeesRequest');
 
+        cy.wait('@fetch10EmployeesRequest');
+
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 10);
+        getTablePaginationDisplayedRows(Module.employeeManagement, SubModule.employeeCatalog, 'table-pagination').should(
+          'have.text',
+          '1–10 of 15'
+        );
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-pagination')
           .find('.MuiTablePagination-input')
           .click();
@@ -172,13 +181,20 @@ describe('Employee Catalog Tests', () => {
         cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(1).should('have.text', '20');
         cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem').eq(2).should('have.text', '50');
 
-        interceptFetchEmployeesRequest({ pageNumber: 1, pageSize: 20 }, { alias: 'fetch20EmployeesRequest' });
-
+        interceptFetchEmployeesRequest(
+          { pageNumber: 1, pageSize: 20, search: '' },
+          { alias: 'fetch20EmployeesRequest', fixture: 'employee/employees-multiple-page-size-20' }
+        );
         cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="20"]').click();
 
         cy.wait('@fetch20EmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=20');
 
-        getTablePaginationSizeInput(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('have.value', '20');
+        getTablePaginationSizeInput(Module.employeeManagement, SubModule.employeeCatalog, 'table-pagination').should('have.value', '20');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 15);
+        getTablePaginationDisplayedRows(Module.employeeManagement, SubModule.employeeCatalog, 'table-pagination').should(
+          'have.text',
+          '1–15 of 15'
+        );
       });
 
       it('should send correct request when the search changes', () => {
