@@ -20,7 +20,7 @@ const UploadCompanyLicensePage: React.FC = () => {
   const userRoles = useAppSelector(selectUserRoles);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { updateStatus, updateError: error } = useAppSelector(selectCompanyLicense);
-  const { data: company } = useAppSelector(selectCompany);
+  const { item: company } = useAppSelector(selectCompany);
   const skipRef = React.useRef(false);
 
   React.useEffect(() => {

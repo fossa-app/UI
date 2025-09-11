@@ -7,17 +7,17 @@ import { parseResponse } from 'shared/helpers';
 import { updateAuthSettings } from './authSlice';
 
 interface IdentityState {
-  client: StateEntity<Client | null>;
+  client: StateEntity<Client | undefined>;
 }
 
 const initialState: IdentityState = {
   client: {
-    data: null,
-    status: 'idle',
+    item: undefined,
+    fetchStatus: 'idle',
   },
 };
 
-export const fetchClient = createAsyncThunk<Client | null, void, { rejectValue: ErrorResponseDTO }>(
+export const fetchClient = createAsyncThunk<Client | undefined, void, { rejectValue: ErrorResponseDTO }>(
   'identity/fetchClient',
   async (_, { dispatch, rejectWithValue }) => {
     try {
@@ -51,16 +51,16 @@ const identitySlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchClient.pending, (state) => {
-        state.client.status = 'loading';
+        state.client.fetchStatus = 'loading';
       })
       .addCase(fetchClient.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
-        state.client.data = null;
-        state.client.status = 'failed';
-        state.client.error = action.payload;
+        state.client.item = undefined;
+        state.client.fetchStatus = 'failed';
+        state.client.fetchError = action.payload;
       })
-      .addCase(fetchClient.fulfilled, (state, action: PayloadAction<Client | null>) => {
-        state.client.data = action.payload;
-        state.client.status = 'succeeded';
+      .addCase(fetchClient.fulfilled, (state, action: PayloadAction<Client | undefined>) => {
+        state.client.item = action.payload;
+        state.client.fetchStatus = 'succeeded';
       });
   },
 });

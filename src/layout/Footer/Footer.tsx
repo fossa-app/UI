@@ -12,8 +12,8 @@ import Environment from './components/Environment';
 
 const Footer: React.FC = () => {
   const isAdmin = useAppSelector(selectIsUserAdmin);
-  const { data: system } = useAppSelector(selectSystemLicense);
-  const { data: company, fetchStatus } = useAppSelector(selectCompanyLicense);
+  const { item: system } = useAppSelector(selectSystemLicense);
+  const { item: company, fetchStatus } = useAppSelector(selectCompanyLicense);
 
   return (
     <>

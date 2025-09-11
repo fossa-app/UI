@@ -30,8 +30,8 @@ interface OffboardingState {
 
 const initialState: OffboardingState = {
   company: {
-    data: OffboardingStep.companySettings,
-    status: 'idle',
+    item: OffboardingStep.companySettings,
+    fetchStatus: 'idle',
     flags: {
       [OffboardingStep.companySettings]: false,
       [OffboardingStep.instructions]: {
@@ -44,8 +44,8 @@ const initialState: OffboardingState = {
     },
   },
   employee: {
-    data: OffboardingStep.employee,
-    status: 'idle',
+    item: OffboardingStep.employee,
+    fetchStatus: 'idle',
   },
 };
 
@@ -53,17 +53,17 @@ const evaluateCompanyOffboardingStep = (state: WritableDraft<OffboardingState>) 
   const { companySettings, instructions, company } = state.company.flags;
 
   if (instructions.branches || instructions.employees || instructions.departments) {
-    state.company.data = OffboardingStep.instructions;
-    state.company.status = 'failed';
+    state.company.item = OffboardingStep.instructions;
+    state.company.fetchStatus = 'failed';
   } else if (companySettings) {
-    state.company.data = OffboardingStep.companySettings;
-    state.company.status = 'failed';
+    state.company.item = OffboardingStep.companySettings;
+    state.company.fetchStatus = 'failed';
   } else if (company) {
-    state.company.data = OffboardingStep.company;
-    state.company.status = 'failed';
+    state.company.item = OffboardingStep.company;
+    state.company.fetchStatus = 'failed';
   } else {
-    state.company.data = OffboardingStep.completed;
-    state.company.status = 'succeeded';
+    state.company.item = OffboardingStep.completed;
+    state.company.fetchStatus = 'succeeded';
   }
 };
 
@@ -94,11 +94,11 @@ const offboardingSlice = createSlice({
         evaluateCompanyOffboardingStep(state);
       })
       .addCase(deleteProfile.rejected, (state) => {
-        state.employee.status = 'failed';
+        state.employee.fetchStatus = 'failed';
       })
       .addCase(deleteProfile.fulfilled, (state) => {
-        state.employee.status = 'succeeded';
-        state.employee.data = OffboardingStep.completed;
+        state.employee.fetchStatus = 'succeeded';
+        state.employee.item = OffboardingStep.completed;
       })
       .addCase(fetchCompanySettings.fulfilled, (state) => {
         state.company.flags[OffboardingStep.companySettings] = true;
@@ -109,7 +109,7 @@ const offboardingSlice = createSlice({
         evaluateCompanyOffboardingStep(state);
       })
       .addCase(fetchProfile.fulfilled, (state) => {
-        state.employee.data = OffboardingStep.employee;
+        state.employee.item = OffboardingStep.employee;
       })
       .addCase(fetchCompany.fulfilled, (state) => {
         state.company.flags[OffboardingStep.company] = true;

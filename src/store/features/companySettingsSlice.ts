@@ -15,7 +15,7 @@ interface CompanySettingsState {
 
 const initialState: CompanySettingsState = {
   companySettings: {
-    data: {
+    item: {
       colorSchemeId: undefined,
     },
     fetchStatus: 'idle',
@@ -136,10 +136,10 @@ const companySettingsSlice = createSlice({
       })
       .addCase(fetchCompanySettings.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.companySettings.fetchStatus = 'failed';
-        state.companySettings.error = action.payload;
+        state.companySettings.fetchError = action.payload;
       })
       .addCase(fetchCompanySettings.fulfilled, (state, action: PayloadAction<CompanySettingsDTO>) => {
-        state.companySettings.data = action.payload;
+        state.companySettings.item = action.payload;
         state.companySettings.fetchStatus = 'succeeded';
       })
       .addCase(createCompanySettings.pending, (state) => {
@@ -169,10 +169,10 @@ const companySettingsSlice = createSlice({
       })
       .addCase(deleteCompanySettings.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.companySettings.deleteStatus = 'failed';
-        state.companySettings.error = action.payload;
+        state.companySettings.fetchError = action.payload;
       })
       .addCase(deleteCompanySettings.fulfilled, (state) => {
-        state.companySettings.data = initialState.companySettings.data;
+        state.companySettings.item = initialState.companySettings.item;
         state.previewColorSchemeId = initialState.previewColorSchemeId;
         state.companySettings.deleteStatus = 'succeeded';
       });

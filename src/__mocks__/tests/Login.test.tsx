@@ -11,7 +11,7 @@ describe('Login Component', () => {
     setMockState({
       auth: {
         user: {
-          data: undefined,
+          item: undefined,
         },
       },
     });

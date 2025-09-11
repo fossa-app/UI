@@ -32,7 +32,7 @@ const EditCompanyPage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const userRoles = useAppSelector(selectUserRoles);
   const countries = useAppSelector(selectSystemCountries);
-  const { data: company, updateError: error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectCompany);
+  const { item: company, updateError: error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectCompany);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
 
   const handleSubmit = (data: Omit<CompanyDTO, 'id'>) => {

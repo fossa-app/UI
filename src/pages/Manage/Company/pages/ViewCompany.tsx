@@ -28,8 +28,8 @@ const testSubModule = COMPANY_VIEW_DETAILS_SCHEMA.subModule;
 const ViewCompanyPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: company, fetchStatus: companyFetchStatus } = useAppSelector(selectCompany);
-  const { data: companyLicense } = useAppSelector(selectCompanyLicense);
+  const { item: company, fetchStatus: companyFetchStatus } = useAppSelector(selectCompany);
+  const { item: companyLicense } = useAppSelector(selectCompanyLicense);
   const userRoles = useAppSelector(selectUserRoles);
   const { branches, employees, departments } = useAppSelector(selectCompanyDatasourceTotals);
   const branchUsagePercent = useAppSelector(selectBranchUsagePercent);

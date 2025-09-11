@@ -12,12 +12,12 @@ interface AuthState {
 
 const initialState: AuthState = {
   settings: {
-    data: OIDC_INITIAL_CONFIG,
-    status: 'idle',
+    item: OIDC_INITIAL_CONFIG,
+    fetchStatus: 'idle',
   },
   user: {
-    data: undefined,
-    status: 'idle',
+    item: undefined,
+    fetchStatus: 'idle',
   },
 };
 
@@ -46,37 +46,37 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     updateAuthSettings(state, action: PayloadAction<Partial<OidcClientSettings>>) {
-      state.settings.data = {
-        ...state.settings.data,
+      state.settings.item = {
+        ...state.settings.item,
         ...action.payload,
       };
-      state.settings.status = 'succeeded';
+      state.settings.fetchStatus = 'succeeded';
 
-      updateUserManager(state.settings.data);
+      updateUserManager(state.settings.item);
     },
     removeUser(state) {
-      state.user.data = undefined;
-      state.user.status = 'failed';
+      state.user.item = undefined;
+      state.user.fetchStatus = 'failed';
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUser.pending, (state) => {
-        state.user.status = 'loading';
+        state.user.fetchStatus = 'loading';
       })
       .addCase(fetchUser.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
-        state.user.data = undefined;
-        state.user.status = 'failed';
-        state.user.error = action.payload;
+        state.user.item = undefined;
+        state.user.fetchStatus = 'failed';
+        state.user.fetchError = action.payload;
       })
       .addCase(fetchUser.fulfilled, (state, action: PayloadAction<AppUser | undefined>) => {
-        state.user.data = action.payload;
-        state.user.status = 'succeeded';
+        state.user.item = action.payload;
+        state.user.fetchStatus = 'succeeded';
 
         const atClaims = decodeJwt<AppUser>(action.payload?.access_token);
 
-        if (state.user.data) {
-          state.user.data.roles = atClaims?.roles?.length ? (atClaims.roles as UserRole[]) : [UserRole.user];
+        if (state.user.item) {
+          state.user.item.roles = atClaims?.roles?.length ? (atClaims.roles as UserRole[]) : [UserRole.user];
         }
       });
   },
@@ -84,8 +84,8 @@ const authSlice = createSlice({
 
 export const { updateAuthSettings, removeUser } = authSlice.actions;
 export const selectUser = (state: RootState) => state.auth.user;
-export const selectUserRoles = (state: RootState) => state.auth.user.data?.roles;
-export const selectIsUserAdmin = (state: RootState) => state.auth.user.data?.roles?.includes(UserRole.administrator) ?? false;
+export const selectUserRoles = (state: RootState) => state.auth.user.item?.roles;
+export const selectIsUserAdmin = (state: RootState) => state.auth.user.item?.roles?.includes(UserRole.administrator) ?? false;
 export const selectAuthSettings = (state: RootState) => state.auth.settings;
 
 export default authSlice.reducer;

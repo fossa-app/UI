@@ -29,7 +29,7 @@ const CreateBranchPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const userRoles = useAppSelector(selectUserRoles);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
-  const { data: company } = useAppSelector(selectCompany);
+  const { item: company } = useAppSelector(selectCompany);
   const { updateStatus, updateError: error } = useAppSelector(selectBranch);
   const companyTimeZones = useAppSelector(selectCompanyTimeZones);
   const countries = useAppSelector(selectSystemCountries);

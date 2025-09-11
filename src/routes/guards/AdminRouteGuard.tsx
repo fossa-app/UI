@@ -6,9 +6,9 @@ import { ROUTES } from 'shared/constants';
 
 const AdminRouteGuard: React.FC<React.PropsWithChildren> = ({ children }) => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
-  const { status } = useAppSelector(selectUser);
+  const { fetchStatus } = useAppSelector(selectUser);
 
-  if (status === 'succeeded' && !isUserAdmin) {
+  if (fetchStatus === 'succeeded' && !isUserAdmin) {
     return <Navigate to={ROUTES.company.path} replace />;
   }
 

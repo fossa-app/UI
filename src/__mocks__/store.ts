@@ -21,7 +21,7 @@ const initialMockState: DeepPartial<RootState> = {
   },
   auth: {
     user: {
-      data: undefined,
+      item: undefined,
     },
   },
   company: { company: {} },

@@ -14,9 +14,9 @@ import ClientLoader from '../ClientLoader';
 
 const RootPage: React.FC = () => {
   const { isDarkTheme } = useAppSelector(selectAppConfig);
-  const { data: companySettings } = useAppSelector(selectCompanySettings);
+  const { item: companySettings } = useAppSelector(selectCompanySettings);
   const previewColorSchemeId = useAppSelector(selectPreviewColorSchemeId);
-  const effectiveColorSchemeId = previewColorSchemeId || companySettings.colorSchemeId;
+  const effectiveColorSchemeId = previewColorSchemeId || companySettings!.colorSchemeId;
   const { appTheme, colorSchemeId } = useAppTheme({
     isDarkTheme,
     companySettings: { ...companySettings, colorSchemeId: effectiveColorSchemeId },

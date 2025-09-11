@@ -13,7 +13,7 @@ const DeleteCompanySettingsPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const userRoles = useAppSelector(selectUserRoles);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
-  const { error, deleteStatus } = useAppSelector(selectCompanySettings);
+  const { fetchError: error, deleteStatus } = useAppSelector(selectCompanySettings);
   const fields = DELETE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.fields;
 
   const actions = React.useMemo(() => {

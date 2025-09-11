@@ -42,7 +42,7 @@ const ManageBranchPage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const userRoles = useAppSelector(selectUserRoles);
   const companyTimeZones = useAppSelector(selectCompanyTimeZones);
-  const { data: company } = useAppSelector(selectCompany);
+  const { item: company } = useAppSelector(selectCompany);
   const countries = useAppSelector(selectSystemCountries);
   const { item: branch, updateError, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectBranch);
   const [formSubmitted, setFormSubmitted] = React.useState(false);

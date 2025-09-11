@@ -12,13 +12,13 @@ describe('Footer Component', () => {
     setMockState({
       license: {
         system: {
-          data: {
+          item: {
             entitlements: { environmentKind: 'Development' },
             terms: { licensee: { longName: 'Test System Licensee', shortName: 'TSL' } },
           } as SystemLicense,
         },
         company: {
-          data: { entitlements: {}, terms: { licensee: { longName: 'Test System Licensee', shortName: 'TCL' } } } as CompanyLicense,
+          item: { entitlements: {}, terms: { licensee: { longName: 'Test System Licensee', shortName: 'TCL' } } } as CompanyLicense,
         },
       },
     });
