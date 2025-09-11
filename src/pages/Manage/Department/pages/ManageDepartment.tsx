@@ -42,15 +42,15 @@ const ManageDepartmentPage: React.FC = () => {
   const { id } = useParams();
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const userRoles = useAppSelector(selectUserRoles);
-  const { data: department, updateError: error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectDepartment);
+  const { item: department, updateError, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectDepartment);
   const {
-    data: parentDepartments,
-    fetchStatus: parentDepartmentsFetchStatus,
+    items: parentDepartments,
+    status: parentDepartmentsFetchStatus,
     page: parentDepartmentsPage = APP_CONFIG.table.defaultPagination,
   } = useAppSelector(selectParentDepartments);
   const {
-    data: managers,
-    fetchStatus: managersFetchStatus,
+    items: managers,
+    status: managersFetchStatus,
     page: managersPage = APP_CONFIG.table.defaultPagination,
   } = useAppSelector(selectManagers);
   const [formSubmitted, setFormSubmitted] = React.useState(false);
@@ -76,28 +76,26 @@ const ManageDepartmentPage: React.FC = () => {
       return USER_PERMISSION_GENERAL_MESSAGE;
     }
 
-    return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
-  }, [error?.errors, isUserAdmin]);
+    return deepCopyObject(updateError?.errors as FieldErrors<FieldValues>);
+  }, [updateError?.errors, isUserAdmin]);
 
   const parentDepartmentItems = React.useMemo(() => {
-    const parentDepartmentList = parentDepartments?.items || [];
-    const isParentDepartmentOptionAvailable = parentDepartmentList.some(
+    const isParentDepartmentOptionAvailable = parentDepartments.some(
       (parentDepartmentItem) => String(parentDepartmentItem.id) === String(department?.parentDepartmentId)
     );
 
     return department?.parentDepartmentId && !isParentDepartmentOptionAvailable
-      ? [{ id: department.parentDepartmentId, name: department.parentDepartmentName } as Department, ...parentDepartmentList]
-      : parentDepartmentList;
-  }, [parentDepartments?.items, department?.parentDepartmentId, department?.parentDepartmentName]);
+      ? [{ id: department.parentDepartmentId, name: department.parentDepartmentName } as Department, ...parentDepartments]
+      : parentDepartments;
+  }, [parentDepartments, department?.parentDepartmentId, department?.parentDepartmentName]);
 
   const managerItems = React.useMemo(() => {
-    const managertList = managers?.items || [];
-    const isManagerOptionAvailable = managertList.some((managertItem) => String(managertItem.id) === String(department?.managerId));
+    const isManagerOptionAvailable = managers.some((managertItem) => String(managertItem.id) === String(department?.managerId));
 
     return department?.managerId && !isManagerOptionAvailable
-      ? [{ id: department.managerId, name: department.managerName } as unknown as Employee, ...managertList]
-      : managertList;
-  }, [managers?.items, department?.managerId, department?.managerName]);
+      ? [{ id: department.managerId, name: department.managerName } as unknown as Employee, ...managers]
+      : managers;
+  }, [managers, department?.managerId, department?.managerName]);
 
   const fields = React.useMemo(() => {
     const disabledFields = mapDisabledFields(DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, userRoles);

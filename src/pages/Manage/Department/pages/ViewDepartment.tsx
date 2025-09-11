@@ -14,7 +14,7 @@ const testSubModule = SubModule.departmentViewDetails;
 const ViewDepartmentPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: department, fetchStatus } = useAppSelector(selectDepartment);
+  const { item: department, fetchStatus } = useAppSelector(selectDepartment);
   const userRoles = useAppSelector(selectUserRoles);
   const { id } = useParams();
   const loading = fetchStatus === 'idle' || fetchStatus === 'loading';

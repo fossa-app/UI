@@ -16,7 +16,7 @@ const ViewEmployeePage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  const { data: employee, fetchStatus } = useAppSelector(selectEmployee);
+  const { item: employee, fetchStatus } = useAppSelector(selectEmployee);
   const { data: profile } = useAppSelector(selectProfile);
   const userRoles = useAppSelector(selectUserRoles);
   const loading = fetchStatus === 'idle' || fetchStatus === 'loading';

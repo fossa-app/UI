@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk, ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
-import { RootState, StateEntity } from 'store';
+import { PaginatedStateEntity, RootState, StateEntityNew } from 'store';
 import axios from 'shared/configs/axios';
 import {
   ErrorResponseDTO,
@@ -22,43 +22,44 @@ import {
   prepareCommaSeparatedQueryParamsByKey,
   getParentDepartmentsIds,
 } from 'shared/helpers';
+import { mergePaginatedItems } from 'store/helpers';
 import { setError, setSuccess } from './messageSlice';
 import { fetchEmployeeById, fetchEmployeesByIds } from './employeeSlice';
 
 interface DepartmentState {
-  department: StateEntity<Department | undefined>;
-  departments: StateEntity<PaginatedResponse<Department> | undefined>;
-  searchedDepartments: StateEntity<PaginatedResponse<Department> | undefined>;
-  parentDepartments: StateEntity<PaginatedResponse<DepartmentDTO> | undefined>;
-  assignedDepartments: StateEntity<PaginatedResponse<DepartmentDTO> | undefined>;
+  department: StateEntityNew<Department>;
+  departmentCatalog: PaginatedStateEntity<Department>;
+  searchedDepartments: PaginatedStateEntity<Department>;
+  parentDepartments: PaginatedStateEntity<DepartmentDTO>;
+  assignedDepartments: PaginatedStateEntity<DepartmentDTO>;
 }
 
 const initialState: DepartmentState = {
   department: {
-    data: undefined,
+    item: undefined,
     fetchStatus: 'idle',
     updateStatus: 'idle',
     deleteStatus: 'idle',
   },
-  departments: {
-    data: undefined,
+  departmentCatalog: {
+    items: [],
     page: APP_CONFIG.table.defaultPagination,
-    fetchStatus: 'idle',
+    status: 'idle',
   },
   searchedDepartments: {
-    data: undefined,
+    items: [],
     page: APP_CONFIG.table.defaultPagination,
-    fetchStatus: 'idle',
+    status: 'idle',
   },
   parentDepartments: {
-    data: undefined,
+    items: [],
     page: APP_CONFIG.table.defaultPagination,
-    fetchStatus: 'idle',
+    status: 'idle',
   },
   assignedDepartments: {
-    data: undefined,
+    items: [],
     page: APP_CONFIG.table.defaultPagination,
-    fetchStatus: 'idle',
+    status: 'idle',
   },
 };
 
@@ -315,10 +316,10 @@ const departmentSlice = createSlice({
   initialState,
   reducers: {
     updateDepartmentsPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
-      state.departments.page = { ...state.departments.page, ...action.payload };
+      state.departmentCatalog.page = { ...state.departmentCatalog.page, ...action.payload };
     },
     resetDepartmentsPagination(state) {
-      state.departments.page = initialState.departments.page;
+      state.departmentCatalog.page = initialState.departmentCatalog.page;
     },
     updateParentDepartmentsPagination(state, action: PayloadAction<Partial<PaginationParams>>) {
       state.parentDepartments.page = { ...state.parentDepartments.page, ...action.payload };
@@ -327,93 +328,81 @@ const departmentSlice = createSlice({
       state.assignedDepartments.page = { ...state.assignedDepartments.page, ...action.payload };
     },
     resetDepartmentsFetchStatus(state) {
-      state.departments.fetchStatus = initialState.departments.fetchStatus;
+      state.departmentCatalog.status = initialState.departmentCatalog.status;
     },
     resetParentDepartmentsFetchStatus(state) {
-      state.parentDepartments.fetchStatus = initialState.parentDepartments.fetchStatus;
+      state.parentDepartments.status = initialState.parentDepartments.status;
     },
     resetParentDepartments(state) {
-      state.parentDepartments.fetchStatus = initialState.parentDepartments.fetchStatus;
-      state.parentDepartments.data = initialState.parentDepartments.data;
+      state.parentDepartments.status = initialState.parentDepartments.status;
+      state.parentDepartments.items = initialState.parentDepartments.items;
     },
     resetAssignedDepartmentsFetchStatus(state) {
-      state.assignedDepartments.fetchStatus = initialState.assignedDepartments.fetchStatus;
+      state.assignedDepartments.status = initialState.assignedDepartments.status;
     },
     resetDepartment(state) {
-      state.department = initialState.department as WritableDraft<StateEntity<Department>>;
+      state.department = initialState.department as WritableDraft<StateEntityNew<Department>>;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchDepartments.pending, (state) => {
-        state.departments.fetchStatus = 'loading';
+        state.departmentCatalog.status = 'loading';
       })
       .addCase(fetchDepartments.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
-        state.departments.data = undefined;
-        state.departments.fetchStatus = 'failed';
-        state.departments.error = action.payload;
+        state.departmentCatalog.items = [];
+        state.departmentCatalog.status = 'failed';
+        state.departmentCatalog.error = action.payload;
       })
       .addCase(fetchDepartments.fulfilled, (state, action: PayloadAction<PaginatedResponse<Department> | undefined>) => {
-        state.departments.data = action.payload;
-        state.departments.page!.totalItems = action.payload?.totalItems;
-        state.departments.page!.totalPages = action.payload?.totalPages;
-        state.departments.fetchStatus = 'succeeded';
-        state.departments.error = undefined;
+        const { items = [], ...page } = action.payload || {};
+
+        state.departmentCatalog.items = items;
+        state.departmentCatalog.page = page;
+        state.departmentCatalog.status = 'succeeded';
+        state.departmentCatalog.error = undefined;
       })
       .addCase(fetchSearchedDepartments.pending, (state) => {
-        state.searchedDepartments.fetchStatus = 'loading';
+        state.searchedDepartments.status = 'loading';
       })
       .addCase(fetchSearchedDepartments.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
-        state.searchedDepartments.data = undefined;
-        state.searchedDepartments.fetchStatus = 'failed';
+        state.searchedDepartments.items = [];
+        state.searchedDepartments.status = 'failed';
         state.searchedDepartments.error = action.payload;
       })
       .addCase(fetchSearchedDepartments.fulfilled, (state, action: PayloadAction<PaginatedResponse<Department> | undefined>) => {
-        state.searchedDepartments.data = action.payload;
-        state.searchedDepartments.page!.totalItems = action.payload?.totalItems;
-        state.searchedDepartments.page!.totalPages = action.payload?.totalPages;
-        state.searchedDepartments.fetchStatus = 'succeeded';
+        const { items = [], ...page } = action.payload || {};
+
+        state.searchedDepartments.items = items;
+        state.searchedDepartments.page = page;
+        state.searchedDepartments.status = 'succeeded';
         state.searchedDepartments.error = undefined;
       })
       .addCase(fetchParentDepartments.pending, (state) => {
-        state.parentDepartments.fetchStatus = 'loading';
+        state.parentDepartments.status = 'loading';
       })
       .addCase(fetchParentDepartments.fulfilled, (state, action) => {
-        state.parentDepartments.page!.totalItems = action.payload?.totalItems;
-        state.parentDepartments.page!.totalPages = action.payload?.totalPages;
-        state.parentDepartments.page!.pageNumber = action.payload?.pageNumber;
-        state.parentDepartments.fetchStatus = 'succeeded';
+        const { items = [], ...page } = action.payload || {};
 
-        const existingItems = state.parentDepartments.data?.items || [];
-        const newItems = action.payload?.items.filter((item) => !existingItems.some(({ id }) => id === item.id)) || [];
-
-        state.parentDepartments.data = {
-          ...action.payload,
-          items: [...existingItems, ...newItems],
-        };
+        state.parentDepartments.items = mergePaginatedItems<DepartmentDTO>(state.parentDepartments.items, items);
+        state.parentDepartments.page = page;
+        state.parentDepartments.status = 'succeeded';
       })
       .addCase(fetchParentDepartments.rejected, (state) => {
-        state.parentDepartments.fetchStatus = 'failed';
+        state.parentDepartments.status = 'failed';
       })
       .addCase(fetchAssignedDepartments.pending, (state) => {
-        state.assignedDepartments.fetchStatus = 'loading';
+        state.assignedDepartments.status = 'loading';
       })
       .addCase(fetchAssignedDepartments.fulfilled, (state, action) => {
-        state.assignedDepartments.page!.totalItems = action.payload?.totalItems;
-        state.assignedDepartments.page!.totalPages = action.payload?.totalPages;
-        state.assignedDepartments.page!.pageNumber = action.payload?.pageNumber;
-        state.assignedDepartments.fetchStatus = 'succeeded';
+        const { items = [], ...page } = action.payload || {};
 
-        const existingItems = state.assignedDepartments.data?.items || [];
-        const newItems = action.payload?.items.filter((item) => !existingItems.some(({ id }) => id === item.id)) || [];
-
-        state.assignedDepartments.data = {
-          ...action.payload,
-          items: [...existingItems, ...newItems],
-        };
+        state.assignedDepartments.items = mergePaginatedItems<DepartmentDTO>(state.assignedDepartments.items, items);
+        state.assignedDepartments.page = page;
+        state.assignedDepartments.status = 'succeeded';
       })
       .addCase(fetchAssignedDepartments.rejected, (state) => {
-        state.assignedDepartments.fetchStatus = 'failed';
+        state.assignedDepartments.status = 'failed';
       })
       .addCase(fetchDepartmentById.pending, (state, action) => {
         if (action.meta.arg.skipState) {
@@ -427,18 +416,18 @@ const departmentSlice = createSlice({
           return;
         }
 
-        state.department.data = undefined;
+        state.department.item = undefined;
         state.department.fetchStatus = 'failed';
-        state.department.error = action.payload;
+        state.department.fetchError = action.payload;
       })
       .addCase(fetchDepartmentById.fulfilled, (state, action) => {
         if (action.meta.arg.skipState) {
           return;
         }
 
-        state.department.data = action.payload;
+        state.department.item = action.payload;
         state.department.fetchStatus = 'succeeded';
-        state.department.error = undefined;
+        state.department.fetchError = undefined;
       })
       .addCase(createDepartment.pending, (state) => {
         state.department.updateStatus = 'loading';
@@ -467,17 +456,17 @@ const departmentSlice = createSlice({
       })
       .addCase(deleteDepartment.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
         state.department.deleteStatus = 'failed';
-        state.department.error = action.payload;
+        state.department.deleteError = action.payload;
       })
       .addCase(deleteDepartment.fulfilled, (state) => {
         state.department.deleteStatus = 'succeeded';
-        state.department.error = undefined;
+        state.department.deleteError = undefined;
       });
   },
 });
 
 export const selectDepartment = (state: RootState) => state.department.department;
-export const selectDepartments = (state: RootState) => state.department.departments;
+export const selectDepartmentCatalog = (state: RootState) => state.department.departmentCatalog;
 export const selectSearchedDepartments = (state: RootState) => state.department.searchedDepartments;
 export const selectParentDepartments = (state: RootState) => state.department.parentDepartments;
 export const selectAssignedDepartments = (state: RootState) => state.department.assignedDepartments;

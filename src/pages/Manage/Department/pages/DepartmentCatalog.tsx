@@ -6,7 +6,7 @@ import {
   fetchDepartments,
   resetDepartmentsFetchStatus,
   selectDepartment,
-  selectDepartments,
+  selectDepartmentCatalog,
   selectUserRoles,
   updateDepartmentsPagination,
   resetDepartmentsPagination,
@@ -35,10 +35,10 @@ const DepartmentCatalogPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const {
-    fetchStatus,
-    data: departments,
+    status: fetchStatus,
+    items: departments,
     page = APP_CONFIG.table.defaultPagination as PaginationParams,
-  } = useAppSelector(selectDepartments);
+  } = useAppSelector(selectDepartmentCatalog);
   const { deleteStatus } = useAppSelector(selectDepartment);
   const userRoles = useAppSelector(selectUserRoles);
   const { searchTerm: search, searchTermChanged, setSearchTermChanged, setPortalProps } = useSearch();
@@ -56,14 +56,14 @@ const DepartmentCatalogPage: React.FC = () => {
           handleNavigate(generatePath(ROUTES.editDepartment.path, { id: department.id }));
           break;
         case 'delete':
-          if (page.pageNumber! > 1 && departments?.items.length === 1) {
+          if (page.pageNumber! > 1 && departments.length === 1) {
             dispatch(updateDepartmentsPagination({ pageNumber: page.pageNumber! - 1 }));
           }
           dispatch(deleteDepartment(department.id));
           break;
       }
     },
-    [handleNavigate, dispatch, page.pageNumber, departments?.items.length]
+    [handleNavigate, dispatch, page.pageNumber, departments.length]
   );
 
   const handlePageChange = React.useCallback(
@@ -154,13 +154,13 @@ const DepartmentCatalogPage: React.FC = () => {
         subModule={testSubModule}
         loading={loading}
         columns={columns}
-        items={departments?.items}
+        items={departments}
         pageNumber={page.pageNumber!}
         pageSize={page.pageSize!}
         totalItems={page.totalItems}
         pageSizeOptions={pageSizeOptions}
         noRecordsTemplate={
-          <Page module={testModule} subModule={testSubModule} sx={{ margin: 0 }}>
+          <Page module={testModule} subModule={testSubModule} sx={{ m: 0 }}>
             <Page.Subtitle variant="h6">No Departments Found</Page.Subtitle>
           </Page>
         }
