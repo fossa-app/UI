@@ -31,7 +31,10 @@ const ViewCompanyPage: React.FC = () => {
   const { item: company, fetchStatus: companyFetchStatus } = useAppSelector(selectCompany);
   const { item: companyLicense } = useAppSelector(selectCompanyLicense);
   const userRoles = useAppSelector(selectUserRoles);
-  const { branches, employees, departments } = useAppSelector(selectCompanyDatasourceTotals);
+  const {
+    item: { branches, employees, departments },
+    fetchStatus: companyDatasourceTotalsFetchStatus,
+  } = useAppSelector(selectCompanyDatasourceTotals);
   const branchUsagePercent = useAppSelector(selectBranchUsagePercent);
   const employeeUsagePercent = useAppSelector(selectEmployeeUsagePercent);
   const departmentUsagePercent = useAppSelector(selectDepartmentUsagePercent);
@@ -121,8 +124,10 @@ const ViewCompanyPage: React.FC = () => {
   }, [companyFetchStatus, dispatch]);
 
   React.useEffect(() => {
-    dispatch(fetchCompanyDatasourceTotals());
-  }, [dispatch]);
+    if (companyDatasourceTotalsFetchStatus === 'idle') {
+      dispatch(fetchCompanyDatasourceTotals());
+    }
+  }, [companyDatasourceTotalsFetchStatus, dispatch]);
 
   return (
     <PageLayout module={testModule} subModule={testSubModule} pageTitle="View Company">

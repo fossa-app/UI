@@ -7,6 +7,7 @@ import {
   getLinearLoader,
   getLoadingButtonLoadingIcon,
   getTestSelectorByModule,
+  selectAction,
   selectNavigationMenuItem,
   selectOption,
   verifyFormValidationMessages,
@@ -14,6 +15,7 @@ import {
   verifyTextFields,
 } from 'support/helpers';
 import {
+  interceptDeleteDepartmentRequest,
   interceptEditCompanyFailedRequest,
   interceptEditCompanyFailedWithErrorRequest,
   interceptEditCompanyRequest,
@@ -23,7 +25,9 @@ import {
   interceptFetchCompanyLicenseRequest,
   interceptFetchCompanyRequest,
   interceptFetchCompanySettingsRequest,
+  interceptFetchDepartmentsByIdsRequest,
   interceptFetchDepartmentsRequest,
+  interceptFetchEmployeesByIdsRequest,
   interceptFetchEmployeesRequest,
   interceptFetchProfileRequest,
   interceptFetchSystemLicenseRequest,
@@ -368,6 +372,55 @@ describe('Company Management Tests', () => {
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
         .should('exist')
         .and('contain.text', 'Company has been successfully updated');
+    });
+
+    it('should reduce the amount of departments in the company license details if a department has been deleted', () => {
+      interceptFetchDepartmentsRequest();
+      interceptFetchEmployeesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
+      interceptDeleteDepartmentRequest('444444444447');
+      cy.visit(ROUTES.viewCompany.path);
+
+      cy.wait('@fetchCompanyLicenseRequest');
+
+      verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
+        'view-details-label-entitlements.maximumDepartmentCount': 'Department usage: 4 of 20',
+      });
+
+      cy.visit(ROUTES.departments.path);
+      cy.wait('@fetchDepartmentsRequest');
+
+      getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should('have.length', 4);
+
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 10 },
+        { alias: 'fetchDeletedDepartmentsRequest', fixture: 'department/departments-deleted' }
+      );
+      selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'delete', '444444444447');
+      cy.wait(['@deleteDepartmentRequest', '@fetchDeletedDepartmentsRequest']);
+
+      getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should('have.length', 3);
+      getTestSelectorByModule(Module.shared, SubModule.header, 'company-logo').click();
+
+      interceptFetchDepartmentsRequest(
+        { pageNumber: 1, pageSize: 1 },
+        { alias: 'fetchDepartmentsTotalUpdatedRequest', fixture: 'department/departments-deleted' }
+      );
+
+      cy.url().should('include', `${ROUTES.viewCompany.path}`);
+      getLinearLoader(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-details').should('exist');
+      cy.wait('@fetchCompanyLicenseRequest');
+
+      verifyTextFields(Module.companyManagement, SubModule.companyLicenseViewDetails, {
+        'view-details-label-entitlements.maximumBranchCount': 'Branch usage: 1 of 10',
+        'view-details-label-entitlements.maximumEmployeeCount': 'Employee usage: 1 of 100',
+        'view-details-label-entitlements.maximumDepartmentCount': 'Department usage: 3 of 20',
+      });
+      getTestSelectorByModule(
+        Module.companyManagement,
+        SubModule.companyLicenseViewDetails,
+        'view-details-value-entitlements.maximumDepartmentCount'
+      ).should('have.attr', 'aria-valuenow', '15');
     });
   });
 });
