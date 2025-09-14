@@ -1,5 +1,17 @@
 import { Branch, ColorSchemeId, Department, Module, SubModule, ThemeMode } from 'shared/models';
 
+const colorSchemeValues: ColorSchemeId[] = [
+  'midnight',
+  'ocean',
+  'sunset',
+  'sunrise',
+  'forest',
+  'lavender',
+  'crimson',
+  'harvest',
+  'emerald',
+];
+
 export const getTestSelectorByModule = (module: Module, subModule: SubModule, selector: string, isPattern = false) => {
   return isPattern ? cy.get(`[data-cy*="${module}-${subModule}-${selector}"]`) : cy.get(`[data-cy="${module}-${subModule}-${selector}"]`);
 };
@@ -165,8 +177,8 @@ export const checkIsSubFlowHasDisabledAttribute = (subFlowName: string, isDisabl
   cy.get(selector).should(isDisabled ? 'have.attr' : 'not.have.attr', 'aria-disabled', 'true');
 };
 
-export const verifyRadioGroupValue = (name: string, expectedValue: string, allValues: string[]) => {
-  allValues.forEach((value) => {
+export const verifyRadioGroupValue = (name: string, expectedValue: string) => {
+  colorSchemeValues.forEach((value) => {
     const assertion = value === expectedValue ? 'be.checked' : 'not.be.checked';
 
     cy.get(`input[name="${name}"][value="${value}"]`).should(assertion);

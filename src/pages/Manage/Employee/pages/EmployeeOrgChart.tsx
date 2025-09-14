@@ -60,7 +60,7 @@ const EmployeeOrgChartPage: React.FC = () => {
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'row',
+            flexDirection: 'column',
             justifyContent: 'flex-start',
             gap: 4,
           }}
@@ -71,7 +71,7 @@ const EmployeeOrgChartPage: React.FC = () => {
                 lineWidth="2px"
                 lineHeight="16px"
                 lineColor={theme.palette.divider}
-                label={<EmployeeCard module={testModule} subModule={testSubModule} employee={root} />}
+                label={<EmployeeCard level="top" module={testModule} subModule={testSubModule} employee={root} />}
               >
                 {renderTree(root.id)}
               </Tree>

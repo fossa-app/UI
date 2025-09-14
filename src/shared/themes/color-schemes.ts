@@ -113,6 +113,63 @@ export const COLOR_SCHEMES = {
       info: '#CBA4FF',
     },
   },
+  crimson: {
+    label: 'Crimson',
+    light: {
+      primary: '#D62828',
+      secondary: '#F77F00',
+      error: '#C1121F',
+      background: '#FFF5F5',
+      paper: '#FFFFFF',
+      info: '#FFB4A2',
+    },
+    dark: {
+      primary: '#BA181B',
+      secondary: '#E85D04',
+      error: '#FF4D4D',
+      background: '#1A0B0B',
+      paper: '#260D0D',
+      info: '#FF7B7B',
+    },
+  },
+  harvest: {
+    label: 'Harvest',
+    light: {
+      primary: '#FFC300',
+      secondary: '#34A853',
+      error: '#E63946',
+      background: '#FFFDE7',
+      paper: '#FFFFFF',
+      info: '#AED581',
+    },
+    dark: {
+      primary: '#FFB703',
+      secondary: '#2E7D32',
+      error: '#FF6B6B',
+      background: '#121910',
+      paper: '#1B2615',
+      info: '#81C784',
+    },
+  },
+  emerald: {
+    label: 'Emerald',
+    light: {
+      primary: '#006241',
+      secondary: '#A67B5B',
+      error: '#C62828',
+      background: '#F5FFF9',
+      paper: '#FFFFFF',
+      info: '#80CBC4',
+    },
+    dark: {
+      primary: '#00A97F',
+      secondary: '#C89F7C',
+      error: '#FF5252',
+      background: '#0D1B1E',
+      paper: '#1E2D28',
+      info: '#4DD0A1',
+    },
+  },
 };
 
 export const COLOR_SCHEME_KEYS = ['primary', 'secondary', 'background', 'paper', 'error', 'info'] as const;
