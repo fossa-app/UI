@@ -10,10 +10,16 @@ interface EmployeeCardProps {
   module: Module;
   subModule: SubModule;
   employee: Employee;
+  level?: 'top' | 'subordinate';
 }
 
-const EmployeeCard: React.FC<EmployeeCardProps> = ({ module, subModule, employee }) => {
+const EmployeeCard: React.FC<EmployeeCardProps> = ({ module, subModule, employee, level }) => {
   const initials = `${employee.firstName.charAt(0)}${employee.lastName.charAt(0)}`;
+  const borderStyles = {
+    top: { borderLeft: 4, borderColor: 'secondary.main' },
+    subordinate: { borderLeft: 0, borderColor: 'transparent' },
+  };
+  const currentBorderStyles = level ? borderStyles[level] : borderStyles.subordinate;
 
   return (
     <Card
@@ -22,6 +28,7 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({ module, subModule, employee
       sx={{
         display: 'inline-flex',
         width: 240,
+        ...currentBorderStyles,
       }}
     >
       <CardContent sx={{ p: 2, '&:last-child': { pb: 2 }, flexGrow: 1 }}>

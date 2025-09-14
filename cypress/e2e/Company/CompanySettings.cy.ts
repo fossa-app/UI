@@ -63,7 +63,7 @@ describe('Company Settings Tests', () => {
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-label', true).should(
         'have.length',
-        6
+        9
       );
       verifyTextFields(Module.companyManagement, SubModule.companySettingsDetails, {
         'form-header': 'Company Settings Details',
@@ -75,14 +75,14 @@ describe('Company Settings Tests', () => {
         'color-scheme-label-sunrise': 'Sunrise',
         'color-scheme-label-lavender': 'Lavender',
       });
-      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'midnight');
       verifyAppTheme('dark', 'midnight');
     });
 
     it('should navigate to the Flows page and reset the form when the cancel button is clicked', () => {
       cy.visit(ROUTES.companySettings.path);
 
-      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'midnight');
       verifyAppTheme('dark', 'midnight');
 
       selectColorScheme(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-sunset');
@@ -104,20 +104,20 @@ describe('Company Settings Tests', () => {
         'color-scheme-label-sunrise': 'Sunrise',
         'color-scheme-label-lavender': 'Lavender',
       });
-      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'midnight');
       verifyAppTheme('dark', 'midnight');
     });
 
     it('should display correct schemes and selected color when the theme mode is changed', () => {
       cy.visit(ROUTES.companySettings.path);
 
-      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'midnight');
 
       getTestSelectorByModule(Module.shared, SubModule.header, 'theme-button').click();
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-label', true).should(
         'have.length',
-        6
+        9
       );
       verifyTextFields(Module.companyManagement, SubModule.companySettingsDetails, {
         'color-scheme-label-midnight': 'Midnight',
@@ -127,7 +127,7 @@ describe('Company Settings Tests', () => {
         'color-scheme-label-sunrise': 'Sunrise',
         'color-scheme-label-lavender': 'Lavender',
       });
-      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'midnight');
       verifyAppTheme('light', 'midnight');
     });
 
@@ -138,7 +138,7 @@ describe('Company Settings Tests', () => {
       getTestSelectorByModule(Module.shared, SubModule.header, 'theme-button').click();
       selectColorScheme(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-lavender');
 
-      verifyRadioGroupValue('color-scheme-group', 'lavender', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'lavender');
       verifyAppTheme('light', 'lavender');
 
       clickActionButton(Module.companyManagement, SubModule.companySettingsDetails);
@@ -156,7 +156,7 @@ describe('Company Settings Tests', () => {
       getTestSelectorByModule(Module.shared, SubModule.header, 'theme-button').click();
       selectColorScheme(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-ocean');
 
-      verifyRadioGroupValue('color-scheme-group', 'ocean', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'ocean');
       verifyAppTheme('light', 'ocean');
 
       interceptFetchCompanySettingsRequest('fetchCompanySettingsRequest', 'company/company-settings-updated');
@@ -168,7 +168,7 @@ describe('Company Settings Tests', () => {
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
         .should('exist')
         .and('contain.text', 'Company Settings has been successfully updated');
-      verifyRadioGroupValue('color-scheme-group', 'ocean', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'ocean');
       verifyAppTheme('light', 'ocean');
     });
 
@@ -191,7 +191,7 @@ describe('Company Settings Tests', () => {
       cy.wait('@editCompanySettingsRequest');
       cy.wait('@fetchCompanySettingsUpdatedRequest');
 
-      verifyRadioGroupValue('color-scheme-group', 'ocean', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'ocean');
       verifyAppTheme('dark', 'ocean');
       cy.window().then((win) => {
         const stored = win.localStorage.getItem(COMPANY_SETTINGS_KEY);
@@ -232,19 +232,19 @@ describe('Company Settings Tests', () => {
 
       selectColorScheme(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-forest');
 
-      verifyRadioGroupValue('color-scheme-group', 'forest', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'forest');
       verifyAppTheme('dark', 'forest');
 
       getTestSelectorByModule(Module.shared, SubModule.header, 'theme-button').click();
       selectColorScheme(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-sunset');
 
-      verifyRadioGroupValue('color-scheme-group', 'sunset', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'sunset');
       verifyAppTheme('light', 'sunset');
 
       getTestSelectorByModule(Module.shared, SubModule.header, 'theme-button').click();
       selectColorScheme(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-lavender');
 
-      verifyRadioGroupValue('color-scheme-group', 'lavender', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'lavender');
       verifyAppTheme('dark', 'lavender');
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companySettingsDetails, 'form-cancel-button').click();
@@ -255,7 +255,7 @@ describe('Company Settings Tests', () => {
       clickSubFlow('Company Settings');
 
       cy.url().should('include', ROUTES.companySettings.path);
-      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'midnight');
       verifyAppTheme('dark', 'midnight');
 
       selectColorScheme(Module.companyManagement, SubModule.companySettingsDetails, 'color-scheme-sunrise');

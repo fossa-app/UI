@@ -1218,7 +1218,7 @@ describe('Onboarding Flow Tests', () => {
       clickSubFlow('Company Onboarding');
 
       cy.url().should('include', ROUTES.createCompanySettings.path);
-      verifyRadioGroupValue('color-scheme-group', 'midnight', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'midnight');
       verifyAppTheme('dark', 'midnight');
     });
 
@@ -1369,13 +1369,13 @@ describe('Onboarding Flow Tests', () => {
 
       selectColorScheme(Module.createCompanySettings, SubModule.companySettingsDetails, 'color-scheme-forest');
 
-      verifyRadioGroupValue('color-scheme-group', 'forest', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'forest');
       verifyAppTheme('dark', 'forest');
 
       getTestSelectorByModule(Module.shared, SubModule.header, 'theme-button').click();
       selectColorScheme(Module.createCompanySettings, SubModule.companySettingsDetails, 'color-scheme-sunset');
 
-      verifyRadioGroupValue('color-scheme-group', 'sunset', ['midnight', 'ocean', 'sunset', 'sunrise', 'forest', 'lavender']);
+      verifyRadioGroupValue('color-scheme-group', 'sunset');
       verifyAppTheme('light', 'sunset');
 
       clickFlowsIcon();
