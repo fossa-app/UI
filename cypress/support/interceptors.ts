@@ -324,12 +324,14 @@ export const interceptEditProfileFailedWithErrorRequest = (
 };
 
 export const interceptFetchEmployeesRequest = (
-  { pageNumber = 1, pageSize = 10, search = '' } = {},
+  { pageNumber = 1, pageSize = 10, search = '', reportsToId, topLevelOnly }: Record<string, any> = {},
   { alias = 'fetchEmployeesRequest', fixture = 'employee/employees', statusCode = 200, delay = 300 } = {}
 ) => {
   cy.fixture(fixture).then((employees) => {
     const searchParam = search ? `&search=${search}` : '';
-    const url = `${serverBaseUrl}/Employees?pageNumber=${pageNumber}&pageSize=${pageSize}${searchParam}`;
+    const reportsToParam = reportsToId !== undefined ? `&reportsToId=${reportsToId}` : '';
+    const topLevelParam = topLevelOnly !== undefined ? `&topLevelOnly=${topLevelOnly}` : '';
+    const url = `${serverBaseUrl}/Employees?pageNumber=${pageNumber}&pageSize=${pageSize}${searchParam}${reportsToParam}${topLevelParam}`;
 
     cy.interceptWithAuth('GET', url, employees, alias, statusCode, delay);
   });

@@ -202,13 +202,13 @@ const EditEmployeePage: React.FC = () => {
     }
   }, [id, fetchStatus, dispatch]);
 
-  useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
-
   React.useEffect(() => {
     return () => {
       dispatch(resetEmployee());
     };
   }, [dispatch]);
+
+  useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
 
   const handleSubmit = (formValue: Employee) => {
     const submitData = mapEmployeeDTO(formValue);

@@ -32,6 +32,7 @@ export enum RouteKey {
   editEmployee = 'editEmployee',
   viewEmployee = 'viewEmployee',
   deleteEmployee = 'deleteEmployee',
+  employeeOrgChart = 'employeeOrgChart',
   departments = 'departments',
   newDepartment = 'newDepartment',
   editDepartment = 'editDepartment',

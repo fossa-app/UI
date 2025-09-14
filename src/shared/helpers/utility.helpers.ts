@@ -68,3 +68,8 @@ export const calculateUsagePercent = (current?: number, max?: number): number =>
 
   return Math.round((current / max) * 100);
 };
+
+// TODO: replace all id mappers with this
+export const getEntityIds = <T extends { id: number }>(items: T[]): number[] => {
+  return Array.from(new Set(items.map(({ id }) => id).filter((id) => id)));
+};

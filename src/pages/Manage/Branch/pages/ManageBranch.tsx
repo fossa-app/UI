@@ -112,8 +112,6 @@ const ManageBranchPage: React.FC = () => {
     }
   }, [id, fetchStatus, dispatch]);
 
-  useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
-
   React.useEffect(() => {
     if (!id || (id && branch && noPhysicalAddress !== undefined)) {
       updateFields();
@@ -125,6 +123,8 @@ const ManageBranchPage: React.FC = () => {
       dispatch(resetBranch());
     };
   }, [dispatch]);
+
+  useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
 
   const handleSubmit = (formValue: Branch) => {
     const submitData = mapBranchDTO(formValue);

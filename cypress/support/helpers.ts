@@ -183,6 +183,17 @@ export const verifyAppTheme = (theme: ThemeMode, colorScheme: ColorSchemeId) => 
     .and('have.attr', 'data-color-scheme-id', colorScheme);
 };
 
+export const checkEmployeeReportsTo = (employeeId: string, managerId: string | null) => {
+  const selector = getTestSelectorByModule(
+    Module.employeeManagement,
+    SubModule.employeeOrgChart,
+    `employee-card-${employeeId}-reportsTo`,
+    true
+  );
+
+  selector.should('exist').and('have.attr', 'data-cy').and('include', `-reportsTo-${managerId}`);
+};
+
 export const uploadTestFile = (selector: string, fixtureName: string, fileType = 'application/octet-stream') => {
   cy.fixture(fixtureName, 'binary').then((fileContent) => {
     const blob = Cypress.Blob.binaryStringToBlob(fileContent, fileType);

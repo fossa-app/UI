@@ -86,6 +86,7 @@ describe('Flows Tests', () => {
           checkIsSubFlowDisabled('Branches', true);
           checkIsSubFlowDisabled('Departments', true);
           checkIsSubFlowDisabled('Employees', true);
+          checkIsSubFlowDisabled('Organization Chart', true);
           checkIsSubFlowDisabled('Employee Onboarding', false);
           checkIsSubFlowDisabled('View Profile', true);
           checkIsSubFlowDisabled('Employee Offboarding', true);
@@ -103,6 +104,7 @@ describe('Flows Tests', () => {
           checkIsSubFlowDisabled('Branches', true);
           checkIsSubFlowDisabled('Departments', true);
           checkIsSubFlowDisabled('Employees', true);
+          checkIsSubFlowDisabled('Organization Chart', true);
           checkIsSubFlowDisabled('Employee Onboarding', false);
           checkIsSubFlowDisabled('View Profile', true);
           checkIsSubFlowDisabled('Employee Offboarding', true);
@@ -140,6 +142,9 @@ describe('Flows Tests', () => {
           getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-item-Branches').should('exist').and('have.text', 'Branches');
           getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-item-Departments').should('exist').and('have.text', 'Departments');
           getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-item-Employees').should('exist').and('have.text', 'Employees');
+          getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-item-Organization Chart')
+            .should('exist')
+            .and('have.text', 'Organization Chart');
           getTestSelectorByModule(Module.manage, SubModule.flows, 'flow-item-Employee Onboarding')
             .should('exist')
             .and('have.text', 'Employee Onboarding');
@@ -230,6 +235,10 @@ describe('Flows Tests', () => {
           cy.url().should('include', ROUTES.employees.path);
 
           cy.visit(ROUTES.flows.path);
+          clickSubFlow('Organization Chart');
+          cy.url().should('include', ROUTES.employeeOrgChart.path);
+
+          cy.visit(ROUTES.flows.path);
           clickSubFlow('View Profile');
           cy.url().should('include', ROUTES.viewProfile.path);
         });
@@ -242,6 +251,7 @@ describe('Flows Tests', () => {
           checkIsSubFlowDisabled('Branches', false);
           checkIsSubFlowDisabled('Departments', false);
           checkIsSubFlowDisabled('Employees', false);
+          checkIsSubFlowDisabled('Organization Chart', false);
           checkIsSubFlowDisabled('Employee Onboarding', true);
           checkIsSubFlowDisabled('View Profile', false);
           checkIsSubFlowDisabled('Employee Offboarding', false);
@@ -302,6 +312,7 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Branches', false);
       checkIsSubFlowDisabled('Departments', false);
       checkIsSubFlowDisabled('Employees', false);
+      checkIsSubFlowDisabled('Organization Chart', false);
       checkIsSubFlowDisabled('Employee Onboarding', true);
       checkIsSubFlowDisabled('View Profile', false);
       checkIsSubFlowDisabled('Employee Offboarding', false);
@@ -344,6 +355,7 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Branches', true);
       checkIsSubFlowDisabled('Departments', true);
       checkIsSubFlowDisabled('Employees', true);
+      checkIsSubFlowDisabled('Organization Chart', true);
       checkIsSubFlowDisabled('Employee Onboarding', false);
       checkIsSubFlowDisabled('View Profile', true);
       checkIsSubFlowDisabled('Employee Offboarding', true);
@@ -366,6 +378,7 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Branches', true);
       checkIsSubFlowDisabled('Departments', true);
       checkIsSubFlowDisabled('Employees', true);
+      checkIsSubFlowDisabled('Organization Chart', true);
       checkIsSubFlowDisabled('Employee Onboarding', false);
       checkIsSubFlowDisabled('View Profile', true);
       checkIsSubFlowDisabled('Employee Offboarding', true);
@@ -396,6 +409,7 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Branches', true);
       checkIsSubFlowDisabled('Departments', true);
       checkIsSubFlowDisabled('Employees', true);
+      checkIsSubFlowDisabled('Organization Chart', true);
       checkIsSubFlowDisabled('Employee Onboarding', false);
       checkIsSubFlowDisabled('View Profile', true);
       checkIsSubFlowDisabled('Employee Offboarding', true);
@@ -420,6 +434,7 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Branches', true);
       checkIsSubFlowDisabled('Departments', true);
       checkIsSubFlowDisabled('Employees', true);
+      checkIsSubFlowDisabled('Organization Chart', true);
       checkIsSubFlowDisabled('Employee Onboarding', false);
       checkIsSubFlowDisabled('View Profile', true);
       checkIsSubFlowDisabled('Employee Offboarding', true);
@@ -440,6 +455,7 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Branches', false);
       checkIsSubFlowDisabled('Departments', false);
       checkIsSubFlowDisabled('Employees', false);
+      checkIsSubFlowDisabled('Organization Chart', false);
       checkIsSubFlowDisabled('Employee Onboarding', true);
       checkIsSubFlowDisabled('View Profile', false);
       checkIsSubFlowDisabled('Employee Offboarding', false);

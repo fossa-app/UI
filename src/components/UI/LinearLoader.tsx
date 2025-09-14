@@ -5,9 +5,10 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 type LinearLoaderProps = {
   delay?: number;
+  backgroundColor?: string;
 } & BackdropProps;
 
-const LinearLoader: React.FC<LinearLoaderProps> = ({ open, delay = 150, ...props }) => {
+const LinearLoader: React.FC<LinearLoaderProps> = ({ open, delay = 150, backgroundColor, ...props }) => {
   const [showLoader, setShowLoader] = React.useState(false);
 
   React.useEffect(() => {
@@ -31,7 +32,7 @@ const LinearLoader: React.FC<LinearLoaderProps> = ({ open, delay = 150, ...props
         right: 0,
         bottom: 0,
         zIndex: (theme) => theme.zIndex.modal + 1,
-        backgroundColor: (theme) => alpha(theme.palette.background.paper, 0.7),
+        backgroundColor: (theme) => backgroundColor || alpha(theme.palette.background.paper, 0.7),
         ...props.sx,
       }}
       {...props}

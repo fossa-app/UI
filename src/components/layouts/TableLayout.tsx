@@ -1,11 +1,11 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
+import Box, { BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { Module, SubModule, UserRole } from 'shared/models';
 import Page from 'components/UI/Page';
 import WithRolesLayout from './WithRolesLayout';
 
-interface TableLayoutProps {
+type TableLayoutProps = {
   module: Module;
   subModule: SubModule;
   pageTitle: string;
@@ -13,7 +13,7 @@ interface TableLayoutProps {
   allowedRoles?: UserRole[];
   actionButtonLabel?: string;
   onActionClick?: () => void;
-}
+} & BoxProps;
 
 const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
   module,
@@ -24,9 +24,10 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
   actionButtonLabel = 'New Item',
   onActionClick,
   children,
+  ...props
 }) => {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1, ...props.sx }} {...props}>
       <Page
         module={module}
         subModule={subModule}

@@ -165,8 +165,6 @@ const ManageDepartmentPage: React.FC = () => {
     }
   }, [parentDepartmentsFetchStatus, parentDepartmentsPage, dispatch]);
 
-  useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
-
   React.useEffect(() => {
     if (id && fetchStatus === 'idle') {
       dispatch(fetchDepartmentById({ id, skipState: false }));
@@ -178,6 +176,8 @@ const ManageDepartmentPage: React.FC = () => {
       dispatch(resetDepartment());
     };
   }, [dispatch]);
+
+  useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
 
   const handleSubmit = (formValue: Department) => {
     const submitData = mapDepartmentDTO(formValue);
