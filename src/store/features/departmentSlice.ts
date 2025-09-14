@@ -25,6 +25,7 @@ import {
 import { mergePaginatedItems } from 'store/helpers';
 import { setError, setSuccess } from './messageSlice';
 import { fetchEmployeeById, fetchEmployeesByIds } from './employeeSlice';
+import { resetCompanyDatasourceTotalsFetchStatus } from './companySlice';
 
 interface DepartmentState {
   department: StateEntity<Department | undefined>;
@@ -297,6 +298,7 @@ export const deleteDepartment = createAsyncThunk<void, DepartmentDTO['id'], { st
 
       dispatch(resetDepartmentsFetchStatus());
       dispatch(resetParentDepartments());
+      dispatch(resetCompanyDatasourceTotalsFetchStatus());
       dispatch(setSuccess(MESSAGES.success.departments.delete));
     } catch (error) {
       dispatch(

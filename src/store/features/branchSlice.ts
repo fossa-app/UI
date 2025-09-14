@@ -16,6 +16,7 @@ import {
 import { mergePaginatedItems } from 'store/helpers';
 import { setError, setSuccess } from './messageSlice';
 import { setBranchesFailedFlag, setBranchesSucceededFlag } from './onboardingSlice';
+import { resetCompanyDatasourceTotalsFetchStatus } from './companySlice';
 
 interface BranchState {
   branch: StateEntity<Branch | undefined>;
@@ -267,6 +268,7 @@ export const deleteBranch = createAsyncThunk<void, BranchDTO['id'], { state: Roo
       await axios.delete<void>(`${ENDPOINTS.branches}/${id}`);
 
       dispatch(resetBranchesFetchStatus());
+      dispatch(resetCompanyDatasourceTotalsFetchStatus());
       dispatch(setSuccess(MESSAGES.success.branches.delete));
 
       const state = getState() as RootState;

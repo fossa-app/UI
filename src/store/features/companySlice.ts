@@ -173,6 +173,9 @@ const companySlice = createSlice({
     resetCompanyFetchStatus(state) {
       state.company.fetchStatus = initialState.company.fetchStatus;
     },
+    resetCompanyDatasourceTotalsFetchStatus(state) {
+      state.companyDatasourceTotals.fetchStatus = initialState.companyDatasourceTotals.fetchStatus;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -265,7 +268,7 @@ export const selectCompanyTimeZones = createSelector(
   }
 );
 
-export const selectCompanyDatasourceTotals = (state: RootState) => state.company.companyDatasourceTotals.item;
+export const selectCompanyDatasourceTotals = (state: RootState) => state.company.companyDatasourceTotals;
 
 export const selectBranchUsagePercent = createSelector(
   [
@@ -300,6 +303,6 @@ export const selectCompanyLicenseLoading = createSelector(
     companyDatasourceTotalsFetchStatus === 'loading'
 );
 
-export const { resetCompanyFetchStatus } = companySlice.actions;
+export const { resetCompanyFetchStatus, resetCompanyDatasourceTotalsFetchStatus } = companySlice.actions;
 
 export default companySlice.reducer;
