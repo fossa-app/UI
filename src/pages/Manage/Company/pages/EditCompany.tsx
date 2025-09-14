@@ -82,8 +82,6 @@ const EditCompanyPage: React.FC = () => {
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
   }, [error?.errors, isUserAdmin]);
 
-  useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
-
   React.useEffect(() => {
     return () => {
       if (formSubmitted) {
@@ -91,6 +89,8 @@ const EditCompanyPage: React.FC = () => {
       }
     };
   }, [formSubmitted, dispatch]);
+
+  useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
 
   return (
     <PageLayout module={testModule} subModule={testSubModule} pageTitle="Edit Company">

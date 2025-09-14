@@ -40,6 +40,7 @@ export enum SubModule {
   employeeCatalog = 'employeeCatalog',
   employeeDetails = 'employeeDetails',
   employeeViewDetails = 'employeeViewDetails',
+  employeeOrgChart = 'employeeOrgChart',
   profileDetails = 'profileDetails',
   profileViewDetails = 'profileViewDetails',
   profileViewSettings = 'profileViewSettings',

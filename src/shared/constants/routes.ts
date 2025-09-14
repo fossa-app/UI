@@ -126,6 +126,10 @@ export const ROUTES: AppRoute = {
     name: 'Delete Employee',
     path: '/flows/offboarding/employee/deleteEmployee',
   },
+  employeeOrgChart: {
+    name: 'Organization Chart',
+    path: '/flows/employeeOrgChart',
+  },
   departments: {
     name: 'Departments',
     path: '/flows/departments',

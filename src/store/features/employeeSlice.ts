@@ -35,6 +35,7 @@ interface EmployeeState {
   employee: StateEntity<Employee | undefined>;
   employeeCatalog: PaginatedStateEntity<Employee>;
   managers: PaginatedStateEntity<EmployeeDTO>;
+  employeeOrgChart: PaginatedStateEntity<EmployeeDTO>;
 }
 
 const initialState: EmployeeState = {
@@ -50,6 +51,11 @@ const initialState: EmployeeState = {
     status: 'idle',
   },
   managers: {
+    items: [],
+    page: APP_CONFIG.table.defaultPagination,
+    status: 'idle',
+  },
+  employeeOrgChart: {
     items: [],
     page: APP_CONFIG.table.defaultPagination,
     status: 'idle',
@@ -132,6 +138,31 @@ export const fetchManagers = createAsyncThunk<
     const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
 
     return data;
+  } catch (error) {
+    return rejectWithValue({
+      ...(error as ErrorResponseDTO),
+      title: MESSAGES.error.employee.notFound,
+    });
+  }
+});
+
+export const fetchOrgChartEmployees = createAsyncThunk<
+  PaginatedResponse<EmployeeDTO> | undefined,
+  Partial<PaginationParams>,
+  { state: RootState; rejectValue: ErrorResponseDTO }
+>('employee/fetchOrgChartEmployees', async ({ pageNumber, pageSize }, { rejectWithValue }) => {
+  try {
+    const fetchSubordinates = async (reportsTo?: EmployeeDTO): Promise<EmployeeDTO[]> => {
+      const queryParams = { pageNumber, pageSize, reportsToId: reportsTo?.id, topLevelOnly: !reportsTo };
+      const subordinatesQuery = prepareQueryParams(queryParams);
+      const { data: subordinateData } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${subordinatesQuery}`);
+
+      return subordinateData.items.concat((await Promise.all(subordinateData.items.map(fetchSubordinates))).flat());
+    };
+
+    return {
+      items: await fetchSubordinates(),
+    };
   } catch (error) {
     return rejectWithValue({
       ...(error as ErrorResponseDTO),
@@ -227,6 +258,7 @@ export const editEmployee = createAsyncThunk<
   try {
     await axios.put<void>(`${ENDPOINTS.employees}/${id}`, employee);
 
+    dispatch(resetOrgChartEmployeesFetchStatus());
     dispatch(setSuccess(MESSAGES.success.employee.updateEmployee));
   } catch (error) {
     dispatch(
@@ -260,6 +292,9 @@ const employeeSlice = createSlice({
     },
     resetManagersFetchStatus(state) {
       state.managers.status = initialState.managers.status;
+    },
+    resetOrgChartEmployeesFetchStatus(state) {
+      state.employeeOrgChart.status = initialState.employeeOrgChart.status;
     },
     resetEmployee(state) {
       state.employee = initialState.employee as WritableDraft<StateEntity<Employee>>;
@@ -303,6 +338,20 @@ const employeeSlice = createSlice({
 
         state.employee.fetchStatus = 'loading';
       })
+      .addCase(fetchOrgChartEmployees.pending, (state) => {
+        state.employeeOrgChart.status = 'loading';
+      })
+      .addCase(fetchOrgChartEmployees.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+        state.employeeOrgChart.items = [];
+        state.employeeOrgChart.status = 'failed';
+        state.employeeOrgChart.error = action.payload;
+      })
+      .addCase(fetchOrgChartEmployees.fulfilled, (state, action: PayloadAction<PaginatedResponse<EmployeeDTO> | undefined>) => {
+        const { items = [] } = action.payload || {};
+        state.employeeOrgChart.items = items;
+        state.employeeOrgChart.status = 'succeeded';
+        state.employeeOrgChart.error = undefined;
+      })
       .addCase(fetchEmployeeById.rejected, (state, action) => {
         if (action.meta.arg.skipState) {
           return;
@@ -337,6 +386,7 @@ const employeeSlice = createSlice({
 
 export const selectEmployeeCatalog = (state: RootState) => state.employee.employeeCatalog;
 export const selectManagers = (state: RootState) => state.employee.managers;
+export const selectEmployeeOrgChart = (state: RootState) => state.employee.employeeOrgChart;
 export const selectEmployee = (state: RootState) => state.employee.employee;
 
 export const {
@@ -345,6 +395,7 @@ export const {
   updateManagersPagination,
   resetEmployeesFetchStatus,
   resetManagersFetchStatus,
+  resetOrgChartEmployeesFetchStatus,
   resetEmployee,
 } = employeeSlice.actions;
 

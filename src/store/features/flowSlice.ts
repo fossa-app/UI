@@ -75,6 +75,7 @@ const flowSlice = createSlice({
       })
       .addCase(fetchProfile.rejected, (state) => {
         state.flows.employees!.subFlows!.employees!.disabled = true;
+        state.flows.employees!.subFlows!.employeeOrgChart!.disabled = true;
         state.flows.branches!.subFlows!.branches!.disabled = true;
         state.flows.departments!.subFlows!.departments!.disabled = true;
         state.flows.profile!.subFlows!.employeeOnboarding!.disabled = false;
@@ -82,6 +83,7 @@ const flowSlice = createSlice({
       })
       .addCase(fetchProfile.fulfilled, (state) => {
         state.flows.employees!.subFlows!.employees!.disabled = false;
+        state.flows.employees!.subFlows!.employeeOrgChart!.disabled = false;
         state.flows.branches!.subFlows!.branches!.disabled = false;
         state.flows.departments!.subFlows!.departments!.disabled = false;
         state.flows.profile!.subFlows!.employeeOnboarding!.disabled = true;
@@ -97,6 +99,7 @@ const flowSlice = createSlice({
         state.flows.profile!.subFlows!.viewProfile!.disabled = true;
         state.flows.profile!.subFlows!.employeeOffboarding!.disabled = true;
         state.flows.employees!.subFlows!.employees!.disabled = true;
+        state.flows.employees!.subFlows!.employeeOrgChart!.disabled = true;
         state.flows.branches!.subFlows!.branches!.disabled = true;
         state.flows.departments!.subFlows!.departments!.disabled = true;
       })
@@ -105,6 +108,7 @@ const flowSlice = createSlice({
         state.flows.profile!.subFlows!.employeeOffboarding!.disabled = true;
         state.flows.profile!.subFlows!.viewProfile!.disabled = true;
         state.flows.employees!.subFlows!.employees!.disabled = true;
+        state.flows.employees!.subFlows!.employeeOrgChart!.disabled = true;
         state.flows.branches!.subFlows!.branches!.disabled = true;
         state.flows.departments!.subFlows!.departments!.disabled = true;
       });

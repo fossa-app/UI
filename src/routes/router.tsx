@@ -72,6 +72,9 @@ const EditEmployeePage = createLazyComponent(() => import('pages/Manage/Employee
   isAdminRoute: true,
 });
 const ViewEmployeePage = createLazyComponent(() => import('pages/Manage/Employee/pages/ViewEmployee'), { title: ROUTES.viewEmployee.name });
+const EmployeeOrgChartPage = createLazyComponent(() => import('pages/Manage/Employee/pages/EmployeeOrgChart'), {
+  title: ROUTES.employeeOrgChart.name,
+});
 const BranchPage = createLazyComponent(() => import('pages/Manage/Branch/Branch'));
 const BranchCatalogPage = createLazyComponent(() => import('pages/Manage/Branch/pages/BranchCatalog'), { title: ROUTES.branches.name });
 const ViewBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/ViewBranch'), { title: ROUTES.viewBranch.name });
@@ -309,6 +312,10 @@ const router = createBrowserRouter([
                     element: ViewEmployeePage,
                   },
                 ],
+              },
+              {
+                path: ROUTES.employeeOrgChart.path,
+                element: EmployeeOrgChartPage,
               },
               {
                 path: ROUTES.profile.path,

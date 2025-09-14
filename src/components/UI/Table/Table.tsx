@@ -82,8 +82,8 @@ const Table = <T extends Item>({
         pl: 3,
         position: 'relative',
         height: APP_CONFIG.scrollableContentHeight,
-        maxWidth: '100%',
         width: APP_CONFIG.table.containerWidth,
+        maxWidth: '100%',
       }}
       {...props}
     >

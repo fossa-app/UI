@@ -73,6 +73,12 @@ export const FLOWS_MAP: FlowsMap = {
         icon: IconType.employee,
         disabled: true,
       },
+      [RouteKey.employeeOrgChart]: {
+        name: ROUTES.employeeOrgChart.name,
+        path: ROUTES.employeeOrgChart.path,
+        icon: IconType.hierarchy,
+        disabled: true,
+      },
     },
   },
   [RouteKey.profile]: {

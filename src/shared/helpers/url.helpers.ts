@@ -16,12 +16,9 @@ export const getBackendOrigin = (frontendOrigin: string): string => {
 };
 
 export const prepareQueryParams = (params: Record<string, any>): string => {
-  const queryParams = Object.entries(params)
-    .filter(([_, value]) => value)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&');
+  const filtered = Object.fromEntries(Object.entries(params).filter(([, value]) => value !== null && value !== undefined && value !== ''));
 
-  return queryParams;
+  return new URLSearchParams(filtered).toString();
 };
 
 export const prepareCommaSeparatedQueryParamsByKey = (key: string, values: number[]): string => {
