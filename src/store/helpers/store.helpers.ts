@@ -1,4 +1,4 @@
-export const mergePaginatedItems = <T extends { id?: string | number }>(existingItems: T[] | undefined, newItems: T[] | undefined): T[] => {
+export const mergePaginatedItems = <T extends { id: number }>(existingItems: T[] | undefined, newItems: T[] | undefined): T[] => {
   if (!newItems?.length) {
     return existingItems || [];
   }

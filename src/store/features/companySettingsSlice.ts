@@ -3,7 +3,7 @@ import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { CompanySettings, CompanySettingsDTO, ErrorResponse, ErrorResponseDTO } from 'shared/models';
+import { CompanySettings, CompanySettingsDTO, EntityInput, ErrorResponse, ErrorResponseDTO } from 'shared/models';
 import { MESSAGES, ENDPOINTS, COMPANY_SETTINGS_KEY } from 'shared/constants';
 import { mapError, saveToLocalStorage, removeFromLocalStorage } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
@@ -17,7 +17,7 @@ const initialState: CompanySettingsState = {
   companySettings: {
     item: {
       colorSchemeId: undefined,
-    },
+    } as CompanySettings,
     fetchStatus: 'idle',
     updateStatus: 'idle',
     deleteStatus: 'idle',
@@ -43,7 +43,7 @@ export const fetchCompanySettings = createAsyncThunk<CompanySettings, void, { re
   }
 );
 
-export const createCompanySettings = createAsyncThunk<void, CompanySettingsDTO, { rejectValue: ErrorResponse<FieldValues> }>(
+export const createCompanySettings = createAsyncThunk<void, EntityInput<CompanySettingsDTO>, { rejectValue: ErrorResponse<FieldValues> }>(
   'companySettings/createCompanySettings',
   async (companySettings, { dispatch, rejectWithValue }) => {
     try {
@@ -67,7 +67,7 @@ export const createCompanySettings = createAsyncThunk<void, CompanySettingsDTO, 
   }
 );
 
-export const editCompanySettings = createAsyncThunk<void, Omit<CompanySettingsDTO, 'id'>, { rejectValue: ErrorResponse<FieldValues> }>(
+export const editCompanySettings = createAsyncThunk<void, EntityInput<CompanySettingsDTO>, { rejectValue: ErrorResponse<FieldValues> }>(
   'companySettings/editCompanySettings',
   async (companySettings, { dispatch, rejectWithValue }) => {
     try {

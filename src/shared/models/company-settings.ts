@@ -1,7 +1,7 @@
 import { ColorSchemeId } from 'shared/models';
 
 export interface CompanySettingsDTO {
-  id?: number;
+  id: number;
   companyId?: number;
   colorSchemeId?: ColorSchemeId;
 }

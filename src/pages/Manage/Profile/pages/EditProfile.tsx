@@ -4,7 +4,7 @@ import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import { editProfile, resetProfileFetchStatus, selectProfile } from 'store/features';
 import { EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, PROFILE_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
-import { Employee } from 'shared/models';
+import { Employee, EntityInput } from 'shared/models';
 import { deepCopyObject, mapProfileDTO } from 'shared/helpers';
 import { useOnFormSubmitEffect } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
@@ -18,7 +18,7 @@ const EditProfilePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { item: profile, updateError: error, updateStatus = 'idle' } = useAppSelector(selectProfile);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
-  const defaultValues: Employee = profile || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
+  const defaultValues: EntityInput<Employee> = profile || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
 
   const errors = React.useMemo(() => {
     return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
@@ -53,7 +53,7 @@ const EditProfilePage: React.FC = () => {
     [updateStatus, handleCancel]
   );
 
-  const handleSubmit = (formValue: Omit<Employee, 'id'>) => {
+  const handleSubmit = (formValue: EntityInput<Employee>) => {
     const submitData = mapProfileDTO(formValue);
 
     dispatch(editProfile(submitData));

@@ -1,5 +1,5 @@
 export interface EmployeeDTO {
-  id?: number;
+  id: number;
   companyId?: number;
   assignedBranchId: number | null;
   assignedDepartmentId: number | null;

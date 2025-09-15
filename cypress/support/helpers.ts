@@ -1,4 +1,4 @@
-import { Branch, ColorSchemeId, Department, Module, SubModule, ThemeMode } from 'shared/models';
+import { Branch, ColorSchemeId, Department, EntityInput, Module, SubModule, ThemeMode } from 'shared/models';
 
 const colorSchemeValues: ColorSchemeId[] = [
   'midnight',
@@ -60,7 +60,7 @@ export const openUserProfile = () => {
   getTestSelectorByModule(Module.shared, SubModule.header, 'profile-name').should('exist').click();
 };
 
-export const fillBranchDetailsForm = (module: Module, subModule: SubModule, branch: Branch) => {
+export const fillBranchDetailsForm = (module: Module, subModule: SubModule, branch: EntityInput<Branch>) => {
   getTestSelectorByModule(module, subModule, 'form-field-name').type(branch.name);
   selectOption(module, subModule, 'timeZoneId', branch.timeZoneId);
   getTestSelectorByModule(module, subModule, 'form-field-address.line1').type(branch!.address!.line1!);

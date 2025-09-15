@@ -10,7 +10,7 @@ import {
   resetPreviewCompanyColorSchemeSettings,
 } from 'store/features';
 import { COMPANY_SETTINGS_FIELDS, COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
-import { CompanySettings, CompanySettingsDTO, ThemeMode } from 'shared/models';
+import { CompanySettings, CompanySettingsDTO, EntityInput, ThemeMode } from 'shared/models';
 import { mapDisabledFields } from 'shared/helpers';
 import { COLOR_SCHEMES } from 'shared/themes';
 import { useUnmount } from 'shared/hooks';
@@ -30,7 +30,7 @@ const CompanySettingsPage: React.FC = () => {
   const mode: ThemeMode = isDarkTheme ? 'dark' : 'light';
 
   const handleSubmit = React.useCallback(
-    (data: Omit<CompanySettingsDTO, 'id'>) => {
+    (data: EntityInput<CompanySettingsDTO>) => {
       dispatch(editCompanySettings({ ...companySettings, ...data }));
     },
     [companySettings, dispatch]

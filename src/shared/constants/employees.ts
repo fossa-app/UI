@@ -1,4 +1,4 @@
-import { Employee, EmployeeFieldConfig, IconType, Module, SubModule, UserRole } from 'shared/models';
+import { Employee, EmployeeFieldConfig, EntityInput, IconType, Module, SubModule, UserRole } from 'shared/models';
 import { FormActionType, FormFieldType, FormActionName, FormProps } from 'components/UI/Form';
 import { Action, Column } from 'components/UI/Table';
 import { ViewDetailActionName, ViewDetailActionType, ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
@@ -374,7 +374,7 @@ export const PROFILE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
   ],
 };
 
-export const EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES: Employee = {
+export const EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES: EntityInput<Employee> = {
   firstName: '',
   lastName: '',
   fullName: '',

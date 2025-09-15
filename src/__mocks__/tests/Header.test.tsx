@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import { toggleAppTheme } from 'store/features';
+import { OnboardingStep } from 'shared/models';
+import Header from 'layout/Header';
 import { setMockState, mockDispatch, resetMockState } from '../store';
 import { getUserManager } from '../oidc-client-mock';
 import { MockRouterWrapper } from '../test-utils';
-import { OnboardingStep } from 'shared/models';
-import Header from 'layout/Header';
 
 describe('Header Component', () => {
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe('Header Component', () => {
         employee: { item: OnboardingStep.completed, fetchStatus: 'succeeded' },
       },
       appConfig: { isDarkTheme: true },
-      company: { company: { item: { name: 'Test', countryCode: 'UA' } } },
+      company: { company: { item: { id: 0, name: 'Test', countryCode: 'UA' } } },
     });
   });
 
