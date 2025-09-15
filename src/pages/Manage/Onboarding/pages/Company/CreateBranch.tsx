@@ -2,7 +2,6 @@ import * as React from 'react';
 import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
-  createOnboardingBranch,
   selectBranch,
   selectIsUserAdmin,
   selectCompanyTimeZones,
@@ -10,6 +9,7 @@ import {
   selectCompany,
   selectSystemCountries,
 } from 'store/features';
+import { createOnboardingBranch } from 'store/thunks';
 import { Branch } from 'shared/models';
 import {
   getBranchManagementDetailsByAddressFormSchema,

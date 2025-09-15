@@ -1,12 +1,16 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
-import { CompanyOnboardingStep, ErrorResponseDTO, OnboardingStep } from 'shared/models';
-import { deleteCompany, fetchCompany } from './companySlice';
-import { fetchBranchesTotal } from './branchSlice';
-import { deleteProfile, fetchProfile } from './profileSlice';
-import { fetchCompanyLicense } from './licenseSlice';
-import { fetchCompanySettings } from './companySettingsSlice';
+import {
+  fetchBranchesTotal,
+  fetchCompanySettings,
+  deleteCompany,
+  fetchCompany,
+  fetchCompanyLicense,
+  deleteProfile,
+  fetchProfile,
+} from 'store/thunks';
+import { CompanyOnboardingStep, OnboardingStep } from 'shared/models';
 
 interface OnboardingState {
   company: StateEntity<CompanyOnboardingStep> & {
@@ -82,45 +86,6 @@ const evaluateEmployeeOnboardingStep = (state: WritableDraft<OnboardingState>) =
     state.employee.fetchStatus = 'failed';
   }
 };
-
-export const fetchOnboardingData = createAsyncThunk<void, void, { rejectValue: ErrorResponseDTO }>(
-  'onboarding/fetchOnboardingData',
-  async (_, { dispatch }) => {
-    try {
-      const companyResponse = await dispatch(fetchCompany(true)).unwrap();
-
-      if (!companyResponse) {
-        return;
-      }
-
-      try {
-        await dispatch(fetchCompanyLicense()).unwrap();
-      } catch {
-        // We expect an error here
-      }
-
-      try {
-        await dispatch(fetchCompanySettings()).unwrap();
-      } catch {
-        // We expect an error here
-      }
-
-      try {
-        await dispatch(fetchBranchesTotal()).unwrap();
-      } catch {
-        // We expect an error here
-      }
-
-      try {
-        await dispatch(fetchProfile()).unwrap();
-      } catch {
-        // We expect an error here
-      }
-    } catch {
-      dispatch({ type: 'onboarding/setOnboardingFailed' });
-    }
-  }
-);
 
 const onboardingSlice = createSlice({
   name: 'onboarding',

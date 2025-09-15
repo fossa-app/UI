@@ -4,23 +4,19 @@ import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   selectEmployee,
-  editEmployee,
-  fetchEmployeeById,
   resetEmployeesFetchStatus,
   selectAssignedBranches,
   resetEmployee,
   updateAssignedBranchesPagination,
   resetAssignedBranchesFetchStatus,
-  fetchAssignedBranches,
   selectAssignedDepartments,
   updateAssignedDepartmentsPagination,
   resetAssignedDepartmentsFetchStatus,
-  fetchAssignedDepartments,
   selectManagers,
-  fetchManagers,
   updateManagersPagination,
   resetManagersFetchStatus,
 } from 'store/features';
+import { fetchAssignedBranches, fetchAssignedDepartments, editEmployee, fetchEmployeeById, fetchManagers } from 'store/thunks';
 import { APP_CONFIG, EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS } from 'shared/constants';
 import { Branch, Department, Employee, EntityInput } from 'shared/models';
 import {

@@ -3,9 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
-  createBranch,
-  editBranch,
-  fetchBranchById,
   resetBranch,
   resetBranchesFetchStatus,
   selectBranch,
@@ -15,6 +12,7 @@ import {
   selectCompany,
   selectSystemCountries,
 } from 'store/features';
+import { createBranch, editBranch, fetchBranchById } from 'store/thunks';
 import {
   BRANCH_DETAILS_FORM_DEFAULT_VALUES,
   BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA,

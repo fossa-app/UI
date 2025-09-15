@@ -4,11 +4,11 @@ import { useAppDispatch, useAppSelector } from 'store';
 import {
   selectUserRoles,
   selectCompanySettings,
-  editCompanySettings,
   selectAppConfig,
   setPreviewCompanyColorSchemeSettings,
   resetPreviewCompanyColorSchemeSettings,
 } from 'store/features';
+import { editCompanySettings } from 'store/thunks';
 import { COMPANY_SETTINGS_FIELDS, COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
 import { CompanySettings, CompanySettingsDTO, EntityInput, ThemeMode } from 'shared/models';
 import { mapDisabledFields } from 'shared/helpers';

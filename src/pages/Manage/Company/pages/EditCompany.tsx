@@ -5,12 +5,12 @@ import { useAppDispatch, useAppSelector } from 'store';
 import {
   selectIsUserAdmin,
   selectUserRoles,
-  editCompany,
   selectCompany,
   selectSystemCountries,
   resetCompanyFetchStatus,
   resetBranchesFetchStatus,
 } from 'store/features';
+import { editCompany } from 'store/thunks';
 import {
   COMPANY_DETAILS_FORM_DEFAULT_VALUES,
   COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA,

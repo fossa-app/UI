@@ -2,7 +2,8 @@ import * as React from 'react';
 import { Outlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchOnboardingData, selectOnboardingLoading } from 'store/features';
+import { selectOnboardingLoading } from 'store/features';
+import { fetchOnboardingData } from 'store/thunks';
 import { APP_CONFIG } from 'shared/constants';
 import CircularLoader from 'components/UI/CircularLoader';
 

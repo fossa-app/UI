@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchDepartmentById, resetDepartment, selectDepartment, selectUserRoles } from 'store/features';
+import { resetDepartment, selectDepartment, selectUserRoles } from 'store/features';
+import { fetchDepartmentById } from 'store/thunks';
 import { Module, SubModule } from 'shared/models';
 import { DEPARTMENT_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
 import { hasAllowedRole } from 'shared/helpers';

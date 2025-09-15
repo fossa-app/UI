@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
-import { createProfile, selectUser, selectProfile } from 'store/features';
+import { selectUser, selectProfile } from 'store/features';
+import { createProfile } from 'store/thunks';
 import { Employee } from 'shared/models';
 import { EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import { deepCopyObject, mapProfileDTO, mapUserProfileToEmployee } from 'shared/helpers';
