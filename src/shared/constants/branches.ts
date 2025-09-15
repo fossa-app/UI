@@ -1,4 +1,4 @@
-import { Branch, BranchFieldConfig, IconType, Module, SubModule, UserRole } from 'shared/models';
+import { Branch, BranchFieldConfig, EntityInput, IconType, Module, SubModule, UserRole } from 'shared/models';
 import { FormActionType, FormFieldType, FormActionName, FormProps } from 'components/UI/Form';
 import { Action, Column } from 'components/UI/Table';
 import { ViewDetailActionName, ViewDetailActionType, ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
@@ -463,7 +463,7 @@ export const BRANCH_TABLE_ACTIONS_SCHEMA: Action<Branch>[] = [
   },
 ];
 
-export const BRANCH_DETAILS_FORM_DEFAULT_VALUES: Branch = {
+export const BRANCH_DETAILS_FORM_DEFAULT_VALUES: EntityInput<Branch> = {
   name: '',
   timeZoneId: '',
   address: null,

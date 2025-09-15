@@ -1,5 +1,5 @@
 import { BRANCH_FIELDS } from 'shared/constants';
-import { Branch, BranchDTO, Company, Country, GeoAddress, TimeZone } from 'shared/models';
+import { Branch, BranchDTO, EntityInput, Company, Country, GeoAddress, TimeZone } from 'shared/models';
 import { FormFieldProps, FieldOption } from 'components/UI/Form';
 import { mapCountryToFieldOption } from './company.helpers';
 
@@ -37,7 +37,7 @@ export const mapBranch = ({
   };
 };
 
-export const mapBranchDTO = (branch: Branch): BranchDTO => {
+export const mapBranchDTO = (branch: Branch): EntityInput<BranchDTO> => {
   if (branch.noPhysicalAddress) {
     return {
       name: branch.name,

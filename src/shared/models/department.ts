@@ -1,5 +1,5 @@
 export interface DepartmentDTO {
-  id?: number;
+  id: number;
   name: string;
   parentDepartmentId: number | null;
   managerId: number | null;

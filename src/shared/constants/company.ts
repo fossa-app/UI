@@ -350,7 +350,7 @@ export const COMPANY_LICENSE_VIEW_DETAILS_SCHEMA: ViewDetailProps<CompanyLicense
   ],
 };
 
-export const COMPANY_DETAILS_FORM_DEFAULT_VALUES: Company = {
+export const COMPANY_DETAILS_FORM_DEFAULT_VALUES: Omit<Company, 'id'> = {
   name: '',
   countryCode: '',
 };

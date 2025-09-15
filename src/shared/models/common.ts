@@ -12,6 +12,8 @@ export type NonNullableFields<T> = {
 
 export type Item = Record<string, any>;
 
+export type EntityInput<T extends { id: number | string }> = Omit<T, 'id'>;
+
 export interface Country {
   name: string;
   code: string;

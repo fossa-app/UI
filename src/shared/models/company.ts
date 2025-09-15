@@ -2,7 +2,7 @@ import { Country, FlattenField } from './common';
 import { CompanyLicense } from './license';
 
 export interface CompanyDTO {
-  id?: number;
+  id: number;
   name: string;
   countryCode: Country['code'];
 }

@@ -3,7 +3,16 @@ import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, PaginatedStateEntity, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { Branch, BranchDTO, ErrorResponseDTO, ErrorResponse, PaginatedResponse, PaginationParams, GeoAddress } from 'shared/models';
+import {
+  Branch,
+  BranchDTO,
+  ErrorResponseDTO,
+  ErrorResponse,
+  PaginatedResponse,
+  PaginationParams,
+  GeoAddress,
+  EntityInput,
+} from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
 import {
   mapBranch,
@@ -190,7 +199,7 @@ export const fetchBranchById = createAsyncThunk<
   }
 });
 
-export const createOnboardingBranch = createAsyncThunk<void, BranchDTO, { rejectValue: ErrorResponse<FieldValues> }>(
+export const createOnboardingBranch = createAsyncThunk<void, EntityInput<BranchDTO>, { rejectValue: ErrorResponse<FieldValues> }>(
   'branch/createOnboardingBranch',
   async (branch, { dispatch, rejectWithValue }) => {
     try {
@@ -215,7 +224,7 @@ export const createOnboardingBranch = createAsyncThunk<void, BranchDTO, { reject
   }
 );
 
-export const createBranch = createAsyncThunk<void, BranchDTO, { rejectValue: ErrorResponse<FieldValues> }>(
+export const createBranch = createAsyncThunk<void, EntityInput<BranchDTO>, { rejectValue: ErrorResponse<FieldValues> }>(
   'branch/createBranch',
   async (branch, { dispatch, rejectWithValue }) => {
     try {
@@ -239,7 +248,7 @@ export const createBranch = createAsyncThunk<void, BranchDTO, { rejectValue: Err
   }
 );
 
-export const editBranch = createAsyncThunk<void, [string, Omit<BranchDTO, 'id'>], { rejectValue: ErrorResponse<FieldValues> }>(
+export const editBranch = createAsyncThunk<void, [string, EntityInput<BranchDTO>], { rejectValue: ErrorResponse<FieldValues> }>(
   'branch/editBranch',
   async ([id, branch], { dispatch, rejectWithValue }) => {
     try {

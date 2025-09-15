@@ -10,6 +10,7 @@ import {
   CompanyDTO,
   DepartmentDTO,
   EmployeeDTO,
+  EntityInput,
   ErrorResponse,
   ErrorResponseDTO,
   PaginatedResponse,
@@ -86,7 +87,7 @@ export const createCompany = createAsyncThunk<void, CompanyDTO, { rejectValue: E
   }
 );
 
-export const editCompany = createAsyncThunk<void, Omit<CompanyDTO, 'id'>, { rejectValue: ErrorResponse<FieldValues> }>(
+export const editCompany = createAsyncThunk<void, EntityInput<CompanyDTO>, { rejectValue: ErrorResponse<FieldValues> }>(
   'company/editCompany',
   async (company, { dispatch, rejectWithValue }) => {
     try {

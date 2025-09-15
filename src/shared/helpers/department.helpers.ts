@@ -1,5 +1,5 @@
 import { DEPARTMENT_FIELDS } from 'shared/constants';
-import { Department, DepartmentDTO, Employee, EmployeeDTO } from 'shared/models';
+import { Department, DepartmentDTO, Employee, EmployeeDTO, EntityInput } from 'shared/models';
 import { FormFieldProps, FieldOption } from 'components/UI/Form';
 import { mapEmployeeToFieldOption } from './employee.helpers';
 
@@ -13,7 +13,7 @@ export const mapDepartment = (department: DepartmentDTO, parentDepartment?: Depa
   };
 };
 
-export const mapDepartmentDTO = (department: Department): DepartmentDTO => {
+export const mapDepartmentDTO = (department: Department): EntityInput<DepartmentDTO> => {
   return {
     name: department.name,
     parentDepartmentId: department.parentDepartmentId || null,

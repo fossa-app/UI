@@ -1,6 +1,6 @@
 import { OidcClientSettings } from 'oidc-client-ts';
 import { FieldErrors, FieldValues } from 'react-hook-form';
-import { ColorSchemeId, CompanySettings, PaginationParams } from 'shared/models';
+import { ColorSchemeId, CompanySettings, EntityInput, PaginationParams } from 'shared/models';
 
 export const OIDC_INITIAL_CONFIG: OidcClientSettings = {
   authority: 'http://localhost:9011',
@@ -128,6 +128,6 @@ export const COMPANY_SETTINGS_KEY = 'companySettings';
 
 export const DEFAULT_COLOR_SCHEME: ColorSchemeId = 'midnight';
 
-export const DEFAULT_COMPANY_SETTINGS: CompanySettings = {
+export const DEFAULT_COMPANY_SETTINGS: EntityInput<CompanySettings> = {
   colorSchemeId: DEFAULT_COLOR_SCHEME,
 };

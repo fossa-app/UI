@@ -1,4 +1,4 @@
-import { AppUser, Branch, BranchDTO, Department, DepartmentDTO, Employee, EmployeeDTO } from 'shared/models';
+import { AppUser, Branch, BranchDTO, Department, DepartmentDTO, Employee, EmployeeDTO, EntityInput } from 'shared/models';
 import { FieldOption } from 'components/UI/Form';
 import { mapUserProfileToEmployee } from './user.helpers';
 
@@ -56,7 +56,7 @@ export const mapEmployeeDTO = (employee: Employee): Pick<EmployeeDTO, 'assignedB
   };
 };
 
-export const mapProfileDTO = (employee: Employee): EmployeeDTO => {
+export const mapProfileDTO = (employee: EntityInput<Employee>): EntityInput<EmployeeDTO> => {
   return {
     firstName: employee.firstName,
     lastName: employee.lastName,

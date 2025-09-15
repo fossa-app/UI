@@ -22,7 +22,7 @@ import {
   resetManagersFetchStatus,
 } from 'store/features';
 import { APP_CONFIG, EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS } from 'shared/constants';
-import { Branch, Department, Employee } from 'shared/models';
+import { Branch, Department, Employee, EntityInput } from 'shared/models';
 import {
   deepCopyObject,
   mapBranchToFieldOption,
@@ -58,7 +58,7 @@ const EditEmployeePage: React.FC = () => {
     page: managersPage = APP_CONFIG.table.defaultPagination,
   } = useAppSelector(selectManagers);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
-  const defaultValues: Employee = employee || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
+  const defaultValues: EntityInput<Employee> = employee || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
 
   const handleAssignedBranchesScrollEnd = React.useCallback(() => {
     if (assignedBranchesPage.pageNumber! < assignedBranchesPage.totalPages!) {

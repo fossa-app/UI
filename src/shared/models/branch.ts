@@ -14,7 +14,7 @@ export interface Address extends AddressDTO {
 }
 
 export interface BranchDTO {
-  id?: number;
+  id: number;
   companyId?: number;
   name: string;
   timeZoneId: TimeZone['id'];

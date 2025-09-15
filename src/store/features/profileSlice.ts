@@ -3,7 +3,7 @@ import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import axios from 'shared/configs/axios';
-import { AppUser, Employee, EmployeeDTO, ErrorResponse, ErrorResponseDTO } from 'shared/models';
+import { AppUser, Employee, EmployeeDTO, EntityInput, ErrorResponse, ErrorResponseDTO } from 'shared/models';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import { mapEmployee, mapError, mapUserProfileToEmployee } from 'shared/helpers';
 import { setError, setSuccess } from './messageSlice';
@@ -43,30 +43,31 @@ export const fetchProfile = createAsyncThunk<Employee | undefined, void, { rejec
   }
 );
 
-export const createProfile = createAsyncThunk<void, EmployeeDTO, { state: RootState; rejectValue: ErrorResponse<FieldValues> }>(
-  'profile/createProfile',
-  async (employee, { dispatch, rejectWithValue }) => {
-    try {
-      await axios.post<void>(ENDPOINTS.employee, employee);
-      await dispatch(fetchProfile()).unwrap();
+export const createProfile = createAsyncThunk<
+  void,
+  EntityInput<EmployeeDTO>,
+  { state: RootState; rejectValue: ErrorResponse<FieldValues> }
+>('profile/createProfile', async (employee, { dispatch, rejectWithValue }) => {
+  try {
+    await axios.post<void>(ENDPOINTS.employee, employee);
+    await dispatch(fetchProfile()).unwrap();
 
-      dispatch(setSuccess(MESSAGES.success.employee.create));
-    } catch (error) {
-      dispatch(
-        setError({
-          ...(error as ErrorResponseDTO),
-          title: MESSAGES.error.employee.create,
-        })
-      );
+    dispatch(setSuccess(MESSAGES.success.employee.create));
+  } catch (error) {
+    dispatch(
+      setError({
+        ...(error as ErrorResponseDTO),
+        title: MESSAGES.error.employee.create,
+      })
+    );
 
-      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+    const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
 
-      return rejectWithValue(mappedError);
-    }
+    return rejectWithValue(mappedError);
   }
-);
+});
 
-export const editProfile = createAsyncThunk<void, Omit<EmployeeDTO, 'id'>, { rejectValue: ErrorResponse<FieldValues> }>(
+export const editProfile = createAsyncThunk<void, EntityInput<EmployeeDTO>, { rejectValue: ErrorResponse<FieldValues> }>(
   'profile/editProfile',
   async (employee, { dispatch, rejectWithValue }) => {
     try {

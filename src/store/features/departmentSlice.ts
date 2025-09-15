@@ -11,6 +11,7 @@ import {
   Department,
   DepartmentDTO,
   EmployeeDTO,
+  EntityInput,
 } from 'shared/models';
 import { APP_CONFIG, MESSAGES, ENDPOINTS } from 'shared/constants';
 import {
@@ -242,7 +243,7 @@ export const fetchDepartmentById = createAsyncThunk<
   }
 );
 
-export const createDepartment = createAsyncThunk<void, DepartmentDTO, { rejectValue: ErrorResponse<FieldValues> }>(
+export const createDepartment = createAsyncThunk<void, EntityInput<DepartmentDTO>, { rejectValue: ErrorResponse<FieldValues> }>(
   'department/createDepartment',
   async (department, { dispatch, rejectWithValue }) => {
     try {
@@ -266,7 +267,7 @@ export const createDepartment = createAsyncThunk<void, DepartmentDTO, { rejectVa
   }
 );
 
-export const editDepartment = createAsyncThunk<void, [string, Omit<DepartmentDTO, 'id'>], { rejectValue: ErrorResponse<FieldValues> }>(
+export const editDepartment = createAsyncThunk<void, [string, EntityInput<DepartmentDTO>], { rejectValue: ErrorResponse<FieldValues> }>(
   'department/editDepartment',
   async ([id, department], { dispatch, rejectWithValue }) => {
     try {
