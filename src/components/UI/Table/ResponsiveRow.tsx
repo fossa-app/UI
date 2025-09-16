@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import Card from '@mui/material/Card';

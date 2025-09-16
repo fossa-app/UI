@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
 import List from '@mui/material/List';

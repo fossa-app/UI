@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FieldValues, RegisterOptions } from 'react-hook-form';
 import { TextFieldProps } from '@mui/material/TextField';
 import { ButtonProps } from '@mui/material/Button';

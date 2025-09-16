@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompany, selectIsUserAdmin, selectUserRoles, selectSystemCountries } from 'store/features';

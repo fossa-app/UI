@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Box, { BoxProps } from '@mui/material/Box';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FieldError, get, useFormContext as reactHookFormContext } from 'react-hook-form';
 import Typography from '@mui/material/Typography';
 import FormHelperText from '@mui/material/FormHelperText';

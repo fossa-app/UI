@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FormProvider as ReactHookFormProvider, useForm, DefaultValues, FieldErrors, FieldValues } from 'react-hook-form';
 import Paper from '@mui/material/Paper';
 import { Item, Module, SubModule } from 'shared/models';

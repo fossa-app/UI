@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { APP_CONFIG } from 'shared/constants';
 
 export const useDebounce = <T>(value: T, delay = APP_CONFIG.searchDebounceTime): T => {

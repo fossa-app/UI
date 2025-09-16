@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup, MapContainerProps } from 'react-leaflet';
 import { GeoAddress, Module, SubModule } from 'shared/models';
 import Page from 'components/UI/Page';

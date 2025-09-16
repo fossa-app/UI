@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 export const useUnmount = (callback: () => void): void => {
   const callbackRef = React.useRef(callback);

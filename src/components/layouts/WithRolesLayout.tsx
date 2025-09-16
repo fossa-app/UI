@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { hasAllowedRole } from 'shared/helpers';
 import { UserRole } from 'shared/models';
 

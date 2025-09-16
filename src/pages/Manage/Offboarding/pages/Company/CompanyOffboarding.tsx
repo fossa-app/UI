@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';

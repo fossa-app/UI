@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import {

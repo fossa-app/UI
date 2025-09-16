@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Tree, TreeNode } from 'react-organizational-chart';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
@@ -50,10 +50,10 @@ const EmployeeOrgChartPage: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         flexGrow: 1,
-        position: 'relative',
-        height: APP_CONFIG.scrollableContentHeight,
-        width: APP_CONFIG.table.containerWidth,
-        maxWidth: '100%',
+        position: 'absolute',
+        left: { xs: theme.spacing(2), sm: theme.spacing(3) },
+        right: { xs: theme.spacing(2), sm: theme.spacing(3) },
+        height: 'calc(100vh - 150px)',
         overflowX: 'auto',
       }}
     >

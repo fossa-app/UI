@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectProfile } from 'store/features';
 import { deleteProfile } from 'store/thunks';

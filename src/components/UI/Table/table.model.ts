@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { TableCellProps } from '@mui/material/TableCell';
 import { Item, UserRole } from 'shared/models';
 

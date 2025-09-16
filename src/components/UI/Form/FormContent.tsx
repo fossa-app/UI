@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useFormContext as reactHookFormContext } from 'react-hook-form';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';

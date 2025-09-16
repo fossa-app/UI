@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';

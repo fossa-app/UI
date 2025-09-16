@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { alpha } from '@mui/material/styles';
 import Backdrop, { BackdropProps } from '@mui/material/Backdrop';
 import LinearProgress from '@mui/material/LinearProgress';

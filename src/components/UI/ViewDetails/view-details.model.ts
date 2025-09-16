@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { GridBaseProps } from '@mui/material/Grid2';
 import { ButtonProps } from '@mui/material/Button';
 import { Module, SubModule, UserRole } from 'shared/models';

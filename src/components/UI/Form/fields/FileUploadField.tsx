@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Controller, useFormContext as reactHookFormContext } from 'react-hook-form';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormLabel from '@mui/material/FormLabel';
