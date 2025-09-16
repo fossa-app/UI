@@ -2,6 +2,16 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity, Status } from 'store';
 import {
+  fetchBranchesTotal,
+  fetchCompanySettings,
+  fetchCompany,
+  fetchCompanyDatasourceTotals,
+  fetchDepartmentsTotal,
+  fetchEmployeesTotal,
+  deleteProfile,
+  fetchProfile,
+} from 'store/thunks';
+import {
   BranchDTO,
   CompanyDatasourceTotals,
   CompanyOffboardingStep,
@@ -10,12 +20,6 @@ import {
   OffboardingStep,
   PaginatedResponse,
 } from 'shared/models';
-import { fetchBranchesTotal } from './branchSlice';
-import { fetchCompanySettings } from './companySettingsSlice';
-import { fetchCompany, fetchCompanyDatasourceTotals } from './companySlice';
-import { deleteProfile, fetchProfile } from './profileSlice';
-import { fetchDepartmentsTotal } from './departmentSlice';
-import { fetchEmployeesTotal } from './employeeSlice';
 
 interface OffboardingState {
   company: StateEntity<CompanyOffboardingStep> & {

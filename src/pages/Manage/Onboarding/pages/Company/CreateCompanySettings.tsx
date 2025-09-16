@@ -5,11 +5,11 @@ import {
   selectUserRoles,
   selectCompanySettings,
   selectAppConfig,
-  createCompanySettings,
   selectIsUserAdmin,
   setPreviewCompanyColorSchemeSettings,
   resetPreviewCompanyColorSchemeSettings,
 } from 'store/features';
+import { createCompanySettings } from 'store/thunks';
 import {
   DEFAULT_COMPANY_SETTINGS,
   COMPANY_SETTINGS_FIELDS,

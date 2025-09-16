@@ -6,7 +6,8 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchCompanyDatasourceTotals, selectCompanyOffboardingStep } from 'store/features';
+import { selectCompanyOffboardingStep } from 'store/features';
+import { fetchCompanyDatasourceTotals } from 'store/thunks';
 import { COMPANY_OFFBOARDING_STEPS, COMPANY_OFFBOARDING_STEP_MAP } from 'shared/constants';
 import { Module, SubModule } from 'shared/models';
 

@@ -2,7 +2,8 @@ import * as React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Box from '@mui/system/Box';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchUser, selectUser } from 'store/features';
+import { selectUser } from 'store/features';
+import { fetchUser } from 'store/thunks';
 import { ROUTES } from 'shared/constants';
 
 const ProtectedPage: React.FC = () => {

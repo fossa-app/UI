@@ -2,13 +2,13 @@ import * as React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
-  fetchEmployees,
   resetEmployeesFetchStatus,
   resetEmployeesPagination,
   selectEmployeeCatalog,
   selectUserRoles,
   updateEmployeesPagination,
 } from 'store/features';
+import { fetchEmployees } from 'store/thunks';
 import { Employee, Module, PaginationParams, SubModule } from 'shared/models';
 import { ACTION_FIELDS, APP_CONFIG, EMPLOYEE_FIELDS, EMPLOYEE_TABLE_ACTIONS_SCHEMA, EMPLOYEE_TABLE_SCHEMA, ROUTES } from 'shared/constants';
 import { getTestSelectorByModule } from 'shared/helpers';

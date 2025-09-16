@@ -1,10 +1,11 @@
 import * as React from 'react';
+import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectCompany, selectIsUserAdmin, selectUserRoles, deleteCompany } from 'store/features';
+import { selectCompany, selectIsUserAdmin, selectUserRoles } from 'store/features';
+import { deleteCompany } from 'store/thunks';
 import { deepCopyObject, hasAllowedRole } from 'shared/helpers';
 import { DELETE_COMPANY_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';
-import { FieldErrors, FieldValues } from 'react-hook-form';
 
 const testModule = DELETE_COMPANY_DETAILS_FORM_SCHEMA.module;
 const testSubModule = DELETE_COMPANY_DETAILS_FORM_SCHEMA.subModule;

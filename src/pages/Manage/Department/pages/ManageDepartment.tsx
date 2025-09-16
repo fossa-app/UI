@@ -5,21 +5,17 @@ import { useAppDispatch, useAppSelector } from 'store';
 import {
   selectIsUserAdmin,
   selectUserRoles,
-  createDepartment,
   resetDepartment,
-  fetchDepartmentById,
   resetDepartmentsFetchStatus,
   selectDepartment,
-  editDepartment,
   selectManagers,
-  fetchParentDepartments,
   selectParentDepartments,
   updateParentDepartmentsPagination,
   resetParentDepartmentsFetchStatus,
-  fetchManagers,
   updateManagersPagination,
   resetManagersFetchStatus,
 } from 'store/features';
+import { createDepartment, fetchDepartmentById, editDepartment, fetchParentDepartments, fetchManagers } from 'store/thunks';
 import {
   APP_CONFIG,
   DEPARTMENT_DETAILS_FORM_DEFAULT_VALUES,

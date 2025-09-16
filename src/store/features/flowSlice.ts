@@ -1,12 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'store';
+import {
+  fetchBranchesTotal,
+  fetchCompanySettings,
+  deleteCompany,
+  fetchCompany,
+  deleteProfile,
+  fetchProfile,
+  fetchCompanyLicense,
+} from 'store/thunks';
 import { FlowsMap, OnboardingStep } from 'shared/models';
 import { FLOWS_MAP } from 'shared/constants';
-import { deleteCompany, fetchCompany } from './companySlice';
-import { fetchBranchesTotal } from './branchSlice';
-import { deleteProfile, fetchProfile } from './profileSlice';
-import { fetchCompanyLicense } from './licenseSlice';
-import { fetchCompanySettings } from './companySettingsSlice';
 
 interface FlowState {
   flows: FlowsMap;

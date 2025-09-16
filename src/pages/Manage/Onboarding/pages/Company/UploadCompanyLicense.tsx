@@ -1,15 +1,20 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FieldValues, FieldErrors } from 'react-hook-form';
-import { renderCopyableField } from 'components/UI/helpers/renderCopyableField';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectCompany } from 'store/features/companySlice';
-import { selectCompanyLicense, uploadCompanyLicense } from 'store/features/licenseSlice';
-import { selectIsUserAdmin, selectUserRoles } from 'store/features/authSlice';
-import { setCompanyLicenseSkipped, resetCompanyLicenseSkipped } from 'store/features/onboardingSlice';
+import { uploadCompanyLicense } from 'store/thunks';
+import {
+  selectCompany,
+  selectCompanyLicense,
+  selectIsUserAdmin,
+  selectUserRoles,
+  setCompanyLicenseSkipped,
+  resetCompanyLicenseSkipped,
+} from 'store/features';
 import { mapDisabledFields, hasAllowedRole, deepCopyObject } from 'shared/helpers';
 import { ROUTES, UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';
+import { renderCopyableField } from 'components/UI/helpers/renderCopyableField';
 
 const testModule = UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.module;
 const testSubModule = UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.subModule;

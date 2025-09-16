@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
-  fetchCompany,
-  fetchCompanyDatasourceTotals,
   selectCompany,
   selectBranchUsagePercent,
   selectCompanyLicense,
@@ -14,6 +12,7 @@ import {
   selectCompanyDatasourceTotals,
   selectCompanyLicenseLoading,
 } from 'store/features';
+import { fetchCompany, fetchCompanyDatasourceTotals } from 'store/thunks';
 import { Module, SubModule } from 'shared/models';
 import { COMPANY_LICENSE_VIEW_DETAILS_SCHEMA, COMPANY_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
 import { createCompanyLicenseEntitlementsFieldsMap, hasAllowedRole } from 'shared/helpers';

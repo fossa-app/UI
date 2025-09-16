@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectCompany, createCompany, selectIsUserAdmin, selectUserRoles, selectSystemCountries } from 'store/features';
+import { selectCompany, selectIsUserAdmin, selectUserRoles, selectSystemCountries } from 'store/features';
+import { createCompany } from 'store/thunks';
 import { Company, CompanyDTO } from 'shared/models';
 import { deepCopyObject, hasAllowedRole, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
 import { COMPANY_DETAILS_FORM_DEFAULT_VALUES, CREATE_COMPANY_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';

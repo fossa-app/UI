@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectCompanySettings, selectIsUserAdmin, selectUserRoles, deleteCompanySettings } from 'store/features';
+import { selectCompanySettings, selectIsUserAdmin, selectUserRoles } from 'store/features';
+import { deleteCompanySettings } from 'store/thunks';
 import { deepCopyObject, hasAllowedRole } from 'shared/helpers';
 import { DELETE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';

@@ -2,8 +2,6 @@ import * as React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
-  deleteBranch,
-  fetchBranches,
   resetBranchesFetchStatus,
   resetBranchesPagination,
   selectBranch,
@@ -11,6 +9,7 @@ import {
   selectUserRoles,
   updateBranchesPagination,
 } from 'store/features';
+import { deleteBranch, fetchBranches } from 'store/thunks';
 import { Branch, Module, PaginationParams, SubModule, UserRole } from 'shared/models';
 import { ACTION_FIELDS, APP_CONFIG, BRANCH_FIELDS, BRANCH_TABLE_ACTIONS_SCHEMA, BRANCH_TABLE_SCHEMA, ROUTES } from 'shared/constants';
 import { getTestSelectorByModule } from 'shared/helpers';

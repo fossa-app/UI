@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
-import { deleteProfile, selectProfile } from 'store/features';
+import { selectProfile } from 'store/features';
+import { deleteProfile } from 'store/thunks';
 import { DELETE_EMPLOYEE_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';
 

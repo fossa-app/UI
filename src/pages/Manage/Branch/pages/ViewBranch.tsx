@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
-import { fetchBranchById, resetBranch, selectBranch, selectUserRoles } from 'store/features';
+import { resetBranch, selectBranch, selectUserRoles } from 'store/features';
+import { fetchBranchById } from 'store/thunks';
 import { Module, SubModule } from 'shared/models';
 import { BRANCH_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
 import { hasAllowedRole } from 'shared/helpers';

@@ -2,8 +2,6 @@ import * as React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
-  deleteDepartment,
-  fetchDepartments,
   resetDepartmentsFetchStatus,
   selectDepartment,
   selectDepartmentCatalog,
@@ -11,6 +9,7 @@ import {
   updateDepartmentsPagination,
   resetDepartmentsPagination,
 } from 'store/features';
+import { deleteDepartment, fetchDepartments } from 'store/thunks';
 import { Department, Module, PaginationParams, SubModule, UserRole } from 'shared/models';
 import {
   ACTION_FIELDS,
