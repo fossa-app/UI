@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import AccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import { SxProps, Theme } from '@mui/material/styles';

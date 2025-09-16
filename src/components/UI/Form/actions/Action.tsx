@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Button from '@mui/material/Button';
 import LoadingButton from 'components/UI/LoadingButton';
 import { ICONS, ACTION_BUTTON_STYLES } from 'shared/constants';

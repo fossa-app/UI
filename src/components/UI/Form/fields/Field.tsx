@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FormFieldProps, FormFieldType } from '../form.model';
 import InputField from './InputField';
 import AutocompleteField from './AutocompleteField';

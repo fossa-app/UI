@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FieldError, get, useFormContext as reactHookFormContext, useWatch } from 'react-hook-form';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';

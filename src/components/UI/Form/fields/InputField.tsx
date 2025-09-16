@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Controller, FieldError, get, useFormContext as reactHookFormContext } from 'react-hook-form';
 import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';

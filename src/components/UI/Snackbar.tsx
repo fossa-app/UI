@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import MuiAlert, { AlertColor } from '@mui/material/Alert';
 import MuiSnackbar, { SnackbarProps as MuiSnackbarProps, SnackbarCloseReason } from '@mui/material/Snackbar';
 import { APP_CONFIG } from 'shared/constants';

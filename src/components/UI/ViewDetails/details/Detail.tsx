@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ViewDetailFieldProps, ViewDetailType } from '../view-details.model';
 import LabelValueDetail from './LabelValueDetail';
 import SectionDetail from './SectionDetail';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Box from '@mui/system/Box';
 import { useAppDispatch, useAppSelector } from 'store';

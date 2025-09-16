@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Grid from '@mui/material/Grid2';
 import { useAppSelector } from 'store';
 import { selectFlows, selectUserRoles } from 'store/features';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box, { BoxProps } from '@mui/material/Box';
 import { Module, SubModule } from 'shared/models';

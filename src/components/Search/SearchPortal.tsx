@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { useLocation } from 'react-router-dom';
 import { TextFieldProps } from '@mui/material/TextField';

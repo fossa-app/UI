@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 export const useOnFormSubmitEffect = (updateStatus: string, formSubmitted: boolean, onSuccess: () => void) => {
   React.useEffect(() => {

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Typography from '@mui/material/Typography';
 import { getNestedValue } from 'shared/helpers';
 import { APP_CONFIG } from 'shared/constants';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ROUTES } from 'shared/constants';
 import RouteTitle from 'components/RouteTitle';

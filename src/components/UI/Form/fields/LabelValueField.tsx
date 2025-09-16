@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useFormContext as reactHookFormContext, useWatch } from 'react-hook-form';
 import Typography from '@mui/material/Typography';
 import { LabelValueFieldProps } from '../form.model';

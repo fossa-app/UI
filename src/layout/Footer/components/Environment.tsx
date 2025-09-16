@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';

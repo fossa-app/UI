@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ACTION_FIELD } from 'shared/constants';
 import { Column } from 'components/UI/Table';
 

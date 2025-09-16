@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { useAppDispatch, useAppSelector } from 'store';

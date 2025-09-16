@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import AdminRouteGuard from './guards/AdminRouteGuard';
 import RouteTitle from 'components/RouteTitle';
 import CircularLoader from 'components/UI/CircularLoader';

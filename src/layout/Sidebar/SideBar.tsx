@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Drawer, { DrawerProps } from '@mui/material/Drawer';
 import { useAppDispatch, useAppSelector } from 'store';
 import { closeSidebar, selectAppConfig } from 'store/features';

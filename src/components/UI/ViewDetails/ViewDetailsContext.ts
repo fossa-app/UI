@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Module, SubModule } from 'shared/models';
 
 const ViewDetailsContext = React.createContext<{ module: Module; subModule: SubModule; loading: boolean } | undefined>(undefined);

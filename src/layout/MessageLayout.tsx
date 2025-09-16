@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import { clearMessages, selectMessage } from 'store/features';
 import { Module, SubModule } from 'shared/models';

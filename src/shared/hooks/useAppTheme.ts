@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { getFromLocalStorage } from 'shared/helpers/storage.helpers';
 import { CompanySettings, EntityInput, ThemeMode } from 'shared/models';
 import { COMPANY_SETTINGS_KEY, DEFAULT_COMPANY_SETTINGS } from 'shared/constants';

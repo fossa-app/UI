@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FieldError, useFormContext as reactHookFormContext, Controller, ControllerRenderProps, FieldValues, get } from 'react-hook-form';
 import { debounce } from '@mui/material/utils';
 import Autocomplete, { AutocompleteInputChangeReason } from '@mui/material/Autocomplete';

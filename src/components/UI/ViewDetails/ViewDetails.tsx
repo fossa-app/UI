@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Accordion, { AccordionProps } from '@mui/material/Accordion';
 import { Module, SubModule } from 'shared/models';
 import LinearLoader from '../LinearLoader';

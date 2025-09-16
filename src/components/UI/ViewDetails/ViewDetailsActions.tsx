@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import AccordionActions, { AccordionActionsProps } from '@mui/material/AccordionActions';
 import { useViewDetailsContext } from './ViewDetailsContext';
 import { ViewDetailActionProps } from './view-details.model';

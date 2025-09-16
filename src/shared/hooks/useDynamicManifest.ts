@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React from 'react';
 import { useAppSelector } from 'store';
 import { selectCompanyLicense, selectSystemLicense } from 'store/features';
 
@@ -8,7 +8,7 @@ export const useDynamicManifest = () => {
   const systemLicenseShortName = system?.terms?.licensee.shortName || '';
   const companyLicenseShortName = company?.terms?.licensee.shortName || '';
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!systemLicenseShortName || !companyLicenseShortName) {
       return;
     }
