@@ -73,17 +73,3 @@ export const mapEmployeeToFieldOption = (employee: EmployeeDTO): FieldOption => 
     value: String(employee.id),
   };
 };
-
-export const getEmployeesAssignedBranchIds = (employees: EmployeeDTO[]): number[] => {
-  return employees.filter(({ assignedBranchId }) => assignedBranchId).map(({ assignedBranchId }) => assignedBranchId) as number[];
-};
-
-export const getEmployeesAssignedDepartmentIds = (employees: EmployeeDTO[]): number[] => {
-  return employees
-    .filter(({ assignedDepartmentId }) => assignedDepartmentId)
-    .map(({ assignedDepartmentId }) => assignedDepartmentId) as number[];
-};
-
-export const getEmployeesManagerIds = (employees: EmployeeDTO[]): number[] => {
-  return employees.filter(({ reportsToId }) => reportsToId).map(({ reportsToId }) => reportsToId) as number[];
-};
