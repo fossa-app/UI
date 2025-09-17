@@ -21,11 +21,9 @@ import {
   mapEmployee,
   mapEmployees,
   prepareQueryParams,
-  getEmployeesAssignedBranchIds,
   mapError,
   prepareCommaSeparatedQueryParamsByKey,
-  getEmployeesAssignedDepartmentIds,
-  getEmployeesManagerIds,
+  getEntityIdsByField,
 } from 'shared/helpers';
 
 const fetchManager = async (dispatch: ThunkDispatch<unknown, unknown, UnknownAction>, id: string) => {
@@ -56,9 +54,9 @@ export const fetchEmployees = createAsyncThunk<
       const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
 
       if (data) {
-        const assignedBranchIds = getEmployeesAssignedBranchIds(data.items);
-        const assignedDepartmentIds = getEmployeesAssignedDepartmentIds(data.items);
-        const managerIds = getEmployeesManagerIds(data.items);
+        const assignedBranchIds = getEntityIdsByField(data.items, 'assignedBranchId');
+        const assignedDepartmentIds = getEntityIdsByField(data.items, 'assignedDepartmentId');
+        const managerIds = getEntityIdsByField(data.items, 'reportsToId');
         let branches: PaginatedResponse<BranchDTO> | undefined;
         let departments: PaginatedResponse<DepartmentDTO> | undefined;
         let managers: PaginatedResponse<EmployeeDTO> | undefined;

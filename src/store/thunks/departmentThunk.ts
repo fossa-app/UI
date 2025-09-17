@@ -26,9 +26,8 @@ import {
   mapDepartments,
   mapError,
   mapDepartment,
-  getDepartmentsManagerIds,
   prepareCommaSeparatedQueryParamsByKey,
-  getParentDepartmentsIds,
+  getEntityIdsByField,
 } from 'shared/helpers';
 
 const fetchParentDepartment = async (dispatch: ThunkDispatch<unknown, unknown, UnknownAction>, id: string) => {
@@ -70,8 +69,8 @@ export const fetchDepartments = createAsyncThunk<
     const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
 
     if (data) {
-      const departmentsManagerIds = getDepartmentsManagerIds(data.items);
-      const parentDepartmentsIds = getParentDepartmentsIds(data.items);
+      const departmentsManagerIds = getEntityIdsByField(data.items, 'managerId');
+      const parentDepartmentsIds = getEntityIdsByField(data.items, 'parentDepartmentId');
       let employees: PaginatedResponse<EmployeeDTO> | undefined;
       let parentDepartments: PaginatedResponse<DepartmentDTO> | undefined;
 
