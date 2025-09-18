@@ -18,6 +18,7 @@ import {
   verifyTextFields,
   selectAction,
   selectNavigationMenuItem,
+  clearInputField,
 } from 'support/helpers';
 import {
   interceptCreateBranchFailedRequest,
@@ -106,7 +107,7 @@ describe('Branch Management Tests', () => {
       { field: 'form-field-address.subdivision-validation', message: 'State must not exceed 50 characters.' },
     ]);
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').find('input').clear();
+    clearInputField(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').find('input').type('12');
 
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
@@ -241,7 +242,7 @@ describe('Branch Management Tests', () => {
       .find('input')
       .should('have.value', 'New York Branch');
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').find('input').clear();
+    clearInputField(Module.branchManagement, SubModule.branchDetails, 'form-field-name');
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name-validation')
@@ -278,7 +279,7 @@ describe('Branch Management Tests', () => {
 
     cy.wait('@fetchBranchByIdRequest');
 
-    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').find('input').clear();
+    clearInputField(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode');
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-address.postalCode').type('*****');
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
 

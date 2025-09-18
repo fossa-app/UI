@@ -114,6 +114,7 @@ describe('Department Management Tests', () => {
     clearDepartmentDetailsForm();
     fillDepartmentDetailsForm({
       name: 'Valid Name',
+      managerId: 333333333335,
     });
     clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
 
@@ -274,7 +275,7 @@ describe('Department Management Tests', () => {
 
     selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444447');
 
-    cy.wait('@fetchDepartmentByIdRequest');
+    cy.wait(['@fetchDepartmentByIdRequest', '@fetchEmployeeByIdRequest']);
 
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'page-title').should('have.text', 'Edit Department');
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-name')
@@ -284,9 +285,10 @@ describe('Department Management Tests', () => {
     clearDepartmentDetailsForm();
     clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
 
-    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-name-validation')
-      .should('exist')
-      .and('have.text', 'Department Name is required');
+    verifyFormValidationMessages(Module.departmentManagement, SubModule.departmentDetails, [
+      { field: 'form-field-name-validation', message: 'Department Name is required' },
+      { field: 'form-field-managerId-validation', message: 'Manager is required' },
+    ]);
 
     clearDepartmentDetailsForm();
     fillDepartmentDetailsForm({
@@ -337,6 +339,22 @@ describe('Department Management Tests', () => {
       },
     ]);
     cy.url().should('include', `${ROUTES.departments.path}/edit/444444444446`);
+
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-cancel-button').click();
+
+    cy.location('pathname').should('eq', ROUTES.departments.path);
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
+
+    verifyNotExist(Module.departmentManagement, SubModule.departmentDetails, [
+      'form-field-name-validation',
+      'form-field-parentDepartmentId-validation',
+      'form-field-managerId-validation',
+    ]);
+    verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
+      'form-field-name': '',
+      'form-field-parentDepartmentId': '',
+      'form-field-managerId': '',
+    });
   });
 
   it('should display async general validation messages if the department creation failed with validation errors', () => {
@@ -488,7 +506,7 @@ describe('Department Management Tests', () => {
 
     selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444447');
 
-    cy.wait('@fetchDepartmentByIdRequest');
+    cy.wait(['@fetchDepartmentByIdRequest', '@fetchEmployeeByIdRequest']);
 
     verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
       'form-field-name': 'Costume',
@@ -677,5 +695,35 @@ describe('Department Management Tests', () => {
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-cancel-button').click();
 
     cy.location('pathname').should('eq', ROUTES.departments.path);
+  });
+
+  it('should not fetch the same department if already visited', () => {
+    interceptFetchDepartmentsRequest();
+    interceptFetchEmployeesByIdsRequest();
+    interceptFetchDepartmentsByIdsRequest();
+    interceptFetchEmployeesRequest(
+      { pageNumber: 1, pageSize: 10 },
+      { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
+    );
+    interceptFetchDepartmentByIdRequest('444444444447', 'fetchDepartmentByIdRequest1');
+    interceptFetchEmployeeByIdRequest('333333333333');
+    cy.visit(ROUTES.departments.path);
+
+    selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444447');
+
+    cy.url().should('include', `${ROUTES.departments.path}/edit/444444444447`);
+    getLinearLoader(Module.departmentManagement, SubModule.departmentDetails, 'form').should('exist');
+
+    cy.wait('@fetchDepartmentByIdRequest1');
+    getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'page-title-back-button').click();
+
+    cy.location('pathname').should('eq', ROUTES.departments.path);
+
+    interceptFetchDepartmentByIdRequest('444444444447', 'fetchDepartmentByIdRequest2');
+    selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444447');
+
+    cy.url().should('include', `${ROUTES.departments.path}/edit/444444444447`);
+    getLinearLoader(Module.departmentManagement, SubModule.departmentDetails, 'form').should('not.exist');
+    cy.get('@fetchDepartmentByIdRequest2.all').should('have.length', 0);
   });
 });

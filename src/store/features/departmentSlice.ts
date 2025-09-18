@@ -85,6 +85,11 @@ const departmentSlice = createSlice({
     resetDepartment(state) {
       state.department = initialState.department as WritableDraft<StateEntity<Department>>;
     },
+    resetDepartmentErrors(state) {
+      state.department.fetchError = undefined;
+      state.department.updateError = undefined;
+      state.department.deleteError = undefined;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -223,6 +228,7 @@ export const {
   updateAssignedDepartmentsPagination,
   resetAssignedDepartmentsFetchStatus,
   resetDepartment,
+  resetDepartmentErrors,
 } = departmentSlice.actions;
 
 export default departmentSlice.reducer;

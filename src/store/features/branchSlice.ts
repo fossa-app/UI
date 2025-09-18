@@ -13,13 +13,11 @@ import {
   fetchAssignedBranches,
   fetchBranchById,
   fetchBranches,
-  fetchSearchedBranches,
 } from 'store/thunks';
 
 interface BranchState {
   branch: StateEntity<Branch | undefined>;
   branchCatalog: PaginatedStateEntity<Branch>;
-  searchedBranches: PaginatedStateEntity<Branch>;
   assignedBranches: PaginatedStateEntity<BranchDTO>;
 }
 
@@ -31,11 +29,6 @@ const initialState: BranchState = {
     deleteStatus: 'idle',
   },
   branchCatalog: {
-    items: [],
-    page: APP_CONFIG.table.defaultPagination,
-    status: 'idle',
-  },
-  searchedBranches: {
     items: [],
     page: APP_CONFIG.table.defaultPagination,
     status: 'idle',
@@ -87,22 +80,6 @@ const branchSlice = createSlice({
         state.branchCatalog.page = page;
         state.branchCatalog.status = 'succeeded';
         state.branchCatalog.error = undefined;
-      })
-      .addCase(fetchSearchedBranches.pending, (state) => {
-        state.searchedBranches.status = 'loading';
-      })
-      .addCase(fetchSearchedBranches.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
-        state.searchedBranches.items = [];
-        state.searchedBranches.status = 'failed';
-        state.searchedBranches.error = action.payload;
-      })
-      .addCase(fetchSearchedBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<Branch> | undefined>) => {
-        const { items = [], ...page } = action.payload || {};
-
-        state.searchedBranches.items = items;
-        state.searchedBranches.page = page;
-        state.searchedBranches.status = 'succeeded';
-        state.searchedBranches.error = undefined;
       })
       .addCase(fetchAssignedBranches.pending, (state) => {
         state.assignedBranches.status = 'loading';
@@ -191,7 +168,6 @@ const branchSlice = createSlice({
 
 export const selectBranch = (state: RootState) => state.branch.branch;
 export const selectBranchCatalog = (state: RootState) => state.branch.branchCatalog;
-export const selectSearchedBranches = (state: RootState) => state.branch.searchedBranches;
 export const selectAssignedBranches = (state: RootState) => state.branch.assignedBranches;
 
 export const {

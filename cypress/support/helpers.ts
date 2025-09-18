@@ -51,7 +51,7 @@ export const clickActionButton = (module: Module, subModule: SubModule) => {
 };
 
 export const search = (module: Module, subModule: SubModule, selector: string, text: string) => {
-  getTestSelectorByModule(module, subModule, selector).find('input').clear();
+  clearInputField(module, subModule, selector);
   getTestSelectorByModule(module, subModule, selector).find('input').type(text);
 };
 
@@ -76,12 +76,12 @@ export const fillBranchDetailsForm = (module: Module, subModule: SubModule, bran
 };
 
 export const clearBranchDetailsForm = (module: Module, subModule: SubModule) => {
-  getTestSelectorByModule(module, subModule, 'form-field-name').find('input').clear();
-  getTestSelectorByModule(module, subModule, 'form-field-address.line1').find('input').clear();
-  getTestSelectorByModule(module, subModule, 'form-field-address.line2').find('input').clear();
-  getTestSelectorByModule(module, subModule, 'form-field-address.city').find('input').clear();
-  getTestSelectorByModule(module, subModule, 'form-field-address.subdivision').find('input').clear();
-  getTestSelectorByModule(module, subModule, 'form-field-address.postalCode').find('input').clear();
+  clearInputField(module, subModule, 'form-field-name');
+  clearInputField(module, subModule, 'form-field-address.line1');
+  clearInputField(module, subModule, 'form-field-address.line2');
+  clearInputField(module, subModule, 'form-field-address.city');
+  clearInputField(module, subModule, 'form-field-address.subdivision');
+  clearInputField(module, subModule, 'form-field-address.postalCode');
 };
 
 export const fillDepartmentDetailsForm = (department: Partial<Department>) => {
@@ -99,7 +99,12 @@ export const fillDepartmentDetailsForm = (department: Partial<Department>) => {
 };
 
 export const clearDepartmentDetailsForm = () => {
-  getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-field-name').find('input').clear();
+  clearInputField(Module.departmentManagement, SubModule.departmentDetails, 'form-field-name');
+  clearInputField(Module.departmentManagement, SubModule.departmentDetails, 'form-field-managerId');
+};
+
+export const clearInputField = (module: Module, subModule: SubModule, selector: string) => {
+  getTestSelectorByModule(module, subModule, selector).find('input').type('{selectall}{backspace}', { delay: 150, force: true });
 };
 
 export const verifyTextFields = (module: Module, subModule: SubModule, fieldValues: { [key: string]: string }) => {

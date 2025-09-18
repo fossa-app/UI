@@ -5,7 +5,7 @@ import { resetDepartment, selectDepartment, selectUserRoles } from 'store/featur
 import { fetchDepartmentById } from 'store/thunks';
 import { Module, SubModule } from 'shared/models';
 import { DEPARTMENT_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
-import { hasAllowedRole } from 'shared/helpers';
+import { compareBigIds, hasAllowedRole } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
 import ViewDetails, { ViewDetailActionName } from 'components/UI/ViewDetails';
 
@@ -42,16 +42,16 @@ const ViewDepartmentPage: React.FC = () => {
   );
 
   React.useEffect(() => {
-    if (id && fetchStatus === 'idle') {
+    if (id && (!department || !compareBigIds(department.id, id))) {
       dispatch(fetchDepartmentById({ id, skipState: false }));
     }
-  }, [id, fetchStatus, dispatch]);
+  }, [id, department, dispatch]);
 
   React.useEffect(() => {
-    return () => {
+    if (!id) {
       dispatch(resetDepartment());
-    };
-  }, [dispatch]);
+    }
+  }, [id, dispatch]);
 
   return (
     <PageLayout

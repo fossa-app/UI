@@ -14,6 +14,7 @@ import {
   resetParentDepartmentsFetchStatus,
   updateManagersPagination,
   resetManagersFetchStatus,
+  resetDepartmentErrors,
 } from 'store/features';
 import { createDepartment, fetchDepartmentById, editDepartment, fetchParentDepartments, fetchManagers } from 'store/thunks';
 import {
@@ -23,8 +24,14 @@ import {
   DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA,
   USER_PERMISSION_GENERAL_MESSAGE,
 } from 'shared/constants';
-import { Department, Employee } from 'shared/models';
-import { mapDisabledFields, deepCopyObject, mapDepartmentDTO, mapDepartmentFieldOptionsToFieldOptions } from 'shared/helpers';
+import { Department, DepartmentDTO, Employee } from 'shared/models';
+import {
+  mapDisabledFields,
+  deepCopyObject,
+  mapDepartmentDTO,
+  mapDepartmentFieldOptionsToFieldOptions,
+  compareBigIds,
+} from 'shared/helpers';
 import { useOnFormSubmitEffect } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
@@ -81,7 +88,7 @@ const ManageDepartmentPage: React.FC = () => {
     );
 
     return department?.parentDepartmentId && !isParentDepartmentOptionAvailable
-      ? [{ id: department.parentDepartmentId, name: department.parentDepartmentName } as Department, ...parentDepartments]
+      ? [{ id: department.parentDepartmentId, name: department.parentDepartmentName } as DepartmentDTO, ...parentDepartments]
       : parentDepartments;
   }, [parentDepartments, department?.parentDepartmentId, department?.parentDepartmentName]);
 
@@ -128,6 +135,7 @@ const ManageDepartmentPage: React.FC = () => {
   const handleSuccess = React.useCallback(() => {
     navigate(-1);
     dispatch(resetDepartmentsFetchStatus());
+    dispatch(resetDepartment());
   }, [navigate, dispatch]);
 
   const handleCancel = React.useCallback(() => {
@@ -162,14 +170,20 @@ const ManageDepartmentPage: React.FC = () => {
   }, [parentDepartmentsFetchStatus, parentDepartmentsPage, dispatch]);
 
   React.useEffect(() => {
-    if (id && fetchStatus === 'idle') {
+    if (id && (!department || !compareBigIds(department.id, id))) {
       dispatch(fetchDepartmentById({ id, skipState: false }));
     }
-  }, [id, fetchStatus, dispatch]);
+  }, [id, department, dispatch]);
+
+  React.useEffect(() => {
+    if (!id) {
+      dispatch(resetDepartment());
+    }
+  }, [id, dispatch]);
 
   React.useEffect(() => {
     return () => {
-      dispatch(resetDepartment());
+      dispatch(resetDepartmentErrors());
     };
   }, [dispatch]);
 

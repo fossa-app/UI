@@ -43,10 +43,12 @@ const Form = <T extends Item>({
   const prevValuesRef = React.useRef<T>();
 
   React.useEffect(() => {
-    if (values && !methods.formState.isDirty) {
+    if (values) {
       methods.reset(values);
+    } else {
+      methods.reset(defaultValues, { keepErrors: true });
     }
-  }, [values, methods]);
+  }, [values, defaultValues, methods]);
 
   React.useEffect(() => {
     if (onChange && !deepEqual(watchedValues, prevValuesRef.current!)) {

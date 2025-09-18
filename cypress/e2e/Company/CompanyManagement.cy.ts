@@ -1,6 +1,7 @@
 import { ROUTES } from 'shared/constants';
 import { Module, SubModule } from 'shared/models';
 import {
+  clearInputField,
   clickActionButton,
   createMockLicensePeriod,
   formatMockDateToLocaleString,
@@ -249,7 +250,7 @@ describe('Company Management Tests', () => {
 
       cy.url().should('include', ROUTES.editCompany.path);
 
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name').find('input').clear();
+      clearInputField(Module.companyManagement, SubModule.companyDetails, 'form-field-name');
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name')
         .find('input')
         .type('Good Omens Changed');
@@ -312,7 +313,7 @@ describe('Company Management Tests', () => {
 
       cy.wait('@fetchCompanyRequest');
 
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name').find('input').clear();
+      clearInputField(Module.companyManagement, SubModule.companyDetails, 'form-field-name');
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name')
         .find('input')
         .type('Good Omens Updated');
@@ -342,7 +343,7 @@ describe('Company Management Tests', () => {
 
       cy.wait('@fetchCompanyRequest');
 
-      getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name').find('input').clear();
+      clearInputField(Module.companyManagement, SubModule.companyDetails, 'form-field-name');
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name')
         .find('input')
         .type('Good Omens Updated');
