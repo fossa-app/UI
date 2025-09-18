@@ -18,6 +18,7 @@ import {
   checkIsSubFlowDisabled,
   selectAction,
   verifyAppTheme,
+  clearInputField,
 } from 'support/helpers';
 import {
   interceptFetchBranchesRequest,
@@ -308,11 +309,11 @@ describe('Onboarding Flow Tests', () => {
           'Basic Information'
         );
 
-        getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-firstName').find('input').clear();
+        clearInputField(Module.createEmployee, SubModule.employeeDetails, 'form-field-firstName');
         getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-firstName').find('input').type(firstName);
-        getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-lastName').find('input').clear();
+        clearInputField(Module.createEmployee, SubModule.employeeDetails, 'form-field-lastName');
         getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-lastName').find('input').type(lastName);
-        getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-fullName').find('input').clear();
+        clearInputField(Module.createEmployee, SubModule.employeeDetails, 'form-field-fullName');
         getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-fullName').find('input').type(fullName);
 
         interceptFetchProfileRequest();
@@ -417,7 +418,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchCompanyFailedRequest');
 
-      getTestSelectorByModule(Module.createCompany, SubModule.companyDetails, 'form-field-name').find('input').clear();
+      clearInputField(Module.createCompany, SubModule.companyDetails, 'form-field-name');
       getTestSelectorByModule(Module.createCompany, SubModule.companyDetails, 'form-field-name').find('input').type('Good Omens Updated');
       selectOption(Module.createCompany, SubModule.companyDetails, 'countryCode', 'DE');
 
@@ -703,7 +704,7 @@ describe('Onboarding Flow Tests', () => {
         { field: 'form-field-address.subdivision-validation', message: 'State must not exceed 50 characters.' },
       ]);
 
-      getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-address.postalCode').find('input').clear();
+      clearInputField(Module.createBranch, SubModule.branchDetails, 'form-field-address.postalCode');
       getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-address.postalCode').find('input').type('12');
 
       clickActionButton(Module.createBranch, SubModule.branchDetails);

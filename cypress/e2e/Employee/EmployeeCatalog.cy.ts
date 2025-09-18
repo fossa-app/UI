@@ -1,6 +1,7 @@
 import { ROUTES } from 'shared/constants';
 import { Module, SubModule } from 'shared/models';
 import {
+  clearInputField,
   getLinearLoader,
   getTablePaginationDisplayedRows,
   getTablePaginationSizeInput,
@@ -240,7 +241,7 @@ describe('Employee Catalog Tests', () => {
           { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
         );
 
-        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees').find('input').clear();
+        clearInputField(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees');
 
         cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 3);

@@ -68,6 +68,8 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ label, name, opti
             loading={loading}
             options={options}
             // TODO: add render/getOptionLabel prop method
+            // Check for this error in console:
+            // MUI: The `getOptionLabel` method of Autocomplete returned object ([object Object]) instead of a string for {"value":"333333333333"}.
             value={getValue(field)}
             isOptionEqualToValue={(option, valueObj) => option.value === valueObj.value}
             onChange={(_, newValue) => {
