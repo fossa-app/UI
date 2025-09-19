@@ -1,6 +1,7 @@
 import { ROUTES } from 'shared/constants';
 import { Module, SubModule } from 'shared/models';
 import {
+  clearInputField,
   clickActionButton,
   fillDepartmentDetailsForm,
   getLinearLoader,
@@ -264,7 +265,7 @@ describe('Department Catalog Tests', () => {
             { alias: 'fetchMultipleDepartmentsRequest', fixture: 'department/departments' }
           );
 
-          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments').find('input').clear();
+          clearInputField(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments');
 
           cy.wait('@fetchMultipleDepartmentsRequest').its('request.url').should('include', 'Departments?pageNumber=1&pageSize=10');
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(

@@ -232,5 +232,43 @@ describe('Department View Tests', () => {
 
       cy.location('pathname').should('eq', ROUTES.departments.path);
     });
+
+    it('should not fetch the same department if already visited', () => {
+      interceptFetchDepartmentsRequest();
+      interceptFetchEmployeesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 10 },
+        { alias: 'fetchEmployeesRequest', fixture: 'employee/employees-multiple' }
+      );
+      interceptFetchDepartmentByIdRequest('444444444447', 'fetchDepartmentByIdRequest1');
+      interceptFetchEmployeeByIdRequest('333333333333');
+      cy.visit(ROUTES.departments.path);
+
+      selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'view', '444444444447');
+
+      cy.url().should('include', `${ROUTES.departments.path}/view/444444444447`);
+      getLinearLoader(Module.departmentManagement, SubModule.departmentViewDetails, 'view-details').should('exist');
+
+      cy.wait('@fetchDepartmentByIdRequest1');
+
+      interceptFetchDepartmentByIdRequest('444444444447', 'fetchDepartmentByIdRequest2');
+      getTestSelectorByModule(Module.departmentManagement, SubModule.departmentViewDetails, 'view-action-button').click();
+
+      cy.url().should('include', `${ROUTES.departments.path}/edit/444444444447`);
+      getLinearLoader(Module.departmentManagement, SubModule.departmentDetails, 'form').should('not.exist');
+      cy.get('@fetchDepartmentByIdRequest2.all').should('have.length', 0);
+
+      interceptFetchDepartmentByIdRequest('444444444447', 'fetchDepartmentByIdRequest3');
+      getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'page-title-back-button').click();
+
+      cy.url().should('include', `${ROUTES.departments.path}/view/444444444447`);
+      getLinearLoader(Module.departmentManagement, SubModule.departmentViewDetails, 'view-details').should('not.exist');
+      cy.get('@fetchDepartmentByIdRequest3.all').should('have.length', 0);
+
+      getTestSelectorByModule(Module.departmentManagement, SubModule.departmentViewDetails, 'page-title-back-button').click();
+      cy.location('pathname').should('eq', ROUTES.departments.path);
+      getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('not.exist');
+    });
   });
 });

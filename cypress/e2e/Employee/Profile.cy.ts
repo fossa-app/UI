@@ -1,6 +1,7 @@
 import { ROUTES } from 'shared/constants';
 import { Module, SubModule } from 'shared/models';
 import {
+  clearInputField,
   clickActionButton,
   getLinearLoader,
   getLoadingButtonLoadingIcon,
@@ -94,11 +95,11 @@ describe('Profile Tests', () => {
 
         cy.url().should('include', ROUTES.editProfile.path);
 
-        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName').find('input').clear();
+        clearInputField(Module.profile, SubModule.profileDetails, 'form-field-firstName');
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName').find('input').type('Aziraphale');
-        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-lastName').find('input').clear();
+        clearInputField(Module.profile, SubModule.profileDetails, 'form-field-lastName');
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-lastName').find('input').type('Fell');
-        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').clear();
+        clearInputField(Module.profile, SubModule.profileDetails, 'form-field-fullName');
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').type('Aziraphale User Fell');
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-cancel-button').should('exist').click();
 
@@ -129,9 +130,9 @@ describe('Profile Tests', () => {
         getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-action-button').click();
 
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-submit-button').should('not.have.attr', 'disabled');
-        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName').find('input').clear();
-        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-lastName').find('input').clear();
-        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').clear();
+        clearInputField(Module.profile, SubModule.profileDetails, 'form-field-firstName');
+        clearInputField(Module.profile, SubModule.profileDetails, 'form-field-lastName');
+        clearInputField(Module.profile, SubModule.profileDetails, 'form-field-fullName');
 
         clickActionButton(Module.profile, SubModule.profileDetails);
 
@@ -168,11 +169,11 @@ describe('Profile Tests', () => {
 
         cy.wait('@fetchProfileRequest');
 
-        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName').find('input').clear();
+        clearInputField(Module.profile, SubModule.profileDetails, 'form-field-firstName');
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName').find('input').type('Joe');
-        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-lastName').find('input').clear();
+        clearInputField(Module.profile, SubModule.profileDetails, 'form-field-lastName');
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-lastName').find('input').type('Joe');
-        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').clear();
+        clearInputField(Module.profile, SubModule.profileDetails, 'form-field-fullName');
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').type('Joe Joe');
 
         clickActionButton(Module.profile, SubModule.profileDetails);
@@ -200,11 +201,11 @@ describe('Profile Tests', () => {
 
         cy.wait('@fetchProfileRequest');
 
-        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName').find('input').clear();
+        clearInputField(Module.profile, SubModule.profileDetails, 'form-field-firstName');
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName').find('input').type('Anthony');
-        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-lastName').find('input').clear();
+        clearInputField(Module.profile, SubModule.profileDetails, 'form-field-lastName');
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-lastName').find('input').type('Crowley');
-        getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').clear();
+        clearInputField(Module.profile, SubModule.profileDetails, 'form-field-fullName');
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').type('Anthony User Crowley');
 
         interceptFetchProfileRequest('fetchUpdatedProfileRequest', 'employee/employee-updated');

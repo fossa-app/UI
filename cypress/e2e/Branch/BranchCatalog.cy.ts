@@ -1,6 +1,7 @@
 import { ROUTES } from 'shared/constants';
 import { Module, SubModule } from 'shared/models';
 import {
+  clearInputField,
   clickActionButton,
   clickField,
   getLinearLoader,
@@ -200,7 +201,7 @@ describe('Branch Catalog Tests', () => {
             { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
           );
 
-          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'search-branches').find('input').clear();
+          clearInputField(Module.branchManagement, SubModule.branchCatalog, 'search-branches');
 
           cy.wait('@fetchMultipleBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 2);
