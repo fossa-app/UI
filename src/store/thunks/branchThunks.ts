@@ -87,24 +87,6 @@ export const fetchBranches = createAsyncThunk<
   }
 });
 
-export const fetchSearchedBranches = createAsyncThunk<
-  PaginatedResponse<BranchDTO> | undefined,
-  Partial<PaginationParams>,
-  { rejectValue: ErrorResponseDTO }
->('branch/fetchSearchedBranches', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
-  try {
-    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
-    const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?${queryParams}`);
-
-    return data;
-  } catch (error) {
-    return rejectWithValue({
-      ...(error as ErrorResponseDTO),
-      title: MESSAGES.error.branches.notFound,
-    });
-  }
-});
-
 export const fetchAssignedBranches = createAsyncThunk<
   PaginatedResponse<BranchDTO> | undefined,
   Partial<PaginationParams>,
