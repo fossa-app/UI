@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
@@ -22,6 +22,7 @@ import {
   DEPARTMENT_DETAILS_FORM_DEFAULT_VALUES,
   DEPARTMENT_FIELDS,
   DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA,
+  ROUTES,
   USER_PERMISSION_GENERAL_MESSAGE,
 } from 'shared/constants';
 import { Department, DepartmentDTO, Employee } from 'shared/models';
@@ -32,7 +33,7 @@ import {
   mapDepartmentFieldOptionsToFieldOptions,
   compareBigIds,
 } from 'shared/helpers';
-import { useOnFormSubmitEffect } from 'shared/hooks';
+import { useOnFormSubmitEffect, useSafeNavigateBack } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
 
@@ -40,7 +41,6 @@ const testModule = DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.module;
 const testSubModule = DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.subModule;
 
 const ManageDepartmentPage: React.FC = () => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { id } = useParams();
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
@@ -56,6 +56,7 @@ const ManageDepartmentPage: React.FC = () => {
     status: managersFetchStatus,
     page: managersPage = APP_CONFIG.table.defaultPagination,
   } = useAppSelector(selectManagers);
+  const safeNavigateBack = useSafeNavigateBack(ROUTES.departments.path);
   const [formSubmitted, setFormSubmitted] = React.useState(false);
   const parentDepartmentsLoading = parentDepartmentsFetchStatus === 'loading';
   const managersLoading = managersFetchStatus === 'loading';
@@ -133,14 +134,14 @@ const ManageDepartmentPage: React.FC = () => {
   ]);
 
   const handleSuccess = React.useCallback(() => {
-    navigate(-1);
+    safeNavigateBack();
     dispatch(resetDepartmentsFetchStatus());
     dispatch(resetDepartment());
-  }, [navigate, dispatch]);
+  }, [safeNavigateBack, dispatch]);
 
   const handleCancel = React.useCallback(() => {
-    navigate(-1);
-  }, [navigate]);
+    safeNavigateBack();
+  }, [safeNavigateBack]);
 
   const actions = React.useMemo(
     () =>
@@ -207,6 +208,7 @@ const ManageDepartmentPage: React.FC = () => {
       module={testModule}
       subModule={testSubModule}
       pageTitle={id ? 'Edit Department' : 'Create Department'}
+      fallbackRoute={ROUTES.departments.path}
       displayNotFoundPage={fetchStatus === 'failed' && !department}
     >
       <Form<Department>

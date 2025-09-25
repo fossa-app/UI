@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
@@ -15,18 +15,20 @@ import {
   selectManagers,
   updateManagersPagination,
   resetManagersFetchStatus,
+  resetEmployeeErrors,
 } from 'store/features';
 import { fetchAssignedBranches, fetchAssignedDepartments, editEmployee, fetchEmployeeById, fetchManagers } from 'store/thunks';
-import { APP_CONFIG, EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS } from 'shared/constants';
-import { Branch, Department, Employee, EntityInput } from 'shared/models';
+import { APP_CONFIG, EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
+import { Branch, Department, Employee, EmployeeDTO, EntityInput } from 'shared/models';
 import {
+  compareBigIds,
   deepCopyObject,
   mapBranchToFieldOption,
   mapDepartmentToFieldOption,
   mapEmployeeDTO,
   mapEmployeeToFieldOption,
 } from 'shared/helpers';
-import { useOnFormSubmitEffect } from 'shared/hooks';
+import { useOnFormSubmitEffect, useSafeNavigateBack } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
 
@@ -34,7 +36,6 @@ const testModule = EMPLOYEE_DETAILS_FORM_SCHEMA.module;
 const testSubModule = EMPLOYEE_DETAILS_FORM_SCHEMA.subModule;
 
 const EditEmployeePage: React.FC = () => {
-  const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { item: employee, updateError, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectEmployee);
@@ -53,6 +54,7 @@ const EditEmployeePage: React.FC = () => {
     status: managersFetchStatus,
     page: managersPage = APP_CONFIG.table.defaultPagination,
   } = useAppSelector(selectManagers);
+  const safeNavigateBack = useSafeNavigateBack(ROUTES.employees.path);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
   const defaultValues: EntityInput<Employee> = employee || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
 
@@ -99,7 +101,7 @@ const EditEmployeePage: React.FC = () => {
     const isManagerOptionAvailable = managers.some((managerItem) => String(managerItem.id) === String(employee?.reportsToId));
 
     return employee?.reportsToId && !isManagerOptionAvailable
-      ? [{ id: employee.reportsToId, name: employee.reportsToName } as unknown as Employee, ...managers]
+      ? [{ id: employee.reportsToId, name: employee.reportsToName } as unknown as EmployeeDTO, ...managers]
       : managers;
   }, [managers, employee?.reportsToId, employee?.reportsToName]);
 
@@ -108,13 +110,10 @@ const EditEmployeePage: React.FC = () => {
   }, [updateError?.errors]);
 
   const handleSuccess = React.useCallback(() => {
-    navigate(-1);
+    safeNavigateBack();
     dispatch(resetEmployeesFetchStatus());
-  }, [navigate, dispatch]);
-
-  const handleCancel = React.useCallback(() => {
-    navigate(-1);
-  }, [navigate]);
+    dispatch(resetEmployee());
+  }, [dispatch, safeNavigateBack]);
 
   const fields = React.useMemo(() => {
     return EMPLOYEE_DETAILS_FORM_SCHEMA.fields.map((field) => {
@@ -164,14 +163,14 @@ const EditEmployeePage: React.FC = () => {
       EMPLOYEE_DETAILS_FORM_SCHEMA.actions.map((action) => {
         switch (action.name) {
           case FormActionName.cancel:
-            return { ...action, onClick: handleCancel };
+            return { ...action, onClick: safeNavigateBack };
           case FormActionName.submit:
             return { ...action, loading: updateStatus === 'loading' };
           default:
             return action;
         }
       }),
-    [updateStatus, handleCancel]
+    [updateStatus, safeNavigateBack]
   );
 
   React.useEffect(() => {
@@ -193,14 +192,20 @@ const EditEmployeePage: React.FC = () => {
   }, [managersFetchStatus, managersPage, dispatch]);
 
   React.useEffect(() => {
-    if (id && fetchStatus === 'idle') {
+    if (id && (!employee || !compareBigIds(employee.id, id))) {
       dispatch(fetchEmployeeById({ id, shouldFetchBranchGeoAddress: false }));
     }
-  }, [id, fetchStatus, dispatch]);
+  }, [id, employee, dispatch]);
+
+  React.useEffect(() => {
+    if (!id) {
+      dispatch(resetEmployee());
+    }
+  }, [id, dispatch]);
 
   React.useEffect(() => {
     return () => {
-      dispatch(resetEmployee());
+      dispatch(resetEmployeeErrors());
     };
   }, [dispatch]);
 
@@ -219,6 +224,7 @@ const EditEmployeePage: React.FC = () => {
       module={testModule}
       subModule={testSubModule}
       pageTitle="Edit Employee"
+      fallbackRoute={ROUTES.employees.path}
       displayNotFoundPage={fetchStatus === 'failed' && !employee}
     >
       <Form<Employee>

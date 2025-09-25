@@ -7,6 +7,7 @@ import {
   selectAction,
   verifyFormValidationMessages,
   verifyInputFields,
+  verifyAbsence,
   verifyTextFields,
 } from 'support/helpers';
 import {
@@ -294,18 +295,22 @@ describe('Employee Management Tests', () => {
     });
 
     it('should display async validation messages if the employee update failed with validation errors', () => {
-      interceptFetchEmployeeByIdRequest('333333333335');
-      interceptFetchEmployeeByIdRequest('333333333333');
-      interceptFetchBranchByIdRequest('222222222222');
-      interceptFetchDepartmentByIdRequest('444444444444');
-      interceptEditEmployeeFailedWithErrorRequest('333333333335');
+      interceptFetchEmployeesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
       interceptFetchBranchesByIdsRequest();
       interceptFetchBranchesRequest(
         { pageNumber: 1, pageSize: 10 },
         { alias: 'fetchAssignedBranchesRequest', fixture: 'branch/branches-multiple' }
       );
       interceptFetchDepartmentsRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetchAssignedDepartmentsRequest' });
-      cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
+      interceptFetchEmployeeByIdRequest('333333333335');
+      interceptFetchEmployeeByIdRequest('333333333333');
+      interceptFetchBranchByIdRequest('222222222222');
+      interceptFetchDepartmentByIdRequest('444444444444');
+      interceptEditEmployeeFailedWithErrorRequest('333333333335');
+      cy.visit(ROUTES.employees.path);
+
+      selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'edit', '333333333335');
 
       cy.wait([
         '@fetchEmployeeByIdRequest',
@@ -345,6 +350,15 @@ describe('Employee Management Tests', () => {
         },
       ]);
       cy.url().should('include', `${ROUTES.employees.path}/edit/333333333335`);
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-cancel-button').click();
+
+      cy.location('pathname').should('eq', ROUTES.employees.path);
+      selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'edit', '333333333335');
+
+      verifyAbsence(Module.employeeManagement, SubModule.employeeDetails, [
+        'form-field-assignedBranchId-validation',
+        'form-field-assignedDepartmentId-validation',
+      ]);
     });
 
     it('should be able to edit the employee and be navigated to the Employee Catalog page if the employee update succeeded', () => {
@@ -739,6 +753,41 @@ describe('Employee Management Tests', () => {
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'page-title-back-button').click();
 
       cy.location('pathname').should('eq', ROUTES.employees.path);
+    });
+
+    it('should not fetch the same employee if already visited', () => {
+      interceptFetchEmployeesRequest(
+        { pageNumber: 1, pageSize: 10 },
+        { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple-no-assignments' }
+      );
+      interceptFetchEmployeesByIdsRequest();
+      interceptFetchBranchesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
+      interceptFetchEmployeeByIdRequest('333333333335', 'fetchEmployeeByIdRequest1', 'employee/employees-multiple-no-assignments');
+      cy.visit(ROUTES.employees.path);
+
+      selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'view', '333333333335');
+
+      cy.url().should('include', `${ROUTES.employees.path}/view/333333333335`);
+      getLinearLoader(Module.employeeManagement, SubModule.employeeViewDetails, 'view-details').should('exist');
+      cy.wait('@fetchEmployeeByIdRequest1');
+
+      interceptFetchEmployeeByIdRequest('333333333335', 'fetchEmployeeByIdRequest2', 'employee/employees-multiple-no-assignments');
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'view-action-button').click();
+
+      cy.url().should('include', `${ROUTES.employees.path}/edit/333333333335`);
+      getLinearLoader(Module.employeeManagement, SubModule.employeeDetails, 'form').should('not.exist');
+      cy.get('@fetchEmployeeByIdRequest2.all').should('have.length', 0);
+      interceptFetchDepartmentByIdRequest('333333333335', 'fetchEmployeeByIdRequest3', 'employee/employees-multiple-no-assignments');
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'page-title-back-button').click();
+
+      cy.url().should('include', `${ROUTES.employees.path}/view/333333333335`);
+      getLinearLoader(Module.employeeManagement, SubModule.employeeViewDetails, 'view-details').should('not.exist');
+      cy.get('@fetchEmployeeByIdRequest3.all').should('have.length', 0);
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'page-title-back-button').click();
+
+      cy.location('pathname').should('eq', ROUTES.employees.path);
+      getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('not.exist');
     });
   });
 });

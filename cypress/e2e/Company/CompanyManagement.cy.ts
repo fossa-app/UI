@@ -12,7 +12,7 @@ import {
   selectNavigationMenuItem,
   selectOption,
   verifyFormValidationMessages,
-  verifyNotExist,
+  verifyAbsence,
   verifyTextFields,
 } from 'support/helpers';
 import {
@@ -53,7 +53,7 @@ const testCompaLicenseFields = () => {
 };
 
 const testCompaLicenseFieldsNotExist = () => {
-  verifyNotExist(Module.companyManagement, SubModule.companyLicenseViewDetails, [
+  verifyAbsence(Module.companyManagement, SubModule.companyLicenseViewDetails, [
     'view-details-section-terms',
     'view-details-section-entitlements',
     'view-details-label-terms.licensee.longName',

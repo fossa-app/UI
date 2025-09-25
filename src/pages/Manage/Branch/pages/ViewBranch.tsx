@@ -59,6 +59,7 @@ const ViewBranchPage: React.FC = () => {
       module={testModule}
       subModule={testSubModule}
       pageTitle="View Branch"
+      fallbackRoute={ROUTES.branches.path}
       displayNotFoundPage={fetchStatus === 'failed' && !branch}
     >
       <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>

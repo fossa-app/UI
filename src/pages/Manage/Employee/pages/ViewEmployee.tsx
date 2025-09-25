@@ -6,6 +6,7 @@ import { selectEmployee, resetEmployee, selectProfile, selectUserRoles } from 's
 import { fetchEmployeeById } from 'store/thunks';
 import { UserRole } from 'shared/models';
 import { EMPLOYEE_VIEW_DETAILS_SCHEMA, ROUTES, ACTION_BUTTON_STYLES } from 'shared/constants';
+import { compareBigIds } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
 import WithRolesLayout from 'components/layouts/WithRolesLayout';
 import ViewDetails from 'components/UI/ViewDetails';
@@ -33,16 +34,16 @@ const ViewEmployeePage: React.FC = () => {
   };
 
   React.useEffect(() => {
-    if (id && fetchStatus === 'idle') {
+    if (id && (!employee || !compareBigIds(employee.id, id))) {
       dispatch(fetchEmployeeById({ id, shouldFetchBranchGeoAddress: false }));
     }
-  }, [id, fetchStatus, dispatch]);
+  }, [id, employee, dispatch]);
 
   React.useEffect(() => {
-    return () => {
+    if (!id) {
       dispatch(resetEmployee());
-    };
-  }, [dispatch]);
+    }
+  }, [id, dispatch]);
 
   return (
     <PageLayout
@@ -50,6 +51,7 @@ const ViewEmployeePage: React.FC = () => {
       module={testModule}
       subModule={testSubModule}
       pageTitle="View Employee"
+      fallbackRoute={ROUTES.employees.path}
       displayNotFoundPage={fetchStatus === 'failed' && !employee}
     >
       <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>

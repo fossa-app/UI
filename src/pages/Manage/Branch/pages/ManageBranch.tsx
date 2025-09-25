@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
@@ -16,6 +16,7 @@ import { createBranch, editBranch, fetchBranchById } from 'store/thunks';
 import {
   BRANCH_DETAILS_FORM_DEFAULT_VALUES,
   BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA,
+  ROUTES,
   USER_PERMISSION_GENERAL_MESSAGE,
 } from 'shared/constants';
 import { Branch, TimeZone } from 'shared/models';
@@ -26,7 +27,7 @@ import {
   mapBranchFieldOptionsToFieldOptions,
   deepCopyObject,
 } from 'shared/helpers';
-import { useOnFormSubmitEffect } from 'shared/hooks';
+import { useOnFormSubmitEffect, useSafeNavigateBack } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormFieldProps, FormActionName } from 'components/UI/Form';
 
@@ -34,7 +35,6 @@ const testModule = BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.module;
 const testSubModule = BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.subModule;
 
 const ManageBranchPage: React.FC = () => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { id } = useParams();
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
@@ -43,6 +43,7 @@ const ManageBranchPage: React.FC = () => {
   const { item: company } = useAppSelector(selectCompany);
   const countries = useAppSelector(selectSystemCountries);
   const { item: branch, updateError, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectBranch);
+  const safeNavigateBack = useSafeNavigateBack(ROUTES.branches.path);
   const [formSubmitted, setFormSubmitted] = React.useState(false);
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
   const [fields, setFields] = React.useState<FormFieldProps<Branch>[]>([]);
@@ -72,13 +73,13 @@ const ManageBranchPage: React.FC = () => {
   }, [updateError?.errors, isUserAdmin]);
 
   const handleSuccess = React.useCallback(() => {
-    navigate(-1);
+    safeNavigateBack();
     dispatch(resetBranchesFetchStatus());
-  }, [navigate, dispatch]);
+  }, [safeNavigateBack, dispatch]);
 
   const handleCancel = React.useCallback(() => {
-    navigate(-1);
-  }, [navigate]);
+    safeNavigateBack();
+  }, [safeNavigateBack]);
 
   const actions = React.useMemo(
     () =>
@@ -148,6 +149,7 @@ const ManageBranchPage: React.FC = () => {
       module={testModule}
       subModule={testSubModule}
       pageTitle={id ? 'Edit Branch' : 'Create Branch'}
+      fallbackRoute={ROUTES.branches.path}
       displayNotFoundPage={fetchStatus === 'failed' && !branch}
     >
       <Form<Branch>
