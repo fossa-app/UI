@@ -6,7 +6,7 @@ import {
   fillBranchDetailsForm,
   getTestSelectorByModule,
   selectOption,
-  verifyNotExist,
+  verifyAbsence,
   verifyFormValidationMessages,
   verifyTextFields,
   clickSubFlow,
@@ -712,7 +712,7 @@ describe('Onboarding Flow Tests', () => {
       clickField(Module.createBranch, SubModule.branchDetails, 'form-field-noPhysicalAddress');
       clickActionButton(Module.createBranch, SubModule.branchDetails);
 
-      verifyNotExist(Module.createBranch, SubModule.branchDetails, [
+      verifyAbsence(Module.createBranch, SubModule.branchDetails, [
         'form-field-address.line1-validation',
         'form-field-address.line2-validation',
         'form-field-address.city-validation',

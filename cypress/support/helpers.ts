@@ -119,7 +119,7 @@ export const verifyInputFields = (module: Module, subModule: SubModule, fieldVal
   });
 };
 
-export const verifyNotExist = (module: Module, subModule: SubModule, fields: string[]) => {
+export const verifyAbsence = (module: Module, subModule: SubModule, fields: string[]) => {
   fields.forEach((field) => {
     getTestSelectorByModule(module, subModule, field).should('not.exist');
   });

@@ -63,6 +63,10 @@ const employeeSlice = createSlice({
     resetEmployee(state) {
       state.employee = initialState.employee as WritableDraft<StateEntity<Employee>>;
     },
+    resetEmployeeErrors(state) {
+      state.employee.fetchError = undefined;
+      state.employee.updateError = undefined;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -161,6 +165,7 @@ export const {
   resetManagersFetchStatus,
   resetOrgChartEmployeesFetchStatus,
   resetEmployee,
+  resetEmployeeErrors,
 } = employeeSlice.actions;
 
 export default employeeSlice.reducer;

@@ -1,37 +1,49 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import Box, { BoxProps } from '@mui/material/Box';
 import { Module, SubModule } from 'shared/models';
 import Page from 'components/UI/Page';
 import { createLazyComponent } from 'routes/lazy-loaded-component';
+import { useSafeNavigateBack } from 'shared/hooks';
 
 const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
 
-type PageLayoutProps = {
+type BaseProps = {
   module: Module;
   subModule: SubModule;
   pageTitle: string;
-  withBackButton?: boolean;
   displayNotFoundPage?: boolean;
 } & BoxProps;
+
+type WithBackButton = {
+  withBackButton: true;
+  fallbackRoute: string;
+};
+
+type WithoutBackButton = {
+  withBackButton?: false;
+  fallbackRoute?: never;
+};
+
+type PageLayoutProps = BaseProps & (WithBackButton | WithoutBackButton);
 
 const PageLayout: React.FC<React.PropsWithChildren<PageLayoutProps>> = ({
   module,
   subModule,
   pageTitle,
+  fallbackRoute,
   withBackButton = false,
   displayNotFoundPage,
   children,
   ...props
 }) => {
-  const navigate = useNavigate();
+  const safeNavigateBack = useSafeNavigateBack(fallbackRoute);
 
   if (displayNotFoundPage) {
     return NotFoundPage;
   }
 
   const handleBackButtonClick = () => {
-    navigate(-1);
+    safeNavigateBack();
   };
 
   return (

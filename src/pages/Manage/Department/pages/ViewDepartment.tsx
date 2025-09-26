@@ -59,6 +59,7 @@ const ViewDepartmentPage: React.FC = () => {
       module={testModule}
       subModule={testSubModule}
       pageTitle="View Department"
+      fallbackRoute={ROUTES.departments.path}
       displayNotFoundPage={fetchStatus === 'failed' && !department}
     >
       <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>

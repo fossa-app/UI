@@ -7,7 +7,7 @@ import {
   verifyInputFields,
   verifyFormValidationMessages,
   clickActionButton,
-  verifyNotExist,
+  verifyAbsence,
   verifyTextFields,
   selectAction,
   fillDepartmentDetailsForm,
@@ -118,7 +118,7 @@ describe('Department Management Tests', () => {
     });
     clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
 
-    verifyNotExist(Module.departmentManagement, SubModule.departmentDetails, [
+    verifyAbsence(Module.departmentManagement, SubModule.departmentDetails, [
       'form-field-name-validation',
       'form-field-parentDepartmentId-validation',
       'form-field-managerId-validation',
@@ -345,7 +345,7 @@ describe('Department Management Tests', () => {
     cy.location('pathname').should('eq', ROUTES.departments.path);
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
 
-    verifyNotExist(Module.departmentManagement, SubModule.departmentDetails, [
+    verifyAbsence(Module.departmentManagement, SubModule.departmentDetails, [
       'form-field-name-validation',
       'form-field-parentDepartmentId-validation',
       'form-field-managerId-validation',

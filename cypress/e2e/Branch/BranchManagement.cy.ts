@@ -11,7 +11,7 @@ import {
   verifyInputFields,
   verifyFormValidationMessages,
   clickActionButton,
-  verifyNotExist,
+  verifyAbsence,
   verifyOptions,
   verifyBranchDetailsFormFieldsExist,
   verifyBranchDetailsFormFieldsNotExist,
@@ -115,7 +115,7 @@ describe('Branch Management Tests', () => {
     clickField(Module.branchManagement, SubModule.branchDetails, 'form-field-noPhysicalAddress');
     clickActionButton(Module.branchManagement, SubModule.branchDetails);
 
-    verifyNotExist(Module.branchManagement, SubModule.branchDetails, [
+    verifyAbsence(Module.branchManagement, SubModule.branchDetails, [
       'form-field-address.line1-validation',
       'form-field-address.line2-validation',
       'form-field-address.city-validation',
