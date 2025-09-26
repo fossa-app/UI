@@ -62,6 +62,11 @@ const branchSlice = createSlice({
     resetBranch(state) {
       state.branch = initialState.branch as WritableDraft<StateEntity<Branch>>;
     },
+    resetBranchErrors(state) {
+      state.branch.fetchError = undefined;
+      state.branch.updateError = undefined;
+      state.branch.deleteError = undefined;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -177,6 +182,7 @@ export const {
   resetAssignedBranchesFetchStatus,
   resetBranch,
   resetBranchesFetchStatus,
+  resetBranchErrors,
 } = branchSlice.actions;
 
 export default branchSlice.reducer;

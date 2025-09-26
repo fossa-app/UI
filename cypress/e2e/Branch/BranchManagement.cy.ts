@@ -291,6 +291,23 @@ describe('Branch Management Tests', () => {
       },
     ]);
     cy.url().should('include', `${ROUTES.branches.path}/edit/222222222222`);
+
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-cancel-button').click();
+
+    cy.location('pathname').should('eq', ROUTES.branches.path);
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-layout-action-button').click();
+
+    verifyAbsence(Module.branchManagement, SubModule.branchDetails, ['form-field-address.postalCode-validation']);
+    verifyInputFields(Module.branchManagement, SubModule.branchDetails, {
+      'form-field-name': '',
+      'form-field-timeZoneId': '',
+      'form-field-address.line1': '',
+      'form-field-address.line2': '',
+      'form-field-address.city': '',
+      'form-field-address.subdivision': '',
+      'form-field-address.postalCode': '',
+      'form-field-address.countryCode': '',
+    });
   });
 
   it('should display async general validation messages if the branch creation failed with validation errors', () => {
@@ -663,5 +680,33 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-cancel-button').click();
 
     cy.location('pathname').should('eq', ROUTES.branches.path);
+  });
+
+  it('should not fetch the same branch if already visited', () => {
+    interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdRequest1');
+    cy.visit(ROUTES.branches.path);
+
+    selectAction(Module.branchManagement, SubModule.branchCatalog, 'view', '222222222222');
+
+    cy.url().should('include', `${ROUTES.branches.path}/view/222222222222`);
+    getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
+    cy.wait('@fetchBranchByIdRequest1');
+
+    interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdRequest2');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-action-button').click();
+
+    cy.url().should('include', `${ROUTES.branches.path}/edit/222222222222`);
+    getLinearLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('not.exist');
+    cy.get('@fetchBranchByIdRequest2.all').should('have.length', 0);
+    interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdRequest3');
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'page-title-back-button').click();
+
+    cy.url().should('include', `${ROUTES.branches.path}/view/222222222222`);
+    getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('not.exist');
+    cy.get('@fetchBranchByIdRequest3.all').should('have.length', 0);
+    getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'page-title-back-button').click();
+
+    cy.location('pathname').should('eq', ROUTES.branches.path);
+    getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('not.exist');
   });
 });

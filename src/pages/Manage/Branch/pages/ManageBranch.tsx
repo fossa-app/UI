@@ -11,6 +11,7 @@ import {
   selectUserRoles,
   selectCompany,
   selectSystemCountries,
+  resetBranchErrors,
 } from 'store/features';
 import { createBranch, editBranch, fetchBranchById } from 'store/thunks';
 import {
@@ -26,6 +27,7 @@ import {
   mapDisabledFields,
   mapBranchFieldOptionsToFieldOptions,
   deepCopyObject,
+  compareBigIds,
 } from 'shared/helpers';
 import { useOnFormSubmitEffect, useSafeNavigateBack } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
@@ -106,20 +108,26 @@ const ManageBranchPage: React.FC = () => {
   }, [noPhysicalAddress, userRoles, availableCountries, availableTimeZones]);
 
   React.useEffect(() => {
-    if (id && fetchStatus === 'idle') {
-      dispatch(fetchBranchById({ id, skipState: false }));
-    }
-  }, [id, fetchStatus, dispatch]);
-
-  React.useEffect(() => {
     if (!id || (id && branch && noPhysicalAddress !== undefined)) {
       updateFields();
     }
   }, [id, branch, noPhysicalAddress, updateFields]);
 
   React.useEffect(() => {
-    return () => {
+    if (id && (!branch || !compareBigIds(branch.id, id))) {
+      dispatch(fetchBranchById({ id, skipState: false }));
+    }
+  }, [id, branch, dispatch]);
+
+  React.useEffect(() => {
+    if (!id) {
       dispatch(resetBranch());
+    }
+  }, [id, dispatch]);
+
+  React.useEffect(() => {
+    return () => {
+      dispatch(resetBranchErrors());
     };
   }, [dispatch]);
 

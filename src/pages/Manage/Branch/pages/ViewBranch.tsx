@@ -5,7 +5,7 @@ import { resetBranch, selectBranch, selectUserRoles } from 'store/features';
 import { fetchBranchById } from 'store/thunks';
 import { Module, SubModule } from 'shared/models';
 import { BRANCH_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
-import { hasAllowedRole } from 'shared/helpers';
+import { compareBigIds, hasAllowedRole } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
 import ViewDetails, { ViewDetailActionName } from 'components/UI/ViewDetails';
 
@@ -42,16 +42,16 @@ const ViewBranchPage: React.FC = () => {
   );
 
   React.useEffect(() => {
-    if (id && fetchStatus === 'idle') {
+    if (id && (!branch || !compareBigIds(branch.id, id))) {
       dispatch(fetchBranchById({ id, skipState: false }));
     }
-  }, [id, fetchStatus, dispatch]);
+  }, [id, branch, dispatch]);
 
   React.useEffect(() => {
-    return () => {
+    if (!id) {
       dispatch(resetBranch());
-    };
-  }, [dispatch]);
+    }
+  }, [id, dispatch]);
 
   return (
     <PageLayout

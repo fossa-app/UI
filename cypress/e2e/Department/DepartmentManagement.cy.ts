@@ -260,6 +260,7 @@ describe('Department Management Tests', () => {
     });
   });
 
+  // TODO: flaky test
   it('should not be able to edit the department if the form is invalid or department updating failed', () => {
     interceptFetchDepartmentsRequest();
     interceptFetchEmployeesByIdsRequest();
