@@ -289,5 +289,35 @@ describe('Branch View Tests', () => {
 
       cy.location('pathname').should('eq', ROUTES.branches.path);
     });
+
+    it('should not fetch the same department if already visited', () => {
+      interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdRequest1');
+      cy.visit(ROUTES.branches.path);
+
+      selectAction(Module.branchManagement, SubModule.branchCatalog, 'view', '222222222222');
+
+      cy.url().should('include', `${ROUTES.branches.path}/view/222222222222`);
+      getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('exist');
+
+      cy.wait('@fetchBranchByIdRequest1');
+
+      interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdRequest2');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'view-action-button').click();
+
+      cy.url().should('include', `${ROUTES.branches.path}/edit/222222222222`);
+      getLinearLoader(Module.branchManagement, SubModule.branchDetails, 'form').should('not.exist');
+      cy.get('@fetchBranchByIdRequest2.all').should('have.length', 0);
+
+      interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdRequest3');
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'page-title-back-button').click();
+
+      cy.url().should('include', `${ROUTES.branches.path}/view/222222222222`);
+      getLinearLoader(Module.branchManagement, SubModule.branchViewDetails, 'view-details').should('not.exist');
+      cy.get('@fetchBranchByIdRequest3.all').should('have.length', 0);
+
+      getTestSelectorByModule(Module.branchManagement, SubModule.branchViewDetails, 'page-title-back-button').click();
+      cy.location('pathname').should('eq', ROUTES.branches.path);
+      getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('not.exist');
+    });
   });
 });
