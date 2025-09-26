@@ -1,6 +1,5 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   resetBranch,
@@ -49,7 +48,8 @@ const ManageBranchPage: React.FC = () => {
   const [formSubmitted, setFormSubmitted] = React.useState(false);
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
   const [fields, setFields] = React.useState<FormFieldProps<Branch>[]>([]);
-  const [formLoading, setFormLoading] = React.useState(true);
+  const formLoading = fetchStatus === 'loading' || (!branch && !!id) || fields.length === 0;
+  const errors = isUserAdmin ? deepCopyObject(updateError?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
 
   const availableCountries = React.useMemo(
     () => countries?.filter(({ code }) => code === company?.countryCode || code === branch?.address?.countryCode) || [],
@@ -57,55 +57,28 @@ const ManageBranchPage: React.FC = () => {
   );
 
   const availableTimeZones = React.useMemo(() => {
-    const isTimeZoneAvailable = companyTimeZones.some(({ id }) => id === branch?.timeZoneId);
-
-    if (isTimeZoneAvailable || (!branch?.timeZoneId && !branch?.timeZoneName)) {
-      return companyTimeZones;
-    }
-
-    return [{ id: branch.timeZoneId, name: branch.timeZoneName } as TimeZone, ...companyTimeZones];
+    if (!branch?.timeZoneId) return companyTimeZones;
+    const isTimeZoneAvailable = companyTimeZones.some(({ id }) => id === branch.timeZoneId);
+    return isTimeZoneAvailable ? companyTimeZones : [{ id: branch.timeZoneId, name: branch.timeZoneName } as TimeZone, ...companyTimeZones];
   }, [companyTimeZones, branch]);
 
-  const errors = React.useMemo(() => {
-    if (!isUserAdmin) {
-      return USER_PERMISSION_GENERAL_MESSAGE;
+  const actions = BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.actions.map((action) => {
+    switch (action.name) {
+      case FormActionName.cancel:
+        return { ...action, onClick: safeNavigateBack };
+      case FormActionName.submit:
+        return { ...action, loading: updateStatus === 'loading' };
+      default:
+        return action;
     }
-
-    return deepCopyObject(updateError?.errors as FieldErrors<FieldValues>);
-  }, [updateError?.errors, isUserAdmin]);
-
-  const handleSuccess = React.useCallback(() => {
-    safeNavigateBack();
-    dispatch(resetBranchesFetchStatus());
-  }, [safeNavigateBack, dispatch]);
-
-  const handleCancel = React.useCallback(() => {
-    safeNavigateBack();
-  }, [safeNavigateBack]);
-
-  const actions = React.useMemo(
-    () =>
-      BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.actions.map((action) => {
-        switch (action.name) {
-          case FormActionName.cancel:
-            return { ...action, onClick: handleCancel };
-          case FormActionName.submit:
-            return { ...action, loading: updateStatus === 'loading' };
-          default:
-            return action;
-        }
-      }),
-    [updateStatus, handleCancel]
-  );
+  });
 
   const updateFields = React.useCallback(() => {
     const schema = getBranchManagementDetailsByAddressFormSchema(BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, !!noPhysicalAddress);
     const disabledFields = mapDisabledFields(schema, userRoles);
     const mappedFields = mapBranchFieldOptionsToFieldOptions(disabledFields, availableTimeZones, availableCountries);
-
     setFields(mappedFields);
-    setFormLoading(!mappedFields.length);
-  }, [noPhysicalAddress, userRoles, availableCountries, availableTimeZones]);
+  }, [noPhysicalAddress, userRoles, availableTimeZones, availableCountries]);
 
   React.useEffect(() => {
     if (!id || (id && branch && noPhysicalAddress !== undefined)) {
@@ -115,7 +88,7 @@ const ManageBranchPage: React.FC = () => {
 
   React.useEffect(() => {
     if (id && (!branch || !compareBigIds(branch.id, id))) {
-      dispatch(fetchBranchById({ id, skipState: false }));
+      dispatch(fetchBranchById({ id, skipState: false, shouldFetchBranchGeoAddress: false }));
     }
   }, [id, branch, dispatch]);
 
@@ -131,7 +104,11 @@ const ManageBranchPage: React.FC = () => {
     };
   }, [dispatch]);
 
-  useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
+  const handleSuccess = () => {
+    safeNavigateBack();
+    dispatch(resetBranchesFetchStatus());
+    dispatch(resetBranch());
+  };
 
   const handleSubmit = (formValue: Branch) => {
     const submitData = mapBranchDTO(formValue);
@@ -150,6 +127,8 @@ const ManageBranchPage: React.FC = () => {
       setNoPhysicalAddress(formValue.noPhysicalAddress);
     }
   };
+
+  useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
 
   return (
     <PageLayout

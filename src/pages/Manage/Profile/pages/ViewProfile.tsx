@@ -17,22 +17,18 @@ const ViewProfilePage: React.FC = () => {
   const { item: profile, fetchStatus } = useAppSelector(selectProfile);
   const loading = fetchStatus === 'idle' || fetchStatus === 'loading';
 
-  const handleEdit = React.useCallback(() => {
+  const handleEdit = () => {
     navigate(ROUTES.editProfile.path);
-  }, [navigate]);
+  };
 
-  const actions = React.useMemo(
-    () =>
-      PROFILE_VIEW_DETAILS_SCHEMA.actions?.map((action) => {
-        switch (action.name) {
-          case ViewDetailActionName.edit:
-            return { ...action, onClick: handleEdit };
-          default:
-            return action;
-        }
-      }),
-    [handleEdit]
-  );
+  const actions = PROFILE_VIEW_DETAILS_SCHEMA.actions?.map((action) => {
+    switch (action.name) {
+      case ViewDetailActionName.edit:
+        return { ...action, onClick: handleEdit };
+      default:
+        return action;
+    }
+  });
 
   React.useEffect(() => {
     if (fetchStatus === 'idle') {

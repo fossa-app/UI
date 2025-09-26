@@ -247,6 +247,40 @@ describe('Employee Catalog Tests', () => {
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 3);
       });
 
+      it('should send correct request when search and pagination change', () => {
+        interceptFetchEmployeesRequest(
+          { pageNumber: 1, pageSize: 10, search: '' },
+          { alias: 'initialEmployeesRequest', fixture: 'employee/employees-multiple' }
+        );
+        interceptFetchEmployeesByIdsRequest();
+
+        cy.wait('@initialEmployeesRequest');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 3);
+
+        interceptFetchEmployeesRequest(
+          { pageNumber: 1, pageSize: 10, search: 'Anthony' },
+          { alias: 'searchEmployeesRequest', fixture: 'employee/employees' }
+        );
+        search(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees', 'Anthony');
+
+        getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
+        cy.wait('@searchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10&search=Anthony');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 1);
+
+        interceptFetchEmployeesRequest(
+          { pageNumber: 1, pageSize: 20, search: 'Anthony' },
+          { alias: 'searchEmployeesPageSize20', fixture: 'employee/employees-multiple-page-size-20' }
+        );
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-pagination')
+          .find('.MuiTablePagination-input')
+          .click();
+        cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="20"]').click();
+
+        cy.wait('@searchEmployeesPageSize20').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=20&search=Anthony');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 15);
+        getTablePaginationSizeInput(Module.employeeManagement, SubModule.employeeCatalog, 'table-pagination').should('have.value', '20');
+      });
+
       it('should reset the search state when the clear icon is clicked', () => {
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10 },

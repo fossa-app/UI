@@ -274,6 +274,53 @@ describe('Department Catalog Tests', () => {
           );
         });
 
+        it('should send correct request when search and pagination change', () => {
+          interceptFetchDepartmentsRequest(
+            { pageNumber: 1, pageSize: 10, search: '' },
+            { alias: 'initialDepartmentsRequest', fixture: 'department/departments-multiple-page-one' }
+          );
+          interceptFetchDepartmentsByIdsRequest();
+          interceptFetchEmployeesByIdsRequest();
+
+          cy.wait(['@initialDepartmentsRequest', '@fetchDepartmentsByIdsRequest', '@fetchEmployeesByIdsRequest']);
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
+            'have.length',
+            10
+          );
+
+          interceptFetchDepartmentsRequest(
+            { pageNumber: 1, pageSize: 10, search: 'Production' },
+            { alias: 'searchDepartmentsRequest', fixture: 'department/departments-searched' }
+          );
+          search(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments', 'Production');
+
+          getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
+          cy.wait('@searchDepartmentsRequest')
+            .its('request.url')
+            .should('include', 'Departments?pageNumber=1&pageSize=10&search=Production');
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
+            'have.length',
+            3
+          );
+
+          interceptFetchDepartmentsRequest(
+            { pageNumber: 1, pageSize: 20, search: 'Production' },
+            { alias: 'searchDepartmentsPageSize20', fixture: 'department/departments-multiple-page-size-20' }
+          );
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-pagination')
+            .find('.MuiTablePagination-input')
+            .click();
+          cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="20"]').click();
+
+          cy.wait('@searchDepartmentsPageSize20')
+            .its('request.url')
+            .should('include', 'Departments?pageNumber=1&pageSize=20&search=Production');
+          getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
+            'have.length',
+            20
+          );
+        });
+
         it('should reset the search state when the clear icon is clicked', () => {
           interceptFetchDepartmentsRequest();
           interceptFetchDepartmentsRequest(

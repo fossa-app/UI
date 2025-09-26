@@ -25,9 +25,7 @@ const ColorSchemeSelector: React.FC<ColorSchemeSelectorProps> = ({
   disabled,
   onChange,
 }) => {
-  const availableSchemes = React.useMemo(() => {
-    return Object.entries(COLOR_SCHEMES).filter(([_, scheme]) => scheme[mode]);
-  }, [mode]);
+  const availableSchemes = Object.entries(COLOR_SCHEMES).filter(([_, scheme]) => scheme[mode]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value as ColorSchemeId);

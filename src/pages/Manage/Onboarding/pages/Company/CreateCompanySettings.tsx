@@ -1,5 +1,4 @@
 import React from 'react';
-import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   selectUserRoles,
@@ -33,63 +32,40 @@ const CreateCompanySettingsPage: React.FC = () => {
   const { isDarkTheme } = useAppSelector(selectAppConfig);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const mode: ThemeMode = isDarkTheme ? 'dark' : 'light';
+  const filteredSchemes = Object.fromEntries(Object.entries(COLOR_SCHEMES).filter(([, scheme]) => scheme[mode]));
+  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
 
-  const handleSubmit = React.useCallback(
-    (data: EntityInput<CompanySettingsDTO>) => {
-      dispatch(createCompanySettings(data));
-    },
-    [dispatch]
-  );
-
-  const handleChange = (data: EntityInput<CompanySettingsDTO>) => {
-    const { colorSchemeId } = data;
-
-    if (colorSchemeId) {
-      dispatch(setPreviewCompanyColorSchemeSettings(colorSchemeId));
+  const fields = mapDisabledFields(CREATE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.fields, userRoles).map((field) => {
+    if (field.name === COMPANY_SETTINGS_FIELDS.colorSchemeId!.field) {
+      return {
+        ...field,
+        mode,
+        colorSchemes: filteredSchemes,
+      };
     }
-  };
+    return field;
+  });
 
-  const filteredSchemes = React.useMemo(() => {
-    return Object.fromEntries(Object.entries(COLOR_SCHEMES).filter(([, scheme]) => scheme[mode]));
-  }, [mode]);
-
-  const fields = React.useMemo(() => {
-    const mappedFields = mapDisabledFields(CREATE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.fields, userRoles);
-
-    return mappedFields.map((field) => {
-      if (field.name === COMPANY_SETTINGS_FIELDS.colorSchemeId!.field) {
-        return {
-          ...field,
-          mode,
-          colorSchemes: filteredSchemes,
-        };
-      }
-
-      return field;
-    });
-  }, [userRoles, filteredSchemes, mode]);
-
-  const actions = React.useMemo(
-    () =>
-      CREATE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.actions.map((action) =>
-        action.name === FormActionName.submit
-          ? { ...action, disabled: !hasAllowedRole(action.roles, userRoles), loading: updateStatus === 'loading' }
-          : action
-      ),
-    [userRoles, updateStatus]
+  const actions = CREATE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.actions.map((action) =>
+    action.name === FormActionName.submit
+      ? { ...action, disabled: !hasAllowedRole(action.roles, userRoles), loading: updateStatus === 'loading' }
+      : action
   );
-
-  const errors = React.useMemo(() => {
-    if (!isUserAdmin) {
-      return USER_PERMISSION_GENERAL_MESSAGE;
-    }
-
-    return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
-  }, [error?.errors, isUserAdmin]);
 
   useUnmount(() => {
     dispatch(resetPreviewCompanyColorSchemeSettings());
   });
+
+  const handleSubmit = (data: EntityInput<CompanySettingsDTO>) => {
+    dispatch(createCompanySettings(data));
+  };
+
+  const handleChange = (data: EntityInput<CompanySettingsDTO>) => {
+    const { colorSchemeId } = data;
+    if (colorSchemeId) {
+      dispatch(setPreviewCompanyColorSchemeSettings(colorSchemeId));
+    }
+  };
 
   return (
     <PageLayout module={testModule} subModule={testSubModule} pageTitle="Company Settings">

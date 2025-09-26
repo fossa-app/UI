@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import { resetProfileFetchStatus, selectProfile } from 'store/features';
 import { editProfile } from 'store/thunks';
@@ -20,39 +19,32 @@ const EditProfilePage: React.FC = () => {
   const { item: profile, updateError: error, updateStatus = 'idle' } = useAppSelector(selectProfile);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
   const defaultValues: EntityInput<Employee> = profile || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
+  const errors = deepCopyObject(error?.errors);
 
-  const errors = React.useMemo(() => {
-    return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
-  }, [error?.errors]);
-
-  const navigateToViewProfile = React.useCallback(() => {
+  const navigateToViewProfile = () => {
     navigate(ROUTES.viewProfile.path);
-  }, [navigate]);
+  };
 
-  const handleCancel = React.useCallback(() => {
+  const handleCancel = () => {
     setFormSubmitted(false);
     navigateToViewProfile();
-  }, [navigateToViewProfile]);
+  };
 
-  const handleSuccess = React.useCallback(() => {
+  const handleSuccess = () => {
     dispatch(resetProfileFetchStatus());
     navigateToViewProfile();
-  }, [dispatch, navigateToViewProfile]);
+  };
 
-  const actions = React.useMemo(
-    () =>
-      PROFILE_DETAILS_FORM_SCHEMA.actions.map((action) => {
-        switch (action.name) {
-          case FormActionName.cancel:
-            return { ...action, onClick: handleCancel };
-          case FormActionName.submit:
-            return { ...action, loading: updateStatus === 'loading' };
-          default:
-            return action;
-        }
-      }),
-    [updateStatus, handleCancel]
-  );
+  const actions = PROFILE_DETAILS_FORM_SCHEMA.actions.map((action) => {
+    switch (action.name) {
+      case FormActionName.cancel:
+        return { ...action, onClick: handleCancel };
+      case FormActionName.submit:
+        return { ...action, loading: updateStatus === 'loading' };
+      default:
+        return action;
+    }
+  });
 
   const handleSubmit = (formValue: EntityInput<Employee>) => {
     const submitData = mapProfileDTO(formValue);

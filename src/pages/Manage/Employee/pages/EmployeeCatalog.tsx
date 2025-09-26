@@ -33,61 +33,47 @@ const EmployeeCatalogPage: React.FC = () => {
   const userRoles = useAppSelector(selectUserRoles);
   const { searchTerm: search, searchTermChanged, setSearchTermChanged, setPortalProps } = useSearch();
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
-  const handleNavigate = React.useCallback((path: string) => navigate(path), [navigate]);
+  const handleNavigate = (path: string) => navigate(path);
 
-  const handleEmployeeAction = React.useCallback(
-    (employee: Employee, action: keyof typeof ACTION_FIELDS) => {
-      switch (action) {
-        case 'view':
-          handleNavigate(generatePath(ROUTES.viewEmployee.path, { id: employee.id }));
-          break;
-        case 'edit':
-          handleNavigate(generatePath(ROUTES.editEmployee.path, { id: employee.id }));
-          break;
-      }
-    },
-    [handleNavigate]
+  const handleEmployeeAction = (employee: Employee, action: keyof typeof ACTION_FIELDS) => {
+    switch (action) {
+      case 'view':
+        handleNavigate(generatePath(ROUTES.viewEmployee.path, { id: employee.id }));
+        break;
+      case 'edit':
+        handleNavigate(generatePath(ROUTES.editEmployee.path, { id: employee.id }));
+        break;
+    }
+  };
+
+  const actions = EMPLOYEE_TABLE_ACTIONS_SCHEMA.map((action) => ({
+    ...action,
+    onClick: (employee: Employee) => handleEmployeeAction(employee, action.field as keyof typeof ACTION_FIELDS),
+  }));
+
+  const columns = mapTableActionsColumn(
+    EMPLOYEE_TABLE_SCHEMA.map((column) =>
+      column.field === EMPLOYEE_FIELDS.firstName.field
+        ? {
+            ...column,
+            renderBodyCell: (employee: Employee) =>
+              renderPrimaryLinkText({
+                item: employee,
+                getText: ({ firstName }) => firstName,
+                onClick: () => handleEmployeeAction(employee, 'view'),
+              }),
+          }
+        : column
+    ),
+    (employee) => (
+      <ActionsMenu<Employee> module={testModule} subModule={testSubModule} actions={actions} context={employee} userRoles={userRoles} />
+    )
   );
 
-  const handlePageChange = React.useCallback(
-    (pagination: Partial<PaginationParams>) => {
-      dispatch(resetEmployeesFetchStatus());
-      dispatch(updateEmployeesPagination(pagination));
-    },
-    [dispatch]
-  );
-
-  const actions = React.useMemo(
-    () =>
-      EMPLOYEE_TABLE_ACTIONS_SCHEMA.map((action) => ({
-        ...action,
-        onClick: (employee: Employee) => handleEmployeeAction(employee, action.field as keyof typeof ACTION_FIELDS),
-      })),
-    [handleEmployeeAction]
-  );
-
-  const columns = React.useMemo(
-    () =>
-      mapTableActionsColumn(
-        EMPLOYEE_TABLE_SCHEMA.map((column) =>
-          column.field === EMPLOYEE_FIELDS.firstName.field
-            ? {
-                ...column,
-                renderBodyCell: (employee: Employee) =>
-                  renderPrimaryLinkText({
-                    item: employee,
-                    getText: ({ firstName }) => firstName,
-                    onClick: () => handleEmployeeAction(employee, 'view'),
-                  }),
-              }
-            : column
-        ),
-        (employee) => (
-          <ActionsMenu<Employee> module={testModule} subModule={testSubModule} actions={actions} context={employee} userRoles={userRoles} />
-        )
-      ),
-    [actions, userRoles, handleEmployeeAction]
-  );
+  const handlePageChange = (pagination: Partial<PaginationParams>) => {
+    dispatch(resetEmployeesFetchStatus());
+    dispatch(updateEmployeesPagination({ ...pagination, search }));
+  };
 
   React.useEffect(() => {
     if (fetchStatus === 'idle') {
@@ -104,10 +90,11 @@ const EmployeeCatalogPage: React.FC = () => {
 
   React.useEffect(() => {
     if (searchTermChanged) {
-      handlePageChange({ search, pageNumber: 1 });
+      dispatch(resetEmployeesFetchStatus());
+      dispatch(updateEmployeesPagination({ search, pageNumber: 1 }));
       setSearchTermChanged(false);
     }
-  }, [search, searchTermChanged, handlePageChange, setSearchTermChanged]);
+  }, [search, searchTermChanged, setSearchTermChanged, dispatch]);
 
   useUnmount(() => {
     if (search) {

@@ -1,6 +1,5 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   selectEmployee,
@@ -57,121 +56,101 @@ const EditEmployeePage: React.FC = () => {
   const safeNavigateBack = useSafeNavigateBack(ROUTES.employees.path);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
   const defaultValues: EntityInput<Employee> = employee || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
+  const errors = deepCopyObject(updateError?.errors);
 
-  const handleAssignedBranchesScrollEnd = React.useCallback(() => {
+  const handleAssignedBranchesScrollEnd = () => {
     if (assignedBranchesPage.pageNumber! < assignedBranchesPage.totalPages!) {
       dispatch(updateAssignedBranchesPagination({ pageNumber: assignedBranchesPage.pageNumber! + 1 }));
       dispatch(resetAssignedBranchesFetchStatus());
     }
-  }, [assignedBranchesPage, dispatch]);
+  };
 
-  const handleAssignedDepartmentsScrollEnd = React.useCallback(() => {
+  const handleAssignedDepartmentsScrollEnd = () => {
     if (assignedDepartmentsPage.pageNumber! < assignedDepartmentsPage.totalPages!) {
       dispatch(updateAssignedDepartmentsPagination({ pageNumber: assignedDepartmentsPage.pageNumber! + 1 }));
       dispatch(resetAssignedDepartmentsFetchStatus());
     }
-  }, [assignedDepartmentsPage, dispatch]);
+  };
 
-  const handleManagersScrollEnd = React.useCallback(() => {
+  const handleManagersScrollEnd = () => {
     if (managersPage.pageNumber! < managersPage.totalPages!) {
       dispatch(updateManagersPagination({ pageNumber: managersPage.pageNumber! + 1 }));
       dispatch(resetManagersFetchStatus());
     }
-  }, [managersPage, dispatch]);
+  };
 
-  const branchItems = React.useMemo(() => {
-    const isBranchOptionAvailable = assignedBranches.some((branchItem) => String(branchItem.id) === String(employee?.assignedBranchId));
-
-    return employee?.assignedBranchId && !isBranchOptionAvailable
-      ? [{ id: employee.assignedBranchId, name: employee.assignedBranchName } as Branch, ...assignedBranches]
-      : assignedBranches;
-  }, [assignedBranches, employee?.assignedBranchId, employee?.assignedBranchName]);
-
-  const departmentItems = React.useMemo(() => {
-    const isDepartmentOptionAvailable = assignedDepartments.some(
-      (departmentItem) => String(departmentItem.id) === String(employee?.assignedDepartmentId)
-    );
-
-    return employee?.assignedDepartmentId && !isDepartmentOptionAvailable
-      ? [{ id: employee.assignedDepartmentId, name: employee.assignedDepartmentName } as Department, ...assignedDepartments]
-      : assignedDepartments;
-  }, [assignedDepartments, employee?.assignedDepartmentId, employee?.assignedDepartmentName]);
-
-  const managerItems = React.useMemo(() => {
-    const isManagerOptionAvailable = managers.some((managerItem) => String(managerItem.id) === String(employee?.reportsToId));
-
-    return employee?.reportsToId && !isManagerOptionAvailable
-      ? [{ id: employee.reportsToId, name: employee.reportsToName } as unknown as EmployeeDTO, ...managers]
-      : managers;
-  }, [managers, employee?.reportsToId, employee?.reportsToName]);
-
-  const errors = React.useMemo(() => {
-    return deepCopyObject(updateError?.errors as FieldErrors<FieldValues>);
-  }, [updateError?.errors]);
-
-  const handleSuccess = React.useCallback(() => {
+  const handleSuccess = () => {
     safeNavigateBack();
     dispatch(resetEmployeesFetchStatus());
     dispatch(resetEmployee());
-  }, [dispatch, safeNavigateBack]);
+  };
 
-  const fields = React.useMemo(() => {
-    return EMPLOYEE_DETAILS_FORM_SCHEMA.fields.map((field) => {
-      switch (field.name) {
-        case EMPLOYEE_FIELDS.assignedBranchId?.field:
-          return {
-            ...field,
-            loading: assignedBranchesFetchStatus === 'loading',
-            options: branchItems.map(mapBranchToFieldOption) ?? [],
-            onScrollEnd: handleAssignedBranchesScrollEnd,
-          };
+  const handleSubmit = (formValue: Employee) => {
+    const submitData = mapEmployeeDTO(formValue);
 
-        case EMPLOYEE_FIELDS.assignedDepartmentId?.field:
-          return {
-            ...field,
-            loading: assignedDepartmentsFetchStatus === 'loading',
-            options: departmentItems.map(mapDepartmentToFieldOption) ?? [],
-            onScrollEnd: handleAssignedDepartmentsScrollEnd,
-          };
+    dispatch(editEmployee([id!, submitData]));
+    setFormSubmitted(true);
+  };
 
-        case EMPLOYEE_FIELDS.reportsToId?.field:
-          return {
-            ...field,
-            loading: managersFetchStatus === 'loading',
-            options: managerItems.map(mapEmployeeToFieldOption) ?? [],
-            onScrollEnd: handleManagersScrollEnd,
-          };
-
-        default:
-          return field;
-      }
-    });
-  }, [
-    branchItems,
-    assignedBranchesFetchStatus,
-    handleAssignedBranchesScrollEnd,
-    departmentItems,
-    assignedDepartmentsFetchStatus,
-    handleAssignedDepartmentsScrollEnd,
-    managerItems,
-    managersFetchStatus,
-    handleManagersScrollEnd,
-  ]);
-
-  const actions = React.useMemo(
-    () =>
-      EMPLOYEE_DETAILS_FORM_SCHEMA.actions.map((action) => {
-        switch (action.name) {
-          case FormActionName.cancel:
-            return { ...action, onClick: safeNavigateBack };
-          case FormActionName.submit:
-            return { ...action, loading: updateStatus === 'loading' };
-          default:
-            return action;
-        }
-      }),
-    [updateStatus, safeNavigateBack]
+  const isBranchOptionAvailable = assignedBranches.some((branchItem) => String(branchItem.id) === String(employee?.assignedBranchId));
+  const branchItems =
+    employee?.assignedBranchId && !isBranchOptionAvailable
+      ? [{ id: employee.assignedBranchId, name: employee.assignedBranchName } as Branch, ...assignedBranches]
+      : assignedBranches;
+  const isDepartmentOptionAvailable = assignedDepartments.some(
+    (departmentItem) => String(departmentItem.id) === String(employee?.assignedDepartmentId)
   );
+  const departmentItems =
+    employee?.assignedDepartmentId && !isDepartmentOptionAvailable
+      ? [{ id: employee.assignedDepartmentId, name: employee.assignedDepartmentName } as Department, ...assignedDepartments]
+      : assignedDepartments;
+  const isManagerOptionAvailable = managers.some((managerItem) => String(managerItem.id) === String(employee?.reportsToId));
+  const managerItems =
+    employee?.reportsToId && !isManagerOptionAvailable
+      ? [{ id: employee.reportsToId, name: employee.reportsToName } as unknown as EmployeeDTO, ...managers]
+      : managers;
+
+  const fields = EMPLOYEE_DETAILS_FORM_SCHEMA.fields.map((field) => {
+    switch (field.name) {
+      case EMPLOYEE_FIELDS.assignedBranchId?.field:
+        return {
+          ...field,
+          loading: assignedBranchesFetchStatus === 'loading',
+          options: branchItems.map(mapBranchToFieldOption) ?? [],
+          onScrollEnd: handleAssignedBranchesScrollEnd,
+        };
+
+      case EMPLOYEE_FIELDS.assignedDepartmentId?.field:
+        return {
+          ...field,
+          loading: assignedDepartmentsFetchStatus === 'loading',
+          options: departmentItems.map(mapDepartmentToFieldOption) ?? [],
+          onScrollEnd: handleAssignedDepartmentsScrollEnd,
+        };
+
+      case EMPLOYEE_FIELDS.reportsToId?.field:
+        return {
+          ...field,
+          loading: managersFetchStatus === 'loading',
+          options: managerItems.map(mapEmployeeToFieldOption) ?? [],
+          onScrollEnd: handleManagersScrollEnd,
+        };
+
+      default:
+        return field;
+    }
+  });
+
+  const actions = EMPLOYEE_DETAILS_FORM_SCHEMA.actions.map((action) => {
+    switch (action.name) {
+      case FormActionName.cancel:
+        return { ...action, onClick: safeNavigateBack };
+      case FormActionName.submit:
+        return { ...action, loading: updateStatus === 'loading' };
+      default:
+        return action;
+    }
+  });
 
   React.useEffect(() => {
     if (assignedBranchesFetchStatus === 'idle') {
@@ -210,13 +189,6 @@ const EditEmployeePage: React.FC = () => {
   }, [dispatch]);
 
   useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
-
-  const handleSubmit = (formValue: Employee) => {
-    const submitData = mapEmployeeDTO(formValue);
-
-    dispatch(editEmployee([id!, submitData]));
-    setFormSubmitted(true);
-  };
 
   return (
     <PageLayout

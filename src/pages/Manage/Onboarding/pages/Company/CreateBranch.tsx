@@ -1,5 +1,4 @@
 import React from 'react';
-import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   selectBranch,
@@ -34,37 +33,17 @@ const CreateBranchPage: React.FC = () => {
   const companyTimeZones = useAppSelector(selectCompanyTimeZones);
   const countries = useAppSelector(selectSystemCountries);
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
+  const availableCountries = countries?.filter(({ code }) => code === company?.countryCode) || [];
+  const schema = getBranchManagementDetailsByAddressFormSchema(CREATE_BRANCH_DETAILS_FORM_SCHEMA.fields, !!noPhysicalAddress);
+  const disabledFields = mapDisabledFields(schema, userRoles);
+  const fields = mapBranchFieldOptionsToFieldOptions(disabledFields, companyTimeZones, availableCountries);
+  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
 
-  const availableCountries = React.useMemo(
-    () => countries?.filter(({ code }) => code === company?.countryCode) || [],
-    [countries, company]
+  const actions = CREATE_BRANCH_DETAILS_FORM_SCHEMA.actions.map((action) =>
+    action.name === FormActionName.submit
+      ? { ...action, disabled: !hasAllowedRole(action.roles, userRoles), loading: updateStatus === 'loading' }
+      : action
   );
-
-  const fields = React.useMemo(() => {
-    const schema = getBranchManagementDetailsByAddressFormSchema(CREATE_BRANCH_DETAILS_FORM_SCHEMA.fields, !!noPhysicalAddress);
-    const disabledFields = mapDisabledFields(schema, userRoles);
-    const mappedFields = mapBranchFieldOptionsToFieldOptions(disabledFields, companyTimeZones, availableCountries);
-
-    return mappedFields;
-  }, [noPhysicalAddress, userRoles, companyTimeZones, availableCountries]);
-
-  const actions = React.useMemo(
-    () =>
-      CREATE_BRANCH_DETAILS_FORM_SCHEMA.actions.map((action) =>
-        action.name === FormActionName.submit
-          ? { ...action, disabled: !hasAllowedRole(action.roles, userRoles), loading: updateStatus === 'loading' }
-          : action
-      ),
-    [userRoles, updateStatus]
-  );
-
-  const errors = React.useMemo(() => {
-    if (!isUserAdmin) {
-      return USER_PERMISSION_GENERAL_MESSAGE;
-    }
-
-    return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
-  }, [error?.errors, isUserAdmin]);
 
   const handleSubmit = (formValue: Branch) => {
     const submitData = mapBranchDTO(formValue);

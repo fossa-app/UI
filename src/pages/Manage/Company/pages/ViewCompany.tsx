@@ -48,73 +48,53 @@ const ViewCompanyPage: React.FC = () => {
     </Page>
   );
 
-  const handleEdit = React.useCallback(() => {
+  const handleEdit = () => {
     navigate(ROUTES.editCompany.path);
-  }, [navigate]);
+  };
 
-  const companyLicenseEntitlementsFieldsMap = React.useMemo(
-    () =>
-      createCompanyLicenseEntitlementsFieldsMap({
-        branches,
-        maximumBranchCount,
-        branchUsagePercent,
-        employees,
-        maximumEmployeeCount,
-        employeeUsagePercent,
-        departments,
-        maximumDepartmentCount,
-        departmentUsagePercent,
-      }),
-    [
-      branches,
-      maximumBranchCount,
-      branchUsagePercent,
-      employees,
-      maximumEmployeeCount,
-      employeeUsagePercent,
-      departments,
-      maximumDepartmentCount,
-      departmentUsagePercent,
-    ]
-  );
+  const companyLicenseEntitlementsFieldsMap = createCompanyLicenseEntitlementsFieldsMap({
+    branches,
+    maximumBranchCount,
+    branchUsagePercent,
+    employees,
+    maximumEmployeeCount,
+    employeeUsagePercent,
+    departments,
+    maximumDepartmentCount,
+    departmentUsagePercent,
+  });
 
-  const companyLicenseFields = React.useMemo(() => {
-    return COMPANY_LICENSE_VIEW_DETAILS_SCHEMA.fields.map((field) => {
-      const companyLicenseEntitlementsField = companyLicenseEntitlementsFieldsMap[field.name];
+  const companyLicenseFields = COMPANY_LICENSE_VIEW_DETAILS_SCHEMA.fields.map((field) => {
+    const companyLicenseEntitlementsField = companyLicenseEntitlementsFieldsMap[field.name];
 
-      if (companyLicenseEntitlementsField) {
-        return {
-          ...field,
-          type: undefined,
-          renderDetailField: () =>
-            renderLicenseUsageDetail({
-              module: COMPANY_LICENSE_VIEW_DETAILS_SCHEMA.module,
-              subModule: COMPANY_LICENSE_VIEW_DETAILS_SCHEMA.subModule,
-              field: companyLicenseEntitlementsField.field,
-              label: `${companyLicenseEntitlementsField.labelPrefix}: ${companyLicenseEntitlementsField.usage} of ${companyLicenseEntitlementsField.max}`,
-              value: companyLicenseEntitlementsField.value,
-            }),
-        };
+    if (companyLicenseEntitlementsField) {
+      return {
+        ...field,
+        type: undefined,
+        renderDetailField: () =>
+          renderLicenseUsageDetail({
+            module: COMPANY_LICENSE_VIEW_DETAILS_SCHEMA.module,
+            subModule: COMPANY_LICENSE_VIEW_DETAILS_SCHEMA.subModule,
+            field: companyLicenseEntitlementsField.field,
+            label: `${companyLicenseEntitlementsField.labelPrefix}: ${companyLicenseEntitlementsField.usage} of ${companyLicenseEntitlementsField.max}`,
+            value: companyLicenseEntitlementsField.value,
+          }),
+      };
+    }
+
+    return field;
+  });
+
+  const actions = COMPANY_VIEW_DETAILS_SCHEMA.actions
+    ?.filter(({ roles }) => hasAllowedRole(roles, userRoles))
+    .map((action) => {
+      switch (action.name) {
+        case ViewDetailActionName.edit:
+          return { ...action, onClick: handleEdit };
+        default:
+          return action;
       }
-
-      return field;
     });
-  }, [companyLicenseEntitlementsFieldsMap]);
-
-  const actions = React.useMemo(
-    () =>
-      COMPANY_VIEW_DETAILS_SCHEMA.actions
-        ?.filter(({ roles }) => hasAllowedRole(roles, userRoles))
-        .map((action) => {
-          switch (action.name) {
-            case ViewDetailActionName.edit:
-              return { ...action, onClick: handleEdit };
-            default:
-              return action;
-          }
-        }),
-    [userRoles, handleEdit]
-  );
 
   React.useEffect(() => {
     if (companyFetchStatus === 'idle') {

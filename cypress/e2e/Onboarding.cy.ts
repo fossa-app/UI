@@ -19,6 +19,7 @@ import {
   selectAction,
   verifyAppTheme,
   clearInputField,
+  verifyInputFields,
 } from 'support/helpers';
 import {
   interceptFetchBranchesRequest,
@@ -866,28 +867,22 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchProfileFailedRequest');
 
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-firstName')
-        .find('input')
-        .should('have.value', 'Admin')
-        .clear();
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-lastName')
-        .find('input')
-        .should('have.value', 'Mock')
-        .clear();
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-fullName')
-        .find('input')
-        .should('have.value', 'Admin Oidc Mock')
-        .clear();
+      verifyInputFields(Module.createEmployee, SubModule.employeeDetails, {
+        'form-field-firstName': 'Admin',
+        'form-field-lastName': 'Mock',
+        'form-field-fullName': 'Admin Oidc Mock',
+      });
 
+      clearInputField(Module.createEmployee, SubModule.employeeDetails, 'form-field-firstName');
+      clearInputField(Module.createEmployee, SubModule.employeeDetails, 'form-field-lastName');
+      clearInputField(Module.createEmployee, SubModule.employeeDetails, 'form-field-fullName');
       clickActionButton(Module.createEmployee, SubModule.employeeDetails);
 
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-firstName-validation')
-        .should('exist')
-        .and('have.text', 'First Name is required');
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-lastName-validation')
-        .should('exist')
-        .and('have.text', 'Last Name is required');
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-fullName-validation').should('not.exist');
+      verifyFormValidationMessages(Module.createEmployee, SubModule.employeeDetails, [
+        { field: 'form-field-firstName-validation', message: 'First Name is required' },
+        { field: 'form-field-lastName-validation', message: 'Last Name is required' },
+      ]);
+      verifyAbsence(Module.createEmployee, SubModule.employeeDetails, ['form-field-fullName-validation']);
     });
 
     it('should display async validation messages if the employee creation failed with validation errors', () => {
@@ -901,21 +896,18 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchProfileFailedRequest');
 
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-firstName')
-        .find('input')
-        .should('have.value', 'Admin')
-        .clear()
-        .type('Joe');
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-lastName')
-        .find('input')
-        .should('have.value', 'Mock')
-        .clear()
-        .type('Joe');
-      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-fullName')
-        .find('input')
-        .should('have.value', 'Admin Oidc Mock')
-        .clear()
-        .type('Joe Joe');
+      verifyInputFields(Module.createEmployee, SubModule.employeeDetails, {
+        'form-field-firstName': 'Admin',
+        'form-field-lastName': 'Mock',
+        'form-field-fullName': 'Admin Oidc Mock',
+      });
+
+      clearInputField(Module.createEmployee, SubModule.employeeDetails, 'form-field-firstName');
+      clearInputField(Module.createEmployee, SubModule.employeeDetails, 'form-field-lastName');
+      clearInputField(Module.createEmployee, SubModule.employeeDetails, 'form-field-fullName');
+      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-firstName').find('input').type('Joe');
+      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-lastName').find('input').type('Joe');
+      getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-field-fullName').find('input').type('Joe Joe');
 
       clickActionButton(Module.createEmployee, SubModule.employeeDetails);
 

@@ -43,72 +43,52 @@ const DepartmentCatalogPage: React.FC = () => {
   const { searchTerm: search, searchTermChanged, setSearchTermChanged, setPortalProps } = useSearch();
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
   const loading = fetchStatus === 'loading' || deleteStatus === 'loading';
-  const handleNavigate = React.useCallback((path: string) => navigate(path), [navigate]);
+  const handleNavigate = (path: string) => navigate(path);
 
-  const handleDepartmentAction = React.useCallback(
-    (department: Department, action: keyof typeof ACTION_FIELDS) => {
-      switch (action) {
-        case 'view':
-          handleNavigate(generatePath(ROUTES.viewDepartment.path, { id: department.id }));
-          break;
-        case 'edit':
-          handleNavigate(generatePath(ROUTES.editDepartment.path, { id: department.id }));
-          break;
-        case 'delete':
-          if (page.pageNumber! > 1 && departments.length === 1) {
-            dispatch(updateDepartmentsPagination({ pageNumber: page.pageNumber! - 1 }));
+  const handleDepartmentAction = (department: Department, action: keyof typeof ACTION_FIELDS) => {
+    switch (action) {
+      case 'view':
+        handleNavigate(generatePath(ROUTES.viewDepartment.path, { id: department.id }));
+        break;
+      case 'edit':
+        handleNavigate(generatePath(ROUTES.editDepartment.path, { id: department.id }));
+        break;
+      case 'delete':
+        if (page.pageNumber! > 1 && departments.length === 1) {
+          dispatch(updateDepartmentsPagination({ pageNumber: page.pageNumber! - 1 }));
+        }
+        dispatch(deleteDepartment(department.id));
+        break;
+    }
+  };
+
+  const handlePageChange = (pagination: Partial<PaginationParams>) => {
+    dispatch(resetDepartmentsFetchStatus());
+    dispatch(updateDepartmentsPagination({ ...pagination, search }));
+  };
+
+  const actions = DEPARTMENT_TABLE_ACTIONS_SCHEMA.map((action) => ({
+    ...action,
+    onClick: (department: Department) => handleDepartmentAction(department, action.field as keyof typeof ACTION_FIELDS),
+  }));
+
+  const columns = mapTableActionsColumn(
+    DEPARTMENT_TABLE_SCHEMA.map((column) =>
+      column.field === DEPARTMENT_FIELDS.name.field
+        ? {
+            ...column,
+            renderBodyCell: (department: Department) =>
+              renderPrimaryLinkText({
+                item: department,
+                getText: ({ name }) => name,
+                onClick: () => handleDepartmentAction(department, 'view'),
+              }),
           }
-          dispatch(deleteDepartment(department.id));
-          break;
-      }
-    },
-    [handleNavigate, dispatch, page.pageNumber, departments.length]
-  );
-
-  const handlePageChange = React.useCallback(
-    (pagination: Partial<PaginationParams>) => {
-      dispatch(resetDepartmentsFetchStatus());
-      dispatch(updateDepartmentsPagination(pagination));
-    },
-    [dispatch]
-  );
-
-  const actions = React.useMemo(
-    () =>
-      DEPARTMENT_TABLE_ACTIONS_SCHEMA.map((action) => ({
-        ...action,
-        onClick: (department: Department) => handleDepartmentAction(department, action.field as keyof typeof ACTION_FIELDS),
-      })),
-    [handleDepartmentAction]
-  );
-
-  const columns = React.useMemo(
-    () =>
-      mapTableActionsColumn(
-        DEPARTMENT_TABLE_SCHEMA.map((column) =>
-          column.field === DEPARTMENT_FIELDS.name.field
-            ? {
-                ...column,
-                renderBodyCell: (department: Department) =>
-                  renderPrimaryLinkText({
-                    item: department,
-                    getText: ({ name }) => name,
-                    onClick: () => handleDepartmentAction(department, 'view'),
-                  }),
-              }
-            : column
-        ),
-        (department) => (
-          <ActionsMenu<Department>
-            module={testModule}
-            subModule={testSubModule}
-            actions={actions}
-            context={department}
-            userRoles={userRoles}
-          />
-        )
-      ),
-    [actions, userRoles, handleDepartmentAction]
+        : column
+    ),
+    (department) => (
+      <ActionsMenu<Department> module={testModule} subModule={testSubModule} actions={actions} context={department} userRoles={userRoles} />
+    )
   );
 
   React.useEffect(() => {
@@ -126,10 +106,11 @@ const DepartmentCatalogPage: React.FC = () => {
 
   React.useEffect(() => {
     if (searchTermChanged) {
-      handlePageChange({ search, pageNumber: 1 });
+      dispatch(resetDepartmentsFetchStatus());
+      dispatch(updateDepartmentsPagination({ search, pageNumber: 1 }));
       setSearchTermChanged(false);
     }
-  }, [search, searchTermChanged, handlePageChange, setSearchTermChanged]);
+  }, [search, searchTermChanged, setSearchTermChanged, dispatch]);
 
   useUnmount(() => {
     if (search) {

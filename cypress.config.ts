@@ -7,6 +7,8 @@ export default defineConfig({
   chromeWebSecurity: false,
   e2e: {
     baseUrl: 'http://we.dev.localhost:4211',
+    viewportWidth: 1280,
+    viewportHeight: 720,
     env: {
       serverBaseUrl: 'http://we.dev.localhost:5210/api/1',
       fusionAuthBaseUrl: 'http://localhost:9011',

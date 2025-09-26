@@ -16,29 +16,20 @@ const DeleteCompanySettingsPage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { fetchError: error, deleteStatus } = useAppSelector(selectCompanySettings);
   const fields = DELETE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.fields;
+  const errors = isUserAdmin ? deepCopyObject(error?.errors as FieldErrors<FieldValues>) : USER_PERMISSION_GENERAL_MESSAGE;
 
-  const actions = React.useMemo(() => {
-    return DELETE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.actions.map((action) => {
-      switch (action.name) {
-        case FormActionName.submit:
-          return {
-            ...action,
-            disabled: !hasAllowedRole(action.roles, userRoles),
-            loading: deleteStatus === 'loading',
-          };
-        default:
-          return action;
-      }
-    });
-  }, [userRoles, deleteStatus]);
-
-  const errors = React.useMemo(() => {
-    if (!isUserAdmin) {
-      return USER_PERMISSION_GENERAL_MESSAGE;
+  const actions = DELETE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.actions.map((action) => {
+    switch (action.name) {
+      case FormActionName.submit:
+        return {
+          ...action,
+          disabled: !hasAllowedRole(action.roles, userRoles),
+          loading: deleteStatus === 'loading',
+        };
+      default:
+        return action;
     }
-
-    return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
-  }, [error?.errors, isUserAdmin]);
+  });
 
   const handleSubmit = () => {
     dispatch(deleteCompanySettings());
