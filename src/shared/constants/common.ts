@@ -1,6 +1,7 @@
 import { SxProps, Theme } from '@mui/material/styles';
+import { ActionField, ActionFieldConfig, TableActionColumn } from 'components/UI/Table';
 
-export const ACTION_FIELDS = {
+export const ACTION_FIELDS: Record<ActionField, ActionFieldConfig> = {
   view: {
     field: 'view',
     name: 'View',
@@ -15,11 +16,13 @@ export const ACTION_FIELDS = {
   },
 };
 
-export const ACTION_FIELD = {
+export const ACTION_FIELD: TableActionColumn = {
   name: 'Actions',
   field: 'actions',
 };
 
 export const SEARCH_PORTAL_ID = 'search-field';
 
-export const ACTION_BUTTON_STYLES: SxProps<Theme> = { width: { xs: '100%', sm: 'auto' } };
+export const ACTION_BUTTON_STYLES: SxProps<Theme> = {
+  width: { xs: '100%', sm: 'auto' },
+};

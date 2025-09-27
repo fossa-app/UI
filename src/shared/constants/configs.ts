@@ -20,7 +20,7 @@ export const APP_CONFIG = {
     containerWidth: 'calc(100vw - 32px)',
     containerMaxHeight: 'calc(100% - 70px)',
   },
-  searchDebounceTime: 300,
+  searchDebounceTime: 400,
   emptyValue: '-',
   containerWidth: 1156,
   scrollableContentHeight: 'calc(100vh - 250px)',

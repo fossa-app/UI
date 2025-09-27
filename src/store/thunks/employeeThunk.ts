@@ -41,12 +41,16 @@ const fetchManager = async (dispatch: ThunkDispatch<unknown, unknown, UnknownAct
 
 export const fetchEmployees = createAsyncThunk<
   PaginatedResponse<Employee> | undefined,
-  { pagination: Partial<PaginationParams>; shouldFetchBranches?: boolean; shouldFetchDepartments?: boolean; shouldFetchManagers?: boolean },
+  Partial<PaginationParams> & {
+    shouldFetchBranches?: boolean;
+    shouldFetchDepartments?: boolean;
+    shouldFetchManagers?: boolean;
+  },
   { rejectValue: ErrorResponseDTO }
 >(
   'employee/fetchEmployees',
   async (
-    { pagination: { pageNumber, pageSize, search }, shouldFetchBranches = true, shouldFetchDepartments = true, shouldFetchManagers = true },
+    { pageNumber, pageSize, search, shouldFetchBranches = true, shouldFetchDepartments = true, shouldFetchManagers = true },
     { dispatch, rejectWithValue }
   ) => {
     try {

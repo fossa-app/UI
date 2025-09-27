@@ -61,9 +61,9 @@ export const fetchDepartmentsTotal = createAsyncThunk<
 
 export const fetchDepartments = createAsyncThunk<
   PaginatedResponse<Department> | undefined,
-  [Partial<PaginationParams>, boolean?],
+  Partial<PaginationParams> & { shouldFetchEmployees?: boolean },
   { rejectValue: ErrorResponseDTO }
->('department/fetchDepartments', async ([{ pageNumber, pageSize, search }, shouldFetchEmployees = true], { dispatch, rejectWithValue }) => {
+>('department/fetchDepartments', async ({ pageNumber, pageSize, search, shouldFetchEmployees = true }, { dispatch, rejectWithValue }) => {
   try {
     const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
     const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
