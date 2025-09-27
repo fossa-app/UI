@@ -503,7 +503,7 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'page-title-back-button').click();
     selectNavigationMenuItem('Branches');
 
-    cy.url().should('include', ROUTES.branches.path);
+    cy.location('pathname').should('eq', ROUTES.branches.path);
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-layout-action-button').click();
 
@@ -604,10 +604,17 @@ describe('Branch Management Tests', () => {
   });
 
   it('should show and hide address fields correctly', () => {
-    interceptFetchBranchByIdRequest('222222222222');
-    cy.visit(`${ROUTES.branches.path}/edit/222222222222`);
+    interceptFetchBranchesRequest(
+      { pageNumber: 1, pageSize: 10 },
+      { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple-different-countries' }
+    );
+    interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdRequest1');
+    cy.visit(ROUTES.branches.path);
 
-    cy.wait('@fetchBranchByIdRequest');
+    selectAction(Module.branchManagement, SubModule.branchCatalog, 'edit', '222222222222');
+
+    cy.location('pathname').should('eq', `${ROUTES.branches.path}/edit/222222222222`);
+    cy.wait('@fetchBranchByIdRequest1');
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-noPhysicalAddress').should(
       'not.have.class',
@@ -640,8 +647,13 @@ describe('Branch Management Tests', () => {
       'form-field-address.countryCode',
     ]);
 
-    interceptFetchBranchByIdRequest('222222222225', 'fetchBranchByIdRequest', 'branch/branches-multiple-different-countries');
-    cy.visit(`${ROUTES.branches.path}/edit/222222222225`);
+    interceptFetchBranchByIdRequest('222222222225', 'fetchBranchByIdRequest2', 'branch/branches-multiple-different-countries');
+    cy.visit(ROUTES.branches.path);
+
+    selectAction(Module.branchManagement, SubModule.branchCatalog, 'edit', '222222222225');
+
+    cy.location('pathname').should('eq', `${ROUTES.branches.path}/edit/222222222225`);
+    cy.wait('@fetchBranchByIdRequest2');
 
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-noPhysicalAddress').should(
       'have.class',

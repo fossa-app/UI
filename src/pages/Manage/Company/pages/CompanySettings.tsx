@@ -29,60 +29,43 @@ const CompanySettingsPage: React.FC = () => {
   const { isDarkTheme } = useAppSelector(selectAppConfig);
   const mode: ThemeMode = isDarkTheme ? 'dark' : 'light';
 
-  const handleSubmit = React.useCallback(
-    (data: EntityInput<CompanySettingsDTO>) => {
-      dispatch(editCompanySettings({ ...companySettings, ...data }));
-    },
-    [companySettings, dispatch]
-  );
+  const handleSubmit = (data: EntityInput<CompanySettingsDTO>) => {
+    dispatch(editCompanySettings({ ...companySettings, ...data }));
+  };
 
-  const handleChange = React.useCallback(
-    (data: CompanySettingsDTO) => {
-      if (data.colorSchemeId) {
-        dispatch(setPreviewCompanyColorSchemeSettings(data.colorSchemeId));
-      }
-    },
-    [dispatch]
-  );
+  const handleChange = (data: CompanySettingsDTO) => {
+    if (data.colorSchemeId) {
+      dispatch(setPreviewCompanyColorSchemeSettings(data.colorSchemeId));
+    }
+  };
 
-  const handleCancel = React.useCallback(() => {
+  const handleCancel = () => {
     navigate(ROUTES.flows.path);
-  }, [navigate]);
+  };
 
-  const filteredSchemes = React.useMemo(() => {
-    return Object.fromEntries(Object.entries(COLOR_SCHEMES).filter(([, scheme]) => scheme[mode]));
-  }, [mode]);
+  const filteredSchemes = Object.fromEntries(Object.entries(COLOR_SCHEMES).filter(([, scheme]) => scheme[mode]));
 
-  const fields = React.useMemo(() => {
-    const mappedFields = mapDisabledFields(COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, userRoles);
+  const fields = mapDisabledFields(COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, userRoles).map((field) => {
+    if (field.name === COMPANY_SETTINGS_FIELDS.colorSchemeId!.field) {
+      return {
+        ...field,
+        mode,
+        colorSchemes: filteredSchemes,
+      };
+    }
+    return field;
+  });
 
-    return mappedFields.map((field) => {
-      if (field.name === COMPANY_SETTINGS_FIELDS.colorSchemeId!.field) {
-        return {
-          ...field,
-          mode,
-          colorSchemes: filteredSchemes,
-        };
-      }
-
-      return field;
-    });
-  }, [userRoles, filteredSchemes, mode]);
-
-  const actions = React.useMemo(
-    () =>
-      COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA.actions.map((action) => {
-        switch (action.name) {
-          case FormActionName.cancel:
-            return { ...action, onClick: handleCancel };
-          case FormActionName.submit:
-            return { ...action, loading: updateStatus === 'loading' };
-          default:
-            return action;
-        }
-      }),
-    [updateStatus, handleCancel]
-  );
+  const actions = COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA.actions.map((action) => {
+    switch (action.name) {
+      case FormActionName.cancel:
+        return { ...action, onClick: handleCancel };
+      case FormActionName.submit:
+        return { ...action, loading: updateStatus === 'loading' };
+      default:
+        return action;
+    }
+  });
 
   useUnmount(() => {
     dispatch(resetPreviewCompanyColorSchemeSettings());

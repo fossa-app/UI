@@ -13,19 +13,17 @@ const DeleteEmployeePage: React.FC = () => {
   const { deleteStatus } = useAppSelector(selectProfile);
   const fields = DELETE_EMPLOYEE_DETAILS_FORM_SCHEMA.fields;
 
-  const actions = React.useMemo(() => {
-    return DELETE_EMPLOYEE_DETAILS_FORM_SCHEMA.actions.map((action) => {
-      switch (action.name) {
-        case FormActionName.submit:
-          return {
-            ...action,
-            loading: deleteStatus === 'loading',
-          };
-        default:
-          return action;
-      }
-    });
-  }, [deleteStatus]);
+  const actions = DELETE_EMPLOYEE_DETAILS_FORM_SCHEMA.actions.map((action) => {
+    switch (action.name) {
+      case FormActionName.submit:
+        return {
+          ...action,
+          loading: deleteStatus === 'loading',
+        };
+      default:
+        return action;
+    }
+  });
 
   const handleSubmit = () => {
     dispatch(deleteProfile());

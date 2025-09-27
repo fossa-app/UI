@@ -17,7 +17,7 @@ const Menu: React.FC<MenuProps> = ({ onCloseSideBar }) => {
   const theme = useTheme();
   const location = useLocation();
   const flowsMap = useAppSelector(selectFlows);
-  const flows = React.useMemo(() => convertFlowsMapToArray(flowsMap), [flowsMap]);
+  const flows = convertFlowsMapToArray(flowsMap);
 
   const getButtonStyles = (isActive: boolean) => ({
     color: isActive ? theme.palette.primary.main : theme.palette.text.primary,

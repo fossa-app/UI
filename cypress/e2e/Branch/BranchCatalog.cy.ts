@@ -207,6 +207,35 @@ describe('Branch Catalog Tests', () => {
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 2);
         });
 
+        it('should send correct request when search and pagination change', () => {
+          interceptFetchBranchesRequest(
+            { pageNumber: 1, pageSize: 10, search: '' },
+            { alias: 'initialBranchesRequest', fixture: 'branch/branches-multiple-page-one' }
+          );
+          cy.wait('@initialBranchesRequest');
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 10);
+
+          interceptFetchBranchesRequest(
+            { pageNumber: 1, pageSize: 10, search: 'New' },
+            { alias: 'searchBranchesRequest', fixture: 'branch/branches' }
+          );
+          search(Module.branchManagement, SubModule.branchCatalog, 'search-branches', 'New');
+          cy.wait('@searchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10&search=New');
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 1);
+
+          interceptFetchBranchesRequest(
+            { pageNumber: 1, pageSize: 20, search: 'New' },
+            { alias: 'searchBranchesPageSize20', fixture: 'branch/branches-multiple-page-size-20' }
+          );
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-pagination')
+            .find('.MuiTablePagination-input')
+            .click();
+          cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="20"]').click();
+
+          cy.wait('@searchBranchesPageSize20').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=20&search=New');
+          getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 20);
+        });
+
         it('should display correct branches and employees when searching branches and navigating to employees', () => {
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10 },

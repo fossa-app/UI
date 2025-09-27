@@ -20,13 +20,8 @@ const CompanyOffboardingInstructionsPage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { status, branches, employees, departments } = useAppSelector(selectCompanyOffboardingInstructionsFlags);
   const loading = status === 'idle' || status === 'loading';
-  const values = React.useMemo(() => ({ branches, employees, departments }), [branches, employees, departments]);
-
-  const errors = React.useMemo(() => {
-    if (!isUserAdmin) {
-      return USER_PERMISSION_GENERAL_MESSAGE;
-    }
-  }, [isUserAdmin]);
+  const values = { branches, employees, departments };
+  const errors = isUserAdmin ? undefined : USER_PERMISSION_GENERAL_MESSAGE;
 
   const handleNavigate = (path: RouteItem['path']) => {
     navigate(path);

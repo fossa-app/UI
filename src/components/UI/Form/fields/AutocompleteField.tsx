@@ -40,12 +40,11 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ label, name, opti
     }
   };
 
-  const debouncedOnInputChange = React.useMemo(
-    () =>
-      debounce((event: React.SyntheticEvent<Element, Event>, newValue: string, reason: AutocompleteInputChangeReason) => {
-        onInputChange?.(event, newValue, reason);
-      }, APP_CONFIG.searchDebounceTime),
-    [onInputChange]
+  const debouncedOnInputChange = debounce(
+    (event: React.SyntheticEvent<Element, Event>, newValue: string, reason: AutocompleteInputChangeReason) => {
+      onInputChange?.(event, newValue, reason);
+    },
+    APP_CONFIG.searchDebounceTime
   );
 
   React.useEffect(() => {

@@ -20,26 +20,21 @@ const ViewBranchPage: React.FC = () => {
   const { id } = useParams();
   const loading = fetchStatus === 'idle' || fetchStatus === 'loading';
 
-  const handleEdit = React.useCallback(() => {
+  const handleEdit = () => {
     const editPath = generatePath(ROUTES.editBranch.path, { id });
-
     navigate(editPath);
-  }, [id, navigate]);
+  };
 
-  const actions = React.useMemo(
-    () =>
-      BRANCH_VIEW_DETAILS_SCHEMA.actions
-        ?.filter(({ roles }) => hasAllowedRole(roles, userRoles))
-        .map((action) => {
-          switch (action.name) {
-            case ViewDetailActionName.edit:
-              return { ...action, onClick: handleEdit };
-            default:
-              return action;
-          }
-        }),
-    [userRoles, handleEdit]
-  );
+  const actions = BRANCH_VIEW_DETAILS_SCHEMA.actions
+    ?.filter(({ roles }) => hasAllowedRole(roles, userRoles))
+    .map((action) => {
+      switch (action.name) {
+        case ViewDetailActionName.edit:
+          return { ...action, onClick: handleEdit };
+        default:
+          return action;
+      }
+    });
 
   React.useEffect(() => {
     if (id && (!branch || !compareBigIds(branch.id, id))) {

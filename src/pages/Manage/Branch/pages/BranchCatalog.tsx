@@ -32,66 +32,52 @@ const BranchCatalogPage: React.FC = () => {
   const { searchTerm: search, searchTermChanged, setSearchTermChanged, setPortalProps } = useSearch();
   const pageSizeOptions = APP_CONFIG.table.defaultPageSizeOptions;
   const loading = fetchStatus === 'loading' || deleteStatus === 'loading';
-  const handleNavigate = React.useCallback((path: string) => navigate(path), [navigate]);
+  const handleNavigate = (path: string) => navigate(path);
 
-  const handleBranchAction = React.useCallback(
-    (branch: Branch, action: keyof typeof ACTION_FIELDS) => {
-      switch (action) {
-        case 'view':
-          handleNavigate(generatePath(ROUTES.viewBranch.path, { id: branch.id }));
-          break;
-        case 'edit':
-          handleNavigate(generatePath(ROUTES.editBranch.path, { id: branch.id }));
-          break;
-        case 'delete':
-          if (page.pageNumber! > 1 && branches.length === 1) {
-            dispatch(updateBranchesPagination({ pageNumber: page.pageNumber! - 1 }));
+  const handleBranchAction = (branch: Branch, action: keyof typeof ACTION_FIELDS) => {
+    switch (action) {
+      case 'view':
+        handleNavigate(generatePath(ROUTES.viewBranch.path, { id: branch.id }));
+        break;
+      case 'edit':
+        handleNavigate(generatePath(ROUTES.editBranch.path, { id: branch.id }));
+        break;
+      case 'delete':
+        if (page.pageNumber! > 1 && branches.length === 1) {
+          dispatch(updateBranchesPagination({ pageNumber: page.pageNumber! - 1 }));
+        }
+        dispatch(deleteBranch(branch.id));
+        break;
+    }
+  };
+
+  const handlePageChange = (pagination: Partial<PaginationParams>) => {
+    dispatch(resetBranchesFetchStatus());
+    dispatch(updateBranchesPagination({ ...pagination, search }));
+  };
+
+  const actions = BRANCH_TABLE_ACTIONS_SCHEMA.map((action) => ({
+    ...action,
+    onClick: (branch: Branch) => handleBranchAction(branch, action.field as keyof typeof ACTION_FIELDS),
+  }));
+
+  const columns = mapTableActionsColumn(
+    BRANCH_TABLE_SCHEMA.map((column) =>
+      column.field === BRANCH_FIELDS.name.field
+        ? {
+            ...column,
+            renderBodyCell: (branch: Branch) =>
+              renderPrimaryLinkText({
+                item: branch,
+                getText: ({ name }) => name,
+                onClick: () => handleBranchAction(branch, 'view'),
+              }),
           }
-          dispatch(deleteBranch(branch.id));
-          break;
-      }
-    },
-    [handleNavigate, dispatch, page.pageNumber, branches.length]
-  );
-
-  const handlePageChange = React.useCallback(
-    (pagination: Partial<PaginationParams>) => {
-      dispatch(resetBranchesFetchStatus());
-      dispatch(updateBranchesPagination(pagination));
-    },
-    [dispatch]
-  );
-
-  const actions = React.useMemo(
-    () =>
-      BRANCH_TABLE_ACTIONS_SCHEMA.map((action) => ({
-        ...action,
-        onClick: (branch: Branch) => handleBranchAction(branch, action.field as keyof typeof ACTION_FIELDS),
-      })),
-    [handleBranchAction]
-  );
-
-  const columns = React.useMemo(
-    () =>
-      mapTableActionsColumn(
-        BRANCH_TABLE_SCHEMA.map((column) =>
-          column.field === BRANCH_FIELDS.name.field
-            ? {
-                ...column,
-                renderBodyCell: (branch: Branch) =>
-                  renderPrimaryLinkText({
-                    item: branch,
-                    getText: ({ name }) => name,
-                    onClick: () => handleBranchAction(branch, 'view'),
-                  }),
-              }
-            : column
-        ),
-        (branch) => (
-          <ActionsMenu<Branch> module={testModule} subModule={testSubModule} actions={actions} context={branch} userRoles={userRoles} />
-        )
-      ),
-    [actions, userRoles, handleBranchAction]
+        : column
+    ),
+    (branch) => (
+      <ActionsMenu<Branch> module={testModule} subModule={testSubModule} actions={actions} context={branch} userRoles={userRoles} />
+    )
   );
 
   React.useEffect(() => {
@@ -109,10 +95,11 @@ const BranchCatalogPage: React.FC = () => {
 
   React.useEffect(() => {
     if (searchTermChanged) {
-      handlePageChange({ search, pageNumber: 1 });
+      dispatch(resetBranchesFetchStatus());
+      dispatch(updateBranchesPagination({ search, pageNumber: 1 }));
       setSearchTermChanged(false);
     }
-  }, [search, searchTermChanged, handlePageChange, setSearchTermChanged]);
+  }, [search, searchTermChanged, setSearchTermChanged, dispatch]);
 
   useUnmount(() => {
     if (search) {

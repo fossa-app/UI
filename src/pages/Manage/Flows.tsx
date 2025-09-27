@@ -14,7 +14,7 @@ const testSubModule = SubModule.flows;
 const FlowsPage: React.FC = () => {
   const flowsMap = useAppSelector(selectFlows);
   const userRoles = useAppSelector(selectUserRoles);
-  const flows = React.useMemo(() => convertFlowsMapToArray(flowsMap), [flowsMap]);
+  const flows = convertFlowsMapToArray(flowsMap);
 
   return (
     <>

@@ -20,26 +20,21 @@ const ViewDepartmentPage: React.FC = () => {
   const { id } = useParams();
   const loading = fetchStatus === 'idle' || fetchStatus === 'loading';
 
-  const handleEdit = React.useCallback(() => {
+  const handleEdit = () => {
     const editPath = generatePath(ROUTES.editDepartment.path, { id });
-
     navigate(editPath);
-  }, [id, navigate]);
+  };
 
-  const actions = React.useMemo(
-    () =>
-      DEPARTMENT_VIEW_DETAILS_SCHEMA.actions
-        ?.filter(({ roles }) => hasAllowedRole(roles, userRoles))
-        .map((action) => {
-          switch (action.name) {
-            case ViewDetailActionName.edit:
-              return { ...action, onClick: handleEdit };
-            default:
-              return action;
-          }
-        }),
-    [userRoles, handleEdit]
-  );
+  const actions = DEPARTMENT_VIEW_DETAILS_SCHEMA.actions
+    ?.filter(({ roles }) => hasAllowedRole(roles, userRoles))
+    .map((action) => {
+      switch (action.name) {
+        case ViewDetailActionName.edit:
+          return { ...action, onClick: handleEdit };
+        default:
+          return action;
+      }
+    });
 
   React.useEffect(() => {
     if (id && (!department || !compareBigIds(department.id, id))) {

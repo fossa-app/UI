@@ -1,6 +1,5 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   selectIsUserAdmin,
@@ -60,103 +59,88 @@ const ManageDepartmentPage: React.FC = () => {
   const [formSubmitted, setFormSubmitted] = React.useState(false);
   const parentDepartmentsLoading = parentDepartmentsFetchStatus === 'loading';
   const managersLoading = managersFetchStatus === 'loading';
+  const errors = isUserAdmin ? deepCopyObject(updateError?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
 
-  const handleParentDepartmentsScrollEnd = React.useCallback(() => {
+  const handleParentDepartmentsScrollEnd = () => {
     if (parentDepartmentsPage.pageNumber! < parentDepartmentsPage.totalPages!) {
       dispatch(updateParentDepartmentsPagination({ pageNumber: parentDepartmentsPage.pageNumber! + 1 }));
       dispatch(resetParentDepartmentsFetchStatus());
     }
-  }, [parentDepartmentsPage, dispatch]);
+  };
 
-  const handleManagersScrollEnd = React.useCallback(() => {
+  const handleManagersScrollEnd = () => {
     if (managersPage.pageNumber! < managersPage.totalPages!) {
       dispatch(updateManagersPagination({ pageNumber: managersPage.pageNumber! + 1 }));
       dispatch(resetManagersFetchStatus());
     }
-  }, [managersPage, dispatch]);
+  };
 
-  const errors = React.useMemo(() => {
-    if (!isUserAdmin) {
-      return USER_PERMISSION_GENERAL_MESSAGE;
-    }
-
-    return deepCopyObject(updateError?.errors as FieldErrors<FieldValues>);
-  }, [updateError?.errors, isUserAdmin]);
-
-  const parentDepartmentItems = React.useMemo(() => {
-    const isParentDepartmentOptionAvailable = parentDepartments.some(
-      (parentDepartmentItem) => String(parentDepartmentItem.id) === String(department?.parentDepartmentId)
-    );
-
-    return department?.parentDepartmentId && !isParentDepartmentOptionAvailable
+  const isParentDepartmentOptionAvailable = parentDepartments.some(
+    (parentDepartmentItem) => String(parentDepartmentItem.id) === String(department?.parentDepartmentId)
+  );
+  const parentDepartmentItems =
+    department?.parentDepartmentId && !isParentDepartmentOptionAvailable
       ? [{ id: department.parentDepartmentId, name: department.parentDepartmentName } as DepartmentDTO, ...parentDepartments]
       : parentDepartments;
-  }, [parentDepartments, department?.parentDepartmentId, department?.parentDepartmentName]);
-
-  const managerItems = React.useMemo(() => {
-    const isManagerOptionAvailable = managers.some((managertItem) => String(managertItem.id) === String(department?.managerId));
-
-    return department?.managerId && !isManagerOptionAvailable
+  const isManagerOptionAvailable = managers.some((managertItem) => String(managertItem.id) === String(department?.managerId));
+  const managerItems =
+    department?.managerId && !isManagerOptionAvailable
       ? [{ id: department.managerId, name: department.managerName } as unknown as Employee, ...managers]
       : managers;
-  }, [managers, department?.managerId, department?.managerName]);
+  const disabledFields = mapDisabledFields(DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, userRoles);
+  const mappedFields = mapDepartmentFieldOptionsToFieldOptions(disabledFields, parentDepartmentItems, managerItems);
 
-  const fields = React.useMemo(() => {
-    const disabledFields = mapDisabledFields(DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, userRoles);
-    const mappedFields = mapDepartmentFieldOptionsToFieldOptions(disabledFields, parentDepartmentItems, managerItems);
+  const fields = mappedFields.map((field) => {
+    switch (field.name) {
+      case DEPARTMENT_FIELDS.parentDepartmentId.field:
+        return {
+          ...field,
+          loading: parentDepartmentsLoading,
+          onScrollEnd: handleParentDepartmentsScrollEnd,
+        };
+      case DEPARTMENT_FIELDS.managerId.field:
+        return {
+          ...field,
+          loading: managersLoading,
+          onScrollEnd: handleManagersScrollEnd,
+        };
+      default:
+        return field;
+    }
+  });
 
-    return mappedFields.map((field) => {
-      switch (field.name) {
-        case DEPARTMENT_FIELDS.parentDepartmentId.field:
-          return {
-            ...field,
-            loading: parentDepartmentsLoading,
-            onScrollEnd: handleParentDepartmentsScrollEnd,
-          };
-        case DEPARTMENT_FIELDS.managerId.field:
-          return {
-            ...field,
-            loading: managersLoading,
-            onScrollEnd: handleManagersScrollEnd,
-          };
-        default:
-          return field;
-      }
-    });
-  }, [
-    userRoles,
-    parentDepartmentItems,
-    managerItems,
-    parentDepartmentsLoading,
-    managersLoading,
-    handleParentDepartmentsScrollEnd,
-    handleManagersScrollEnd,
-  ]);
-
-  const handleSuccess = React.useCallback(() => {
+  const handleSuccess = () => {
     safeNavigateBack();
     dispatch(resetDepartmentsFetchStatus());
     dispatch(resetDepartment());
-  }, [safeNavigateBack, dispatch]);
+  };
 
-  const handleCancel = React.useCallback(() => {
+  const handleCancel = () => {
     safeNavigateBack();
-  }, [safeNavigateBack]);
+  };
 
-  const actions = React.useMemo(
-    () =>
-      DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.actions.map((action) => {
-        switch (action.name) {
-          case FormActionName.cancel:
-            return { ...action, onClick: handleCancel };
-          case FormActionName.submit:
-            return { ...action, loading: updateStatus === 'loading' };
-          default:
-            return action;
-        }
-      }),
-    [updateStatus, handleCancel]
-  );
+  const handleSubmit = (formValue: Department) => {
+    const submitData = mapDepartmentDTO(formValue);
+
+    if (id) {
+      dispatch(editDepartment([id, submitData]));
+    } else {
+      dispatch(createDepartment(submitData));
+    }
+
+    setFormSubmitted(true);
+  };
+
+  const actions = DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.actions.map((action) => {
+    switch (action.name) {
+      case FormActionName.cancel:
+        return { ...action, onClick: handleCancel };
+      case FormActionName.submit:
+        return { ...action, loading: updateStatus === 'loading' };
+      default:
+        return action;
+    }
+  });
 
   React.useEffect(() => {
     if (managersFetchStatus === 'idle') {
@@ -189,18 +173,6 @@ const ManageDepartmentPage: React.FC = () => {
   }, [dispatch]);
 
   useOnFormSubmitEffect(updateStatus, formSubmitted, handleSuccess);
-
-  const handleSubmit = (formValue: Department) => {
-    const submitData = mapDepartmentDTO(formValue);
-
-    if (id) {
-      dispatch(editDepartment([id, submitData]));
-    } else {
-      dispatch(createDepartment(submitData));
-    }
-
-    setFormSubmitted(true);
-  };
 
   return (
     <PageLayout

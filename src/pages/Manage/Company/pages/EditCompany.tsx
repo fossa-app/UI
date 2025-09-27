@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   selectIsUserAdmin,
@@ -34,53 +33,35 @@ const EditCompanyPage: React.FC = () => {
   const countries = useAppSelector(selectSystemCountries);
   const { item: company, updateError: error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectCompany);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
+  const fields = mapCountriesToFieldOptions(mapDisabledFields(COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, userRoles), countries);
+  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
+  const navigateToViewCompany = () => navigate(ROUTES.viewCompany.path);
 
   const handleSubmit = (data: Omit<CompanyDTO, 'id'>) => {
     dispatch(editCompany(data));
     setFormSubmitted(true);
   };
 
-  const navigateToViewCompany = React.useCallback(() => {
-    navigate(ROUTES.viewCompany.path);
-  }, [navigate]);
-
-  const handleCancel = React.useCallback(() => {
+  const handleCancel = () => {
     setFormSubmitted(false);
     navigateToViewCompany();
-  }, [navigateToViewCompany]);
+  };
 
-  const handleSuccess = React.useCallback(() => {
+  const handleSuccess = () => {
     dispatch(resetBranchesFetchStatus());
     navigateToViewCompany();
-  }, [dispatch, navigateToViewCompany]);
+  };
 
-  const fields = React.useMemo(
-    () => mapCountriesToFieldOptions(mapDisabledFields(COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, userRoles), countries),
-    [userRoles, countries]
-  );
-
-  const actions = React.useMemo(
-    () =>
-      COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA.actions.map((action) => {
-        switch (action.name) {
-          case FormActionName.cancel:
-            return { ...action, onClick: handleCancel };
-          case FormActionName.submit:
-            return { ...action, loading: updateStatus === 'loading' };
-          default:
-            return action;
-        }
-      }),
-    [updateStatus, handleCancel]
-  );
-
-  const errors = React.useMemo(() => {
-    if (!isUserAdmin) {
-      return USER_PERMISSION_GENERAL_MESSAGE;
+  const actions = COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA.actions.map((action) => {
+    switch (action.name) {
+      case FormActionName.cancel:
+        return { ...action, onClick: handleCancel };
+      case FormActionName.submit:
+        return { ...action, loading: updateStatus === 'loading' };
+      default:
+        return action;
     }
-
-    return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
-  }, [error?.errors, isUserAdmin]);
+  });
 
   React.useEffect(() => {
     return () => {

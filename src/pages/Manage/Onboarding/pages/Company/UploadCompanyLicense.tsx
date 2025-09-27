@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FieldValues, FieldErrors } from 'react-hook-form';
+import { FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import { uploadCompanyLicense } from 'store/thunks';
 import {
@@ -27,6 +27,7 @@ const UploadCompanyLicensePage: React.FC = () => {
   const { updateStatus, updateError: error } = useAppSelector(selectCompanyLicense);
   const { item: company } = useAppSelector(selectCompany);
   const skipRef = React.useRef(false);
+  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
 
   React.useEffect(() => {
     return () => {
@@ -36,64 +37,50 @@ const UploadCompanyLicensePage: React.FC = () => {
     };
   }, [dispatch]);
 
-  const handleSkip = React.useCallback(() => {
+  const handleSkip = () => {
     skipRef.current = true;
     dispatch(setCompanyLicenseSkipped());
     navigate(ROUTES.createBranch.path, { replace: true });
-  }, [dispatch, navigate]);
+  };
 
-  const fields = React.useMemo(() => {
-    const mappedFields = mapDisabledFields(UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.fields, userRoles);
-
-    return mappedFields.map((field) => {
-      switch (field.name) {
-        case 'companyId':
-          return {
-            ...field,
-            type: undefined,
-            renderField: () =>
-              renderCopyableField({
-                module: testModule,
-                subModule: testSubModule,
-                label: 'Company ID',
-                text: String(company?.id),
-              }),
-          };
-        case 'licenseFile':
-          return {
-            ...field,
-            disabled: !hasAllowedRole(field.roles, userRoles),
-          };
-        default:
-          return field;
-      }
-    });
-  }, [userRoles, company?.id]);
-
-  const errors = React.useMemo(() => {
-    if (!isUserAdmin) {
-      return USER_PERMISSION_GENERAL_MESSAGE;
+  const fields = mapDisabledFields(UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.fields, userRoles).map((field) => {
+    switch (field.name) {
+      case 'companyId':
+        return {
+          ...field,
+          type: undefined,
+          renderField: () =>
+            renderCopyableField({
+              module: testModule,
+              subModule: testSubModule,
+              label: 'Company ID',
+              text: String(company?.id),
+            }),
+        };
+      case 'licenseFile':
+        return {
+          ...field,
+          disabled: !hasAllowedRole(field.roles, userRoles),
+        };
+      default:
+        return field;
     }
+  });
 
-    return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
-  }, [error?.errors, isUserAdmin]);
-
-  const actions = React.useMemo(() => {
-    return UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.actions.map((action) => {
-      switch (action.name) {
-        case FormActionName.submit:
-          return {
-            ...action,
-            disabled: !hasAllowedRole(action.roles, userRoles),
-            loading: updateStatus === 'loading',
-          };
-        case FormActionName.cancel:
-          return { ...action, disabled: !hasAllowedRole(action.roles, userRoles), onClick: handleSkip };
-        default:
-          return action;
-      }
-    });
-  }, [userRoles, updateStatus, handleSkip]);
+  const actions = UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.actions.map((action) => {
+    switch (action.name) {
+      case FormActionName.submit:
+        return {
+          ...action,
+          disabled: !hasAllowedRole(action.roles, userRoles),
+          loading: updateStatus === 'loading',
+        };
+      case FormActionName.cancel:
+        return { ...action, disabled: !hasAllowedRole(action.roles, userRoles), onClick: handleSkip };
+      default:
+        return action;
+    }
+  });
 
   const handleSubmit = (data: FieldValues) => {
     const file = data['licenseFile'] as File;

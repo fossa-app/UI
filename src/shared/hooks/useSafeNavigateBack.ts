@@ -1,11 +1,10 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from 'shared/constants';
 
 export const useSafeNavigateBack = (fallback?: string) => {
   const navigate = useNavigate();
 
-  return React.useCallback(() => {
+  return () => {
     if (window.history.length > 1) {
       navigate(-1);
     } else if (fallback) {
@@ -13,5 +12,5 @@ export const useSafeNavigateBack = (fallback?: string) => {
     } else {
       navigate(ROUTES.flows.path, { replace: true });
     }
-  }, [navigate, fallback]);
+  };
 };

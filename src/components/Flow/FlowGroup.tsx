@@ -43,16 +43,13 @@ const FlowGroup: React.FC<FlowGroupProps> = ({
   const hasSubFlow = subFlows.length > 0;
 
   // TODO: MUI element does not set disabled attribute
-  const isSubFlowDisabled = React.useCallback(
-    (subFlow: Flow) => {
-      const disabled = !!subFlow.disabled;
-      const hasRoles = !!subFlow.roles?.length;
-      const roleNotAllowed = hasRoles && !hasAllowedRole(subFlow.roles, roles);
+  const isSubFlowDisabled = (subFlow: Flow) => {
+    const disabled = !!subFlow.disabled;
+    const hasRoles = !!subFlow.roles?.length;
+    const roleNotAllowed = hasRoles && !hasAllowedRole(subFlow.roles, roles);
 
-      return disabled || roleNotAllowed;
-    },
-    [roles]
-  );
+    return disabled || roleNotAllowed;
+  };
 
   const handleToggle = (event: React.MouseEvent) => {
     event.stopPropagation();

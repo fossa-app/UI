@@ -1,5 +1,4 @@
 import React from 'react';
-import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectUser, selectProfile } from 'store/features';
 import { createProfile } from 'store/thunks';
@@ -16,20 +15,17 @@ const CreateEmployeePage: React.FC = () => {
   const { item: user } = useAppSelector(selectUser);
   const { updateStatus, updateError: error } = useAppSelector(selectProfile);
 
+  const actions = CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA.actions.map((action) =>
+    action.name === FormActionName.submit ? { ...action, loading: updateStatus === 'loading' } : action
+  );
+
+  // TODO: removing useMemo causes form reset issues
   const employeeData = React.useMemo(() => {
     return mapUserProfileToEmployee(user?.profile);
   }, [user?.profile]);
 
-  const actions = React.useMemo(
-    () =>
-      CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA.actions.map((action) =>
-        action.name === FormActionName.submit ? { ...action, loading: updateStatus === 'loading' } : action
-      ),
-    [updateStatus]
-  );
-
   const errors = React.useMemo(() => {
-    return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
+    return deepCopyObject(error?.errors);
   }, [error?.errors]);
 
   const handleSubmit = (formValue: Employee) => {

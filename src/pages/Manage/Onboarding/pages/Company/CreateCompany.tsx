@@ -1,5 +1,4 @@
 import React from 'react';
-import { FieldErrors, FieldValues } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompany, selectIsUserAdmin, selectUserRoles, selectSystemCountries } from 'store/features';
 import { createCompany } from 'store/thunks';
@@ -17,29 +16,13 @@ const CreateCompanyPage: React.FC = () => {
   const countries = useAppSelector(selectSystemCountries);
   const { updateStatus, updateError: error } = useAppSelector(selectCompany);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
-
-  const fields = React.useMemo(
-    () => mapCountriesToFieldOptions(mapDisabledFields(CREATE_COMPANY_DETAILS_FORM_SCHEMA.fields, userRoles), countries),
-    [userRoles, countries]
+  const fields = mapCountriesToFieldOptions(mapDisabledFields(CREATE_COMPANY_DETAILS_FORM_SCHEMA.fields, userRoles), countries);
+  const actions = CREATE_COMPANY_DETAILS_FORM_SCHEMA.actions.map((action) =>
+    action.name === FormActionName.submit
+      ? { ...action, disabled: !hasAllowedRole(action.roles, userRoles), loading: updateStatus === 'loading' }
+      : action
   );
-
-  const actions = React.useMemo(
-    () =>
-      CREATE_COMPANY_DETAILS_FORM_SCHEMA.actions.map((action) =>
-        action.name === FormActionName.submit
-          ? { ...action, disabled: !hasAllowedRole(action.roles, userRoles), loading: updateStatus === 'loading' }
-          : action
-      ),
-    [userRoles, updateStatus]
-  );
-
-  const errors = React.useMemo(() => {
-    if (!isUserAdmin) {
-      return USER_PERMISSION_GENERAL_MESSAGE;
-    }
-
-    return deepCopyObject(error?.errors as FieldErrors<FieldValues>);
-  }, [error?.errors, isUserAdmin]);
+  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
 
   const handleSubmit = (data: CompanyDTO) => {
     dispatch(createCompany(data));
