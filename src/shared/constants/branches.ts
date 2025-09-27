@@ -449,16 +449,16 @@ export const BRANCH_TABLE_SCHEMA: Column<Branch>[] = [
 export const BRANCH_TABLE_ACTIONS_SCHEMA: Action<Branch>[] = [
   {
     name: ACTION_FIELDS.view.name,
-    field: ACTION_FIELDS.view.field,
+    field: 'view',
   },
   {
     name: ACTION_FIELDS.edit.name,
-    field: ACTION_FIELDS.edit.field,
+    field: 'edit',
     roles: [UserRole.administrator],
   },
   {
     name: ACTION_FIELDS.delete.name,
-    field: ACTION_FIELDS.delete.field,
+    field: 'delete',
     roles: [UserRole.administrator],
   },
 ];

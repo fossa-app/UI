@@ -21,7 +21,7 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
   pageTitle,
   userRoles,
   allowedRoles,
-  actionButtonLabel = 'New Item',
+  actionButtonLabel,
   onActionClick,
   children,
   ...props
@@ -37,15 +37,17 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
           {pageTitle}
         </Page.Title>
         <WithRolesLayout allowedRoles={allowedRoles} userRoles={userRoles}>
-          <Button
-            data-cy={`${module}-${subModule}-table-layout-action-button`}
-            aria-label="New Item"
-            variant="contained"
-            color="primary"
-            onClick={onActionClick}
-          >
-            {actionButtonLabel}
-          </Button>
+          {actionButtonLabel && (
+            <Button
+              data-cy={`${module}-${subModule}-table-layout-action-button`}
+              aria-label="New Item"
+              variant="contained"
+              color="primary"
+              onClick={onActionClick}
+            >
+              {actionButtonLabel}
+            </Button>
+          )}
         </WithRolesLayout>
       </Page>
       {children}
