@@ -10,7 +10,7 @@ type TableLayoutProps = {
   subModule: SubModule;
   pageTitle: string;
   userRoles?: UserRole[];
-  allowedRoles?: UserRole[];
+  allowedActionRoles?: UserRole[];
   actionButtonLabel?: string;
   onActionClick?: () => void;
 } & BoxProps;
@@ -20,8 +20,8 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
   subModule,
   pageTitle,
   userRoles,
-  allowedRoles,
-  actionButtonLabel = 'New Item',
+  allowedActionRoles,
+  actionButtonLabel,
   onActionClick,
   children,
   ...props
@@ -36,16 +36,18 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
         <Page.Title sx={{ flexGrow: 1 }} typographyProps={{ sx: { textAlign: 'left' } }}>
           {pageTitle}
         </Page.Title>
-        <WithRolesLayout allowedRoles={allowedRoles} userRoles={userRoles}>
-          <Button
-            data-cy={`${module}-${subModule}-table-layout-action-button`}
-            aria-label="New Item"
-            variant="contained"
-            color="primary"
-            onClick={onActionClick}
-          >
-            {actionButtonLabel}
-          </Button>
+        <WithRolesLayout allowedRoles={allowedActionRoles} userRoles={userRoles}>
+          {actionButtonLabel && (
+            <Button
+              data-cy={`${module}-${subModule}-table-layout-action-button`}
+              aria-label="New Item"
+              variant="contained"
+              color="primary"
+              onClick={onActionClick}
+            >
+              {actionButtonLabel}
+            </Button>
+          )}
         </WithRolesLayout>
       </Page>
       {children}
