@@ -228,6 +228,7 @@ describe('Branch Management Tests', () => {
     });
   });
 
+  // TODO: flaky test
   it('should not be able to edit the branch if the form is invalid or branch update failed', () => {
     interceptEditBranchFailedRequest('222222222222');
     interceptFetchBranchByIdRequest('222222222222');
