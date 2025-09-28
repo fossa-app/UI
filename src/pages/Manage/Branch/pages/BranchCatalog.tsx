@@ -16,7 +16,7 @@ const testSubModule = SubModule.branchCatalog;
 
 const BranchCatalogPage: React.FC = () => {
   return (
-    <Catalog<Branch, ReturnType<typeof selectBranchCatalog>>
+    <Catalog<Branch>
       module={testModule}
       subModule={testSubModule}
       pageTitle="Branches"

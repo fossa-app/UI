@@ -267,6 +267,17 @@ export const interceptDeleteBranchRequest = (id: string) => {
   cy.interceptWithAuth('DELETE', `${serverBaseUrl}/Branches/${id}`, null, 'deleteBranchRequest');
 };
 
+export const interceptFetchBranchLocationRequest = (
+  alias = 'fetchBranchLocationRequest',
+  fixture = 'branch/branch-location',
+  statusCode = 200,
+  delay = 300
+) => {
+  cy.fixture(fixture).then((branchLocation: PaginatedResponse<Branch>) => {
+    cy.interceptWithAuth('GET', `https://nominatim.openstreetmap.org/search*`, branchLocation, alias, statusCode, delay);
+  });
+};
+
 export const interceptDeleteBranchFailedRequest = (id: string) => {
   cy.interceptWithAuth('DELETE', `${serverBaseUrl}/Branches/${id}`, null, 'deleteBranchFailedRequest', 404);
 };

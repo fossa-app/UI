@@ -13,7 +13,7 @@ export const mapUserProfileToEmployee = (userProfile?: UserProfile): Employee | 
   }
 
   return {
-    id: Number(userProfile.sub),
+    id: userProfile.sub as unknown as number,
     firstName: userProfile.given_name!,
     lastName: userProfile.family_name!,
     fullName: userProfile.name!,

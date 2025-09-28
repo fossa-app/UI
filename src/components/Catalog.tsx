@@ -19,7 +19,7 @@ interface StateAction {
   dispatch?: AppDispatch;
 }
 
-type CatalogProps<T extends Item, TState extends PaginatedStateEntity<T>> = {
+type CatalogProps<T extends Item> = {
   module: Module;
   subModule: SubModule;
   pageTitle: string;
@@ -36,12 +36,12 @@ type CatalogProps<T extends Item, TState extends PaginatedStateEntity<T>> = {
   updatePagination: (pagination: Partial<PaginationParams>) => ReturnType<AppDispatch>;
   resetFetchStatus: () => ReturnType<AppDispatch>;
   resetPagination: () => ReturnType<AppDispatch>;
-  selectCatalog: (state: RootState) => TState;
+  selectCatalog: (state: RootState) => PaginatedStateEntity<T>;
   deleteAction?: (id: number) => AsyncThunkAction<void, number, StateAction>;
   selectEntity?: (state: RootState) => { deleteStatus?: Status };
 };
 
-const Catalog = <T extends Item, TState extends PaginatedStateEntity<T>>({
+const Catalog = <T extends Item>({
   module,
   subModule,
   pageTitle,
@@ -61,7 +61,7 @@ const Catalog = <T extends Item, TState extends PaginatedStateEntity<T>>({
   tableActionsSchema,
   primaryField,
   getPrimaryText,
-}: CatalogProps<T, TState>) => {
+}: CatalogProps<T>) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { status: fetchStatus, items, page } = useAppSelector(selectCatalog);

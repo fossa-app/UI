@@ -10,7 +10,7 @@ const testSubModule = SubModule.employeeCatalog;
 
 const EmployeeCatalogPage: React.FC = () => {
   return (
-    <Catalog<Employee, ReturnType<typeof selectEmployeeCatalog>>
+    <Catalog<Employee>
       module={testModule}
       subModule={testSubModule}
       pageTitle="Employees"
