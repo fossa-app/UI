@@ -29,7 +29,7 @@ type ManageEntityProps<T extends { id: number }, TDTO extends { id: number }> = 
   editEntityAction: (
     args: [string, EntityInput<TDTO>]
   ) => AsyncThunkAction<void, [string, EntityInput<TDTO>], { rejectValue: ErrorResponse<FieldValues> }>;
-  fetchEntityAction?: () => AsyncThunkAction<T, unknown, { rejectValue: ErrorResponseDTO }>;
+  fetchEntityAction: (params: { id: string }) => AsyncThunkAction<T, unknown, { rejectValue: ErrorResponseDTO }>;
 };
 
 const ManageEntity = <T extends { id: number }, TDTO extends { id: number }>({
@@ -92,7 +92,7 @@ const ManageEntity = <T extends { id: number }, TDTO extends { id: number }>({
     const shouldFetch = !hasFetched.current && id && (!values || !compareBigIds(values.id, id)) && fetchEntityAction;
 
     if (shouldFetch) {
-      dispatch(fetchEntityAction());
+      dispatch(fetchEntityAction!({ id }));
       hasFetched.current = true;
     }
   }, [id, values, dispatch, fetchEntityAction]);
