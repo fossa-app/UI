@@ -1,0 +1,27 @@
+[
+  {
+    "place_id": 282983886,
+    "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+    "osm_type": "way",
+    "osm_id": 90716273,
+    "lat": "40.7364904",
+    "lon": "-74.0033234",
+    "class": "building",
+    "type": "yes",
+    "place_rank": 30,
+    "importance": 0.421,
+    "addresstype": "building",
+    "name": "270 West 11th Street",
+    "display_name": "270 West 11th Street, Manhattan Community Board 2, Manhattan, New York County, City of New York, New York, 10014, United States",
+    "boundingbox": ["40.7364404", "40.7365404", "-74.0033734", "-74.0032734"],
+    "address": {
+      "house_number": "270",
+      "road": "West 11th Street",
+      "city": "New York",
+      "state": "New York",
+      "postcode": "10014",
+      "country": "United States",
+      "country_code": "us"
+    }
+  }
+]

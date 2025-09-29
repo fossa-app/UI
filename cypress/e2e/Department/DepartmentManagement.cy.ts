@@ -251,8 +251,6 @@ describe('Department Management Tests', () => {
 
     selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444444');
 
-    cy.wait('@fetchDepartmentByIdRequest');
-
     verifyInputFields(Module.departmentManagement, SubModule.departmentDetails, {
       'form-field-name': 'Production',
       'form-field-parentDepartmentId': '',

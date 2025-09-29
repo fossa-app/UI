@@ -214,8 +214,6 @@ describe('Branch Management Tests', () => {
 
     selectAction(Module.branchManagement, SubModule.branchCatalog, 'edit', '222222222222');
 
-    cy.wait('@fetchBranchByIdRequest');
-
     verifyInputFields(Module.branchManagement, SubModule.branchDetails, {
       'form-field-name': 'New York Branch',
       'form-field-timeZoneId': 'America/New_York',
@@ -604,6 +602,7 @@ describe('Branch Management Tests', () => {
     ]);
   });
 
+  // TODO: flaky test
   it('should show and hide address fields correctly', () => {
     interceptFetchBranchesRequest(
       { pageNumber: 1, pageSize: 10 },

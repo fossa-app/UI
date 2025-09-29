@@ -22,6 +22,7 @@ const ViewBranchPage: React.FC = () => {
 
   const handleEdit = () => {
     const editPath = generatePath(ROUTES.editBranch.path, { id });
+
     navigate(editPath);
   };
 

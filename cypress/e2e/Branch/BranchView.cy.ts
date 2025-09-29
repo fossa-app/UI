@@ -290,7 +290,7 @@ describe('Branch View Tests', () => {
       cy.location('pathname').should('eq', ROUTES.branches.path);
     });
 
-    it('should not fetch the same department if already visited', () => {
+    it('should not fetch the same branch if already visited', () => {
       interceptFetchBranchByIdRequest('222222222222', 'fetchBranchByIdRequest1');
       cy.visit(ROUTES.branches.path);
 
