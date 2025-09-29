@@ -1,5 +1,4 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
   selectIsUserAdmin,
@@ -33,7 +32,6 @@ const testSubModule = DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.subModule;
 
 const ManageDepartmentPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { id } = useParams();
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const userRoles = useAppSelector(selectUserRoles);
   const { item: department, updateError, fetchStatus } = useAppSelector(selectDepartment);
@@ -50,7 +48,6 @@ const ManageDepartmentPage: React.FC = () => {
   const parentDepartmentsLoading = parentDepartmentsFetchStatus === 'loading';
   const managersLoading = managersFetchStatus === 'loading';
   const errors = isUserAdmin ? deepCopyObject(updateError?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
-  const fetchAction = id ? () => fetchDepartmentById({ id, skipState: false }) : undefined;
 
   const handleParentDepartmentsScrollEnd = () => {
     if (parentDepartmentsPage.pageNumber! < parentDepartmentsPage.totalPages!) {
@@ -127,7 +124,7 @@ const ManageDepartmentPage: React.FC = () => {
       resetEntity={resetDepartment}
       resetErrors={resetDepartmentErrors}
       resetCatalogFetchStatus={resetDepartmentsFetchStatus}
-      fetchEntityAction={fetchAction}
+      fetchEntityAction={(params) => fetchDepartmentById({ id: params.id, skipState: false })}
       createEntityAction={createDepartment}
       editEntityAction={editDepartment}
       mapDTO={mapDepartmentDTO}

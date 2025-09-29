@@ -45,7 +45,6 @@ const ManageBranchPage: React.FC = () => {
   const [fields, setFields] = React.useState<FormFieldProps<Branch>[]>([]);
   const formLoading = fetchStatus === 'loading' || (!branch && !!id) || fields.length === 0;
   const errors = isUserAdmin ? deepCopyObject(updateError?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
-  const fetchAction = id ? () => fetchBranchById({ id, skipState: false }) : undefined;
 
   // TODO: get rid of memoization
   const availableCountries = React.useMemo(
@@ -97,7 +96,7 @@ const ManageBranchPage: React.FC = () => {
       resetEntity={resetBranch}
       resetErrors={resetBranchErrors}
       resetCatalogFetchStatus={resetBranchesFetchStatus}
-      fetchEntityAction={fetchAction}
+      fetchEntityAction={(params) => fetchBranchById({ id: params.id, skipState: false })}
       createEntityAction={createBranch}
       editEntityAction={editBranch}
       mapDTO={mapBranchDTO}
