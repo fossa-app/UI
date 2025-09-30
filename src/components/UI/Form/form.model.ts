@@ -86,18 +86,16 @@ export type InputFieldProps = BaseFormFieldProps & {
 
 export type AutocompleteFieldProps = BaseFormFieldProps & {
   type: FormFieldType.autocomplete;
-  // TODO: add renderOptions to map to the field options
   options: FieldOption[];
   loading?: boolean;
   onInputChange?: (event: React.SyntheticEvent<Element, Event>, value: string, reason: AutocompleteInputChangeReason) => void;
   onScrollEnd?: () => void;
-} & Omit<AutocompleteProps<FieldOption, boolean | undefined, boolean | undefined, boolean | undefined>, 'renderInput'>;
+} & Omit<AutocompleteProps<FieldOption, false, false, false>, 'renderInput'>;
 
 export type SelectFieldProps = BaseFormFieldProps & {
   type: FormFieldType.select;
-  // TODO: add renderOptions to map to the field options
   options: FieldOption[];
-} & SelectProps;
+} & SelectProps<string>;
 
 export type CheckboxFieldProps = BaseFormFieldProps & {
   type: FormFieldType.checkbox;

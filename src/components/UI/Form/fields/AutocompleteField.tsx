@@ -66,9 +66,7 @@ const AutocompleteField: React.FC<AutocompleteFieldProps> = ({ label, name, opti
             data-cy={`${module}-${subModule}-form-field-${name}`}
             loading={loading}
             options={options}
-            // TODO: add render/getOptionLabel prop method
-            // Check for this error in console:
-            // MUI: The `getOptionLabel` method of Autocomplete returned object ([object Object]) instead of a string for {"value":"333333333333"}.
+            getOptionLabel={({ label }) => label ?? ''}
             value={getValue(field)}
             isOptionEqualToValue={(option, valueObj) => option.value === valueObj.value}
             onChange={(_, newValue) => {

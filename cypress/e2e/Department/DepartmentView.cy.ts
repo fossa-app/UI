@@ -189,9 +189,6 @@ describe('Department View Tests', () => {
       selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'view', '444444444444');
 
       cy.wait(['@fetchDepartmentByIdRequest', '@fetchEmployeeByIdRequest']);
-      // TODO: flaky test, waiting solves the issue
-      // eslint-disable-next-line cypress/no-unnecessary-waiting
-      cy.wait(200);
 
       testDepartmentFields();
 
