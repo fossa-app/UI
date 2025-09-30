@@ -46,33 +46,22 @@ const ManageBranchPage: React.FC = () => {
   const formLoading = fetchStatus === 'loading' || (!branch && !!id) || fields.length === 0;
   const errors = isUserAdmin ? deepCopyObject(updateError?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
 
-  // TODO: get rid of memoization
-  const availableCountries = React.useMemo(
-    () => countries?.filter(({ code }) => code === company?.countryCode || code === branch?.address?.countryCode) || [],
-    [countries, company, branch]
-  );
-
-  const availableTimeZones = React.useMemo(() => {
-    if (!branch?.timeZoneId) {
-      return companyTimeZones;
-    }
-
-    const isTimeZoneAvailable = companyTimeZones.some(({ id }) => id === branch.timeZoneId);
-    return isTimeZoneAvailable ? companyTimeZones : [{ id: branch.timeZoneId, name: branch.timeZoneName } as TimeZone, ...companyTimeZones];
-  }, [companyTimeZones, branch]);
-
-  const updateFields = React.useCallback(() => {
-    const schema = getBranchManagementDetailsByAddressFormSchema(BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, !!noPhysicalAddress);
-    const disabledFields = mapDisabledFields(schema, userRoles);
-    const mappedFields = mapBranchFieldOptionsToFieldOptions(disabledFields, availableTimeZones, availableCountries);
-    setFields(mappedFields);
-  }, [noPhysicalAddress, userRoles, availableTimeZones, availableCountries]);
-
   React.useEffect(() => {
     if (!id || (id && branch && noPhysicalAddress !== undefined)) {
-      updateFields();
+      const availableCountries =
+        countries?.filter(({ code }) => code === company?.countryCode || code === branch?.address?.countryCode) || [];
+      const availableTimeZones = !branch?.timeZoneId
+        ? companyTimeZones
+        : companyTimeZones.some(({ id }) => id === branch.timeZoneId)
+          ? companyTimeZones
+          : [{ id: branch.timeZoneId, name: branch.timeZoneName } as TimeZone, ...companyTimeZones];
+      const schema = getBranchManagementDetailsByAddressFormSchema(BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, !!noPhysicalAddress);
+      const disabledFields = mapDisabledFields(schema, userRoles);
+      const mappedFields = mapBranchFieldOptionsToFieldOptions(disabledFields, availableTimeZones, availableCountries);
+
+      setFields(mappedFields);
     }
-  }, [id, branch, noPhysicalAddress, updateFields]);
+  }, [id, branch, noPhysicalAddress, userRoles, companyTimeZones, countries, company?.countryCode, branch?.address?.countryCode]);
 
   const handleChange = (formValue: Branch) => {
     if (formValue.noPhysicalAddress !== noPhysicalAddress) {

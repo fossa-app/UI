@@ -67,7 +67,9 @@ const ViewEntity = <T extends { id: number }>({
   }, [id, values, dispatch, fetchEntityAction]);
 
   React.useEffect(() => {
-    if (!id) dispatch(resetEntity());
+    if (!id) {
+      dispatch(resetEntity());
+    }
   }, [id, dispatch, resetEntity]);
 
   return (
