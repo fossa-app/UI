@@ -2,6 +2,7 @@ import React from 'react';
 import Box, { BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { Module, SubModule, UserRole } from 'shared/models';
+import { ACTION_BUTTON_STYLES } from 'shared/constants';
 import Page from 'components/UI/Page';
 import WithRolesLayout from './WithRolesLayout';
 
@@ -31,7 +32,7 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
       <Page
         module={module}
         subModule={subModule}
-        sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 5, minHeight: 38 }}
+        sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 5, minHeight: 38, gap: 4 }}
       >
         <Page.Title sx={{ flexGrow: 1 }} typographyProps={{ sx: { textAlign: 'left' } }}>
           {pageTitle}
@@ -43,6 +44,7 @@ const TableLayout: React.FC<React.PropsWithChildren<TableLayoutProps>> = ({
               aria-label="New Item"
               variant="contained"
               color="primary"
+              sx={ACTION_BUTTON_STYLES}
               onClick={onActionClick}
             >
               {actionButtonLabel}

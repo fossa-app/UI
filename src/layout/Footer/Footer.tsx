@@ -16,33 +16,31 @@ const Footer: React.FC = () => {
   const { item: company, fetchStatus } = useAppSelector(selectCompanyLicense);
 
   return (
-    <>
-      <AppBar position="static" component="footer" sx={{ top: 'auto', bottom: 0 }}>
-        <Toolbar>
-          <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexGrow: 1 }}>
-            <Grid>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Logo sx={{ width: 36, height: 36 }} />
-                <Typography data-testid="app-logo" variant="caption" component="div">
-                  Fossa
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Environment kind={system?.entitlements?.environmentKind} name={system?.entitlements?.environmentName} />
-                <License
-                  loading={fetchStatus === 'idle' || fetchStatus === 'loading'}
-                  isAdmin={isAdmin}
-                  system={system?.terms?.licensee}
-                  company={company?.terms?.licensee}
-                />
-              </Box>
-            </Grid>
+    <AppBar position="static" component="footer" sx={{ top: 'auto', bottom: 0 }}>
+      <Toolbar>
+        <Grid container spacing={4} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexGrow: 1 }}>
+          <Grid>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Logo sx={{ width: 36, height: 36 }} />
+              <Typography data-testid="app-logo" variant="caption" component="div">
+                Fossa
+              </Typography>
+            </Box>
           </Grid>
-        </Toolbar>
-      </AppBar>
-    </>
+          <Grid>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Environment kind={system?.entitlements?.environmentKind} name={system?.entitlements?.environmentName} />
+              <License
+                loading={fetchStatus === 'idle' || fetchStatus === 'loading'}
+                isAdmin={isAdmin}
+                system={system?.terms?.licensee}
+                company={company?.terms?.licensee}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+      </Toolbar>
+    </AppBar>
   );
 };
 

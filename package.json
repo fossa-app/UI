@@ -38,7 +38,7 @@
     "test:e2e:onboarding": "npx cypress run --e2e --spec \"cypress/e2e/Onboarding.cy.ts\"",
     "test:e2e:open": "npx cypress open --e2e --browser chrome",
     "lint": "eslint",
-    "format": "prettier --write \"{src,public,cypress}/**/*.{js,jsx,ts,tsx,css,json,html}\"",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css,json,html,md,yml,yaml,scss}\"",
     "prepare": "husky install"
   },
   "browserslist": {

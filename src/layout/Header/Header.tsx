@@ -59,7 +59,7 @@ const Header: React.FC = () => {
       <Toolbar sx={{ minHeight: 64 }}>
         <Grid
           container
-          spacing={{ xs: 2, sm: 4 }}
+          spacing={{ xs: 3, sm: 5 }}
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
