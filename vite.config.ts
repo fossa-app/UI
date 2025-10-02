@@ -37,10 +37,13 @@ export default defineConfig({
       support: path.resolve(__dirname, 'cypress/support'),
     },
   },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-redux', '@mui/material', '@mui/icons-material', '@reduxjs/toolkit', 'leaflet'],
+  },
   build: {
     outDir: 'build',
     minify: 'esbuild',
-    chunkSizeWarningLimit: 700,
+    chunkSizeWarningLimit: 500,
     sourcemap: process.env.NODE_ENV !== 'production',
     rollupOptions: {
       output: {
@@ -49,11 +52,9 @@ export default defineConfig({
         assetFileNames: 'assets/[name]-[hash][extname]',
         manualChunks: (id) => {
           if (id.includes('node_modules')) {
-            // NOTE: when a complex manualChunks is set, the preview script is not working
-            // if (id.includes('react')) return 'vendor-react';
-            // if (id.includes('@mui')) return 'vendor-mui';
-            // if (id.includes('leaflet') || id.includes('react-leaflet')) return 'vendor-leaflet';
-            // if (id.includes('redux') || id.includes('@reduxjs')) return 'vendor-redux';
+            if (id.includes('@mui')) return 'vendor-mui';
+            if (id.includes('redux') || id.includes('@reduxjs')) return 'vendor-redux';
+            if (id.includes('leaflet') || id.includes('react-leaflet')) return 'vendor-leaflet';
             return 'vendor';
           }
         },
