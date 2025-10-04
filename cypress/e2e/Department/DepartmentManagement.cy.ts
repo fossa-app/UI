@@ -258,7 +258,6 @@ describe('Department Management Tests', () => {
     });
   });
 
-  // TODO: flaky test
   it('should not be able to edit the department if the form is invalid or department updating failed', () => {
     interceptFetchDepartmentsRequest();
     interceptFetchEmployeesByIdsRequest();
@@ -490,7 +489,6 @@ describe('Department Management Tests', () => {
     getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('not.exist');
   });
 
-  // TODO: flaky test
   it('should reset the department after editing and navigating back', () => {
     interceptFetchDepartmentsRequest();
     interceptFetchEmployeesByIdsRequest();
