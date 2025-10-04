@@ -2,6 +2,7 @@ import React from 'react';
 import AdminRouteGuard from './guards/AdminRouteGuard';
 import RouteTitle from 'components/RouteTitle';
 import CircularLoader from 'components/UI/CircularLoader';
+import ErrorBoundary from 'components/ErrorBoundary';
 
 type ImportFunc = () => Promise<{ default: React.ComponentType<object> }>;
 
@@ -25,8 +26,7 @@ export const createLazyComponent = (
 
   return (
     <React.Suspense fallback={<CircularLoader />}>
-      {/* TODO: create error boundary component */}
-      {isAdminRoute ? <AdminRouteGuard>{content}</AdminRouteGuard> : content}
+      <ErrorBoundary>{isAdminRoute ? <AdminRouteGuard>{content}</AdminRouteGuard> : content}</ErrorBoundary>
     </React.Suspense>
   );
 };
