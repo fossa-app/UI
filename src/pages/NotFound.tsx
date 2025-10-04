@@ -11,6 +11,9 @@ export interface NotFoundPageProps {
   showActionButton?: boolean;
 }
 
+const testModule = Module.shared;
+const testSubModule = SubModule.notFound;
+
 const NotFoundPage: React.FC<NotFoundPageProps> = ({
   title = 'Page Not Found',
   subtitle = 'Oops! The page you are looking for does not exist.',
@@ -18,13 +21,13 @@ const NotFoundPage: React.FC<NotFoundPageProps> = ({
 }) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexGrow: 1, gap: 5 }}>
-      <Page module={Module.shared} subModule={SubModule.notFound}>
+      <Page module={testModule} subModule={testSubModule}>
         <Page.Title>{title}</Page.Title>
         <Page.Subtitle>{subtitle}</Page.Subtitle>
       </Page>
       {showActionButton && (
         <Button
-          data-cy={`${Module.shared}-${SubModule.notFound}-navigate-home-button`}
+          data-cy={`${testModule}-${testSubModule}-navigate-home-button`}
           aria-label="Navigate Home"
           component={Link}
           to="/"

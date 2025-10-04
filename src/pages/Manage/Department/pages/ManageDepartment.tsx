@@ -25,7 +25,7 @@ import {
 } from 'shared/constants';
 import { Department, DepartmentDTO, EmployeeDTO } from 'shared/models';
 import { mapDisabledFields, deepCopyObject, mapDepartmentDTO, mapDepartmentFieldOptionsToFieldOptions } from 'shared/helpers';
-import ManageEntity from 'components/ManageEntity';
+import ManageEntity from 'components/Entity/ManageEntity';
 
 const testModule = DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.module;
 const testSubModule = DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.subModule;

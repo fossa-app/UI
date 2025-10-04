@@ -45,6 +45,7 @@ export enum SubModule {
   profileViewDetails = 'profileViewDetails',
   profileViewSettings = 'profileViewSettings',
   notFound = 'notFound',
+  error = 'error',
   snackbar = 'snackbar',
   license = 'license',
   upload = 'upload',

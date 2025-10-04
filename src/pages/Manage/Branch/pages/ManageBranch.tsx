@@ -28,7 +28,7 @@ import {
   deepCopyObject,
 } from 'shared/helpers';
 import { FormFieldProps } from 'components/UI/Form';
-import ManageEntity from 'components/ManageEntity';
+import ManageEntity from 'components/Entity/ManageEntity';
 
 const testModule = BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.module;
 const testSubModule = BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.subModule;
