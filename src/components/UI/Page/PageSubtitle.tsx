@@ -4,7 +4,7 @@ import { usePageContext } from './PageContext';
 
 type PageSubtitleProps = TypographyProps;
 
-const PageSubtitle = ({ variant = 'subtitle1', children, ...props }: React.PropsWithChildren<PageSubtitleProps>) => {
+const PageSubtitle = ({ variant = 'subtitle1', sx, children, ...props }: React.PropsWithChildren<PageSubtitleProps>) => {
   const context = usePageContext();
 
   if (!context) {
@@ -19,7 +19,7 @@ const PageSubtitle = ({ variant = 'subtitle1', children, ...props }: React.Props
       variant={variant}
       component="p"
       color="textSecondary"
-      sx={{ textAlign: 'center' }}
+      sx={{ textAlign: 'center', ...sx }}
       {...props}
     >
       {children}

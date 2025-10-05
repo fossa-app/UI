@@ -19,7 +19,7 @@ import { createCompanyLicenseEntitlementsFieldsMap, hasAllowedRole } from 'share
 import PageLayout from 'components/layouts/PageLayout';
 import ViewDetails, { ViewDetailActionName } from 'components/UI/ViewDetails';
 import Page from 'components/UI/Page';
-import { renderLicenseUsageDetail } from 'pages/Manage/Branch/helpers/renderLicenseUsageDetail';
+import { renderLicenseUsageDetail } from '../helpers/renderLicenseUsageDetail';
 
 const testModule = COMPANY_VIEW_DETAILS_SCHEMA.module;
 const testSubModule = COMPANY_VIEW_DETAILS_SCHEMA.subModule;
