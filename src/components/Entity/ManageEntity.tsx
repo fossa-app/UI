@@ -80,6 +80,7 @@ const ManageEntity = <T extends { id: number }, TDTO extends { id: number }>({
     }
 
     setFormSubmitted(true);
+    dispatch(resetErrors());
   };
 
   const handleSuccess = () => {

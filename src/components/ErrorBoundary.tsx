@@ -34,7 +34,15 @@ class ErrorBoundary extends React.Component<React.PropsWithChildren, State> {
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexGrow: 1, gap: 5 }}>
           <Page module={testModule} subModule={testSubModule}>
             <Page.Title>Something went wrong</Page.Title>
-            <Page.Subtitle>{this.state.error?.message}</Page.Subtitle>
+            <Page.Subtitle
+              sx={{
+                overflowWrap: 'break-word',
+                wordBreak: 'break-word',
+                whiteSpace: 'normal',
+              }}
+            >
+              {this.state.error?.message}
+            </Page.Subtitle>
           </Page>
           <Button
             data-cy={`${testModule}-${testSubModule}-reload-button`}
