@@ -166,7 +166,7 @@ describe('Branch View Tests', () => {
         });
       });
 
-      it('should display not found page if the branch was not found', () => {
+      it('should display the Not Found page if the branch was not found', () => {
         interceptFetchBranchByIdFailedRequest('222222222224');
         cy.visit(`${ROUTES.branches.path}/view/222222222224`);
 

@@ -9,6 +9,8 @@ import {
   verifyInputFields,
   verifyAbsence,
   verifyTextFields,
+  clearInputField,
+  openUserProfile,
 } from 'support/helpers';
 import {
   interceptEditEmployeeFailedRequest,
@@ -41,6 +43,8 @@ const testEmployeeViewFields = () => {
     'view-details-value-lastName': 'Crowley',
     'view-details-label-fullName': 'Full Name',
     'view-details-value-fullName': 'Anthony User Crowley',
+    'view-details-label-jobTitle': 'Job Title',
+    'view-details-value-jobTitle': 'The Best Guy',
     'view-details-section-additionalInfo': 'Additional Information',
     'view-details-label-assignedBranchName': 'Assigned Branch',
     'view-details-value-assignedBranchName': 'New York Branch',
@@ -61,6 +65,7 @@ const testEmployeeFormFields = () => {
     'form-field-value-fullName': 'Anthony User Crowley',
   });
   verifyInputFields(Module.employeeManagement, SubModule.employeeDetails, {
+    'form-field-jobTitle': 'The Best Guy',
     'form-field-assignedBranchId-input': 'New York Branch',
     'form-field-assignedDepartmentId-input': 'Production',
     'form-field-reportsToId-input': 'Gabriel Admin Archangel',
@@ -271,6 +276,30 @@ describe('Employee Management Tests', () => {
       testEmployeeFormFields();
     });
 
+    it('should display validation messages if the form is invalid', () => {
+      interceptFetchEmployeeByIdRequest('333333333333', 'fetchEmployeeByIdRequest', 'employee/employees-multiple');
+      interceptFetchEmployeesByIdsRequest();
+      interceptEditEmployeeRequest('333333333333');
+      interceptFetchBranchesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
+      cy.visit(ROUTES.employees.path);
+
+      selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'edit', '333333333333');
+
+      cy.wait('@fetchEmployeeByIdRequest');
+
+      clearInputField(Module.employeeManagement, SubModule.employeeDetails, 'form-field-jobTitle');
+      clickActionButton(Module.employeeManagement, SubModule.employeeDetails);
+
+      verifyFormValidationMessages(Module.employeeManagement, SubModule.employeeDetails, [
+        {
+          field: 'form-field-jobTitle-validation',
+          message: 'Job Title is required',
+        },
+      ]);
+      cy.location('pathname').should('eq', `${ROUTES.employees.path}/edit/333333333333`);
+    });
+
     it('should not be able to edit the employee if the employee update failed', () => {
       interceptFetchEmployeeByIdRequest('333333333335');
       interceptFetchEmployeeByIdRequest('333333333333');
@@ -292,6 +321,7 @@ describe('Employee Management Tests', () => {
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
         .should('exist')
         .and('contain.text', 'Failed to update the Employee');
+      cy.location('pathname').should('eq', `${ROUTES.employees.path}/edit/333333333335`);
     });
 
     it('should display async validation messages if the employee update failed with validation errors', () => {
@@ -388,6 +418,9 @@ describe('Employee Management Tests', () => {
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-fullName')
         .should('exist')
         .and('have.text', 'Anthony User Crowley');
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-jobTitle')
+        .should('exist')
+        .and('have.text', 'The Best Guy');
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedBranchName')
         .should('exist')
         .and('have.text', 'New York Branch');
@@ -407,6 +440,10 @@ describe('Employee Management Tests', () => {
         '@fetchAssignedDepartmentsRequest',
       ]);
 
+      clearInputField(Module.employeeManagement, SubModule.employeeDetails, 'form-field-jobTitle');
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-jobTitle')
+        .find('input')
+        .type('The Best Guy Ever');
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-assignedBranchId').click();
       getTestSelectorByModule(
         Module.employeeManagement,
@@ -449,6 +486,9 @@ describe('Employee Management Tests', () => {
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-fullName')
         .should('exist')
         .and('have.text', 'Anthony User Crowley');
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-jobTitle')
+        .should('exist')
+        .and('have.text', 'The Best Guy Ever');
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedBranchName')
         .should('exist')
         .and('have.text', 'Hawaii Branch');
@@ -788,6 +828,64 @@ describe('Employee Management Tests', () => {
 
       cy.location('pathname').should('eq', ROUTES.employees.path);
       getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('not.exist');
+    });
+
+    it('should not fetch the profile if the updated employee is not the current user', () => {
+      interceptFetchEmployeeByIdRequest('333333333334', 'fetchEmployeeByIdRequest', 'employee/employees-multiple');
+      interceptFetchEmployeesByIdsRequest();
+      interceptEditEmployeeRequest('333333333334');
+      interceptFetchBranchesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
+      cy.visit(ROUTES.employees.path);
+
+      selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'edit', '333333333334');
+
+      cy.location('pathname').should('eq', `${ROUTES.employees.path}/edit/333333333334`);
+      cy.wait('@fetchEmployeeByIdRequest');
+
+      clearInputField(Module.employeeManagement, SubModule.employeeDetails, 'form-field-jobTitle');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-jobTitle').find('input').type('Nice Guy');
+      clickActionButton(Module.employeeManagement, SubModule.employeeDetails);
+      cy.wait('@editEmployeeRequest');
+
+      cy.location('pathname').should('eq', ROUTES.employees.path);
+
+      interceptFetchProfileRequest('fetchProfileRequest2');
+      openUserProfile();
+
+      getLinearLoader(Module.profile, SubModule.profileViewDetails, 'view-details').should('not.exist');
+      cy.get('@fetchProfileRequest2.all').should('have.length', 0);
+    });
+
+    it('should fetch the profile if the updated employee is the current user', () => {
+      interceptFetchEmployeeByIdRequest('333333333333', 'fetchEmployeeByIdRequest', 'employee/employees-multiple');
+      interceptFetchEmployeesByIdsRequest();
+      interceptEditEmployeeRequest('333333333333');
+      interceptFetchBranchesByIdsRequest();
+      interceptFetchDepartmentsByIdsRequest();
+      cy.visit(ROUTES.employees.path);
+
+      selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'edit', '333333333333');
+
+      cy.location('pathname').should('eq', `${ROUTES.employees.path}/edit/333333333333`);
+      cy.wait('@fetchEmployeeByIdRequest');
+
+      clearInputField(Module.employeeManagement, SubModule.employeeDetails, 'form-field-jobTitle');
+
+      getTestSelectorByModule(Module.employeeManagement, SubModule.employeeDetails, 'form-field-jobTitle')
+        .find('input')
+        .type('Heavenly Executive Director');
+      clickActionButton(Module.employeeManagement, SubModule.employeeDetails);
+      cy.wait('@editEmployeeRequest');
+
+      cy.location('pathname').should('eq', ROUTES.employees.path);
+
+      interceptFetchProfileRequest('fetchProfileRequest2');
+      openUserProfile();
+
+      getLinearLoader(Module.profile, SubModule.profileViewDetails, 'view-details').should('exist');
+      cy.get('@fetchProfileRequest2.all').should('have.length', 1);
     });
   });
 });

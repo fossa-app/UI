@@ -131,5 +131,5 @@ Cypress.Commands.add('mockLightTheme', () => {
 });
 
 Cypress.Commands.add('mockMobileView', () => {
-  cy.viewport(390, 844);
+  cy.viewport(430, 932);
 });

@@ -104,7 +104,7 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
     {
       type: FormFieldType.text,
       name: BRANCH_FIELDS.name.field,
-      label: 'Enter Branch Name',
+      label: 'Branch Name',
       grid: { size: { xs: 12, md: 6 } },
       autoFocus: true,
       rules: {
@@ -144,7 +144,7 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
     {
       type: FormFieldType.text,
       name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line1!.field}`,
-      label: 'Enter Address Line 1',
+      label: 'Address Line 1',
       grid: { size: { xs: 12, md: 6 } },
       rules: {
         required: { value: true, message: 'Address Line 1 is required' },
@@ -158,7 +158,7 @@ export const BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Branch> = {
     {
       type: FormFieldType.text,
       name: `${BRANCH_FIELDS.address.field}.${BRANCH_FIELDS.address.line2!.field}`,
-      label: 'Enter Address Line 2',
+      label: 'Address Line 2',
       grid: { size: { xs: 12, md: 6 } },
       rules: {
         maxLength: {

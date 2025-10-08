@@ -296,7 +296,7 @@ describe('Branch Catalog Tests', () => {
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 2);
         });
 
-        it(`should ${isAdminRole ? '' : 'not '}be able to manually navigate to branch management page`, () => {
+        it(`should ${isAdminRole ? '' : 'not '}be able to manually navigate to the Branch Management page`, () => {
           interceptFetchBranchesRequest();
 
           branchAdminRoutes.forEach((route) => {
@@ -305,7 +305,7 @@ describe('Branch Catalog Tests', () => {
           });
         });
 
-        it('should be able to navigate by buttons to branch view page', () => {
+        it('should be able to navigate by buttons to the Branch View page', () => {
           interceptFetchBranchesRequest();
           interceptFetchBranchByIdRequest('222222222222');
 
@@ -368,7 +368,7 @@ describe('Branch Catalog Tests', () => {
             .should('have.attr', 'data-invalid');
         });
 
-        it('should be able to navigate to the branch view page by clicking the branch name cell', () => {
+        it('should be able to navigate to the Branch View page by clicking the branch name cell', () => {
           interceptFetchBranchesRequest();
           interceptFetchBranchByIdRequest('222222222222');
           cy.visit(ROUTES.branches.path);
@@ -525,7 +525,7 @@ describe('Branch Catalog Tests', () => {
       getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 2);
     });
 
-    it('should be able to navigate by buttons to branch management page', () => {
+    it('should be able to navigate by buttons to the Branch Management page', () => {
       interceptFetchBranchesRequest();
       interceptFetchBranchByIdRequest('222222222222');
 

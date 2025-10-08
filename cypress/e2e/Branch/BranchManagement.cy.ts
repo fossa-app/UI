@@ -58,7 +58,7 @@ describe('Branch Management Tests', () => {
     cy.loginMock(true);
   });
 
-  it('should display an empty form on branch creation page', () => {
+  it('should display an empty form on the Create Branch page', () => {
     cy.visit(ROUTES.newBranch.path);
     getTestSelectorByModule(Module.branchManagement, SubModule.branchDetails, 'form-field-name').should('not.have.value');
 
@@ -141,7 +141,7 @@ describe('Branch Management Tests', () => {
     cy.url().should('include', ROUTES.newBranch.path);
   });
 
-  it('should be able to create new branch and be navigated back to the branch catalog page if the form is valid and branch creation succeeded', () => {
+  it('should be able to create new branch and be navigated back to the Branch Catalog page if the form is valid and branch creation succeeded', () => {
     interceptCreateBranchRequest();
     cy.visit(ROUTES.branches.path);
 
@@ -177,7 +177,7 @@ describe('Branch Management Tests', () => {
       .and('contain.text', 'Branch has been successfully created');
   });
 
-  it('should display not found page if the branch was not found', () => {
+  it('should display the Not Found page if the branch was not found', () => {
     interceptFetchBranchByIdFailedRequest('222222222224');
     cy.visit(`${ROUTES.branches.path}/edit/222222222224`);
 
@@ -186,7 +186,7 @@ describe('Branch Management Tests', () => {
     cy.location('pathname').should('eq', ROUTES.flows.path);
   });
 
-  it('should reset the form and be navigated back to the branch catalog page if the cancel button is clicked', () => {
+  it('should reset the form and be navigated back to the Branch Catalog page if the cancel button is clicked', () => {
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit(ROUTES.branches.path);
 
@@ -327,7 +327,7 @@ describe('Branch Management Tests', () => {
     getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error').should('exist').and('contain.text', 'Failed to create a Branch');
   });
 
-  it('should be able to edit the branch and be navigated back to the branch catalog page if the form is valid and branch update succeeded', () => {
+  it('should be able to edit the branch and be navigated back to the Branch Catalog page if the form is valid and branch update succeeded', () => {
     interceptEditBranchRequest('222222222222');
     interceptFetchBranchByIdRequest('222222222222');
     cy.visit(ROUTES.branches.path);

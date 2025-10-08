@@ -47,7 +47,7 @@ export const DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Department> = 
     {
       type: FormFieldType.text,
       name: DEPARTMENT_FIELDS.name.field,
-      label: 'Enter Department Name',
+      label: 'Department Name',
       grid: { size: { xs: 12, md: 6 } },
       autoFocus: true,
       rules: {

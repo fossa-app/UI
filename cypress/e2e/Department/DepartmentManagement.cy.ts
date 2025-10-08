@@ -211,7 +211,7 @@ describe('Department Management Tests', () => {
       .and('have.text', 'Set Design');
   });
 
-  it('should display Not Found page if the department was not found', () => {
+  it('should display the Not Found page if the department was not found', () => {
     interceptFetchDepartmentsRequest();
     interceptFetchEmployeesByIdsRequest();
     interceptFetchDepartmentsByIdsRequest();

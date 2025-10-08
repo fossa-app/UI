@@ -48,8 +48,9 @@ export const mapEmployees = ({
   });
 };
 
-export const mapEmployeeDTO = (employee: Employee): Pick<EmployeeDTO, 'assignedBranchId' | 'assignedDepartmentId' | 'reportsToId'> => {
+export const mapEmployeeDTO = (employee: Employee): Omit<EntityInput<EmployeeDTO>, 'firstName' | 'lastName' | 'fullName'> => {
   return {
+    jobTitle: employee.jobTitle,
     assignedBranchId: employee.assignedBranchId || null,
     assignedDepartmentId: employee.assignedDepartmentId || null,
     reportsToId: employee.reportsToId || null,
@@ -61,6 +62,7 @@ export const mapProfileDTO = (employee: EntityInput<Employee>): EntityInput<Empl
     firstName: employee.firstName,
     lastName: employee.lastName,
     fullName: employee.fullName,
+    jobTitle: employee.jobTitle,
     assignedBranchId: employee.assignedBranchId || null,
     assignedDepartmentId: employee.assignedDepartmentId || null,
     reportsToId: employee.reportsToId || null,

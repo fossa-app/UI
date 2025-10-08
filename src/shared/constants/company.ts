@@ -124,7 +124,7 @@ export const COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA: FormProps<Company> = {
     {
       type: FormFieldType.text,
       name: COMPANY_FIELDS.name.field,
-      label: 'Enter Company Name',
+      label: 'Company Name',
       grid: { size: { xs: 12, md: 6 } },
       autoFocus: true,
       rules: {

@@ -52,7 +52,7 @@ describe('Profile Tests', () => {
         loginMock();
       });
 
-      it('should not be able to navigate to the profile page if the employee is in a draft status', () => {
+      it('should not be able to navigate to the Profile page if the employee is in a draft status', () => {
         interceptFetchProfileFailedRequest();
         cy.visit(ROUTES.employeeOnboarding.path);
 
@@ -66,7 +66,7 @@ describe('Profile Tests', () => {
         cy.location('pathname').should('eq', ROUTES.flows.path);
       });
 
-      it('should navigate to view profile page if the employee exists when clicking the profile menu item', () => {
+      it('should navigate to the View Profile page if the employee exists when clicking the profile menu item', () => {
         interceptFetchProfileRequest();
         cy.visit(ROUTES.viewCompany.path);
 
@@ -87,7 +87,7 @@ describe('Profile Tests', () => {
         getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-action-button').should('exist');
       });
 
-      it('should reset the form and navigate to view profile page if the cancel button is clicked', () => {
+      it('should reset the form and navigate to the View Profile page if the cancel button is clicked', () => {
         interceptFetchProfileRequest();
         cy.visit(ROUTES.viewProfile.path);
 
@@ -190,7 +190,7 @@ describe('Profile Tests', () => {
         cy.url().should('include', ROUTES.editProfile.path);
       });
 
-      it('should be able to edit the profile and be navigated to view profile page if the form is valid and employee update succeeded', () => {
+      it('should be able to edit the profile and be navigated to the View Profile page if the form is valid and employee update succeeded', () => {
         interceptFetchProfileRequest();
         interceptEditProfileRequest();
         cy.visit(ROUTES.viewProfile.path);

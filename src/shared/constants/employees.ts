@@ -21,6 +21,10 @@ export const EMPLOYEE_FIELDS: EmployeeFieldConfig = {
     field: 'fullName',
     name: 'Full Name',
   },
+  jobTitle: {
+    field: 'jobTitle',
+    name: 'Job Title',
+  },
   assignedBranchId: {
     field: 'assignedBranchId',
     name: 'Assigned Branch ID',
@@ -61,6 +65,11 @@ export const EMPLOYEE_TABLE_SCHEMA: Column<Employee>[] = [
   {
     name: EMPLOYEE_FIELDS.fullName.name,
     field: EMPLOYEE_FIELDS.fullName.field,
+    width: 200,
+  },
+  {
+    name: EMPLOYEE_FIELDS.jobTitle.name,
+    field: EMPLOYEE_FIELDS.jobTitle.field,
     width: 200,
   },
   {
@@ -112,7 +121,7 @@ export const CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
     {
       type: FormFieldType.text,
       name: EMPLOYEE_FIELDS.firstName.field,
-      label: 'Enter First Name',
+      label: 'First Name',
       grid: { size: { xs: 12, md: 6 } },
       autoFocus: true,
       rules: {
@@ -122,7 +131,7 @@ export const CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
     {
       type: FormFieldType.text,
       name: EMPLOYEE_FIELDS.lastName.field,
-      label: 'Enter Last Name',
+      label: 'Last Name',
       grid: { size: { xs: 12, md: 6 } },
       rules: {
         required: { value: true, message: 'Last Name is required' },
@@ -131,7 +140,7 @@ export const CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
     {
       type: FormFieldType.text,
       name: EMPLOYEE_FIELDS.fullName.field,
-      label: 'Enter Full Name',
+      label: 'Full Name',
       grid: { size: { xs: 12 } },
     },
   ],
@@ -196,6 +205,12 @@ export const PROFILE_VIEW_DETAILS_SCHEMA: ViewDetailProps<Employee> = {
       type: ViewDetailType.labelValue,
       grid: { size: { xs: 12, md: 12 } },
     },
+    {
+      name: EMPLOYEE_FIELDS.jobTitle.field,
+      label: 'Job Title',
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 12 } },
+    },
   ],
   actions: [
     {
@@ -237,6 +252,12 @@ export const EMPLOYEE_VIEW_DETAILS_SCHEMA: ViewDetailProps<Employee> = {
       label: 'Full Name',
       type: ViewDetailType.labelValue,
       grid: { size: { xs: 12 } },
+    },
+    {
+      name: EMPLOYEE_FIELDS.jobTitle.field,
+      label: 'Job Title',
+      type: ViewDetailType.labelValue,
+      grid: { size: { xs: 12, md: 6 } },
     },
     {
       name: 'additionalInfo',
@@ -295,6 +316,17 @@ export const EMPLOYEE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
       grid: { size: { xs: 12 } },
     },
     {
+      type: FormFieldType.text,
+      name: EMPLOYEE_FIELDS.jobTitle.field,
+      label: 'Job Title',
+      grid: { size: { xs: 12, md: 6 } },
+      autoFocus: true,
+      rules: {
+        required: { value: true, message: 'Job Title is required' },
+      },
+      roles: [UserRole.administrator],
+    },
+    {
       type: FormFieldType.section,
       name: 'additionalInfo',
       label: 'Additional Information',
@@ -349,10 +381,48 @@ export const EMPLOYEE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
 };
 
 export const PROFILE_DETAILS_FORM_SCHEMA: FormProps<Employee> = {
-  ...CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA,
   module: Module.profile,
   subModule: SubModule.profileDetails,
   title: 'Profile Details',
+  fields: [
+    {
+      type: FormFieldType.section,
+      name: 'basicInfo',
+      label: 'Basic Information',
+      grid: { size: { xs: 12 } },
+    },
+    {
+      type: FormFieldType.text,
+      name: EMPLOYEE_FIELDS.firstName.field,
+      label: 'First Name',
+      grid: { size: { xs: 12, md: 6 } },
+      autoFocus: true,
+      rules: {
+        required: { value: true, message: 'First Name is required' },
+      },
+    },
+    {
+      type: FormFieldType.text,
+      name: EMPLOYEE_FIELDS.lastName.field,
+      label: 'Last Name',
+      grid: { size: { xs: 12, md: 6 } },
+      rules: {
+        required: { value: true, message: 'Last Name is required' },
+      },
+    },
+    {
+      type: FormFieldType.text,
+      name: EMPLOYEE_FIELDS.fullName.field,
+      label: 'Full Name',
+      grid: { size: { xs: 12 } },
+    },
+    {
+      type: FormFieldType.labelValue,
+      name: EMPLOYEE_FIELDS.jobTitle.field,
+      label: 'Job Title',
+      grid: { size: { xs: 12 } },
+    },
+  ],
   actions: [
     {
       actionType: FormActionType.button,
@@ -378,6 +448,7 @@ export const EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES: EntityInput<Employee> = {
   firstName: '',
   lastName: '',
   fullName: '',
+  jobTitle: '',
   assignedBranchId: null,
   assignedDepartmentId: null,
   reportsToId: null,

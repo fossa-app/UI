@@ -4,6 +4,7 @@ export interface EmployeeDTO {
   assignedBranchId: number | null;
   assignedDepartmentId: number | null;
   reportsToId: number | null;
+  jobTitle: string;
   firstName: string;
   lastName: string;
   fullName: string;

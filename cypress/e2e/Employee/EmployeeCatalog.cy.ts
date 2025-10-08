@@ -121,6 +121,10 @@ describe('Employee Catalog Tests', () => {
           'have.text',
           'Full Name'
         );
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-header-cell-jobTitle').should(
+          'have.text',
+          'Job Title'
+        );
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-header-cell-assignedBranchName').should(
           'have.text',
           'Assigned Branch'
@@ -143,6 +147,9 @@ describe('Employee Catalog Tests', () => {
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-fullName')
           .should('exist')
           .and('have.text', 'Anthony User Crowley');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-jobTitle')
+          .should('exist')
+          .and('have.text', 'The Best Guy');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedBranchName')
           .should('exist')
           .and('have.text', 'New York Branch');
@@ -428,6 +435,10 @@ describe('Employee Catalog Tests', () => {
           'have.text',
           'Full Name'
         );
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-header-cell-333333333335-jobTitle').should(
+          'have.text',
+          'Job Title'
+        );
         getTestSelectorByModule(
           Module.employeeManagement,
           SubModule.employeeCatalog,
@@ -453,6 +464,9 @@ describe('Employee Catalog Tests', () => {
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-fullName')
           .should('exist')
           .and('have.text', 'Anthony User Crowley');
+        getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-jobTitle')
+          .should('exist')
+          .and('have.text', 'The Best Guy');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-cell-333333333335-assignedBranchName')
           .should('exist')
           .and('have.text', 'New York Branch');
