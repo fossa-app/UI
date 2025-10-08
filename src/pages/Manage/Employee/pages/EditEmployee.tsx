@@ -15,6 +15,8 @@ import {
   updateManagersPagination,
   resetManagersFetchStatus,
   resetEmployeeErrors,
+  resetProfileFetchStatus,
+  selectProfile,
 } from 'store/features';
 import { fetchAssignedBranches, fetchAssignedDepartments, editEmployee, fetchEmployeeById, fetchManagers } from 'store/thunks';
 import { APP_CONFIG, EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
@@ -38,6 +40,7 @@ const EditEmployeePage: React.FC = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { item: employee, updateError, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectEmployee);
+  const { item: profile } = useAppSelector(selectProfile);
   const {
     status: assignedBranchesFetchStatus,
     items: assignedBranches,
@@ -83,6 +86,10 @@ const EditEmployeePage: React.FC = () => {
     safeNavigateBack();
     dispatch(resetEmployeesFetchStatus());
     dispatch(resetEmployee());
+
+    if (profile?.id === employee?.id) {
+      dispatch(resetProfileFetchStatus());
+    }
   };
 
   const handleSubmit = (formValue: Employee) => {

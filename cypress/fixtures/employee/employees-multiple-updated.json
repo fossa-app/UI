@@ -22,6 +22,7 @@
       "firstName": "Anthony",
       "lastName": "Crowley",
       "fullName": "Anthony User Crowley",
+      "jobTitle": "The Best Guy Ever",
       "assignedBranchId": 222222222223,
       "assignedDepartmentId": 444444444445,
       "reportsToId": 333333333334

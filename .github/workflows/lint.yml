@@ -43,7 +43,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_JSCPD: false
-          VALIDATE_TSX: false
-          VALIDATE_TYPESCRIPT_ES: false
           JAVASCRIPT_ES_CONFIG_FILE: eslint.config.mjs
           TYPESCRIPT_ES_CONFIG_FILE: eslint.config.mjs

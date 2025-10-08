@@ -20,6 +20,7 @@ export const mapUserProfileToEmployee = (userProfile?: UserProfile): Employee | 
     assignedBranchId: null,
     assignedDepartmentId: null,
     reportsToId: null,
+    jobTitle: '',
     picture: userProfile.picture,
   };
 };

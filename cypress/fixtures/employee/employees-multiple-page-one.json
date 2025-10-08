@@ -7,14 +7,16 @@
       "companyId": 111111111111,
       "firstName": "Gabriel",
       "lastName": "Archangel",
-      "fullName": "Gabriel Admin Archangel"
+      "fullName": "Gabriel Admin Archangel",
+      "jobTitle": "Chief Archangel"
     },
     {
       "id": 333333333334,
       "companyId": 111111111111,
       "firstName": "Aziraphale",
       "lastName": "Fell",
-      "fullName": "Aziraphale User Fell"
+      "fullName": "Aziraphale User Fell",
+      "jobTitle": "Nice Guy"
     },
     {
       "id": 333333333335,

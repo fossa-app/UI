@@ -104,7 +104,7 @@ export const clearDepartmentDetailsForm = () => {
 };
 
 export const clearInputField = (module: Module, subModule: SubModule, selector: string) => {
-  getTestSelectorByModule(module, subModule, selector).find('input').type('{selectall}{backspace}', { delay: 150, force: true });
+  getTestSelectorByModule(module, subModule, selector).find('input').type('{selectall}{backspace}', { delay: 200, force: true });
 };
 
 export const verifyTextFields = (module: Module, subModule: SubModule, fieldValues: { [key: string]: string }) => {

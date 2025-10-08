@@ -8,6 +8,7 @@
       "firstName": "Gabriel",
       "lastName": "Archangel",
       "fullName": "Gabriel Admin Archangel",
+      "jobTitle": "Chief Archangel",
       "reportsToId": null
     },
     {
@@ -16,6 +17,7 @@
       "firstName": "Aziraphale",
       "lastName": "Fell",
       "fullName": "Aziraphale User Fell",
+      "jobTitle": "Nice Guy",
       "reportsToId": null
     }
   ],

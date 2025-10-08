@@ -143,6 +143,11 @@ describe('Employee Organization Chart Tests', () => {
           'have.text',
           'Gabriel Admin Archangel'
         );
+        getTestSelectorByModule(
+          Module.employeeManagement,
+          SubModule.employeeOrgChart,
+          'employee-content-card-333333333333-jobTitle'
+        ).should('have.text', 'Chief Archangel');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeOrgChart, 'employee-content-card-333333333334-avatar').should(
           'have.text',
           'AF'
@@ -151,6 +156,11 @@ describe('Employee Organization Chart Tests', () => {
           'have.text',
           'Aziraphale User Fell'
         );
+        getTestSelectorByModule(
+          Module.employeeManagement,
+          SubModule.employeeOrgChart,
+          'employee-content-card-333333333334-jobTitle'
+        ).should('have.text', 'Nice Guy');
         checkEmployeeReportsTo('333333333333', null);
         checkEmployeeReportsTo('333333333334', null);
         checkEmployeeReportsTo('333333333335', '333333333333');

@@ -105,7 +105,7 @@ describe('Company Management Tests', () => {
         loginMock();
       });
 
-      it('should be able to navigate and view the company page', () => {
+      it('should be able to navigate and view the Company page', () => {
         cy.visit(ROUTES.company.path);
 
         selectNavigationMenuItem('Company');
