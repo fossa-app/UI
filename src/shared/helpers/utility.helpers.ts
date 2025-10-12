@@ -22,7 +22,7 @@ export const getNestedValue = <T>(values: T, path: string): unknown => {
   }, values as unknown);
 };
 
-export const deepEqual = <T extends object>(obj1: T, obj2: T): boolean => {
+export const deepEqual = <T>(obj1: T, obj2: T): boolean => {
   if (obj1 === obj2) {
     return true;
   }
