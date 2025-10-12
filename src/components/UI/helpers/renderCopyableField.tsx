@@ -11,7 +11,7 @@ interface CopyableFieldParams {
   label?: string;
 }
 
-export const renderCopyableField: React.FC<CopyableFieldParams> = ({ module, subModule, label, text }) => (
+export const renderCopyableField = ({ module, subModule, label, text }: CopyableFieldParams) => (
   <>
     {label && (
       <Typography data-cy={`${module}-${subModule}-copyable-field-label`} variant="body2" color="textSecondary">

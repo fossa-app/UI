@@ -40,7 +40,7 @@ const Form = <T extends Item>({
   });
 
   const watchedValues = methods.watch();
-  const prevValuesRef = React.useRef<T>();
+  const prevValuesRef = React.useRef<T | null>(null);
 
   React.useEffect(() => {
     if (values) {
@@ -51,7 +51,7 @@ const Form = <T extends Item>({
   }, [values, defaultValues, methods]);
 
   React.useEffect(() => {
-    if (onChange && !deepEqual(watchedValues, prevValuesRef.current!)) {
+    if (onChange && !deepEqual(watchedValues, prevValuesRef.current)) {
       onChange(watchedValues);
       prevValuesRef.current = watchedValues;
     }
