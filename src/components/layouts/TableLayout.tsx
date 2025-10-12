@@ -1,7 +1,7 @@
 import React from 'react';
 import Box, { BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { Module, SubModule, UserRole } from 'shared/models';
+import { Module, SubModule, UserRole } from 'shared/types';
 import { ACTION_BUTTON_STYLES } from 'shared/constants';
 import Page from 'components/UI/Page';
 import WithRolesLayout from './WithRolesLayout';

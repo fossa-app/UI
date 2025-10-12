@@ -5,7 +5,7 @@ import { removeUser, selectAuthSettings, setError } from 'store/features';
 import axios, { AxiosError, AxiosRequestConfig } from 'shared/configs/axios';
 import { getUserFromLocalStorage, getUserManager, parseResponse } from 'shared/helpers';
 import { MESSAGES, ROUTES } from 'shared/constants';
-import { ErrorResponseDTO } from 'shared/models';
+import { ErrorResponseDTO } from 'shared/types';
 
 // TODO: debug, a weird issue takes place when authenticated, the token is not being set and receiving 401, fixes after refresh
 const AxiosInterceptor: React.FC<React.PropsWithChildren> = ({ children }) => {

@@ -10,7 +10,7 @@ import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HubIcon from '@mui/icons-material/Hub';
-import { IconType, SvgIcon } from 'shared/models';
+import { IconType, SvgIcon } from 'shared/types';
 
 export const ICONS: Record<IconType, SvgIcon> = {
   [IconType.save]: SaveIcon,

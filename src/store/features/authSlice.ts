@@ -3,7 +3,7 @@ import { OidcClientSettings } from 'oidc-client-ts';
 import { RootState, StateEntity } from 'store';
 import { fetchUser } from 'store/thunks';
 import { updateUserManager, decodeJwt } from 'shared/helpers';
-import { AppUser, ErrorResponseDTO, UserRole } from 'shared/models';
+import { AppUser, ErrorResponseDTO, UserRole } from 'shared/types';
 import { OIDC_INITIAL_CONFIG } from 'shared/constants';
 
 interface AuthState {

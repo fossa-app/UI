@@ -1,6 +1,6 @@
 import { TypedUseSelectorHook } from 'react-redux';
 import configureStore from 'redux-mock-store';
-import { DeepPartial } from 'shared/models';
+import { DeepPartial } from 'shared/types';
 import { RootState } from 'store';
 
 const middlewares: any[] = [];

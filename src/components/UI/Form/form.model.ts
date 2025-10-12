@@ -8,7 +8,7 @@ import { CheckboxProps } from '@mui/material/Checkbox';
 import { SwitchProps } from '@mui/material/Switch';
 import { GridBaseProps } from '@mui/material/Grid2';
 import { TypographyProps } from '@mui/material/Typography';
-import { Module, SubModule, ThemeMode, UserRole } from 'shared/models';
+import { Module, SubModule, ThemeMode, UserRole } from 'shared/types';
 import { LoadingButtonProps } from '../LoadingButton';
 
 type Validate<T> = {

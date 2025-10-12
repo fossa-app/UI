@@ -1,5 +1,5 @@
 import React from 'react';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 
 const FormContext = React.createContext<{ module: Module; subModule: SubModule; loading: boolean } | undefined>(undefined);
 

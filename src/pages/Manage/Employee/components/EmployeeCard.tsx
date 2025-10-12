@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
-import { Employee, Module, SubModule } from 'shared/models';
+import { Employee, Module, SubModule } from 'shared/types';
 
 interface EmployeeCardProps {
   module: Module;

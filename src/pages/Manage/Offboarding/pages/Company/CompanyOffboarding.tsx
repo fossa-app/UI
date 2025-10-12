@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompanyOffboardingStep } from 'store/features';
 import { fetchCompanyDatasourceTotals } from 'store/thunks';
 import { COMPANY_OFFBOARDING_STEPS, COMPANY_OFFBOARDING_STEP_MAP } from 'shared/constants';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 
 const CompanyOffboardingPage: React.FC = () => {
   const navigate = useNavigate();

@@ -3,7 +3,7 @@ import { generatePath, useNavigate } from 'react-router-dom';
 import { AsyncThunkAction } from '@reduxjs/toolkit';
 import { AppDispatch, PaginatedStateEntity, RootState, Status, useAppDispatch, useAppSelector } from 'store';
 import { selectUserRoles } from 'store/features';
-import { Module, SubModule, Item, PaginationParams, UserRole, ErrorResponseDTO, PaginatedResponse } from 'shared/models';
+import { Module, SubModule, Entity, PaginationParams, UserRole, ErrorResponseDTO, PaginatedResponse } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
 import { getTestSelectorByModule } from 'shared/helpers';
 import { useUnmount } from 'shared/hooks';
@@ -19,7 +19,7 @@ interface StateAction {
   dispatch?: AppDispatch;
 }
 
-type CatalogProps<T extends Item> = {
+type CatalogProps<T extends Entity> = {
   module: Module;
   subModule: SubModule;
   pageTitle: string;
@@ -41,7 +41,7 @@ type CatalogProps<T extends Item> = {
   selectEntity?: (state: RootState) => { deleteStatus?: Status };
 };
 
-const Catalog = <T extends Item>({
+const Catalog = <T extends Entity>({
   module,
   subModule,
   pageTitle,

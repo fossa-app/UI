@@ -1,5 +1,5 @@
 import { FieldErrors, FieldValues } from 'react-hook-form';
-import { ErrorResponseDTO, ErrorResponse } from 'shared/models';
+import { ErrorResponseDTO, ErrorResponse } from 'shared/types';
 import { FormFieldProps } from 'components/UI/Form';
 
 export const mapError = <T extends FieldValues>(error: ErrorResponseDTO): ErrorResponse<T> => {

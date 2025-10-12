@@ -20,9 +20,9 @@ import {
 } from 'store/features';
 import { fetchAssignedBranches, fetchAssignedDepartments, editEmployee, fetchEmployeeById, fetchManagers } from 'store/thunks';
 import { APP_CONFIG, EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
-import { Branch, Department, Employee, EmployeeDTO, EntityInput } from 'shared/models';
+import { Branch, Department, Employee, EmployeeDTO, EntityInput } from 'shared/types';
 import {
-  compareBigIds,
+  areEqualBigIds,
   deepCopyObject,
   mapBranchToFieldOption,
   mapDepartmentToFieldOption,
@@ -178,7 +178,7 @@ const EditEmployeePage: React.FC = () => {
   }, [managersFetchStatus, managersPage, dispatch]);
 
   React.useEffect(() => {
-    if (id && (!employee || !compareBigIds(employee.id, id))) {
+    if (id && (!employee || !areEqualBigIds(employee.id, id))) {
       dispatch(fetchEmployeeById({ id, shouldFetchBranchGeoAddress: false }));
     }
   }, [id, employee, dispatch]);

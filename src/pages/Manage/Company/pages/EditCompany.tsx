@@ -14,9 +14,9 @@ import {
   COMPANY_DETAILS_FORM_DEFAULT_VALUES,
   COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA,
   ROUTES,
-  USER_PERMISSION_GENERAL_MESSAGE,
+  USER_PERMISSION_GENERAL_ERROR,
 } from 'shared/constants';
-import { Company, CompanyDTO, EntityInput } from 'shared/models';
+import { Company, CompanyDTO, EntityInput } from 'shared/types';
 import { deepCopyObject, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
 import { useOnFormSubmitEffect } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
@@ -34,7 +34,7 @@ const EditCompanyPage: React.FC = () => {
   const { item: company, updateError: error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectCompany);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
   const fields = mapCountriesToFieldOptions(mapDisabledFields(COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, userRoles), countries);
-  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
+  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_ERROR;
   const navigateToViewCompany = () => navigate(ROUTES.viewCompany.path);
 
   const handleSubmit = (data: EntityInput<CompanyDTO>) => {

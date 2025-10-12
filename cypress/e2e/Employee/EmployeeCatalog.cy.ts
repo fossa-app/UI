@@ -1,5 +1,5 @@
 import { ROUTES } from 'shared/constants';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import {
   clearInputField,
   getLinearLoader,
@@ -229,15 +229,17 @@ describe('Employee Catalog Tests', () => {
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 1);
 
         interceptFetchEmployeesRequest(
-          { pageNumber: 1, pageSize: 10, search: 'Joe' },
+          { pageNumber: 1, pageSize: 10, search: 'Anthonyy' },
           { alias: 'fetchSearchedNoEmployeesRequest', fixture: 'employee/employees-empty' }
         );
 
-        search(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees', 'Joe');
+        search(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees', 'y');
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
 
-        cy.wait('@fetchSearchedNoEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10&search=Joe');
+        cy.wait('@fetchSearchedNoEmployeesRequest')
+          .its('request.url')
+          .should('include', 'Employees?pageNumber=1&pageSize=10&search=Anthonyy');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 0);
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'page-subtitle')
           .should('exist')
@@ -245,12 +247,13 @@ describe('Employee Catalog Tests', () => {
 
         interceptFetchEmployeesRequest(
           { pageNumber: 1, pageSize: 10, search: '' },
-          { alias: 'fetchMultipleEmployeesRequest', fixture: 'employee/employees-multiple' }
+          { alias: 'fetchMultipleEmployeesClearedRequest', fixture: 'employee/employees-multiple' }
         );
 
         clearInputField(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees');
 
-        cy.wait('@fetchMultipleEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
+        getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
+        cy.wait('@fetchMultipleEmployeesClearedRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 3);
       });
 

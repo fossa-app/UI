@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@mui/material/Grid2';
 import { useAppSelector } from 'store';
 import { selectFlows, selectUserRoles } from 'store/features';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import { convertFlowsMapToArray } from 'shared/helpers';
 import { APP_CONFIG } from 'shared/constants';
 import Page from 'components/UI/Page';

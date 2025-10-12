@@ -1,4 +1,6 @@
-export const mergePaginatedItems = <T extends { id: number }>(existingItems: T[] | undefined, newItems: T[] | undefined): T[] => {
+import { BaseEntity } from 'shared/types';
+
+export const mergePaginatedItems = <T extends BaseEntity>(existingItems: T[] | undefined, newItems: T[] | undefined): T[] => {
   if (!newItems?.length) {
     return existingItems || [];
   }

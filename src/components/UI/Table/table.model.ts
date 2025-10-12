@@ -1,6 +1,6 @@
 import React from 'react';
 import { TableCellProps } from '@mui/material/TableCell';
-import { Item, UserRole } from 'shared/models';
+import { Entity, UserRole } from 'shared/types';
 
 export type ActionField = 'view' | 'edit' | 'delete';
 
@@ -14,7 +14,7 @@ export interface TableActionColumn {
   name: string;
 }
 
-export type Column<T = Item> = {
+export type Column<T = Entity> = {
   name: React.ReactNode;
   field: string;
   width?: number | string;
@@ -22,7 +22,7 @@ export type Column<T = Item> = {
   renderBodyCell?: (item: T) => React.ReactNode;
 } & TableCellProps;
 
-export interface Action<T = Item> {
+export interface Action<T = Entity> {
   name: React.ReactNode;
   field: ActionField;
   roles?: UserRole[];

@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { resetMockState, setMockState } from '../store';
-import { CompanyLicense, SystemLicense } from 'shared/models';
+import { CompanyLicense, SystemLicense } from 'shared/types';
 import Environment from 'layout/Footer/components/Environment';
 import Footer from 'layout/Footer';
 

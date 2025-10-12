@@ -21,9 +21,9 @@ import {
   DEPARTMENT_FIELDS,
   DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA,
   ROUTES,
-  USER_PERMISSION_GENERAL_MESSAGE,
+  USER_PERMISSION_GENERAL_ERROR,
 } from 'shared/constants';
-import { Department, DepartmentDTO, EmployeeDTO } from 'shared/models';
+import { Department, DepartmentDTO, EmployeeDTO } from 'shared/types';
 import { mapDisabledFields, deepCopyObject, mapDepartmentDTO, mapDepartmentFieldOptionsToFieldOptions } from 'shared/helpers';
 import ManageEntity from 'components/Entity/ManageEntity';
 
@@ -47,7 +47,7 @@ const ManageDepartmentPage: React.FC = () => {
   } = useAppSelector(selectManagers);
   const parentDepartmentsLoading = parentDepartmentsFetchStatus === 'loading';
   const managersLoading = managersFetchStatus === 'loading';
-  const errors = isUserAdmin ? deepCopyObject(updateError?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
+  const errors = isUserAdmin ? deepCopyObject(updateError?.errors) : USER_PERMISSION_GENERAL_ERROR;
 
   const handleParentDepartmentsScrollEnd = () => {
     if (parentDepartmentsPage.pageNumber! < parentDepartmentsPage.totalPages!) {

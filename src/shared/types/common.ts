@@ -10,9 +10,11 @@ export type NonNullableFields<T> = {
   [K in keyof T]-?: NonNullable<T[K]>;
 };
 
-export type Item = Record<string, any>;
+export type BaseEntity = { id: number };
 
-export type EntityInput<T extends { id: number | string }> = Omit<T, 'id'>;
+export type EntityInput<T extends BaseEntity> = Omit<T, 'id'>;
+
+export type Entity = Record<string, any>;
 
 export interface Country {
   name: string;

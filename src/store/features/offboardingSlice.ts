@@ -19,7 +19,7 @@ import {
   EmployeeDTO,
   OffboardingStep,
   PaginatedResponse,
-} from 'shared/models';
+} from 'shared/types';
 
 interface OffboardingState {
   company: StateEntity<CompanyOffboardingStep> & {

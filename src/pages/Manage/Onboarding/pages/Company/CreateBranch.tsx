@@ -9,7 +9,7 @@ import {
   selectSystemCountries,
 } from 'store/features';
 import { createOnboardingBranch } from 'store/thunks';
-import { Branch } from 'shared/models';
+import { Branch } from 'shared/types';
 import {
   getBranchManagementDetailsByAddressFormSchema,
   mapBranchDTO,
@@ -18,7 +18,7 @@ import {
   deepCopyObject,
   hasAllowedRole,
 } from 'shared/helpers';
-import { CREATE_BRANCH_DETAILS_FORM_SCHEMA, BRANCH_DETAILS_FORM_DEFAULT_VALUES, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
+import { CREATE_BRANCH_DETAILS_FORM_SCHEMA, BRANCH_DETAILS_FORM_DEFAULT_VALUES, USER_PERMISSION_GENERAL_ERROR } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';
 
 const testModule = CREATE_BRANCH_DETAILS_FORM_SCHEMA.module;
@@ -37,7 +37,7 @@ const CreateBranchPage: React.FC = () => {
   const schema = getBranchManagementDetailsByAddressFormSchema(CREATE_BRANCH_DETAILS_FORM_SCHEMA.fields, !!noPhysicalAddress);
   const disabledFields = mapDisabledFields(schema, userRoles);
   const fields = mapBranchFieldOptionsToFieldOptions(disabledFields, companyTimeZones, availableCountries);
-  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
+  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_ERROR;
 
   const actions = CREATE_BRANCH_DETAILS_FORM_SCHEMA.actions.map((action) =>
     action.name === FormActionName.submit

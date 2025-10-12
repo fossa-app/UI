@@ -1,7 +1,7 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
-import { Branch, Module, SubModule } from 'shared/models';
+import { Branch, Module, SubModule } from 'shared/types';
 import { getNestedValue } from 'shared/helpers';
 import { APP_CONFIG } from 'shared/constants';
 

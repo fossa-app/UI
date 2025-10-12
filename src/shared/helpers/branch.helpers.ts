@@ -1,5 +1,5 @@
 import { BRANCH_FIELDS } from 'shared/constants';
-import { Branch, BranchDTO, EntityInput, Company, Country, GeoAddress, TimeZone } from 'shared/models';
+import { Branch, BranchDTO, EntityInput, Company, Country, GeoAddress, TimeZone } from 'shared/types';
 import { FormFieldProps, FieldOption } from 'components/UI/Form';
 import { mapCountryToFieldOption } from './company.helpers';
 

@@ -1,4 +1,4 @@
-import { UserRole } from 'shared/models';
+import { UserRole } from 'shared/types';
 import { FormFieldProps } from 'components/UI/Form';
 
 export const mapDisabledFields = <T>(fields: FormFieldProps<T>[], userRoles?: UserRole[]): FormFieldProps<T>[] => {

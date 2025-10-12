@@ -1,5 +1,5 @@
 import { User } from 'oidc-client-ts';
-import { AppUser, Employee, UserProfile } from 'shared/models';
+import { AppUser, Employee, UserProfile } from 'shared/types';
 
 export const mapUser = (user: User): AppUser => {
   const { toStorageString, ...rest } = user;

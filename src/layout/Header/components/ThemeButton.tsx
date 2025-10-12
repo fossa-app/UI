@@ -3,7 +3,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { getTestSelectorByModule } from 'shared/helpers';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 
 const testModule = Module.shared;
 const testSubModule = SubModule.header;

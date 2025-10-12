@@ -1,4 +1,4 @@
-import { Branch, ColorSchemeId, Department, EntityInput, Module, SubModule, ThemeMode } from 'shared/models';
+import { Branch, ColorSchemeId, Department, EntityInput, Module, SubModule, ThemeMode } from 'shared/types';
 
 const colorSchemeValues: ColorSchemeId[] = [
   'midnight',
@@ -51,7 +51,6 @@ export const clickActionButton = (module: Module, subModule: SubModule) => {
 };
 
 export const search = (module: Module, subModule: SubModule, selector: string, text: string) => {
-  clearInputField(module, subModule, selector);
   getTestSelectorByModule(module, subModule, selector).find('input').type(text);
 };
 

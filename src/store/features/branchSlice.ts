@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, PaginatedStateEntity, StateEntity } from 'store';
-import { Branch, BranchDTO, ErrorResponseDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/models';
+import { Branch, BranchDTO, ErrorResponseDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
 import { mergePaginatedItems } from 'store/helpers';
 import {

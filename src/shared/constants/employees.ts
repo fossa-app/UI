@@ -1,4 +1,4 @@
-import { Employee, EmployeeFieldConfig, EntityInput, IconType, Module, SubModule, UserRole } from 'shared/models';
+import { Employee, EmployeeFieldConfig, EntityInput, IconType, Module, SubModule, UserRole } from 'shared/types';
 import { FormActionType, FormFieldType, FormActionName, FormProps } from 'components/UI/Form';
 import { Action, Column } from 'components/UI/Table';
 import { ViewDetailActionName, ViewDetailActionType, ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';

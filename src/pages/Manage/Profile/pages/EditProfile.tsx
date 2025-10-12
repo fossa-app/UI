@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { resetProfileFetchStatus, selectProfile } from 'store/features';
 import { editProfile } from 'store/thunks';
 import { EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, PROFILE_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
-import { Employee, EntityInput } from 'shared/models';
+import { Employee, EntityInput } from 'shared/types';
 import { deepCopyObject, mapProfileDTO } from 'shared/helpers';
 import { useOnFormSubmitEffect } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';

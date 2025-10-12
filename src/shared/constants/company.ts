@@ -9,7 +9,7 @@ import {
   Module,
   SubModule,
   UserRole,
-} from 'shared/models';
+} from 'shared/types';
 import { FormActionType, FormFieldType, FormActionName, FormProps } from 'components/UI/Form';
 import { ViewDetailActionName, ViewDetailActionType, ViewDetailProps, ViewDetailType } from 'components/UI/ViewDetails';
 import { renderCopyableField } from 'components/UI/helpers/renderCopyableField';

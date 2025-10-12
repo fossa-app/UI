@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Theme } from '@mui/material/styles';
 import CircularProgress, { circularProgressClasses } from '@mui/material/CircularProgress';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 
 interface RenderLicenseUsageDetailParams {
   module: Module;

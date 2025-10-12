@@ -2,7 +2,7 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
-import { CompanyLicense, Module, SubModule, SystemLicense } from 'shared/models';
+import { CompanyLicense, Module, SubModule, SystemLicense } from 'shared/types';
 import { getTestSelectorByModule } from 'shared/helpers';
 
 const testModule = Module.shared;

@@ -12,7 +12,7 @@ import {
   fetchParentDepartments,
   fetchSearchedDepartments,
 } from 'store/thunks';
-import { ErrorResponseDTO, ErrorResponse, PaginatedResponse, PaginationParams, Department, DepartmentDTO } from 'shared/models';
+import { ErrorResponseDTO, ErrorResponse, PaginatedResponse, PaginationParams, Department, DepartmentDTO } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
 import { mergePaginatedItems } from 'store/helpers';
 

@@ -1,4 +1,4 @@
-import { CompanyLicense } from 'shared/models';
+import { CompanyLicense } from 'shared/types';
 import { formatDateToLocaleString } from './date.helpers';
 
 export const mapCompanyLicense = (license: CompanyLicense): CompanyLicense => {

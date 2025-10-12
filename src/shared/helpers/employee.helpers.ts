@@ -1,4 +1,4 @@
-import { AppUser, Branch, BranchDTO, Department, DepartmentDTO, Employee, EmployeeDTO, EntityInput } from 'shared/models';
+import { AppUser, Branch, BranchDTO, Department, DepartmentDTO, Employee, EmployeeDTO, EntityInput } from 'shared/types';
 import { FieldOption } from 'components/UI/Form';
 import { mapUserProfileToEmployee } from './user.helpers';
 

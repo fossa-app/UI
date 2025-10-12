@@ -22,7 +22,7 @@ import {
   ErrorResponse,
   ErrorResponseDTO,
   PaginatedResponse,
-} from 'shared/models';
+} from 'shared/types';
 import { calculateUsagePercent, filterUniqueByField } from 'shared/helpers';
 
 interface CompanyState {

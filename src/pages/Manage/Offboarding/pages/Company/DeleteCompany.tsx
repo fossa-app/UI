@@ -3,7 +3,8 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompany, selectIsUserAdmin, selectUserRoles } from 'store/features';
 import { deleteCompany } from 'store/thunks';
 import { deepCopyObject, hasAllowedRole } from 'shared/helpers';
-import { DELETE_COMPANY_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
+import { DELETE_COMPANY_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_ERROR } from 'shared/constants';
+import { Company } from 'shared/types';
 import Form, { FormActionName } from 'components/UI/Form';
 
 const testModule = DELETE_COMPANY_DETAILS_FORM_SCHEMA.module;
@@ -15,7 +16,7 @@ const DeleteCompanyPage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { deleteError: error, deleteStatus } = useAppSelector(selectCompany);
   const fields = DELETE_COMPANY_DETAILS_FORM_SCHEMA.fields;
-  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
+  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_ERROR;
 
   const actions = DELETE_COMPANY_DETAILS_FORM_SCHEMA.actions.map((action) => {
     switch (action.name) {
@@ -35,10 +36,10 @@ const DeleteCompanyPage: React.FC = () => {
   };
 
   return (
-    <Form<File> module={testModule} subModule={testSubModule} errors={errors} onSubmit={handleSubmit}>
+    <Form<Company> module={testModule} subModule={testSubModule} errors={errors} onSubmit={handleSubmit}>
       <Form.Header>{DELETE_COMPANY_DETAILS_FORM_SCHEMA.title}</Form.Header>
       <Form.Content fields={fields} />
-      <Form.Actions actions={actions}></Form.Actions>
+      <Form.Actions actions={actions} />
     </Form>
   );
 };

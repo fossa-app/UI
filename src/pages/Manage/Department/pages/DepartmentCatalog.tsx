@@ -7,7 +7,7 @@ import {
   resetDepartmentsPagination,
 } from 'store/features';
 import { deleteDepartment, fetchDepartments } from 'store/thunks';
-import { Department, Module, SubModule } from 'shared/models';
+import { Department, Module, SubModule } from 'shared/types';
 import { DEPARTMENT_FIELDS, DEPARTMENT_TABLE_SCHEMA, DEPARTMENT_TABLE_ACTIONS_SCHEMA, ROUTES } from 'shared/constants';
 import Catalog from 'components/Catalog';
 

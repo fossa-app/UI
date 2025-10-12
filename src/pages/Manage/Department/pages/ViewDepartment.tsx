@@ -2,7 +2,7 @@ import React from 'react';
 import { ROUTES, DEPARTMENT_VIEW_DETAILS_SCHEMA } from 'shared/constants';
 import { selectDepartment, resetDepartment } from 'store/features';
 import { fetchDepartmentById } from 'store/thunks';
-import { Department, Module, SubModule } from 'shared/models';
+import { Department, Module, SubModule } from 'shared/types';
 import ViewEntity from 'components/Entity/ViewEntity';
 
 const ViewDepartmentPage: React.FC = () => (

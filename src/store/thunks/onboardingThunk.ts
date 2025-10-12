@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchBranchesTotal, fetchCompanySettings, fetchCompany, fetchCompanyLicense, fetchProfile } from 'store/thunks';
-import { ErrorResponseDTO } from 'shared/models';
+import { ErrorResponseDTO } from 'shared/types';
 
 export const fetchOnboardingData = createAsyncThunk<void, void, { rejectValue: ErrorResponseDTO }>(
   'onboarding/fetchOnboardingData',

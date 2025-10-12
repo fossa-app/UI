@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
 import { setError, setSuccess } from 'store/features';
 import axios from 'shared/configs/axios';
-import { CompanySettings, CompanySettingsDTO, EntityInput, ErrorResponse, ErrorResponseDTO } from 'shared/models';
+import { CompanySettings, CompanySettingsDTO, EntityInput, ErrorResponse, ErrorResponseDTO } from 'shared/types';
 import { MESSAGES, ENDPOINTS, COMPANY_SETTINGS_KEY } from 'shared/constants';
 import { mapError, saveToLocalStorage, removeFromLocalStorage } from 'shared/helpers';
 

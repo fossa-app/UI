@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import { fetchClient } from 'store/thunks';
-import { Client, ErrorResponseDTO } from 'shared/models';
+import { Client, ErrorResponseDTO } from 'shared/types';
 
 interface IdentityState {
   client: StateEntity<Client | undefined>;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import { clearMessages, selectMessage } from 'store/features';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import { getTestSelectorByModule } from 'shared/helpers';
 import Snackbar from 'components/UI/Snackbar';
 

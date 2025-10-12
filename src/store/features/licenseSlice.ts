@@ -3,7 +3,7 @@ import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import { fetchCompanyLicense, fetchSystemLicense, uploadCompanyLicense } from 'store/thunks';
-import { CompanyLicense, ErrorResponse, ErrorResponseDTO, SystemLicense } from 'shared/models';
+import { CompanyLicense, ErrorResponse, ErrorResponseDTO, SystemLicense } from 'shared/types';
 
 interface LicenseState {
   system: StateEntity<SystemLicense | undefined>;

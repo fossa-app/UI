@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import { Branch, Module, SubModule } from 'shared/models';
+import { Branch, Module, SubModule } from 'shared/types';
 import MapView from 'components/UI/Map';
 
 interface RenderBranchMapFieldParams {

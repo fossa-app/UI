@@ -1,4 +1,4 @@
-import { FlowsMap, IconType, RouteKey, UserRole } from 'shared/models';
+import { FlowsMap, IconType, RouteKey, UserRole } from 'shared/types';
 import { ROUTES } from './routes';
 
 export const FLOWS_MAP: FlowsMap = {

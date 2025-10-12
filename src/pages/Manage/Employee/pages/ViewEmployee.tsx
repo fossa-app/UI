@@ -4,9 +4,9 @@ import Button from '@mui/material/Button';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectEmployee, resetEmployee, selectProfile, selectUserRoles } from 'store/features';
 import { fetchEmployeeById } from 'store/thunks';
-import { UserRole } from 'shared/models';
+import { UserRole } from 'shared/types';
 import { EMPLOYEE_VIEW_DETAILS_SCHEMA, ROUTES, ACTION_BUTTON_STYLES } from 'shared/constants';
-import { compareBigIds } from 'shared/helpers';
+import { areEqualBigIds } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
 import WithRolesLayout from 'components/layouts/WithRolesLayout';
 import ViewDetails from 'components/UI/ViewDetails';
@@ -34,7 +34,7 @@ const ViewEmployeePage: React.FC = () => {
   };
 
   React.useEffect(() => {
-    if (id && (!employee || !compareBigIds(employee.id, id))) {
+    if (id && (!employee || !areEqualBigIds(employee.id, id))) {
       dispatch(fetchEmployeeById({ id, shouldFetchBranchGeoAddress: false }));
     }
   }, [id, employee, dispatch]);

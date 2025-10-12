@@ -19,7 +19,7 @@ import {
   PaginationParams,
   GeoAddress,
   EntityInput,
-} from 'shared/models';
+} from 'shared/types';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import {
   mapBranch,

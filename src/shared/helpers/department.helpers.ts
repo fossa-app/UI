@@ -1,5 +1,5 @@
 import { DEPARTMENT_FIELDS } from 'shared/constants';
-import { Department, DepartmentDTO, Employee, EmployeeDTO, EntityInput } from 'shared/models';
+import { Department, DepartmentDTO, Employee, EmployeeDTO, EntityInput } from 'shared/types';
 import { FormFieldProps, FieldOption } from 'components/UI/Form';
 import { mapEmployeeToFieldOption } from './employee.helpers';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormProvider as ReactHookFormProvider, useForm, DefaultValues, FieldErrors, FieldValues } from 'react-hook-form';
 import Paper from '@mui/material/Paper';
-import { Item, Module, SubModule } from 'shared/models';
+import { Entity, Module, SubModule } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
 import { deepEqual } from 'shared/helpers';
 import LinearLoader from '../LinearLoader';
@@ -21,7 +21,7 @@ type FormProps<T extends FieldValues> = React.PropsWithChildren<{
   onChange?: (formValue: T) => void;
 }>;
 
-const Form = <T extends Item>({
+const Form = <T extends Entity>({
   module,
   subModule,
   defaultValues,

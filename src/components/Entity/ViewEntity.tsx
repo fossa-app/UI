@@ -3,12 +3,12 @@ import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { AsyncThunkAction } from '@reduxjs/toolkit';
 import { useAppDispatch, useAppSelector, RootState, AppDispatch, StateEntity } from 'store';
 import { selectUserRoles } from 'store/features';
-import { compareBigIds, hasAllowedRole } from 'shared/helpers';
-import { Module, SubModule, ErrorResponseDTO } from 'shared/models';
+import { areEqualBigIds, hasAllowedRole } from 'shared/helpers';
+import { Module, SubModule, ErrorResponseDTO, BaseEntity } from 'shared/types';
 import PageLayout from 'components/layouts/PageLayout';
 import ViewDetails, { ViewDetailActionName, ViewDetailProps } from 'components/UI/ViewDetails';
 
-type ViewEntityProps<T extends { id: number }> = {
+type ViewEntityProps<T extends BaseEntity> = {
   module: Module;
   subModule: SubModule;
   pageTitle: string;
@@ -20,7 +20,7 @@ type ViewEntityProps<T extends { id: number }> = {
   fetchEntityAction: (params: { id: string }) => AsyncThunkAction<T, unknown, { rejectValue: ErrorResponseDTO }>;
 };
 
-const ViewEntity = <T extends { id: number }>({
+const ViewEntity = <T extends BaseEntity>({
   module,
   subModule,
   pageTitle,
@@ -58,7 +58,7 @@ const ViewEntity = <T extends { id: number }>({
     });
 
   React.useEffect(() => {
-    const shouldFetch = !hasFetched.current && id && (!values || !compareBigIds(values.id, id));
+    const shouldFetch = !hasFetched.current && id && (!values || !areEqualBigIds(values.id, id));
 
     if (shouldFetch) {
       dispatch(fetchEntityAction({ id }));

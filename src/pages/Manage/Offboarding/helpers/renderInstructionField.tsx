@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 
 interface RenderInstructionFieldParams {
   module: Module;

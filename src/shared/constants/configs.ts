@@ -1,6 +1,6 @@
 import { OidcClientSettings } from 'oidc-client-ts';
 import { FieldErrors, FieldValues } from 'react-hook-form';
-import { ColorSchemeId, CompanySettings, EntityInput, PaginationParams } from 'shared/models';
+import { ColorSchemeId, CompanySettings, EntityInput, PaginationParams } from 'shared/types';
 
 export const OIDC_INITIAL_CONFIG: OidcClientSettings = {
   authority: 'http://localhost:9011',
@@ -115,7 +115,7 @@ export const MESSAGES = {
   },
 };
 
-export const USER_PERMISSION_GENERAL_MESSAGE = {
+export const USER_PERMISSION_GENERAL_ERROR = {
   '': {
     type: 'pattern',
     message: MESSAGES.error.general.permission,

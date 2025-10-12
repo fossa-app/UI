@@ -1,6 +1,6 @@
 import React from 'react';
 import Accordion, { AccordionProps } from '@mui/material/Accordion';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import LinearLoader from '../LinearLoader';
 import ViewDetailsContext from './ViewDetailsContext';
 import ViewDetailsHeader from './ViewDetailsHeader';
