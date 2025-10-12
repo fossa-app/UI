@@ -7,7 +7,7 @@ import { useAppSelector } from 'store';
 import { selectAppConfig, selectCompanySettings, selectPreviewColorSchemeId } from 'store/features';
 import { useAppTheme } from 'shared/hooks';
 import { darkScrollbar, getTestSelectorByModule, lightScrollbar } from 'shared/helpers';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import MessageLayout from 'layout/MessageLayout';
 import AxiosInterceptor from '../AxiosInterceptor';
 import ClientLoader from '../ClientLoader';

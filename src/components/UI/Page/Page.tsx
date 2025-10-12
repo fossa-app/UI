@@ -1,6 +1,6 @@
 import React from 'react';
 import Box, { BoxProps } from '@mui/material/Box';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import PageContext from './PageContext';
 import PageTitle from './PageTitle';
 import PageSubtitle from './PageSubtitle';

@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import { Department } from 'shared/models';
+import { Department } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
 
 interface RenderDepartmentFieldParams {

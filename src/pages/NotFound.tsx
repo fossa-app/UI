@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Box from '@mui/system/Box';
 import Button from '@mui/material/Button';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import Page from 'components/UI/Page';
 
 export interface NotFoundPageProps {

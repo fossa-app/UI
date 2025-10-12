@@ -13,9 +13,9 @@ import {
   DEFAULT_COMPANY_SETTINGS,
   COMPANY_SETTINGS_FIELDS,
   CREATE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA,
-  USER_PERMISSION_GENERAL_MESSAGE,
+  USER_PERMISSION_GENERAL_ERROR,
 } from 'shared/constants';
-import { CompanySettings, CompanySettingsDTO, EntityInput, ThemeMode } from 'shared/models';
+import { CompanySettings, CompanySettingsDTO, EntityInput, ThemeMode } from 'shared/types';
 import { deepCopyObject, hasAllowedRole, mapDisabledFields } from 'shared/helpers';
 import { COLOR_SCHEMES } from 'shared/themes';
 import { useUnmount } from 'shared/hooks';
@@ -33,7 +33,7 @@ const CreateCompanySettingsPage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const mode: ThemeMode = isDarkTheme ? 'dark' : 'light';
   const filteredSchemes = Object.fromEntries(Object.entries(COLOR_SCHEMES).filter(([, scheme]) => scheme[mode]));
-  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
+  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_ERROR;
 
   const fields = mapDisabledFields(CREATE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.fields, userRoles).map((field) => {
     if (field.name === COMPANY_SETTINGS_FIELDS.colorSchemeId!.field) {

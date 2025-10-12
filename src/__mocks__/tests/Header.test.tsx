@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import { toggleAppTheme } from 'store/features';
-import { OnboardingStep } from 'shared/models';
+import { OnboardingStep } from 'shared/types';
 import Header from 'layout/Header';
 import { setMockState, mockDispatch, resetMockState } from '../store';
 import { getUserManager } from '../oidc-client-mock';

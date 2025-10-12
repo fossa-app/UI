@@ -5,7 +5,7 @@ import { useTheme } from '@mui/material/styles';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectEmployeeOrgChart } from 'store/features';
 import { fetchOrgChartEmployees } from 'store/thunks';
-import { Module, PaginationParams, SubModule } from 'shared/models';
+import { Module, PaginationParams, SubModule } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
 import LinearLoader from 'components/UI/LinearLoader';
 import PageLayout from 'components/layouts/PageLayout';

@@ -12,7 +12,7 @@ import {
   selectCompanyOnboardingSkippedSteps,
   selectCompanyOnboardingStep,
 } from 'store/features';
-import { Module, OnboardingStep, SubModule } from 'shared/models';
+import { Module, OnboardingStep, SubModule } from 'shared/types';
 import { COMPANY_ONBOARDING_STEP_MAP, COMPANY_ONBOARDING_STEPS } from 'shared/constants';
 
 const CompanyOnboardingPage: React.FC = () => {

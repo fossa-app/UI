@@ -5,7 +5,7 @@ import List from '@mui/material/List';
 import Box from '@mui/material/Box';
 import { useAppSelector } from 'store';
 import { selectFlows } from 'store/features';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import { convertFlowsMapToArray, getTestSelectorByModule } from 'shared/helpers';
 import FlowItem from 'components/Flow/FlowItem';
 

@@ -1,6 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import { PaginationParams, GeneralErrorResponse } from 'shared/models';
+import { PaginationParams, GeneralErrorResponse } from 'shared/types';
 import clientReducer from './features/identitySlice';
 import appConfigReducer from './features/appConfigSlice';
 import licenseReducer from './features/licenseSlice';

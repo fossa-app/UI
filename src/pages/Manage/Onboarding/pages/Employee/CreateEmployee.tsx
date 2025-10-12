@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectProfile } from 'store/features';
 import { createProfile } from 'store/thunks';
-import { Employee } from 'shared/models';
+import { Employee } from 'shared/types';
 import { EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA } from 'shared/constants';
 import { deepCopyObject, mapProfileDTO } from 'shared/helpers';
 import Form, { FormActionName } from 'components/UI/Form';

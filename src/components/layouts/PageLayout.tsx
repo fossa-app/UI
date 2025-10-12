@@ -1,6 +1,6 @@
 import React from 'react';
 import Box, { BoxProps } from '@mui/material/Box';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import Page from 'components/UI/Page';
 import { createLazyComponent } from 'routes/lazy-loaded-component';
 import { useSafeNavigateBack } from 'shared/hooks';

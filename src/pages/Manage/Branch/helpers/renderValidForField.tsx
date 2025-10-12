@@ -1,6 +1,6 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import { daysUntil } from 'shared/helpers';
 
 interface RenderValidForFieldParams {

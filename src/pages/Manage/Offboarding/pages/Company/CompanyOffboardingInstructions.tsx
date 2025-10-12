@@ -6,10 +6,10 @@ import { selectCompanyOffboardingInstructionsFlags, selectIsUserAdmin } from 'st
 import {
   COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA,
   ROUTES,
-  USER_PERMISSION_GENERAL_MESSAGE,
+  USER_PERMISSION_GENERAL_ERROR,
   ACTION_BUTTON_STYLES,
 } from 'shared/constants';
-import { CompanyDatasourceTotals, RouteItem } from 'shared/models';
+import { CompanyDatasourceTotals, RouteItem } from 'shared/types';
 import Form from 'components/UI/Form';
 
 const testModule = COMPANY_OFFBOARDING_INSTRUCTIONS_FORM_SCHEMA.module;
@@ -21,7 +21,7 @@ const CompanyOffboardingInstructionsPage: React.FC = () => {
   const { status, branches, employees, departments } = useAppSelector(selectCompanyOffboardingInstructionsFlags);
   const loading = status === 'idle' || status === 'loading';
   const values = { branches, employees, departments };
-  const errors = isUserAdmin ? undefined : USER_PERMISSION_GENERAL_MESSAGE;
+  const errors = isUserAdmin ? undefined : USER_PERMISSION_GENERAL_ERROR;
 
   const handleNavigate = (path: RouteItem['path']) => {
     navigate(path);

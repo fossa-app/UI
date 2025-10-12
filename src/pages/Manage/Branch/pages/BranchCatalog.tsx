@@ -7,7 +7,7 @@ import {
   resetBranchesPagination,
 } from 'store/features';
 import { deleteBranch, fetchBranches } from 'store/thunks';
-import { Branch, Module, SubModule } from 'shared/models';
+import { Branch, Module, SubModule } from 'shared/types';
 import { BRANCH_FIELDS, BRANCH_TABLE_SCHEMA, BRANCH_TABLE_ACTIONS_SCHEMA, ROUTES } from 'shared/constants';
 import Catalog from 'components/Catalog';
 

@@ -1,5 +1,5 @@
 import { ROUTES } from 'shared/constants';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import {
   clearInputField,
   clickActionButton,
@@ -183,14 +183,14 @@ describe('Branch Catalog Tests', () => {
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 1);
 
           interceptFetchBranchesRequest(
-            { pageNumber: 1, pageSize: 10, search: 'Old' },
+            { pageNumber: 1, pageSize: 10, search: 'Neww' },
             { alias: 'fetchSearchedNoBranchesRequest', fixture: 'branch/branches-empty' }
           );
 
-          search(Module.branchManagement, SubModule.branchCatalog, 'search-branches', 'Old');
+          search(Module.branchManagement, SubModule.branchCatalog, 'search-branches', 'w');
 
           getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('exist');
-          cy.wait('@fetchSearchedNoBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10&search=Old');
+          cy.wait('@fetchSearchedNoBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10&search=Neww');
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 0);
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'page-subtitle')
             .should('exist')
@@ -198,12 +198,13 @@ describe('Branch Catalog Tests', () => {
 
           interceptFetchBranchesRequest(
             { pageNumber: 1, pageSize: 10, search: '' },
-            { alias: 'fetchMultipleBranchesRequest', fixture: 'branch/branches-multiple' }
+            { alias: 'fetchMultipleBranchesClearedRequest', fixture: 'branch/branches-multiple' }
           );
 
           clearInputField(Module.branchManagement, SubModule.branchCatalog, 'search-branches');
 
-          cy.wait('@fetchMultipleBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
+          getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('exist');
+          cy.wait('@fetchMultipleBranchesClearedRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10');
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 2);
         });
 

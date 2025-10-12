@@ -3,7 +3,7 @@ import Box, { BoxProps } from '@mui/material/Box';
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import { ACTION_BUTTON_STYLES } from 'shared/constants';
 
 export type FileUploadProps = {

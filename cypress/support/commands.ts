@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { SinonStub } from 'cypress/types/sinon';
-import { ThemeMode } from 'shared/models';
+import { ThemeMode } from 'shared/types';
 
 // ***********************************************
 // This example commands.ts shows you how to

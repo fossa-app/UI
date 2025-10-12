@@ -1,5 +1,5 @@
 import { ICONS } from 'shared/constants';
-import { Flow, FlowsMap } from 'shared/models';
+import { Flow, FlowsMap } from 'shared/types';
 
 export const convertFlowsMapToArray = (flowsMap: FlowsMap): Flow[] => {
   return Object.values(flowsMap).map((flow) => ({

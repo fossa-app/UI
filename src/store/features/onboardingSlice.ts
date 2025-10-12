@@ -10,7 +10,7 @@ import {
   deleteProfile,
   fetchProfile,
 } from 'store/thunks';
-import { CompanyOnboardingStep, OnboardingStep } from 'shared/models';
+import { CompanyOnboardingStep, OnboardingStep } from 'shared/types';
 
 interface OnboardingState {
   company: StateEntity<CompanyOnboardingStep> & {

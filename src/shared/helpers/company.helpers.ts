@@ -1,4 +1,4 @@
-import { Company, CompanyDTO, Country } from 'shared/models';
+import { Company, CompanyDTO, Country } from 'shared/types';
 import { COMPANY_LICENSE_FIELDS } from 'shared/constants';
 import { FormFieldProps, FormFieldType, FieldOption } from 'components/UI/Form';
 

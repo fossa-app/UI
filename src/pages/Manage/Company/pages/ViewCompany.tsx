@@ -13,7 +13,7 @@ import {
   selectCompanyLicenseLoading,
 } from 'store/features';
 import { fetchCompany, fetchCompanyDatasourceTotals } from 'store/thunks';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import { COMPANY_LICENSE_VIEW_DETAILS_SCHEMA, COMPANY_VIEW_DETAILS_SCHEMA, ROUTES } from 'shared/constants';
 import { createCompanyLicenseEntitlementsFieldsMap, hasAllowedRole } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup, MapContainerProps } from 'react-leaflet';
-import { GeoAddress, Module, SubModule } from 'shared/models';
+import { GeoAddress, Module, SubModule } from 'shared/types';
 import Page from 'components/UI/Page';
 
 type MapViewProps = {

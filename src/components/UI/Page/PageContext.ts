@@ -1,5 +1,5 @@
 import React from 'react';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 
 const PageContext = React.createContext<{ module: Module; subModule: SubModule } | undefined>(undefined);
 

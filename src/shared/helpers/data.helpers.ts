@@ -32,7 +32,7 @@ export const parseResponse = <T = unknown>(response: any): T => {
   return response as T;
 };
 
-export const compareBigIds = (value1: number | string, value2: number | string): boolean => {
+export const areEqualBigIds = (value1: number | string, value2: number | string): boolean => {
   try {
     return BigInt(value1) === BigInt(value2);
   } catch {

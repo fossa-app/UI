@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { updateAuthSettings } from 'store/features';
 import axios from 'shared/configs/axios';
-import { Client, ErrorResponseDTO } from 'shared/models';
+import { Client, ErrorResponseDTO } from 'shared/types';
 import { MESSAGES, ROUTES, ENDPOINTS } from 'shared/constants';
 import { parseResponse } from 'shared/helpers';
 

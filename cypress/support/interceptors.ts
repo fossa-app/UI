@@ -1,4 +1,4 @@
-import { Branch, Department, Employee, PaginatedResponse } from '../../src/shared/models';
+import { Branch, Department, Employee, PaginatedResponse } from '../../src/shared/types';
 
 const baseUrl = Cypress.config('baseUrl');
 const serverBaseUrl = Cypress.env('serverBaseUrl');

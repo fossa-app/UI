@@ -4,12 +4,12 @@ import { DefaultValues, FieldErrors, FieldValues } from 'react-hook-form';
 import { AsyncThunkAction } from '@reduxjs/toolkit';
 import { useAppDispatch, useAppSelector, RootState, AppDispatch, StateEntity } from 'store';
 import { useOnFormSubmitEffect, useSafeNavigateBack, useUnmount } from 'shared/hooks';
-import { EntityInput, ErrorResponse, ErrorResponseDTO, Module, SubModule } from 'shared/models';
-import { compareBigIds } from 'shared/helpers';
+import { BaseEntity, EntityInput, ErrorResponse, ErrorResponseDTO, Module, SubModule } from 'shared/types';
+import { areEqualBigIds } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName, FormFieldProps, FormProps } from 'components/UI/Form';
 
-type ManageEntityProps<T extends { id: number }, TDTO extends { id: number }> = {
+type ManageEntityProps<T extends BaseEntity, TDTO extends BaseEntity> = {
   module: Module;
   subModule: SubModule;
   pageTitle: { create: string; edit: string };
@@ -32,7 +32,7 @@ type ManageEntityProps<T extends { id: number }, TDTO extends { id: number }> = 
   fetchEntityAction: (params: { id: string }) => AsyncThunkAction<T, unknown, { rejectValue: ErrorResponseDTO }>;
 };
 
-const ManageEntity = <T extends { id: number }, TDTO extends { id: number }>({
+const ManageEntity = <T extends BaseEntity, TDTO extends BaseEntity>({
   module,
   subModule,
   pageTitle,
@@ -90,10 +90,10 @@ const ManageEntity = <T extends { id: number }, TDTO extends { id: number }>({
   };
 
   React.useEffect(() => {
-    const shouldFetch = !hasFetched.current && id && (!values || !compareBigIds(values.id, id)) && fetchEntityAction;
+    const shouldFetch = !hasFetched.current && id && (!values || !areEqualBigIds(values.id, id)) && fetchEntityAction;
 
     if (shouldFetch) {
-      dispatch(fetchEntityAction!({ id }));
+      dispatch(fetchEntityAction({ id }));
       hasFetched.current = true;
     }
   }, [id, values, dispatch, fetchEntityAction]);

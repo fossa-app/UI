@@ -5,7 +5,7 @@ import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import { Employee, Module, SubModule } from 'shared/models';
+import { Employee, Module, SubModule } from 'shared/types';
 import { getTestSelectorByModule } from 'shared/helpers';
 
 const testModule = Module.shared;

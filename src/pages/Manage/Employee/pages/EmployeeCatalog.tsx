@@ -1,5 +1,5 @@
 import React from 'react';
-import { Module, SubModule, Employee } from 'shared/models';
+import { Module, SubModule, Employee } from 'shared/types';
 import { selectEmployeeCatalog, updateEmployeesPagination, resetEmployeesFetchStatus, resetEmployeesPagination } from 'store/features';
 import { fetchEmployees } from 'store/thunks';
 import { EMPLOYEE_FIELDS, EMPLOYEE_TABLE_SCHEMA, EMPLOYEE_TABLE_ACTIONS_SCHEMA, ROUTES } from 'shared/constants';

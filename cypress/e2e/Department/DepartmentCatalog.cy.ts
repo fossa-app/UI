@@ -1,5 +1,5 @@
 import { ROUTES } from 'shared/constants';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import {
   clearInputField,
   clickActionButton,
@@ -242,16 +242,16 @@ describe('Department Catalog Tests', () => {
           );
 
           interceptFetchDepartmentsRequest(
-            { pageNumber: 1, pageSize: 10, search: 'Sound' },
+            { pageNumber: 1, pageSize: 10, search: 'Productions' },
             { alias: 'fetchSearchedNoDepartmentsRequest', fixture: 'department/departments-empty' }
           );
 
-          search(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments', 'Sound');
+          search(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments', 's');
 
           getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
           cy.wait('@fetchSearchedNoDepartmentsRequest')
             .its('request.url')
-            .should('include', 'Departments?pageNumber=1&pageSize=10&search=Sound');
+            .should('include', 'Departments?pageNumber=1&pageSize=10&search=Productions');
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
             'have.length',
             0
@@ -262,12 +262,13 @@ describe('Department Catalog Tests', () => {
 
           interceptFetchDepartmentsRequest(
             { pageNumber: 1, pageSize: 10, search: '' },
-            { alias: 'fetchMultipleDepartmentsRequest', fixture: 'department/departments' }
+            { alias: 'fetchMultipleDepartmentsClearedRequest', fixture: 'department/departments' }
           );
 
           clearInputField(Module.departmentManagement, SubModule.departmentCatalog, 'search-departments');
 
-          cy.wait('@fetchMultipleDepartmentsRequest').its('request.url').should('include', 'Departments?pageNumber=1&pageSize=10');
+          getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
+          cy.wait('@fetchMultipleDepartmentsClearedRequest').its('request.url').should('include', 'Departments?pageNumber=1&pageSize=10');
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
             'have.length',
             4

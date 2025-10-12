@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import CopyToClipboard from 'components/UI/CopyToClipboard';
 
 interface CopyableFieldParams {

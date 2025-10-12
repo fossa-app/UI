@@ -1,4 +1,4 @@
-import { ColorSchemeId } from 'shared/models';
+import { ColorSchemeId } from 'shared/types';
 
 export interface CompanySettingsDTO {
   id: number;

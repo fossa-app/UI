@@ -5,7 +5,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { Item, Module, SubModule } from 'shared/models';
+import { Entity, Module, SubModule } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
 import { Column } from './table.model';
 
@@ -17,11 +17,11 @@ type ResponsiveRowProps<T> = {
   isMobile: boolean;
 };
 
-const renderCellContent = <T extends Item>(item: T, column: Column<T>): React.ReactNode => {
+const renderCellContent = <T extends Entity>(item: T, column: Column<T>): React.ReactNode => {
   return column.renderBodyCell ? column.renderBodyCell(item) : (item[column.field] ?? APP_CONFIG.emptyValue);
 };
 
-const ResponsiveRow = <T extends Item>({ module, subModule, item, columns, isMobile }: ResponsiveRowProps<T>) => {
+const ResponsiveRow = <T extends Entity>({ module, subModule, item, columns, isMobile }: ResponsiveRowProps<T>) => {
   if (isMobile) {
     return (
       <Card data-cy={`${module}-${subModule}-table-body-row-${item.id}`}>

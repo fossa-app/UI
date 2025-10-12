@@ -12,7 +12,7 @@ import {
   resetCompanyLicenseSkipped,
 } from 'store/features';
 import { mapDisabledFields, hasAllowedRole, deepCopyObject } from 'shared/helpers';
-import { ROUTES, UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_MESSAGE } from 'shared/constants';
+import { ROUTES, UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_ERROR } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';
 import { renderCopyableField } from 'components/UI/helpers/renderCopyableField';
 
@@ -27,7 +27,7 @@ const UploadCompanyLicensePage: React.FC = () => {
   const { updateStatus, updateError: error } = useAppSelector(selectCompanyLicense);
   const { item: company } = useAppSelector(selectCompany);
   const skipRef = React.useRef(false);
-  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
+  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_ERROR;
 
   React.useEffect(() => {
     return () => {

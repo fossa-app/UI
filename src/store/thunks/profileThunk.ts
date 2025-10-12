@@ -3,7 +3,7 @@ import { FieldValues } from 'react-hook-form';
 import { RootState } from 'store';
 import { setError, setSuccess, resetCompanyDatasourceTotalsFetchStatus } from 'store/features';
 import axios from 'shared/configs/axios';
-import { Employee, EmployeeDTO, EntityInput, ErrorResponse, ErrorResponseDTO } from 'shared/models';
+import { Employee, EmployeeDTO, EntityInput, ErrorResponse, ErrorResponseDTO } from 'shared/types';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import { mapEmployee, mapError } from 'shared/helpers';
 

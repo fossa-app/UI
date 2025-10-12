@@ -4,7 +4,7 @@ import ListItem, { ListItemProps } from '@mui/material/ListItem';
 import ListItemButton, { ListItemButtonProps } from '@mui/material/ListItemButton';
 import ListItemIcon, { ListItemIconProps } from '@mui/material/ListItemIcon';
 import ListItemText, { ListItemTextProps } from '@mui/material/ListItemText';
-import { RouteItem } from 'shared/models';
+import { RouteItem } from 'shared/types';
 
 type FlowItemProps = {
   buttonProps?: ListItemButtonProps;

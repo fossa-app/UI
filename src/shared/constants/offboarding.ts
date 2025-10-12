@@ -1,5 +1,5 @@
-import { RouteItem } from 'shared/models';
-import { CompanyOffboardingStep, OffboardingStep, OffboardingStepOption } from '../models/offboarding';
+import { RouteItem } from 'shared/types';
+import { CompanyOffboardingStep, OffboardingStep, OffboardingStepOption } from '../types/offboarding';
 import { ROUTES } from './routes';
 
 export const COMPANY_OFFBOARDING_STEPS: OffboardingStepOption[] = [

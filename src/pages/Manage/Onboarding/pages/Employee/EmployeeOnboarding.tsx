@@ -7,7 +7,7 @@ import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 import { useAppSelector } from 'store';
 import { selectEmployeeOnboardingStep } from 'store/features';
-import { Module, OnboardingStep, SubModule } from 'shared/models';
+import { Module, OnboardingStep, SubModule } from 'shared/types';
 import { EMPLOYEE_ONBOARDING_STEPS, ROUTES } from 'shared/constants';
 
 const EmployeeOnboarding: React.FC = () => {

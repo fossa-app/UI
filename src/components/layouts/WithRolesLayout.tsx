@@ -1,6 +1,6 @@
 import React from 'react';
 import { hasAllowedRole } from 'shared/helpers';
-import { UserRole } from 'shared/models';
+import { UserRole } from 'shared/types';
 
 interface WithRolesLayoutProps {
   allowedRoles?: UserRole[];

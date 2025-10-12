@@ -4,7 +4,7 @@ import { RootState } from 'store';
 import { fetchBranchesTotal, fetchDepartmentsTotal, fetchEmployeesTotal } from 'store/thunks';
 import { setError, setSuccess } from 'store/features';
 import axios from 'shared/configs/axios';
-import { Company, CompanyDTO, EntityInput, ErrorResponse, ErrorResponseDTO } from 'shared/models';
+import { Company, CompanyDTO, EntityInput, ErrorResponse, ErrorResponseDTO } from 'shared/types';
 import { mapCompany, mapError } from 'shared/helpers';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
 

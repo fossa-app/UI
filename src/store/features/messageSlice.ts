@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from 'store';
-import { ErrorResponseDTO } from 'shared/models';
+import { ErrorResponseDTO } from 'shared/types';
 
 interface MessageState {
   error: ErrorResponseDTO | undefined;

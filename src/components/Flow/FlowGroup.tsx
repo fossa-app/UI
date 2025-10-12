@@ -10,7 +10,7 @@ import Collapse from '@mui/material/Collapse';
 import { useTheme } from '@mui/material/styles';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Flow, Module, SubModule, UserRole } from 'shared/models';
+import { Flow, Module, SubModule, UserRole } from 'shared/types';
 import { hasAllowedRole } from 'shared/helpers';
 import FlowItem from './FlowItem';
 

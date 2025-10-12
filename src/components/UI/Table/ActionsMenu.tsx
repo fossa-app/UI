@@ -5,7 +5,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import { Item, Module, SubModule, UserRole } from 'shared/models';
+import { Entity, Module, SubModule, UserRole } from 'shared/types';
 import { Action } from 'components/UI/Table';
 import WithRolesLayout from 'components/layouts/WithRolesLayout';
 
@@ -17,7 +17,7 @@ interface ActionsMenuProps<T> {
   userRoles?: UserRole[];
 }
 
-const ActionsMenu = <T extends Item>({ module, subModule, actions, context, userRoles }: ActionsMenuProps<T>) => {
+const ActionsMenu = <T extends Entity>({ module, subModule, actions, context, userRoles }: ActionsMenuProps<T>) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleOpenActionsMenu = (event: React.MouseEvent<HTMLElement>) => {

@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { useAppSelector } from 'store';
 import { selectEmployeeOffboardingStep } from 'store/features';
-import { OffboardingStep } from 'shared/models';
+import { OffboardingStep } from 'shared/types';
 import { ROUTES } from 'shared/constants';
 
 const EmployeeOffboardingPage: React.FC = () => {

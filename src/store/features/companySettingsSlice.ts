@@ -3,7 +3,7 @@ import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import { createCompanySettings, deleteCompanySettings, editCompanySettings, fetchCompanySettings } from 'store/thunks';
-import { CompanySettings, CompanySettingsDTO, ErrorResponse, ErrorResponseDTO } from 'shared/models';
+import { CompanySettings, CompanySettingsDTO, ErrorResponse, ErrorResponseDTO } from 'shared/types';
 
 interface CompanySettingsState {
   companySettings: StateEntity<CompanySettings>;

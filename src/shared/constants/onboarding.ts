@@ -1,4 +1,4 @@
-import { RouteItem, OnboardingStep, OnboardingStepOption, CompanyOnboardingStep } from 'shared/models';
+import { RouteItem, OnboardingStep, OnboardingStepOption, CompanyOnboardingStep } from 'shared/types';
 import { ROUTES } from './routes';
 
 export const COMPANY_ONBOARDING_STEPS: OnboardingStepOption[] = [

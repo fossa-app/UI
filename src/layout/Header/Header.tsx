@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { openSideBar, selectAppConfig, selectCompany, selectProfile, selectOnboardingCompleted, toggleAppTheme } from 'store/features';
 import { getTestSelectorByModule, getUserManager } from 'shared/helpers';
 import { ROUTES, SEARCH_PORTAL_ID } from 'shared/constants';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import SearchPortal from 'components/Search';
 import ProfileMenu from './components/ProfileMenu';
 import ThemeButton from './components/ThemeButton';

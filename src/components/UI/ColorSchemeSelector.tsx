@@ -6,7 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
 import { COLOR_SCHEME_KEYS, COLOR_SCHEMES } from 'shared/themes';
-import { ThemeMode, ColorSchemeId, Module, SubModule } from 'shared/models';
+import { ThemeMode, ColorSchemeId, Module, SubModule } from 'shared/types';
 
 type ColorSchemeSelectorProps = {
   module: Module;

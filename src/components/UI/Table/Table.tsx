@@ -8,7 +8,7 @@ import TablePagination from '@mui/material/TablePagination';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import { useResponsive } from 'shared/hooks';
-import { Item, Module, SubModule } from 'shared/models';
+import { Entity, Module, SubModule } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
 import Page from 'components/UI/Page';
 import { Column } from './table.model';
@@ -31,7 +31,7 @@ type TableProps<T> = {
   onPageSizeChange: (pageSize: number) => void;
 } & PaperProps;
 
-const Table = <T extends Item>({
+const Table = <T extends Entity>({
   module,
   subModule,
   columns,

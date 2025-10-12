@@ -1,6 +1,6 @@
 import { PaletteOptions } from '@mui/material/styles';
 import { COLOR_SCHEMES } from 'shared/themes';
-import { ColorSchemeId, ThemeMode } from 'shared/models';
+import { ColorSchemeId, ThemeMode } from 'shared/types';
 
 export const getPaletteFromScheme = (schemeId: ColorSchemeId, mode: ThemeMode): PaletteOptions => {
   const themeGroup = COLOR_SCHEMES[schemeId];

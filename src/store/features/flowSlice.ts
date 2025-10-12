@@ -9,7 +9,7 @@ import {
   fetchProfile,
   fetchCompanyLicense,
 } from 'store/thunks';
-import { FlowsMap, OnboardingStep } from 'shared/models';
+import { FlowsMap, OnboardingStep } from 'shared/types';
 import { FLOWS_MAP } from 'shared/constants';
 
 interface FlowState {

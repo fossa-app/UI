@@ -15,7 +15,7 @@ import {
   ErrorResponseDTO,
   PaginatedResponse,
   PaginationParams,
-} from 'shared/models';
+} from 'shared/types';
 import { MESSAGES, ENDPOINTS } from 'shared/constants';
 import {
   mapEmployee,

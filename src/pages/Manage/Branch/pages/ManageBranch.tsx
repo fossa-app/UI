@@ -17,9 +17,9 @@ import {
   BRANCH_DETAILS_FORM_DEFAULT_VALUES,
   BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA,
   ROUTES,
-  USER_PERMISSION_GENERAL_MESSAGE,
+  USER_PERMISSION_GENERAL_ERROR,
 } from 'shared/constants';
-import { Branch, BranchDTO, TimeZone } from 'shared/models';
+import { Branch, BranchDTO, TimeZone } from 'shared/types';
 import {
   getBranchManagementDetailsByAddressFormSchema,
   mapBranchDTO,
@@ -44,7 +44,7 @@ const ManageBranchPage: React.FC = () => {
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
   const [fields, setFields] = React.useState<FormFieldProps<Branch>[]>([]);
   const formLoading = fetchStatus === 'loading' || (!branch && !!id) || fields.length === 0;
-  const errors = isUserAdmin ? deepCopyObject(updateError?.errors) : USER_PERMISSION_GENERAL_MESSAGE;
+  const errors = isUserAdmin ? deepCopyObject(updateError?.errors) : USER_PERMISSION_GENERAL_ERROR;
 
   React.useEffect(() => {
     if (!id || (id && branch && noPhysicalAddress !== undefined)) {

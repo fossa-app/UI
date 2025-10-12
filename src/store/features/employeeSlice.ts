@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { PaginatedStateEntity, RootState, StateEntity } from 'store';
-import { Employee, EmployeeDTO, ErrorResponse, ErrorResponseDTO, PaginatedResponse, PaginationParams } from 'shared/models';
+import { Employee, EmployeeDTO, ErrorResponse, ErrorResponseDTO, PaginatedResponse, PaginationParams } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
 import { mergePaginatedItems } from 'store/helpers';
 import { editEmployee, fetchEmployeeById, fetchEmployees, fetchManagers, fetchOrgChartEmployees } from 'store/thunks';

@@ -1,4 +1,4 @@
-import { UserRole } from 'shared/models';
+import { UserRole } from 'shared/types';
 
 export const hasAllowedRole = (allowedRoles?: UserRole[], userRoles?: UserRole[]): boolean => {
   if (!allowedRoles?.length || !userRoles?.length) {

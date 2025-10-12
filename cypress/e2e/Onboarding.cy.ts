@@ -1,5 +1,5 @@
 import { ROUTES } from 'shared/constants';
-import { Module, SubModule } from 'shared/models';
+import { Module, SubModule } from 'shared/types';
 import {
   clickActionButton,
   clickField,

@@ -1,6 +1,6 @@
 import { createTheme, Theme } from '@mui/material/styles';
 import { getPaletteFromScheme } from 'shared/helpers';
-import { ColorSchemeId, ThemeMode } from 'shared/models';
+import { ColorSchemeId, ThemeMode } from 'shared/types';
 import { DEFAULT_COLOR_SCHEME } from 'shared/constants';
 
 const components = {

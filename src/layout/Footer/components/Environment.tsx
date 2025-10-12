@@ -2,7 +2,7 @@ import React from 'react';
 import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
-import { EnvironmentKind } from 'shared/models';
+import { EnvironmentKind } from 'shared/types';
 
 interface EnvironmentProps {
   kind?: EnvironmentKind;

@@ -3,7 +3,7 @@ import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import { createProfile, deleteProfile, editProfile, fetchProfile, fetchUser } from 'store/thunks';
-import { AppUser, Employee, ErrorResponse, ErrorResponseDTO } from 'shared/models';
+import { AppUser, Employee, ErrorResponse, ErrorResponseDTO } from 'shared/types';
 import { mapUserProfileToEmployee } from 'shared/helpers';
 
 interface ProfileState {
