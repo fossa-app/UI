@@ -230,7 +230,7 @@ export const uploadTestFile = (selector: string, fixtureName: string, fileType =
 export const createMockLicensePeriod = (validForDays: number): { notBefore: string; notAfter: string } => {
   const MS_IN_DAY = 24 * 60 * 60 * 1000;
   const now = new Date();
-  now.setUTCHours(0, 0, 0, 0);
+  now.setHours(0, 0, 0, 0);
   const notAfterDate = new Date(now.getTime() + validForDays * MS_IN_DAY);
   const notBeforeDate = new Date(notAfterDate.getTime() - 365 * MS_IN_DAY);
   const formatDate = (date: Date) => date.toISOString().replace('Z', '+00:00');

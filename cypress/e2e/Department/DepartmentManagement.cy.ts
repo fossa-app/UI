@@ -153,7 +153,7 @@ describe('Department Management Tests', () => {
     getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
       .should('exist')
       .and('contain.text', 'Failed to create a Department');
-    cy.url().should('include', ROUTES.newDepartment.path);
+    cy.location('pathname').should('eq', ROUTES.newDepartment.path);
   });
 
   it('should be able to create a new department and be navigated back to the Department Catalog page if the form is valid and the department creation succeeded', () => {
@@ -189,7 +189,7 @@ describe('Department Management Tests', () => {
     cy.wait('@createDepartmentRequest');
     cy.wait('@fetchCreatedDepartmentsRequest');
 
-    cy.url().should('include', ROUTES.departments.path);
+    cy.location('pathname').should('eq', ROUTES.departments.path);
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should('have.length', 5);
     getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
       .should('exist')
@@ -246,7 +246,7 @@ describe('Department Management Tests', () => {
     });
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-cancel-button').should('exist').click();
 
-    cy.url().should('include', ROUTES.departments.path);
+    cy.location('pathname').should('eq', ROUTES.departments.path);
     getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('not.exist');
 
     selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444444');
@@ -300,7 +300,7 @@ describe('Department Management Tests', () => {
     getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
       .should('exist')
       .and('contain.text', 'Failed to update the Department');
-    cy.url().should('include', `${ROUTES.departments.path}/edit/444444444447`);
+    cy.location('pathname').should('eq', `${ROUTES.departments.path}/edit/444444444447`);
   });
 
   it('should display async validation messages if the department update failed with validation errors', () => {
@@ -336,7 +336,7 @@ describe('Department Management Tests', () => {
         message: 'Parent department must be in the same tenant and cannot be self-referential',
       },
     ]);
-    cy.url().should('include', `${ROUTES.departments.path}/edit/444444444446`);
+    cy.location('pathname').should('eq', `${ROUTES.departments.path}/edit/444444444446`);
 
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-cancel-button').click();
 
@@ -437,7 +437,7 @@ describe('Department Management Tests', () => {
 
     cy.wait('@editDepartmentRequest');
 
-    cy.url().should('include', ROUTES.departments.path);
+    cy.location('pathname').should('eq', ROUTES.departments.path);
     getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
 
     cy.wait('@fetchUpdatedDepartmentsRequest');
@@ -480,12 +480,12 @@ describe('Department Management Tests', () => {
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'page-title-back-button').click();
 
-    cy.url().should('include', ROUTES.departments.path);
+    cy.location('pathname').should('eq', ROUTES.departments.path);
 
     selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444444');
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'page-title-back-button').click();
 
-    cy.url().should('include', ROUTES.departments.path);
+    cy.location('pathname').should('eq', ROUTES.departments.path);
     getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('not.exist');
   });
 
@@ -514,7 +514,7 @@ describe('Department Management Tests', () => {
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'page-title-back-button').click();
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
 
-    cy.url().should('include', ROUTES.newDepartment.path);
+    cy.location('pathname').should('eq', ROUTES.newDepartment.path);
     testDepartmentEmptyInputFields();
   });
 
@@ -675,20 +675,20 @@ describe('Department Management Tests', () => {
 
     selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444444');
 
-    cy.url().should('include', `${ROUTES.departments.path}/edit/444444444444`);
+    cy.location('pathname').should('eq', `${ROUTES.departments.path}/edit/444444444444`);
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-cancel-button').click();
 
     cy.location('pathname').should('eq', ROUTES.departments.path);
     selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'view', '444444444444');
 
-    cy.url().should('include', `${ROUTES.departments.path}/view/444444444444`);
+    cy.location('pathname').should('eq', `${ROUTES.departments.path}/view/444444444444`);
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentViewDetails, 'page-title-back-button').click();
 
     cy.location('pathname').should('eq', ROUTES.departments.path);
 
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
 
-    cy.url().should('include', ROUTES.newDepartment.path);
+    cy.location('pathname').should('eq', ROUTES.newDepartment.path);
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-cancel-button').click();
 
     cy.location('pathname').should('eq', ROUTES.departments.path);
@@ -708,7 +708,7 @@ describe('Department Management Tests', () => {
 
     selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444447');
 
-    cy.url().should('include', `${ROUTES.departments.path}/edit/444444444447`);
+    cy.location('pathname').should('eq', `${ROUTES.departments.path}/edit/444444444447`);
     getLinearLoader(Module.departmentManagement, SubModule.departmentDetails, 'form').should('exist');
 
     cy.wait('@fetchDepartmentByIdRequest1');
@@ -719,7 +719,7 @@ describe('Department Management Tests', () => {
     interceptFetchDepartmentByIdRequest('444444444447', 'fetchDepartmentByIdRequest2');
     selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444447');
 
-    cy.url().should('include', `${ROUTES.departments.path}/edit/444444444447`);
+    cy.location('pathname').should('eq', `${ROUTES.departments.path}/edit/444444444447`);
     getLinearLoader(Module.departmentManagement, SubModule.departmentDetails, 'form').should('not.exist');
     cy.get('@fetchDepartmentByIdRequest2.all').should('have.length', 0);
   });

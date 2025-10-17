@@ -73,7 +73,7 @@ describe('Profile Tests', () => {
         cy.wait('@fetchProfileRequest');
         openUserProfile();
 
-        cy.url().should('include', ROUTES.viewProfile.path);
+        cy.location('pathname').should('eq', ROUTES.viewProfile.path);
         verifyTextFields(Module.profile, SubModule.profileViewDetails, {
           'view-details-header': 'Profile Details',
           'view-details-section-basicInfo': 'Basic Information',
@@ -93,7 +93,7 @@ describe('Profile Tests', () => {
 
         getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-action-button').click();
 
-        cy.url().should('include', ROUTES.editProfile.path);
+        cy.location('pathname').should('eq', ROUTES.editProfile.path);
 
         clearInputField(Module.profile, SubModule.profileDetails, 'form-field-firstName');
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-firstName').find('input').type('Aziraphale');
@@ -103,7 +103,7 @@ describe('Profile Tests', () => {
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-field-fullName').find('input').type('Aziraphale User Fell');
         getTestSelectorByModule(Module.profile, SubModule.profileDetails, 'form-cancel-button').should('exist').click();
 
-        cy.url().should('include', ROUTES.viewProfile.path);
+        cy.location('pathname').should('eq', ROUTES.viewProfile.path);
 
         getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-action-button').click();
 
@@ -187,7 +187,7 @@ describe('Profile Tests', () => {
             message: `'First Name' and 'Last Name' cannot be the same.`,
           },
         ]);
-        cy.url().should('include', ROUTES.editProfile.path);
+        cy.location('pathname').should('eq', ROUTES.editProfile.path);
       });
 
       it('should be able to edit the profile and be navigated to the View Profile page if the form is valid and employee update succeeded', () => {
@@ -197,7 +197,7 @@ describe('Profile Tests', () => {
 
         getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-action-button').click();
 
-        cy.url().should('include', ROUTES.editProfile.path);
+        cy.location('pathname').should('eq', ROUTES.editProfile.path);
 
         cy.wait('@fetchProfileRequest');
 
@@ -219,7 +219,7 @@ describe('Profile Tests', () => {
         cy.wait('@editProfileRequest');
         cy.wait('@fetchUpdatedProfileRequest');
 
-        cy.url().should('include', ROUTES.viewProfile.path);
+        cy.location('pathname').should('eq', ROUTES.viewProfile.path);
         getTestSelectorByModule(Module.profile, SubModule.profileViewDetails, 'view-details-value-firstName').should(
           'have.text',
           'Anthony'

@@ -19,7 +19,7 @@ import { renderCopyableField } from 'components/UI/helpers/renderCopyableField';
 const testModule = UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.module;
 const testSubModule = UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA.subModule;
 
-const UploadCompanyLicensePage: React.FC = () => {
+const CompanyLicenseUploadPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const userRoles = useAppSelector(selectUserRoles);
@@ -97,4 +97,4 @@ const UploadCompanyLicensePage: React.FC = () => {
   );
 };
 
-export default UploadCompanyLicensePage;
+export default CompanyLicenseUploadPage;

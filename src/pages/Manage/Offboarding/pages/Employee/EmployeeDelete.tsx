@@ -8,7 +8,7 @@ import Form, { FormActionName } from 'components/UI/Form';
 const testModule = DELETE_EMPLOYEE_DETAILS_FORM_SCHEMA.module;
 const testSubModule = DELETE_EMPLOYEE_DETAILS_FORM_SCHEMA.subModule;
 
-const DeleteEmployeePage: React.FC = () => {
+const EmployeeDeletePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { deleteStatus } = useAppSelector(selectProfile);
   const fields = DELETE_EMPLOYEE_DETAILS_FORM_SCHEMA.fields;
@@ -38,4 +38,4 @@ const DeleteEmployeePage: React.FC = () => {
   );
 };
 
-export default DeleteEmployeePage;
+export default EmployeeDeletePage;

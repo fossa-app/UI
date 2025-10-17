@@ -175,7 +175,7 @@ describe('Flows Tests', () => {
         it('should navigate correctly by urls from the Flows page', () => {
           [ROUTES.viewCompany.path, ROUTES.branches.path, ROUTES.employees.path, ROUTES.viewProfile.path].forEach((route) => {
             cy.visit(route);
-            cy.url().should('include', route);
+            cy.location('pathname').should('eq', route);
           });
         });
 
@@ -220,27 +220,27 @@ describe('Flows Tests', () => {
 
         it('should correctly navigate manually from the Flows page', () => {
           clickSubFlow('View Company');
-          cy.url().should('include', ROUTES.viewCompany.path);
+          cy.location('pathname').should('eq', ROUTES.viewCompany.path);
 
           cy.visit(ROUTES.flows.path);
           clickSubFlow('Branches');
-          cy.url().should('include', ROUTES.branches.path);
+          cy.location('pathname').should('eq', ROUTES.branches.path);
 
           cy.visit(ROUTES.flows.path);
           clickSubFlow('Departments');
-          cy.url().should('include', ROUTES.departments.path);
+          cy.location('pathname').should('eq', ROUTES.departments.path);
 
           cy.visit(ROUTES.flows.path);
           clickSubFlow('Employees');
-          cy.url().should('include', ROUTES.employees.path);
+          cy.location('pathname').should('eq', ROUTES.employees.path);
 
           cy.visit(ROUTES.flows.path);
           clickSubFlow('Organization Chart');
-          cy.url().should('include', ROUTES.employeeOrgChart.path);
+          cy.location('pathname').should('eq', ROUTES.employeeOrgChart.path);
 
           cy.visit(ROUTES.flows.path);
           clickSubFlow('View Profile');
-          cy.url().should('include', ROUTES.viewProfile.path);
+          cy.location('pathname').should('eq', ROUTES.viewProfile.path);
         });
 
         it('should display correct enabled and disabled subFlows', () => {
@@ -273,7 +273,7 @@ describe('Flows Tests', () => {
 
           cy.visit(ROUTES.companySettings.path);
 
-          cy.url().should('include', isAdminRole ? ROUTES.companySettings.path : ROUTES.viewCompany.path);
+          cy.location('pathname').should('eq', isAdminRole ? ROUTES.companySettings.path : ROUTES.viewCompany.path);
         });
       });
     });
@@ -294,7 +294,7 @@ describe('Flows Tests', () => {
       interceptDeleteBranchRequest('222222222222');
 
       clickSubFlow('Branches');
-      cy.url().should('include', ROUTES.branches.path);
+      cy.location('pathname').should('eq', ROUTES.branches.path);
 
       selectAction(Module.branchManagement, SubModule.branchCatalog, 'delete', '222222222222');
       interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetchNoBranchesRequest', fixture: 'branch/branches-empty' });
@@ -334,7 +334,7 @@ describe('Flows Tests', () => {
       interceptCreateProfileRequest();
 
       clickSubFlow('Company Onboarding');
-      cy.url().should('include', ROUTES.createCompany.path);
+      cy.location('pathname').should('eq', ROUTES.createCompany.path);
 
       getTestSelectorByModule(Module.createCompany, SubModule.companyDetails, 'form-field-name').type('Good Omens');
       selectOption(Module.createCompany, SubModule.companyDetails, 'countryCode', 'US');
@@ -343,7 +343,7 @@ describe('Flows Tests', () => {
       cy.wait('@createCompanyRequest');
       cy.wait('@fetchCompanyRequest');
 
-      cy.url().should('include', ROUTES.createCompanySettings.path);
+      cy.location('pathname').should('eq', ROUTES.createCompanySettings.path);
 
       clickFlowsIcon();
 
@@ -367,7 +367,7 @@ describe('Flows Tests', () => {
 
       cy.wait(['@createCompanySettingsRequest', '@fetchCompanySettingsRequest']);
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
       clickFlowsIcon();
 
       cy.location('pathname').should('eq', ROUTES.flows.path);
@@ -384,7 +384,7 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Employee Offboarding', true);
 
       clickSubFlow('Company Onboarding');
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
 
       getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-field-licenseFile-file-upload').click();
       uploadTestFile('input#file-upload-input', 'company/valid-company-license.lic');
@@ -397,7 +397,7 @@ describe('Flows Tests', () => {
       cy.wait('@uploadCompanyLicenseRequest');
       cy.wait('@fetchCompanyLicenseRequest');
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
 
       clickFlowsIcon();
 
@@ -416,7 +416,7 @@ describe('Flows Tests', () => {
 
       clickSubFlow('Company Onboarding');
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
 
       getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-name').type('America/New_York');
       selectOption(Module.createBranch, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
@@ -440,7 +440,7 @@ describe('Flows Tests', () => {
       checkIsSubFlowDisabled('Employee Offboarding', true);
 
       clickSubFlow('Employee Onboarding');
-      cy.url().should('include', ROUTES.createEmployee.path);
+      cy.location('pathname').should('eq', ROUTES.createEmployee.path);
 
       interceptFetchProfileRequest();
       clickActionButton(Module.createEmployee, SubModule.employeeDetails);

@@ -10,7 +10,7 @@ import Form, { FormActionName } from 'components/UI/Form';
 const testModule = CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA.module;
 const testSubModule = CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA.subModule;
 
-const CreateEmployeePage: React.FC = () => {
+const EmployeeCreatePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { item: profile, updateStatus, updateError: error } = useAppSelector(selectProfile);
   const errors = deepCopyObject(error?.errors);
@@ -41,4 +41,4 @@ const CreateEmployeePage: React.FC = () => {
   );
 };
 
-export default CreateEmployeePage;
+export default EmployeeCreatePage;

@@ -405,12 +405,12 @@ describe('Employee Catalog Tests', () => {
 
         cy.visit(`${ROUTES.employees.path}/view/333333333335`);
 
-        cy.url().should('include', `${ROUTES.employees.path}/view/333333333335`);
+        cy.location('pathname').should('eq', `${ROUTES.employees.path}/view/333333333335`);
 
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeViewDetails, 'page-title-back-button').click();
         selectAction(Module.employeeManagement, SubModule.employeeCatalog, 'view', '333333333335');
 
-        cy.url().should('include', `${ROUTES.employees.path}/view/333333333335`);
+        cy.location('pathname').should('eq', `${ROUTES.employees.path}/view/333333333335`);
       });
 
       it('should render the mobile view if there are fetched employees', () => {
@@ -515,7 +515,7 @@ describe('Employee Catalog Tests', () => {
 
       cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
-      cy.url().should('include', ROUTES.company.path);
+      cy.location('pathname').should('eq', ROUTES.company.path);
     });
   });
 
@@ -538,14 +538,14 @@ describe('Employee Catalog Tests', () => {
 
       cy.visit(`${ROUTES.employees.path}/edit/333333333335`);
 
-      cy.url().should('include', `${ROUTES.employees.path}/edit/333333333335`);
+      cy.location('pathname').should('eq', `${ROUTES.employees.path}/edit/333333333335`);
 
       cy.visit(ROUTES.employees.path);
 
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'actions-menu-icon-333333333335').click();
       getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'action-edit-333333333335').click();
 
-      cy.url().should('include', `${ROUTES.employees.path}/edit/333333333335`);
+      cy.location('pathname').should('eq', `${ROUTES.employees.path}/edit/333333333335`);
     });
   });
 });

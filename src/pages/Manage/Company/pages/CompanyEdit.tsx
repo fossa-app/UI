@@ -25,7 +25,7 @@ import Form, { FormActionName } from 'components/UI/Form';
 const testModule = COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA.module;
 const testSubModule = COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA.subModule;
 
-const EditCompanyPage: React.FC = () => {
+const CompanyEditPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
@@ -92,4 +92,4 @@ const EditCompanyPage: React.FC = () => {
   );
 };
 
-export default EditCompanyPage;
+export default CompanyEditPage;

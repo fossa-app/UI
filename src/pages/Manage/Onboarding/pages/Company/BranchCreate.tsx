@@ -24,7 +24,7 @@ import Form, { FormActionName } from 'components/UI/Form';
 const testModule = CREATE_BRANCH_DETAILS_FORM_SCHEMA.module;
 const testSubModule = CREATE_BRANCH_DETAILS_FORM_SCHEMA.subModule;
 
-const CreateBranchPage: React.FC = () => {
+const BranchCreatePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const userRoles = useAppSelector(selectUserRoles);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
@@ -71,4 +71,4 @@ const CreateBranchPage: React.FC = () => {
   );
 };
 
-export default CreateBranchPage;
+export default BranchCreatePage;

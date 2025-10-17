@@ -99,7 +99,7 @@ describe('Onboarding Flow Tests', () => {
 
         cy.wait('@fetchCompanyFailedRequest');
 
-        cy.url().should('include', ROUTES.createCompany.path);
+        cy.location('pathname').should('eq', ROUTES.createCompany.path);
 
         if (isAdminRole) {
           getTestSelectorByModule(Module.createCompany, SubModule.companyDetails, 'form-general-error-message').should('not.exist');
@@ -115,7 +115,7 @@ describe('Onboarding Flow Tests', () => {
 
         companyOnboardingRoutes.forEach((route) => {
           cy.visit(route);
-          cy.url().should('include', ROUTES.createCompany.path);
+          cy.location('pathname').should('eq', ROUTES.createCompany.path);
         });
         employeeOnboardingRoutes.forEach((route) => {
           cy.visit(route);
@@ -133,7 +133,7 @@ describe('Onboarding Flow Tests', () => {
 
         cy.wait('@fetchCompanyLicenseFailedRequest');
 
-        cy.url().should('include', ROUTES.createCompanySettings.path);
+        cy.location('pathname').should('eq', ROUTES.createCompanySettings.path);
 
         if (isAdminRole) {
           getTestSelectorByModule(Module.createCompanySettings, SubModule.companySettingsDetails, 'form-general-error-message').should(
@@ -159,7 +159,7 @@ describe('Onboarding Flow Tests', () => {
 
         companyOnboardingRoutes.forEach((route) => {
           cy.visit(route);
-          cy.url().should('include', ROUTES.createCompanySettings.path);
+          cy.location('pathname').should('eq', ROUTES.createCompanySettings.path);
         });
         employeeOnboardingRoutes.forEach((route) => {
           cy.visit(route);
@@ -177,7 +177,7 @@ describe('Onboarding Flow Tests', () => {
 
         cy.wait('@fetchCompanyLicenseFailedRequest');
 
-        cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+        cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
 
         if (isAdminRole) {
           getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-general-error-message').should(
@@ -205,7 +205,7 @@ describe('Onboarding Flow Tests', () => {
 
         companyOnboardingRoutes.forEach((route) => {
           cy.visit(route);
-          cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+          cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
         });
         employeeOnboardingRoutes.forEach((route) => {
           cy.visit(route);
@@ -221,7 +221,7 @@ describe('Onboarding Flow Tests', () => {
         interceptFetchProfileFailedRequest();
         cy.visit(ROUTES.onboarding.path);
 
-        cy.url().should('include', ROUTES.createBranch.path);
+        cy.location('pathname').should('eq', ROUTES.createBranch.path);
 
         if (isAdminRole) {
           getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-general-error-message').should('not.exist');
@@ -237,7 +237,7 @@ describe('Onboarding Flow Tests', () => {
 
         companyOnboardingRoutes.forEach((route) => {
           cy.visit(route);
-          cy.url().should('include', ROUTES.createBranch.path);
+          cy.location('pathname').should('eq', ROUTES.createBranch.path);
         });
         employeeOnboardingRoutes.forEach((route) => {
           cy.visit(route);
@@ -255,7 +255,7 @@ describe('Onboarding Flow Tests', () => {
 
         cy.wait('@fetchProfileFailedRequest');
 
-        cy.url().should('include', ROUTES.createEmployee.path);
+        cy.location('pathname').should('eq', ROUTES.createEmployee.path);
         getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-submit-button').should('not.have.attr', 'disabled');
         getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-general-error-message').should('not.exist');
         getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-submit-button').should('contain.text', 'Finish');
@@ -263,7 +263,7 @@ describe('Onboarding Flow Tests', () => {
 
         employeeOnboardingRoutes.forEach((route) => {
           cy.visit(route);
-          cy.url().should('include', ROUTES.createEmployee.path);
+          cy.location('pathname').should('eq', ROUTES.createEmployee.path);
         });
         companyOnboardingRoutes.forEach((route) => {
           cy.visit(route);
@@ -282,14 +282,14 @@ describe('Onboarding Flow Tests', () => {
 
         cy.wait('@fetchProfileFailedRequest');
 
-        cy.url().should('include', ROUTES.createEmployee.path);
+        cy.location('pathname').should('eq', ROUTES.createEmployee.path);
 
         clickActionButton(Module.createEmployee, SubModule.employeeDetails);
 
         cy.wait('@createProfileFailedRequest');
 
         getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
-        cy.url().should('include', ROUTES.createEmployee.path);
+        cy.location('pathname').should('eq', ROUTES.createEmployee.path);
       });
 
       it('should be able to navigate to the Flows page if the employee creation succeeded', () => {
@@ -303,7 +303,7 @@ describe('Onboarding Flow Tests', () => {
 
         cy.wait('@fetchProfileFailedRequest');
 
-        cy.url().should('include', ROUTES.createEmployee.path);
+        cy.location('pathname').should('eq', ROUTES.createEmployee.path);
         getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-header').should('have.text', 'Employee Details');
         getTestSelectorByModule(Module.createEmployee, SubModule.employeeDetails, 'form-section-field-basicInfo').should(
           'have.text',
@@ -339,7 +339,7 @@ describe('Onboarding Flow Tests', () => {
 
         getTestSelectorByModule(Module.shared, SubModule.header, 'company-logo').should('exist').click();
 
-        cy.url().should('include', ROUTES.viewCompany.path);
+        cy.location('pathname').should('eq', ROUTES.viewCompany.path);
       });
 
       it('should navigate to the Flows page if company, company settings, company license, branch and employee data exist', () => {
@@ -401,7 +401,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchCompanyFailedRequest');
 
-      cy.url().should('include', ROUTES.createCompany.path);
+      cy.location('pathname').should('eq', ROUTES.createCompany.path);
 
       getTestSelectorByModule(Module.createCompany, SubModule.companyDetails, 'form-field-name').type('Test Company');
       selectOption(Module.createCompany, SubModule.companyDetails, 'countryCode', 'UA');
@@ -409,7 +409,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@createCompanyFailedRequest');
 
-      cy.url().should('include', ROUTES.createCompany.path);
+      cy.location('pathname').should('eq', ROUTES.createCompany.path);
     });
 
     it('should display async validation messages if the company creation failed with validation errors', () => {
@@ -432,7 +432,7 @@ describe('Onboarding Flow Tests', () => {
           message: `Company 'Good Omens Updated' already exists in the system.`,
         },
       ]);
-      cy.url().should('include', ROUTES.createCompany.path);
+      cy.location('pathname').should('eq', ROUTES.createCompany.path);
     });
 
     it('should be able to navigate to the Company Settings step if the company creation succeeded', () => {
@@ -443,7 +443,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchCompanyFailedRequest');
 
-      cy.url().should('include', ROUTES.createCompany.path);
+      cy.location('pathname').should('eq', ROUTES.createCompany.path);
       getTestSelectorByModule(Module.createCompany, SubModule.companyDetails, 'form-header').should('have.text', 'Company Details');
       getTestSelectorByModule(Module.createCompany, SubModule.companyDetails, 'form-section-field-basicInfo').should(
         'have.text',
@@ -460,7 +460,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait(['@createCompanyRequest', '@fetchCompanyRequest']);
 
-      cy.url().should('include', ROUTES.createCompanySettings.path);
+      cy.location('pathname').should('eq', ROUTES.createCompanySettings.path);
       getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
       getTestSelectorByModule(Module.shared, SubModule.header, 'company-logo').should('exist').and('have.text', 'Good Omens');
       getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text').should('not.exist');
@@ -477,14 +477,14 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchCompanySettingsFailedRequest');
 
-      cy.url().should('include', ROUTES.createCompanySettings.path);
+      cy.location('pathname').should('eq', ROUTES.createCompanySettings.path);
 
       selectColorScheme(Module.createCompanySettings, SubModule.companySettingsDetails, 'color-scheme-sunrise');
       clickActionButton(Module.createCompanySettings, SubModule.companySettingsDetails);
 
       cy.wait('@createCompanySettingsFailedRequest');
 
-      cy.url().should('include', ROUTES.createCompanySettings.path);
+      cy.location('pathname').should('eq', ROUTES.createCompanySettings.path);
     });
 
     it('should be able to navigate to the Company License upload step if the company settings creation succeeded', () => {
@@ -498,14 +498,14 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchCompanySettingsFailedRequest');
 
-      cy.url().should('include', ROUTES.createCompanySettings.path);
+      cy.location('pathname').should('eq', ROUTES.createCompanySettings.path);
       selectColorScheme(Module.createCompanySettings, SubModule.companySettingsDetails, 'color-scheme-sunset');
       interceptFetchCompanySettingsRequest();
       clickActionButton(Module.createCompanySettings, SubModule.companySettingsDetails);
 
       cy.wait(['@createCompanySettingsRequest', '@fetchCompanySettingsRequest']);
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
       getTestSelectorByModule(Module.shared, SubModule.header, 'menu-icon').should('have.attr', 'disabled');
     });
 
@@ -557,7 +557,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchCompanyLicenseFailedRequest');
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
 
       getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-field-licenseFile-file-upload').click();
       uploadTestFile('input#file-upload-input', 'company/invalid-company-license.lic');
@@ -569,7 +569,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@uploadCompanyLicenseFailedRequest');
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
         .should('exist')
         .and('contain.text', 'Failed to upload Company license');
@@ -587,7 +587,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchCompanyLicenseFailedRequest');
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
       getTestSelectorByModule(Module.shared, SubModule.license, 'company-license-text').should('not.exist');
 
       getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-field-licenseFile-file-upload').click();
@@ -602,7 +602,7 @@ describe('Onboarding Flow Tests', () => {
       cy.wait('@uploadCompanyLicenseRequest');
       cy.wait('@fetchCompanyLicenseRequest');
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
         .should('exist')
         .and('contain.text', 'Company License has been successfully uploaded');
@@ -627,14 +627,14 @@ describe('Onboarding Flow Tests', () => {
       cy.wait('@createCompanyRequest');
       cy.wait('@fetchCompanyRequest');
 
-      cy.url().should('include', ROUTES.createCompanySettings.path);
+      cy.location('pathname').should('eq', ROUTES.createCompanySettings.path);
       interceptFetchCompanySettingsRequest();
       clickActionButton(Module.createCompanySettings, SubModule.companySettingsDetails);
 
       cy.wait('@createCompanySettingsRequest');
       cy.wait('@fetchCompanySettingsRequest');
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
 
       getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-field-licenseFile-file-upload').click();
       uploadTestFile('input#file-upload-input', 'company/valid-company-license.lic');
@@ -648,7 +648,7 @@ describe('Onboarding Flow Tests', () => {
       cy.wait('@uploadCompanyLicenseRequest');
       cy.wait('@fetchCompanyLicenseRequest');
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
       getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-timeZoneId').click();
 
       verifyOptions(Module.createBranch, SubModule.branchDetails, 'form-field-timeZoneId-option', [
@@ -755,7 +755,7 @@ describe('Onboarding Flow Tests', () => {
           message: `Postal Code '*****' for Country 'US - [United States]' is invalid.`,
         },
       ]);
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
     });
 
     it('should not be navigated to the Flows page if the branch creation failed', () => {
@@ -769,7 +769,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchBranchesFailedRequest');
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
 
       getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-name').type('Test Branch');
       selectOption(Module.createBranch, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
@@ -778,7 +778,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@createBranchFailedRequest');
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
     });
 
     it('should be navigated to the Flows page if the branch creation succeeded', () => {
@@ -792,7 +792,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchBranchesFailedRequest');
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
       verifyTextFields(Module.createBranch, SubModule.branchDetails, {
         'form-header': 'Branch Details',
         'form-section-field-basicInfo': 'Basic Information',
@@ -824,10 +824,10 @@ describe('Onboarding Flow Tests', () => {
 
       clickSubFlow('Company Onboarding');
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
       getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-cancel-button').click();
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
 
       interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 1 }, { alias: 'fetchBranchesTotalRequest' });
       getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-name').type('America/New_York');
@@ -922,7 +922,7 @@ describe('Onboarding Flow Tests', () => {
           message: `'First Name' and 'Last Name' cannot be the same.`,
         },
       ]);
-      cy.url().should('include', ROUTES.createEmployee.path);
+      cy.location('pathname').should('eq', ROUTES.createEmployee.path);
     });
 
     it('should not be able to navigate to the Company creation page from the Company License upload page if the Company has already been created', () => {
@@ -935,10 +935,10 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchCompanyLicenseFailedRequest');
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
       cy.visit(ROUTES.createCompany.path);
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
     });
 
     it('should not be able to navigate to the Company License upload page from the Branch creation page if the Company license has already been uploaded', () => {
@@ -951,10 +951,10 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@fetchBranchesFailedRequest');
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
       cy.visit(ROUTES.uploadCompanyLicense.path);
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
     });
 
     it('should be redirected to the Flows page if manually visiting a non-existing route from the Branch creation page', () => {
@@ -965,7 +965,7 @@ describe('Onboarding Flow Tests', () => {
       interceptFetchProfileFailedRequest();
       cy.visit(ROUTES.companyOnboarding.path);
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
       cy.visit('/flows/onboarding/wrongUrl');
 
       cy.location('pathname').should('eq', ROUTES.flows.path);
@@ -979,7 +979,7 @@ describe('Onboarding Flow Tests', () => {
       interceptFetchProfileFailedRequest();
       cy.visit(ROUTES.employeeOnboarding.path);
 
-      cy.url().should('include', ROUTES.createEmployee.path);
+      cy.location('pathname').should('eq', ROUTES.createEmployee.path);
       cy.visit('/flows/onboarding/wrongUrl');
 
       cy.location('pathname').should('eq', ROUTES.flows.path);
@@ -998,7 +998,7 @@ describe('Onboarding Flow Tests', () => {
       cy.visit(ROUTES.flows.path);
 
       clickSubFlow('Company Onboarding');
-      cy.url().should('include', ROUTES.createCompany.path);
+      cy.location('pathname').should('eq', ROUTES.createCompany.path);
       getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper', true).should('have.length', 4);
 
       getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-company').should('exist');
@@ -1042,7 +1042,7 @@ describe('Onboarding Flow Tests', () => {
       cy.wait('@createCompanyRequest');
       cy.wait('@fetchCompanyRequest');
 
-      cy.url().should('include', ROUTES.createCompanySettings.path);
+      cy.location('pathname').should('eq', ROUTES.createCompanySettings.path);
 
       selectColorScheme(Module.createCompanySettings, SubModule.companySettingsDetails, 'color-scheme-sunset');
       interceptFetchCompanySettingsRequest();
@@ -1050,7 +1050,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait(['@createCompanySettingsRequest', '@fetchCompanySettingsRequest']);
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
       getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper', true).should('have.length', 4);
 
       getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-company').should('exist');
@@ -1086,7 +1086,7 @@ describe('Onboarding Flow Tests', () => {
       cy.wait('@uploadCompanyLicenseRequest');
       cy.wait('@fetchCompanyLicenseRequest');
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
       getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper', true).should('have.length', 4);
       getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-company').should('exist');
       getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-company')
@@ -1121,7 +1121,7 @@ describe('Onboarding Flow Tests', () => {
       cy.location('pathname').should('eq', ROUTES.flows.path);
 
       clickSubFlow('Employee Onboarding');
-      cy.url().should('include', ROUTES.createEmployee.path);
+      cy.location('pathname').should('eq', ROUTES.createEmployee.path);
 
       getTestSelectorByModule(Module.onboarding, SubModule.employeeOnboarding, 'stepper', true).should('have.length', 1);
       getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-company').should('not.exist');
@@ -1153,7 +1153,7 @@ describe('Onboarding Flow Tests', () => {
 
       clickSubFlow('Company Onboarding');
 
-      cy.url().should('include', ROUTES.createCompanySettings.path);
+      cy.location('pathname').should('eq', ROUTES.createCompanySettings.path);
       getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper', true).should('have.length', 4);
 
       getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-company').should('exist');
@@ -1193,7 +1193,7 @@ describe('Onboarding Flow Tests', () => {
 
       clickSubFlow('Company Onboarding');
 
-      cy.url().should('include', ROUTES.createCompanySettings.path);
+      cy.location('pathname').should('eq', ROUTES.createCompanySettings.path);
 
       interceptFetchCompanySettingsRequest();
       selectColorScheme(Module.createCompanySettings, SubModule.companySettingsDetails, 'color-scheme-sunrise');
@@ -1201,7 +1201,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait('@createCompanySettingsRequest');
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
       clickFlowsIcon();
       clickSubFlow('Company Offboarding');
       interceptFetchCompanySettingsFailedRequest('fetchCompanySettingsFailedSecondRequest');
@@ -1210,7 +1210,7 @@ describe('Onboarding Flow Tests', () => {
       clickFlowsIcon();
       clickSubFlow('Company Onboarding');
 
-      cy.url().should('include', ROUTES.createCompanySettings.path);
+      cy.location('pathname').should('eq', ROUTES.createCompanySettings.path);
       verifyRadioGroupValue('color-scheme-group', 'midnight');
       verifyAppTheme('dark', 'midnight');
     });
@@ -1227,7 +1227,7 @@ describe('Onboarding Flow Tests', () => {
 
       clickSubFlow('Company Onboarding');
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
       getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-companyLicense')
         .find('.MuiStepLabel-root')
         .should('not.have.class', 'Mui-disabled');
@@ -1236,7 +1236,7 @@ describe('Onboarding Flow Tests', () => {
         .should('have.class', 'Mui-disabled');
       getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-cancel-button').should('exist').click();
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
       getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-companyLicense')
         .find('.MuiStepLabel-root')
         .should('not.have.class', 'Mui-disabled');
@@ -1256,7 +1256,7 @@ describe('Onboarding Flow Tests', () => {
 
       clickSubFlow('Company Onboarding');
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
       getTestSelectorByModule(Module.onboarding, SubModule.companyOnboarding, 'stepper-companyLicense')
         .find('.MuiStepLabel-root')
         .should('not.have.class', 'Mui-disabled');
@@ -1270,7 +1270,7 @@ describe('Onboarding Flow Tests', () => {
 
       clickSubFlow('Company Onboarding');
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
 
       getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-field-licenseFile-file-upload').click();
       uploadTestFile('input#file-upload-input', 'company/valid-company-license.lic');
@@ -1299,7 +1299,7 @@ describe('Onboarding Flow Tests', () => {
 
       clickSubFlow('Company Onboarding');
 
-      cy.url().should('include', ROUTES.createCompanySettings.path);
+      cy.location('pathname').should('eq', ROUTES.createCompanySettings.path);
 
       interceptFetchCompanySettingsRequest();
       selectColorScheme(Module.createCompanySettings, SubModule.companySettingsDetails, 'color-scheme-sunrise');
@@ -1307,7 +1307,7 @@ describe('Onboarding Flow Tests', () => {
 
       cy.wait(['@createCompanySettingsRequest', '@fetchCompanySettingsRequest']);
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
 
       getTestSelectorByModule(Module.createBranch, SubModule.branchDetails, 'form-field-name').type('America/New_York');
       selectOption(Module.createBranch, SubModule.branchDetails, 'timeZoneId', 'America/New_York');
@@ -1332,12 +1332,12 @@ describe('Onboarding Flow Tests', () => {
 
       clickSubFlow('Company Onboarding');
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
       getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-cancel-button').click();
 
       cy.location('pathname').should('eq', ROUTES.flows.path);
       clickSubFlow('Branches');
-      cy.url().should('include', ROUTES.branches.path);
+      cy.location('pathname').should('eq', ROUTES.branches.path);
 
       selectAction(Module.branchManagement, SubModule.branchCatalog, 'delete', '222222222222');
       interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetchNoBranchesRequest', fixture: 'branch/branches-empty' });
@@ -1346,10 +1346,10 @@ describe('Onboarding Flow Tests', () => {
       clickFlowsIcon();
       clickSubFlow('Company Onboarding');
 
-      cy.url().should('include', ROUTES.uploadCompanyLicense.path);
+      cy.location('pathname').should('eq', ROUTES.uploadCompanyLicense.path);
       getTestSelectorByModule(Module.uploadCompanyLicense, SubModule.companyLicenseDetails, 'form-cancel-button').click();
 
-      cy.url().should('include', ROUTES.createBranch.path);
+      cy.location('pathname').should('eq', ROUTES.createBranch.path);
     });
 
     it('should preview the color scheme when the company settings color scheme is changed', () => {

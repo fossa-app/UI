@@ -60,7 +60,7 @@ describe('Authentication Flow Tests - Successful Client Request', () => {
 
     securedRoutes.forEach((route) => {
       cy.visit(route);
-      cy.url().should('include', ROUTES.login.path);
+      cy.location('pathname').should('eq', ROUTES.login.path);
     });
   });
 
@@ -121,7 +121,7 @@ describe('Authentication Flow Tests - Successful Client Request', () => {
     cy.wait('@openidConfigurationRequest');
     cy.wait('@logoutRequest');
 
-    cy.url().should('include', ROUTES.login.path);
+    cy.location('pathname').should('eq', ROUTES.login.path);
     getTestSelectorByModule(Module.shared, SubModule.header, 'profile-menu').should('not.exist');
   });
 

@@ -302,7 +302,7 @@ describe('Branch Catalog Tests', () => {
 
           branchAdminRoutes.forEach((route) => {
             cy.visit(route);
-            cy.url().should('include', isAdminRole ? route : ROUTES.company.path);
+            cy.location('pathname').should('eq', isAdminRole ? route : ROUTES.company.path);
           });
         });
 
@@ -329,7 +329,7 @@ describe('Branch Catalog Tests', () => {
           );
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'action-view-222222222222').click();
 
-          cy.url().should('include', `${ROUTES.branches.path}/view/222222222222`);
+          cy.location('pathname').should('eq', `${ROUTES.branches.path}/view/222222222222`);
         });
 
         it('should display branch management buttons', () => {
@@ -376,7 +376,7 @@ describe('Branch Catalog Tests', () => {
 
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-cell-222222222222-name').click();
 
-          cy.url().should('include', `${ROUTES.branches.path}/view/222222222222`);
+          cy.location('pathname').should('eq', `${ROUTES.branches.path}/view/222222222222`);
         });
 
         it('should reset the search state when the clear icon is clicked', () => {
@@ -531,12 +531,12 @@ describe('Branch Catalog Tests', () => {
       interceptFetchBranchByIdRequest('222222222222');
 
       getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-layout-action-button').click();
-      cy.url().should('include', branchAdminRoutes[0]);
+      cy.location('pathname').should('eq', branchAdminRoutes[0]);
 
       cy.visit(ROUTES.branches.path);
 
       selectAction(Module.branchManagement, SubModule.branchCatalog, 'edit', '222222222222');
-      cy.url().should('include', branchAdminRoutes[1]);
+      cy.location('pathname').should('eq', branchAdminRoutes[1]);
     });
 
     it('should not be able to delete a branch if the branch deletion failed', () => {
