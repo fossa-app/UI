@@ -110,7 +110,7 @@ describe('Company Management Tests', () => {
 
         selectNavigationMenuItem('Company');
 
-        cy.url().should('include', ROUTES.viewCompany.path);
+        cy.location('pathname').should('eq', ROUTES.viewCompany.path);
         verifyTextFields(Module.companyManagement, SubModule.companyViewDetails, {
           'view-details-header': 'Company Details',
           'view-details-section-basicInfo': 'Basic Information',
@@ -227,13 +227,13 @@ describe('Company Management Tests', () => {
 
       cy.visit(ROUTES.editCompany.path);
 
-      cy.url().should('include', ROUTES.viewCompany.path);
+      cy.location('pathname').should('eq', ROUTES.viewCompany.path);
     });
 
     it('should not be able to navigate to the Company Settings page', () => {
       cy.visit(ROUTES.companySettings.path);
 
-      cy.url().should('include', ROUTES.viewCompany.path);
+      cy.location('pathname').should('eq', ROUTES.viewCompany.path);
     });
   });
 
@@ -248,7 +248,7 @@ describe('Company Management Tests', () => {
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('exist').click();
 
-      cy.url().should('include', ROUTES.editCompany.path);
+      cy.location('pathname').should('eq', ROUTES.editCompany.path);
 
       clearInputField(Module.companyManagement, SubModule.companyDetails, 'form-field-name');
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-field-name')
@@ -257,7 +257,7 @@ describe('Company Management Tests', () => {
       selectOption(Module.companyManagement, SubModule.companyDetails, 'countryCode', 'UA');
       getTestSelectorByModule(Module.companyManagement, SubModule.companyDetails, 'form-cancel-button').should('exist').click();
 
-      cy.url().should('include', ROUTES.viewCompany.path);
+      cy.location('pathname').should('eq', ROUTES.viewCompany.path);
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').click();
 
@@ -275,7 +275,7 @@ describe('Company Management Tests', () => {
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('exist').click();
 
-      cy.url().should('include', ROUTES.editCompany.path);
+      cy.location('pathname').should('eq', ROUTES.editCompany.path);
 
       cy.wait('@fetchCompanyRequest');
 
@@ -304,7 +304,7 @@ describe('Company Management Tests', () => {
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
         .should('exist')
         .and('contain.text', 'Failed to update the Company');
-      cy.url().should('include', ROUTES.editCompany.path);
+      cy.location('pathname').should('eq', ROUTES.editCompany.path);
     });
 
     it('should display async validation messages if the company update failed with validation errors', () => {
@@ -330,7 +330,7 @@ describe('Company Management Tests', () => {
           message: `Company 'Good Omens Updated' already exists in the system.`,
         },
       ]);
-      cy.url().should('include', ROUTES.editCompany.path);
+      cy.location('pathname').should('eq', ROUTES.editCompany.path);
     });
 
     it('should be able to edit the company and be navigated to the View Company page if the form is valid and company update succeeded', () => {
@@ -339,7 +339,7 @@ describe('Company Management Tests', () => {
 
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-action-button').should('exist').click();
 
-      cy.url().should('include', ROUTES.editCompany.path);
+      cy.location('pathname').should('eq', ROUTES.editCompany.path);
 
       cy.wait('@fetchCompanyRequest');
 
@@ -361,7 +361,7 @@ describe('Company Management Tests', () => {
       cy.wait('@editCompanyRequest');
       cy.wait('@fetchUpdatedCompanyRequest');
 
-      cy.url().should('include', ROUTES.viewCompany.path);
+      cy.location('pathname').should('eq', ROUTES.viewCompany.path);
       getTestSelectorByModule(Module.companyManagement, SubModule.companyViewDetails, 'view-details-value-name').should(
         'have.text',
         'Good Omens Updated'
@@ -408,7 +408,7 @@ describe('Company Management Tests', () => {
         { alias: 'fetchDepartmentsTotalUpdatedRequest', fixture: 'department/departments-deleted' }
       );
 
-      cy.url().should('include', `${ROUTES.viewCompany.path}`);
+      cy.location('pathname').should('eq', `${ROUTES.viewCompany.path}`);
       getLinearLoader(Module.companyManagement, SubModule.companyLicenseViewDetails, 'view-details').should('exist');
       cy.wait('@fetchCompanyLicenseRequest');
 

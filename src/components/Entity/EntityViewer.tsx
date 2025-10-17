@@ -8,7 +8,7 @@ import { Module, SubModule, ErrorResponseDTO, BaseEntity } from 'shared/types';
 import PageLayout from 'components/layouts/PageLayout';
 import ViewDetails, { ViewDetailActionName, ViewDetailProps } from 'components/UI/ViewDetails';
 
-type ViewEntityProps<T extends BaseEntity> = {
+type EntityViewerProps<T extends BaseEntity> = {
   module: Module;
   subModule: SubModule;
   pageTitle: string;
@@ -17,10 +17,10 @@ type ViewEntityProps<T extends BaseEntity> = {
   editRoute?: string;
   selectEntity: (state: RootState) => StateEntity<T | undefined>;
   resetEntity: () => ReturnType<AppDispatch>;
-  fetchEntityAction: (params: { id: string }) => AsyncThunkAction<T, unknown, { rejectValue: ErrorResponseDTO }>;
+  fetchEntityAction: (id: string) => AsyncThunkAction<T, unknown, { rejectValue: ErrorResponseDTO }>;
 };
 
-const ViewEntity = <T extends BaseEntity>({
+const EntityViewer = <T extends BaseEntity>({
   module,
   subModule,
   pageTitle,
@@ -30,7 +30,7 @@ const ViewEntity = <T extends BaseEntity>({
   fetchEntityAction,
   viewSchema,
   editRoute,
-}: ViewEntityProps<T>) => {
+}: EntityViewerProps<T>) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { item: values, fetchStatus } = useAppSelector(selectEntity);
@@ -61,7 +61,7 @@ const ViewEntity = <T extends BaseEntity>({
     const shouldFetch = !hasFetched.current && id && (!values || !areEqualBigIds(values.id, id));
 
     if (shouldFetch) {
-      dispatch(fetchEntityAction({ id }));
+      dispatch(fetchEntityAction(id));
       hasFetched.current = true;
     }
   }, [id, values, dispatch, fetchEntityAction]);
@@ -90,4 +90,4 @@ const ViewEntity = <T extends BaseEntity>({
   );
 };
 
-export default ViewEntity;
+export default EntityViewer;

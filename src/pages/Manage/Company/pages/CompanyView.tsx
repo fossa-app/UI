@@ -24,7 +24,7 @@ import { renderLicenseUsageDetail } from '../helpers/renderLicenseUsageDetail';
 const testModule = COMPANY_VIEW_DETAILS_SCHEMA.module;
 const testSubModule = COMPANY_VIEW_DETAILS_SCHEMA.subModule;
 
-const ViewCompanyPage: React.FC = () => {
+const CompanyViewPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { item: company, fetchStatus: companyFetchStatus } = useAppSelector(selectCompany);
@@ -129,4 +129,4 @@ const ViewCompanyPage: React.FC = () => {
   );
 };
 
-export default ViewCompanyPage;
+export default CompanyViewPage;

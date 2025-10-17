@@ -35,6 +35,8 @@ import {
   interceptFetchDepartmentsRequest,
   interceptFetchEmployeesByIdsRequest,
   interceptDeleteDepartmentRequest,
+  interceptFetchEmployeesFailedRequest,
+  interceptFetchDepartmentsFailedRequest,
 } from 'support/interceptors';
 
 const companyOffboardingRoutes = [ROUTES.deleteCompanySettings.path, ROUTES.companyOffboardingInstructions.path, ROUTES.deleteCompany.path];
@@ -73,7 +75,7 @@ describe('Offboarding Flow Tests', () => {
         interceptFetchProfileRequest();
         cy.visit(ROUTES.employeeOffboarding.path);
 
-        cy.url().should('include', ROUTES.deleteEmployee.path);
+        cy.location('pathname').should('eq', ROUTES.deleteEmployee.path);
         getTestSelectorByModule(Module.deleteEmployee, SubModule.employeeDetails, 'form-header').should('have.text', 'Delete Profile');
         getTestSelectorByModule(Module.deleteEmployee, SubModule.employeeDetails, 'form-submit-button')
           .should('exist')
@@ -94,7 +96,7 @@ describe('Offboarding Flow Tests', () => {
         checkIsSubFlowDisabled('Employee Offboarding', false);
         clickSubFlow('Employee Offboarding');
 
-        cy.url().should('include', ROUTES.deleteEmployee.path);
+        cy.location('pathname').should('eq', ROUTES.deleteEmployee.path);
       });
 
       it('should not be redirected to the Flows page if the profile deletion failed', () => {
@@ -110,7 +112,7 @@ describe('Offboarding Flow Tests', () => {
         clickActionButton(Module.deleteEmployee, SubModule.employeeDetails);
         cy.wait('@deleteProfileFailedRequest');
 
-        cy.url().should('include', ROUTES.deleteEmployee.path);
+        cy.location('pathname').should('eq', ROUTES.deleteEmployee.path);
         getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
           .should('exist')
           .and('contain.text', 'Unable to delete the Profile. It has dependent entities');
@@ -183,7 +185,7 @@ describe('Offboarding Flow Tests', () => {
         interceptFetchProfileRequest();
         cy.visit(ROUTES.offboarding.path);
 
-        cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+        cy.location('pathname').should('eq', ROUTES.companyOffboardingInstructions.path);
 
         if (isAdminRole) {
           getTestSelectorByModule(Module.companyOffboardingInstructions, SubModule.offboardingDetails, 'form-general-error-message').should(
@@ -201,7 +203,7 @@ describe('Offboarding Flow Tests', () => {
 
         companyOffboardingRoutes.forEach((route) => {
           cy.visit(route);
-          cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+          cy.location('pathname').should('eq', ROUTES.companyOffboardingInstructions.path);
         });
       });
 
@@ -210,10 +212,12 @@ describe('Offboarding Flow Tests', () => {
         interceptFetchCompanySettingsRequest();
         interceptFetchCompanyLicenseRequest();
         interceptFetchBranchesFailedRequest();
+        interceptFetchEmployeesFailedRequest();
+        interceptFetchDepartmentsFailedRequest();
         interceptFetchProfileFailedRequest();
         cy.visit(ROUTES.offboarding.path);
 
-        cy.url().should('include', ROUTES.deleteCompanySettings.path);
+        cy.location('pathname').should('eq', ROUTES.deleteCompanySettings.path);
 
         if (isAdminRole) {
           getTestSelectorByModule(Module.deleteCompanySettings, SubModule.companySettingsDetails, 'form-general-error-message').should(
@@ -235,7 +239,7 @@ describe('Offboarding Flow Tests', () => {
 
         companyOffboardingRoutes.forEach((route) => {
           cy.visit(route);
-          cy.url().should('include', ROUTES.deleteCompanySettings.path);
+          cy.location('pathname').should('eq', ROUTES.deleteCompanySettings.path);
         });
       });
 
@@ -244,10 +248,12 @@ describe('Offboarding Flow Tests', () => {
         interceptFetchCompanySettingsFailedRequest();
         interceptFetchCompanyLicenseRequest();
         interceptFetchBranchesFailedRequest();
+        interceptFetchEmployeesFailedRequest();
+        interceptFetchDepartmentsFailedRequest();
         interceptFetchProfileFailedRequest();
         cy.visit(ROUTES.offboarding.path);
 
-        cy.url().should('include', ROUTES.deleteCompany.path);
+        cy.location('pathname').should('eq', ROUTES.deleteCompany.path);
 
         if (isAdminRole) {
           getTestSelectorByModule(Module.deleteCompany, SubModule.companyDetails, 'form-general-error-message').should('not.exist');
@@ -260,7 +266,7 @@ describe('Offboarding Flow Tests', () => {
 
         companyOffboardingRoutes.forEach((route) => {
           cy.visit(route);
-          cy.url().should('include', ROUTES.deleteCompany.path);
+          cy.location('pathname').should('eq', ROUTES.deleteCompany.path);
         });
       });
     });
@@ -304,7 +310,7 @@ describe('Offboarding Flow Tests', () => {
       checkIsSubFlowHasDisabledAttribute('Company Offboarding', false);
       clickSubFlow('Company Offboarding');
 
-      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      cy.location('pathname').should('eq', ROUTES.companyOffboardingInstructions.path);
       verifyTextFields(Module.companyOffboardingInstructions, SubModule.offboardingDetails, {
         'form-header': 'Delete Branches, Departments & Offboard Employees',
         'form-section-field-basicInfo':
@@ -330,7 +336,7 @@ describe('Offboarding Flow Tests', () => {
 
       clickSubFlow('Company Offboarding');
 
-      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      cy.location('pathname').should('eq', ROUTES.companyOffboardingInstructions.path);
       verifyTextFields(Module.companyOffboardingInstructions, SubModule.offboardingDetails, {
         'form-field-value-branches': 'Remaining Branches: 1',
         'form-field-value-departments': 'Remaining Departments: 4',
@@ -341,7 +347,7 @@ describe('Offboarding Flow Tests', () => {
         .and('have.text', 'Go to Branch Catalog')
         .click();
 
-      cy.url().should('include', ROUTES.branches.path);
+      cy.location('pathname').should('eq', ROUTES.branches.path);
 
       clickFlowsIcon();
 
@@ -361,7 +367,7 @@ describe('Offboarding Flow Tests', () => {
 
       clickSubFlow('Company Offboarding');
 
-      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      cy.location('pathname').should('eq', ROUTES.companyOffboardingInstructions.path);
       verifyTextFields(Module.companyOffboardingInstructions, SubModule.offboardingDetails, {
         'form-field-value-branches': 'All branches have been removed!',
         'form-field-value-departments': 'Remaining Departments: 4',
@@ -372,7 +378,7 @@ describe('Offboarding Flow Tests', () => {
         .and('have.text', 'Go to Department Catalog')
         .click();
 
-      cy.url().should('include', ROUTES.departments.path);
+      cy.location('pathname').should('eq', ROUTES.departments.path);
 
       clickFlowsIcon();
 
@@ -395,7 +401,7 @@ describe('Offboarding Flow Tests', () => {
 
       clickSubFlow('Company Offboarding');
 
-      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      cy.location('pathname').should('eq', ROUTES.companyOffboardingInstructions.path);
       verifyTextFields(Module.companyOffboardingInstructions, SubModule.offboardingDetails, {
         'form-field-value-branches': 'All branches have been removed!',
         'form-field-value-departments': 'All departments have been removed!',
@@ -406,7 +412,7 @@ describe('Offboarding Flow Tests', () => {
         .and('have.text', 'Go to Employee Offboarding')
         .click();
 
-      cy.url().should('include', ROUTES.deleteEmployee.path);
+      cy.location('pathname').should('eq', ROUTES.deleteEmployee.path);
 
       clickFlowsIcon();
 
@@ -434,7 +440,7 @@ describe('Offboarding Flow Tests', () => {
 
       clickSubFlow('Company Offboarding');
 
-      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      cy.location('pathname').should('eq', ROUTES.companyOffboardingInstructions.path);
 
       verifyTextFields(Module.companyOffboardingInstructions, SubModule.offboardingDetails, {
         'form-field-value-branches': 'Remaining Branches: 1',
@@ -446,12 +452,12 @@ describe('Offboarding Flow Tests', () => {
         .and('have.text', 'Go to Branch Catalog')
         .click();
 
-      cy.url().should('include', ROUTES.branches.path);
+      cy.location('pathname').should('eq', ROUTES.branches.path);
       clickFlowsIcon();
 
       clickSubFlow('Company Offboarding');
 
-      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      cy.location('pathname').should('eq', ROUTES.companyOffboardingInstructions.path);
       clickActionButton(Module.companyOffboardingInstructions, SubModule.offboardingDetails);
       cy.wait(['@fetchBranchesRequest']);
 
@@ -469,7 +475,7 @@ describe('Offboarding Flow Tests', () => {
         { pageNumber: 1, pageSize: 1 },
         { alias: 'fetchEmptyOnboardingBranchesRequest', fixture: 'branch/branches-empty' }
       );
-      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      cy.location('pathname').should('eq', ROUTES.companyOffboardingInstructions.path);
       cy.wait('@fetchEmptyOnboardingBranchesRequest');
 
       verifyTextFields(Module.companyOffboardingInstructions, SubModule.offboardingDetails, {
@@ -487,7 +493,7 @@ describe('Offboarding Flow Tests', () => {
         { alias: 'fetchDepartmentsRequest', fixture: 'department/departments-single' }
       );
 
-      cy.url().should('include', ROUTES.departments.path);
+      cy.location('pathname').should('eq', ROUTES.departments.path);
 
       selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'delete', '444444444444');
       interceptFetchDepartmentsRequest(
@@ -515,7 +521,7 @@ describe('Offboarding Flow Tests', () => {
         .and('have.text', 'Go to Employee Offboarding')
         .click();
 
-      cy.url().should('include', ROUTES.deleteEmployee.path);
+      cy.location('pathname').should('eq', ROUTES.deleteEmployee.path);
       clickActionButton(Module.deleteEmployee, SubModule.employeeDetails);
       cy.wait('@deleteProfileRequest');
 
@@ -525,7 +531,7 @@ describe('Offboarding Flow Tests', () => {
         { pageNumber: 1, pageSize: 1 },
         { alias: 'fetchEmptyOnboardingEmployeesRequest', fixture: 'employee/employees-empty' }
       );
-      cy.url().should('include', ROUTES.deleteCompanySettings.path);
+      cy.location('pathname').should('eq', ROUTES.deleteCompanySettings.path);
     });
 
     it('should not be redirected to the Delete Company page if the company settings deletion failed', () => {
@@ -549,7 +555,7 @@ describe('Offboarding Flow Tests', () => {
       clickActionButton(Module.deleteCompanySettings, SubModule.companySettingsDetails);
       cy.wait('@deleteCompanySettingsFailedRequest');
 
-      cy.url().should('include', ROUTES.deleteCompanySettings.path);
+      cy.location('pathname').should('eq', ROUTES.deleteCompanySettings.path);
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'error')
         .should('exist')
         .and('contain.text', 'Failed to delete the Company Settings');
@@ -585,7 +591,7 @@ describe('Offboarding Flow Tests', () => {
       clickActionButton(Module.deleteCompanySettings, SubModule.companySettingsDetails);
       cy.wait(['@deleteCompanySettingsRequest', '@fetchCompanySettingsFailedRequest']);
 
-      cy.url().should('include', ROUTES.deleteCompany.path);
+      cy.location('pathname').should('eq', ROUTES.deleteCompany.path);
       getTestSelectorByModule(Module.shared, SubModule.snackbar, 'success')
         .should('exist')
         .and('contain.text', 'Company Settings has been successfully deleted');
@@ -619,7 +625,7 @@ describe('Offboarding Flow Tests', () => {
 
       clickSubFlow('Company Offboarding');
 
-      cy.url().should('include', ROUTES.deleteCompany.path);
+      cy.location('pathname').should('eq', ROUTES.deleteCompany.path);
 
       clickActionButton(Module.deleteCompany, SubModule.companyDetails);
       cy.wait('@deleteCompanyFailedRequest');
@@ -651,7 +657,7 @@ describe('Offboarding Flow Tests', () => {
 
       clickSubFlow('Company Offboarding');
 
-      cy.url().should('include', ROUTES.deleteCompany.path);
+      cy.location('pathname').should('eq', ROUTES.deleteCompany.path);
 
       interceptFetchCompanyFailedRequest();
       clickActionButton(Module.deleteCompany, SubModule.companyDetails);
@@ -722,7 +728,7 @@ describe('Offboarding Flow Tests', () => {
       cy.visit(ROUTES.flows.path);
 
       clickSubFlow('Company Offboarding');
-      cy.url().should('include', ROUTES.companyOffboardingInstructions.path);
+      cy.location('pathname').should('eq', ROUTES.companyOffboardingInstructions.path);
 
       getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper', true).should('have.length', 3);
       getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-instructions')
@@ -748,7 +754,7 @@ describe('Offboarding Flow Tests', () => {
         .should('have.text', 'Delete Company');
 
       clickActionButton(Module.companyOffboardingInstructions, SubModule.offboardingDetails);
-      cy.url().should('include', ROUTES.branches.path);
+      cy.location('pathname').should('eq', ROUTES.branches.path);
       cy.wait(['@fetchBranchesRequest']);
 
       interceptFetchBranchesRequest({ pageNumber: 1, pageSize: 10 }, { alias: 'fetchNoBranchesRequest', fixture: 'branch/branches-empty' });
@@ -759,7 +765,7 @@ describe('Offboarding Flow Tests', () => {
       interceptFetchBranchesFailedRequest();
       clickSubFlow('Company Offboarding');
 
-      cy.url().should('include', ROUTES.deleteCompanySettings.path);
+      cy.location('pathname').should('eq', ROUTES.deleteCompanySettings.path);
       getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper', true).should('have.length', 3);
       getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-instructions')
         .should('exist')
@@ -779,7 +785,7 @@ describe('Offboarding Flow Tests', () => {
       clickActionButton(Module.deleteCompanySettings, SubModule.companySettingsDetails);
       cy.wait(['@deleteCompanySettingsRequest', '@fetchCompanySettingsFailedRequest']);
 
-      cy.url().should('include', ROUTES.deleteCompany.path);
+      cy.location('pathname').should('eq', ROUTES.deleteCompany.path);
       getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper', true).should('have.length', 3);
       getTestSelectorByModule(Module.offboarding, SubModule.companyOffboarding, 'stepper-instructions')
         .should('exist')

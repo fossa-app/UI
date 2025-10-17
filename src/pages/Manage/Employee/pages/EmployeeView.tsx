@@ -14,7 +14,7 @@ import ViewDetails from 'components/UI/ViewDetails';
 const testModule = EMPLOYEE_VIEW_DETAILS_SCHEMA.module;
 const testSubModule = EMPLOYEE_VIEW_DETAILS_SCHEMA.subModule;
 
-const ViewEmployeePage: React.FC = () => {
+const EmployeeViewPage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useAppDispatch();
@@ -88,4 +88,4 @@ const ViewEmployeePage: React.FC = () => {
   );
 };
 
-export default ViewEmployeePage;
+export default EmployeeViewPage;

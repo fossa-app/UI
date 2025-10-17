@@ -9,7 +9,7 @@ import { areEqualBigIds } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName, FormFieldProps, FormProps } from 'components/UI/Form';
 
-type ManageEntityProps<T extends BaseEntity, TDTO extends BaseEntity> = {
+type EntityManagerProps<T extends BaseEntity, TDTO extends BaseEntity> = {
   module: Module;
   subModule: SubModule;
   pageTitle: { create: string; edit: string };
@@ -29,10 +29,10 @@ type ManageEntityProps<T extends BaseEntity, TDTO extends BaseEntity> = {
   editEntityAction: (
     args: [string, EntityInput<TDTO>]
   ) => AsyncThunkAction<void, [string, EntityInput<TDTO>], { rejectValue: ErrorResponse<FieldValues> }>;
-  fetchEntityAction: (params: { id: string }) => AsyncThunkAction<T, unknown, { rejectValue: ErrorResponseDTO }>;
+  fetchEntityAction: (id: string) => AsyncThunkAction<T, unknown, { rejectValue: ErrorResponseDTO }>;
 };
 
-const ManageEntity = <T extends BaseEntity, TDTO extends BaseEntity>({
+const EntityManager = <T extends BaseEntity, TDTO extends BaseEntity>({
   module,
   subModule,
   pageTitle,
@@ -51,7 +51,7 @@ const ManageEntity = <T extends BaseEntity, TDTO extends BaseEntity>({
   createEntityAction,
   editEntityAction,
   mapDTO,
-}: ManageEntityProps<T, TDTO>) => {
+}: EntityManagerProps<T, TDTO>) => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
   const { item: values, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectEntity);
@@ -93,7 +93,7 @@ const ManageEntity = <T extends BaseEntity, TDTO extends BaseEntity>({
     const shouldFetch = !hasFetched.current && id && (!values || !areEqualBigIds(values.id, id)) && fetchEntityAction;
 
     if (shouldFetch) {
-      dispatch(fetchEntityAction({ id }));
+      dispatch(fetchEntityAction(id));
       hasFetched.current = true;
     }
   }, [id, values, dispatch, fetchEntityAction]);
@@ -135,4 +135,4 @@ const ManageEntity = <T extends BaseEntity, TDTO extends BaseEntity>({
   );
 };
 
-export default ManageEntity;
+export default EntityManager;

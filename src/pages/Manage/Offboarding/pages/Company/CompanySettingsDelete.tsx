@@ -10,7 +10,7 @@ import Form, { FormActionName } from 'components/UI/Form';
 const testModule = DELETE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.module;
 const testSubModule = DELETE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.subModule;
 
-const DeleteCompanySettingsPage: React.FC = () => {
+const CompanySettingsDeletePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const userRoles = useAppSelector(selectUserRoles);
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
@@ -44,4 +44,4 @@ const DeleteCompanySettingsPage: React.FC = () => {
   );
 };
 
-export default DeleteCompanySettingsPage;
+export default CompanySettingsDeletePage;

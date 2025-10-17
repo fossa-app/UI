@@ -29,10 +29,10 @@ const EmployeeOnboardingPage = createLazyComponent(() => import('pages/Manage/On
 const EmployeeOffboardingPage = createLazyComponent(() => import('pages/Manage/Offboarding/pages/Employee/EmployeeOffboarding'), {
   title: ROUTES.employeeOffboarding.name,
 });
-const CreateCompanyPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/CreateCompany'), {
+const CompanyCreatePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/CompanyCreate'), {
   title: ROUTES.createCompany.name,
 });
-const DeleteCompanyPage = createLazyComponent(() => import('pages/Manage/Offboarding/pages/Company/DeleteCompany'), {
+const CompanyDeletePage = createLazyComponent(() => import('pages/Manage/Offboarding/pages/Company/CompanyDelete'), {
   title: ROUTES.deleteCompany.name,
 });
 const CompanyOffboardingInstructionsPage = createLazyComponent(
@@ -41,48 +41,48 @@ const CompanyOffboardingInstructionsPage = createLazyComponent(
     title: ROUTES.companyOffboardingInstructions.name,
   }
 );
-const DeleteCompanySettingsPage = createLazyComponent(() => import('pages/Manage/Offboarding/pages/Company/DeleteCompanySettings'), {
+const CompanySettingsDeletePage = createLazyComponent(() => import('pages/Manage/Offboarding/pages/Company/CompanySettingsDelete'), {
   title: ROUTES.deleteCompanySettings.name,
 });
-const CreateBranchPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/CreateBranch'), {
+const BranchCreatePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/BranchCreate'), {
   title: ROUTES.createBranch.name,
 });
-const UploadCompanyLicensePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/UploadCompanyLicense'), {
+const CompanyLicenseUploadPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/CompanyLicenseUpload'), {
   title: ROUTES.uploadCompanyLicense.name,
 });
-const CreateEmployeePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Employee/CreateEmployee'), {
+const EmployeeCreatePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Employee/EmployeeCreate'), {
   title: ROUTES.createEmployee.name,
 });
-const DeleteEmployeePage = createLazyComponent(() => import('pages/Manage/Offboarding/pages/Employee/DeleteEmployee'), {
+const EmployeeDeletePage = createLazyComponent(() => import('pages/Manage/Offboarding/pages/Employee/EmployeeDelete'), {
   title: ROUTES.deleteEmployee.name,
 });
 const NotFoundPage = createLazyComponent(() => import('pages/NotFound'), { title: 'Not found' });
 const CompanyPage = createLazyComponent(() => import('pages/Manage/Company/Company'));
-const EditCompanyPage = createLazyComponent(() => import('pages/Manage/Company/pages/EditCompany'), {
+const CompanyEditPage = createLazyComponent(() => import('pages/Manage/Company/pages/CompanyEdit'), {
   title: ROUTES.editCompany.name,
   isAdminRoute: true,
 });
-const ViewCompanyPage = createLazyComponent(() => import('pages/Manage/Company/pages/ViewCompany'), { title: ROUTES.viewCompany.name });
+const CompanyViewPage = createLazyComponent(() => import('pages/Manage/Company/pages/CompanyView'), { title: ROUTES.viewCompany.name });
 const EmployeePage = createLazyComponent(() => import('pages/Manage/Employee/Employee'));
 const EmployeeCatalogPage = createLazyComponent(() => import('pages/Manage/Employee/pages/EmployeeCatalog'), {
   title: ROUTES.employees.name,
 });
-const EditEmployeePage = createLazyComponent(() => import('pages/Manage/Employee/pages/EditEmployee'), {
+const EmployeeEditPage = createLazyComponent(() => import('pages/Manage/Employee/pages/EmployeeEdit'), {
   title: ROUTES.editEmployee.name,
   isAdminRoute: true,
 });
-const ViewEmployeePage = createLazyComponent(() => import('pages/Manage/Employee/pages/ViewEmployee'), { title: ROUTES.viewEmployee.name });
+const EmployeeViewPage = createLazyComponent(() => import('pages/Manage/Employee/pages/EmployeeView'), { title: ROUTES.viewEmployee.name });
 const EmployeeOrgChartPage = createLazyComponent(() => import('pages/Manage/Employee/pages/EmployeeOrgChart'), {
   title: ROUTES.employeeOrgChart.name,
 });
 const BranchPage = createLazyComponent(() => import('pages/Manage/Branch/Branch'));
 const BranchCatalogPage = createLazyComponent(() => import('pages/Manage/Branch/pages/BranchCatalog'), { title: ROUTES.branches.name });
-const ViewBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/ViewBranch'), { title: ROUTES.viewBranch.name });
-const NewBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/ManageBranch'), {
+const BranchViewPage = createLazyComponent(() => import('pages/Manage/Branch/pages/BranchView'), { title: ROUTES.viewBranch.name });
+const NewBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/BranchManagement'), {
   title: ROUTES.newBranch.name,
   isAdminRoute: true,
 });
-const EditBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/ManageBranch'), {
+const EditBranchPage = createLazyComponent(() => import('pages/Manage/Branch/pages/BranchManagement'), {
   title: ROUTES.editBranch.name,
   isAdminRoute: true,
 });
@@ -93,14 +93,14 @@ const DepartmentPage = createLazyComponent(() => import('pages/Manage/Department
 const DepartmentCatalogPage = createLazyComponent(() => import('pages/Manage/Department/pages/DepartmentCatalog'), {
   title: ROUTES.departments.name,
 });
-const ViewDepartmentPage = createLazyComponent(() => import('pages/Manage/Department/pages/ViewDepartment'), {
+const DepartmentViewPage = createLazyComponent(() => import('pages/Manage/Department/pages/DepartmentView'), {
   title: ROUTES.viewDepartment.name,
 });
-const CreateDepartmentPage = createLazyComponent(() => import('pages/Manage/Department/pages/ManageDepartment'), {
+const CreateDepartmentPage = createLazyComponent(() => import('pages/Manage/Department/pages/DepartmentManagement'), {
   title: ROUTES.newDepartment.name,
   isAdminRoute: true,
 });
-const EditDepartmentPage = createLazyComponent(() => import('pages/Manage/Department/pages/ManageDepartment'), {
+const EditDepartmentPage = createLazyComponent(() => import('pages/Manage/Department/pages/DepartmentManagement'), {
   title: ROUTES.editDepartment.name,
   isAdminRoute: true,
 });
@@ -108,7 +108,7 @@ const CompanySettingsPage = createLazyComponent(() => import('pages/Manage/Compa
   title: ROUTES.companySettings.name,
   isAdminRoute: true,
 });
-const CreateCompanySettingsPage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/CreateCompanySettings'), {
+const CompanySettingsCreatePage = createLazyComponent(() => import('pages/Manage/Onboarding/pages/Company/CompanySettingsCreate'), {
   title: ROUTES.createCompanySettings.name,
 });
 
@@ -165,19 +165,19 @@ const router = createBrowserRouter([
                       },
                       {
                         path: ROUTES.createCompany.path,
-                        element: CreateCompanyPage,
+                        element: CompanyCreatePage,
                       },
                       {
                         path: ROUTES.createCompanySettings.path,
-                        element: CreateCompanySettingsPage,
+                        element: CompanySettingsCreatePage,
                       },
                       {
                         path: ROUTES.uploadCompanyLicense.path,
-                        element: UploadCompanyLicensePage,
+                        element: CompanyLicenseUploadPage,
                       },
                       {
                         path: ROUTES.createBranch.path,
-                        element: CreateBranchPage,
+                        element: BranchCreatePage,
                       },
                     ],
                   },
@@ -191,7 +191,7 @@ const router = createBrowserRouter([
                       },
                       {
                         path: ROUTES.createEmployee.path,
-                        element: CreateEmployeePage,
+                        element: EmployeeCreatePage,
                       },
                     ],
                   },
@@ -223,11 +223,11 @@ const router = createBrowserRouter([
                       },
                       {
                         path: ROUTES.deleteCompanySettings.path,
-                        element: DeleteCompanySettingsPage,
+                        element: CompanySettingsDeletePage,
                       },
                       {
                         path: ROUTES.deleteCompany.path,
-                        element: DeleteCompanyPage,
+                        element: CompanyDeletePage,
                       },
                     ],
                   },
@@ -241,7 +241,7 @@ const router = createBrowserRouter([
                       },
                       {
                         path: ROUTES.deleteEmployee.path,
-                        element: DeleteEmployeePage,
+                        element: EmployeeDeletePage,
                       },
                     ],
                   },
@@ -261,11 +261,11 @@ const router = createBrowserRouter([
                   },
                   {
                     path: ROUTES.viewCompany.path,
-                    element: ViewCompanyPage,
+                    element: CompanyViewPage,
                   },
                   {
                     path: ROUTES.editCompany.path,
-                    element: EditCompanyPage,
+                    element: CompanyEditPage,
                   },
                   {
                     path: ROUTES.companySettings.path,
@@ -291,7 +291,7 @@ const router = createBrowserRouter([
                   },
                   {
                     path: ROUTES.viewBranch.path,
-                    element: ViewBranchPage,
+                    element: BranchViewPage,
                   },
                 ],
               },
@@ -305,11 +305,11 @@ const router = createBrowserRouter([
                   },
                   {
                     path: ROUTES.editEmployee.path,
-                    element: EditEmployeePage,
+                    element: EmployeeEditPage,
                   },
                   {
                     path: ROUTES.viewEmployee.path,
-                    element: ViewEmployeePage,
+                    element: EmployeeViewPage,
                   },
                 ],
               },
@@ -353,7 +353,7 @@ const router = createBrowserRouter([
                   },
                   {
                     path: ROUTES.viewDepartment.path,
-                    element: ViewDepartmentPage,
+                    element: DepartmentViewPage,
                   },
                 ],
               },

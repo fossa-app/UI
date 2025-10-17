@@ -10,7 +10,7 @@ import Form, { FormActionName } from 'components/UI/Form';
 const testModule = CREATE_COMPANY_DETAILS_FORM_SCHEMA.module;
 const testSubModule = CREATE_COMPANY_DETAILS_FORM_SCHEMA.subModule;
 
-const CreateCompanyPage: React.FC = () => {
+const CompanyCreatePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const userRoles = useAppSelector(selectUserRoles);
   const countries = useAppSelector(selectSystemCountries);
@@ -43,4 +43,4 @@ const CreateCompanyPage: React.FC = () => {
   );
 };
 
-export default CreateCompanyPage;
+export default CompanyCreatePage;

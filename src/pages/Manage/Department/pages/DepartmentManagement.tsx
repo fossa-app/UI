@@ -25,12 +25,12 @@ import {
 } from 'shared/constants';
 import { Department, DepartmentDTO, EmployeeDTO } from 'shared/types';
 import { mapDisabledFields, deepCopyObject, mapDepartmentDTO, mapDepartmentFieldOptionsToFieldOptions } from 'shared/helpers';
-import ManageEntity from 'components/Entity/ManageEntity';
+import EntityManager from 'components/Entity/EntityManager';
 
 const testModule = DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.module;
 const testSubModule = DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.subModule;
 
-const ManageDepartmentPage: React.FC = () => {
+const DepartmentManagementPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const userRoles = useAppSelector(selectUserRoles);
@@ -110,7 +110,7 @@ const ManageDepartmentPage: React.FC = () => {
   }, [parentDepartmentsFetchStatus, parentDepartmentsPage, dispatch]);
 
   return (
-    <ManageEntity<Department, DepartmentDTO>
+    <EntityManager<Department, DepartmentDTO>
       module={testModule}
       subModule={testSubModule}
       pageTitle={{ create: 'Create Department', edit: 'Edit Department' }}
@@ -124,7 +124,7 @@ const ManageDepartmentPage: React.FC = () => {
       resetEntity={resetDepartment}
       resetErrors={resetDepartmentErrors}
       resetCatalogFetchStatus={resetDepartmentsFetchStatus}
-      fetchEntityAction={(params) => fetchDepartmentById({ id: params.id, skipState: false })}
+      fetchEntityAction={(id) => fetchDepartmentById({ id, skipState: false })}
       createEntityAction={createDepartment}
       editEntityAction={editDepartment}
       mapDTO={mapDepartmentDTO}
@@ -132,4 +132,4 @@ const ManageDepartmentPage: React.FC = () => {
   );
 };
 
-export default ManageDepartmentPage;
+export default DepartmentManagementPage;

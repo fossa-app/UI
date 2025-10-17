@@ -372,7 +372,7 @@ describe('Department Catalog Tests', () => {
 
           departmentAdminRoutes.forEach((route) => {
             cy.visit(route);
-            cy.url().should('include', isAdminRole ? route : ROUTES.company.path);
+            cy.location('pathname').should('eq', isAdminRole ? route : ROUTES.company.path);
           });
         });
 
@@ -400,7 +400,7 @@ describe('Department Catalog Tests', () => {
           );
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'action-view-444444444444').click();
 
-          cy.url().should('include', `${ROUTES.departments.path}/view/444444444444`);
+          cy.location('pathname').should('eq', `${ROUTES.departments.path}/view/444444444444`);
         });
 
         it('should display department management buttons', () => {
@@ -440,7 +440,7 @@ describe('Department Catalog Tests', () => {
             .find('p')
             .click();
 
-          cy.url().should('include', `${ROUTES.departments.path}/view/444444444444`);
+          cy.location('pathname').should('eq', `${ROUTES.departments.path}/view/444444444444`);
         });
 
         it('should display default values if there is no parent department provided', () => {
@@ -617,12 +617,12 @@ describe('Department Catalog Tests', () => {
       );
 
       getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-layout-action-button').click();
-      cy.url().should('include', departmentAdminRoutes[0]);
+      cy.location('pathname').should('eq', departmentAdminRoutes[0]);
 
       cy.visit(ROUTES.departments.path);
 
       selectAction(Module.departmentManagement, SubModule.departmentCatalog, 'edit', '444444444444');
-      cy.url().should('include', departmentAdminRoutes[1]);
+      cy.location('pathname').should('eq', departmentAdminRoutes[1]);
     });
 
     it('should not be able to delete a department if the department deletion failed', () => {

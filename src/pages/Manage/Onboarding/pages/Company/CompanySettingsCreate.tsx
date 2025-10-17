@@ -25,7 +25,7 @@ import Form, { FormActionName } from 'components/UI/Form';
 const testModule = CREATE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.module;
 const testSubModule = CREATE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.subModule;
 
-const CreateCompanySettingsPage: React.FC = () => {
+const CompanySettingsCreatePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const userRoles = useAppSelector(selectUserRoles);
   const { updateStatus, updateError: error } = useAppSelector(selectCompanySettings);
@@ -85,4 +85,4 @@ const CreateCompanySettingsPage: React.FC = () => {
   );
 };
 
-export default CreateCompanySettingsPage;
+export default CompanySettingsCreatePage;

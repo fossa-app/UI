@@ -36,7 +36,7 @@ import Form, { FormActionName } from 'components/UI/Form';
 const testModule = EMPLOYEE_DETAILS_FORM_SCHEMA.module;
 const testSubModule = EMPLOYEE_DETAILS_FORM_SCHEMA.subModule;
 
-const EditEmployeePage: React.FC = () => {
+const EmployeeEditPage: React.FC = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const { item: employee, updateError, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectEmployee);
@@ -223,4 +223,4 @@ const EditEmployeePage: React.FC = () => {
   );
 };
 
-export default EditEmployeePage;
+export default EmployeeEditPage;

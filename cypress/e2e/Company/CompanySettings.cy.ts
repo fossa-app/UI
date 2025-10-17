@@ -54,7 +54,7 @@ describe('Company Settings Tests', () => {
     it('should be able to navigate and view the Company Settings page and the default color scheme if the company settings exist', () => {
       cy.visit(ROUTES.companySettings.path);
 
-      cy.url().should('include', ROUTES.companySettings.path);
+      cy.location('pathname').should('eq', ROUTES.companySettings.path);
 
       getLinearLoader(Module.companyManagement, SubModule.companySettingsDetails, 'form').should('not.exist');
       cy.wait('@fetchCompanySettingsRequest');
@@ -94,7 +94,7 @@ describe('Company Settings Tests', () => {
 
       clickSubFlow('Company Settings');
 
-      cy.url().should('include', ROUTES.companySettings.path);
+      cy.location('pathname').should('eq', ROUTES.companySettings.path);
 
       verifyTextFields(Module.companyManagement, SubModule.companySettingsDetails, {
         'color-scheme-label-midnight': 'Midnight',
@@ -254,7 +254,7 @@ describe('Company Settings Tests', () => {
 
       clickSubFlow('Company Settings');
 
-      cy.url().should('include', ROUTES.companySettings.path);
+      cy.location('pathname').should('eq', ROUTES.companySettings.path);
       verifyRadioGroupValue('color-scheme-group', 'midnight');
       verifyAppTheme('dark', 'midnight');
 

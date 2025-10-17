@@ -28,12 +28,12 @@ import {
   deepCopyObject,
 } from 'shared/helpers';
 import { FormFieldProps } from 'components/UI/Form';
-import ManageEntity from 'components/Entity/ManageEntity';
+import EntityManager from 'components/Entity/EntityManager';
 
 const testModule = BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.module;
 const testSubModule = BRANCH_MANAGEMENT_DETAILS_FORM_SCHEMA.subModule;
 
-const ManageBranchPage: React.FC = () => {
+const BranchManagementPage: React.FC = () => {
   const { id } = useParams();
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const userRoles = useAppSelector(selectUserRoles);
@@ -70,7 +70,7 @@ const ManageBranchPage: React.FC = () => {
   };
 
   return (
-    <ManageEntity<Branch, BranchDTO>
+    <EntityManager<Branch, BranchDTO>
       module={testModule}
       subModule={testSubModule}
       pageTitle={{ create: 'Create Branch', edit: 'Edit Branch' }}
@@ -85,7 +85,7 @@ const ManageBranchPage: React.FC = () => {
       resetEntity={resetBranch}
       resetErrors={resetBranchErrors}
       resetCatalogFetchStatus={resetBranchesFetchStatus}
-      fetchEntityAction={(params) => fetchBranchById({ id: params.id, skipState: false })}
+      fetchEntityAction={(id) => fetchBranchById({ id, skipState: false })}
       createEntityAction={createBranch}
       editEntityAction={editBranch}
       mapDTO={mapBranchDTO}
@@ -93,4 +93,4 @@ const ManageBranchPage: React.FC = () => {
   );
 };
 
-export default ManageBranchPage;
+export default BranchManagementPage;
