@@ -1,4 +1,4 @@
-FROM node:24-alpine
+FROM node:25-alpine
 
 RUN apk --no-cache add curl=8.14.1-r2
 
