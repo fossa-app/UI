@@ -10,8 +10,6 @@ on:
       - published
   workflow_dispatch:
 
-permissions: read-all
-
 env:
   DOTNET_NOLOGO: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
@@ -21,12 +19,18 @@ jobs:
   ci:
     name: CI
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      statuses: write
+      packages: read
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v6
         with:
           lfs: true
           fetch-depth: 0
+          persist-credentials: false
       - name: 'Install InvokeBuild Module'
         shell: pwsh
         run: Install-Module -Name InvokeBuild -Force
@@ -63,12 +67,18 @@ jobs:
       name: 'DockerHub'
       url: https://hub.docker.com/r/tiksn/fossa-ui
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      statuses: write
+      packages: read
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v6
         with:
           lfs: true
           fetch-depth: 0
+          persist-credentials: false
       - name: 'Download Artefact'
         uses: actions/download-artifact@v6.0.0
         with:
