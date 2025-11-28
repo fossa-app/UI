@@ -32,13 +32,12 @@ Task Publish Pack, {
     $state = Import-Clixml -Path ".\.trash\$Instance\state.clixml"
     $dockerImageVersionTag = $state.DockerImageVersionTag
     $dockerImageLatestTag = $state.DockerImageLatestTag
-    $dockerImageVersionArchiveName = $state.DockerImageVersionArchiveName
-    $dockerImageLatestArchiveName = $state.DockerImageLatestArchiveName
-    $dockerImageVersionArchive = Resolve-Path -Path ".\.trash\$Instance\artifacts\$dockerImageVersionArchiveName"
-    $dockerImageLatestArchive = Resolve-Path -Path ".\.trash\$Instance\artifacts\$dockerImageLatestArchiveName"
+    $buildArtifactsFolder = $state.BuildArtifactsFolder
+    $dockerImageMultiArchArchiveName = $state.DockerImageMultiArchArchiveName
+    $dockerImageMultiArchArchive = Join-Path -Path $buildArtifactsFolder -ChildPath $dockerImageMultiArchArchiveName
+    $dockerImageMultiArchArchive = Resolve-Path -Path $dockerImageMultiArchArchive
 
-    Exec { docker image load --input $dockerImageVersionArchive }
-    Exec { docker image load --input $dockerImageLatestArchive }
+    Exec { docker image load --input $dockerImageMultiArchArchive }
 
     if ($null -eq $env:DOCKER_ACCESS_TOKEN) {
         Import-Module -Name Microsoft.PowerShell.SecretManagement
@@ -70,14 +69,11 @@ Task Pack Build, Test, EstimateVersion, {
     $dockerImageVersionTag = "$($dockerImageName):$nextVersion"
     $dockerImageLatestTag = "$($dockerImageName):latest"
 
-    $dockerImageVersionArchiveName = $state.DockerImageVersionArchiveName
-    $dockerImageLatestArchiveName = $state.DockerImageLatestArchiveName
-    $dockerImageVersionArchive = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(".\.trash\$Instance\artifacts\$dockerImageVersionArchiveName")
-    $dockerImageLatestArchive = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(".\.trash\$Instance\artifacts\$dockerImageLatestArchiveName")
+    $buildArtifactsFolder = $state.BuildArtifactsFolder
+    $dockerImageMultiArchArchiveName = $state.DockerImageMultiArchArchiveName
+    $dockerImageMultiArchArchive = Join-Path -Path $buildArtifactsFolder -ChildPath $dockerImageMultiArchArchiveName
 
-    Exec { docker buildx build --file $dockerFilePath --tag $dockerImageVersionTag --tag $dockerImageLatestTag . }
-    Exec { docker image save --output $dockerImageVersionArchive $dockerImageVersionTag }
-    Exec { docker image save --output $dockerImageLatestArchive $dockerImageLatestTag }
+    Exec { docker buildx build --platform 'linux/amd64,linux/arm64' --output "type=oci,dest=$dockerImageMultiArchArchive" --file $dockerFilePath --tag $dockerImageVersionTag --tag $dockerImageLatestTag . }
 
     $state.DockerImageVersionTag = $dockerImageVersionTag
     $state.DockerImageLatestTag = $dockerImageLatestTag
@@ -204,14 +200,13 @@ Task Init {
     New-Item -Path $buildArtifactsFolder -ItemType Directory | Out-Null
 
     $state = [PSCustomObject]@{
-        NextVersion                   = $null
-        TrashFolder                   = $trashFolder
-        BuildArtifactsFolder          = $buildArtifactsFolder
-        DockerImageName               = 'tiksn/fossa-ui'
-        DockerImageVersionTag         = $null
-        DockerImageLatestTag          = $null
-        DockerImageVersionArchiveName = 'tiksn-fossa-ui-version.tar'
-        DockerImageLatestArchiveName  = 'tiksn-fossa-ui-latest.tar'
+        NextVersion                     = $null
+        TrashFolder                     = $trashFolder
+        BuildArtifactsFolder            = $buildArtifactsFolder
+        DockerImageName                 = 'tiksn/fossa-ui'
+        DockerImageVersionTag           = $null
+        DockerImageLatestTag            = $null
+        DockerImageMultiArchArchiveName = 'tiksn-fossa-ui-multiarch.tar'
     }
 
     $state | Export-Clixml -Path ".\.trash\$Instance\state.clixml"
