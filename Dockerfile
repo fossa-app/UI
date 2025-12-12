@@ -1,4 +1,4 @@
-FROM node:25-alpine
+FROM --platform=$TARGETARCH node:25.2.1-alpine3.21
 
 RUN apk --no-cache add curl=8.14.1-r2
 
