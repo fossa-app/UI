@@ -84,7 +84,7 @@
     "globals": "^16.4.0",
     "husky": "^9.1.7",
     "jest-environment-jsdom": "^29.7.0",
-    "lint-staged": "^15.5.1",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.5.2",
     "redux-mock-store": "^1.5.5",
     "rollup-plugin-visualizer": "^6.0.3",
