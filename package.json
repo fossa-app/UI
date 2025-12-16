@@ -18,7 +18,7 @@
     "react-leaflet": "^5.0.0",
     "react-organizational-chart": "^2.2.1",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^7.7.1",
+    "react-router-dom": "^7.10.1",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
