@@ -12,7 +12,7 @@ import {
   fetchParentDepartments,
   fetchSearchedDepartments,
 } from 'store/thunks';
-import { ErrorResponseDTO, ErrorResponse, PaginatedResponse, PaginationParams, Department, DepartmentDTO } from 'shared/types';
+import { ValidationProblemDetails, ErrorResponse, PaginatedResponse, PaginationParams, Department } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
 import { mergePaginatedItems } from 'store/helpers';
 
@@ -20,8 +20,8 @@ interface DepartmentState {
   department: StateEntity<Department | undefined>;
   departmentCatalog: PaginatedStateEntity<Department>;
   searchedDepartments: PaginatedStateEntity<Department>;
-  parentDepartments: PaginatedStateEntity<DepartmentDTO>;
-  assignedDepartments: PaginatedStateEntity<DepartmentDTO>;
+  parentDepartments: PaginatedStateEntity<Department>;
+  assignedDepartments: PaginatedStateEntity<Department>;
 }
 
 const initialState: DepartmentState = {
@@ -96,7 +96,7 @@ const departmentSlice = createSlice({
       .addCase(fetchDepartments.pending, (state) => {
         state.departmentCatalog.status = 'loading';
       })
-      .addCase(fetchDepartments.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchDepartments.rejected, (state, action: PayloadAction<ValidationProblemDetails | undefined>) => {
         state.departmentCatalog.items = [];
         state.departmentCatalog.status = 'failed';
         state.departmentCatalog.error = action.payload;
@@ -112,7 +112,7 @@ const departmentSlice = createSlice({
       .addCase(fetchSearchedDepartments.pending, (state) => {
         state.searchedDepartments.status = 'loading';
       })
-      .addCase(fetchSearchedDepartments.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchSearchedDepartments.rejected, (state, action: PayloadAction<ValidationProblemDetails | undefined>) => {
         state.searchedDepartments.items = [];
         state.searchedDepartments.status = 'failed';
         state.searchedDepartments.error = action.payload;
@@ -131,7 +131,7 @@ const departmentSlice = createSlice({
       .addCase(fetchParentDepartments.fulfilled, (state, action) => {
         const { items = [], ...page } = action.payload || {};
 
-        state.parentDepartments.items = mergePaginatedItems<DepartmentDTO>(state.parentDepartments.items, items);
+        state.parentDepartments.items = mergePaginatedItems<Department>(state.parentDepartments.items, items);
         state.parentDepartments.page = page;
         state.parentDepartments.status = 'succeeded';
       })
@@ -144,7 +144,7 @@ const departmentSlice = createSlice({
       .addCase(fetchAssignedDepartments.fulfilled, (state, action) => {
         const { items = [], ...page } = action.payload || {};
 
-        state.assignedDepartments.items = mergePaginatedItems<DepartmentDTO>(state.assignedDepartments.items, items);
+        state.assignedDepartments.items = mergePaginatedItems<Department>(state.assignedDepartments.items, items);
         state.assignedDepartments.page = page;
         state.assignedDepartments.status = 'succeeded';
       })
@@ -201,7 +201,7 @@ const departmentSlice = createSlice({
       .addCase(deleteDepartment.pending, (state) => {
         state.department.deleteStatus = 'loading';
       })
-      .addCase(deleteDepartment.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(deleteDepartment.rejected, (state, action: PayloadAction<ValidationProblemDetails | undefined>) => {
         state.department.deleteStatus = 'failed';
         state.department.deleteError = action.payload;
       })

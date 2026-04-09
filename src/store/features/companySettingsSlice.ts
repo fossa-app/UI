@@ -3,7 +3,7 @@ import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import { createCompanySettings, deleteCompanySettings, editCompanySettings, fetchCompanySettings } from 'store/thunks';
-import { CompanySettings, CompanySettingsDTO, ErrorResponse, ErrorResponseDTO } from 'shared/types';
+import { CompanySettings, ErrorResponse, ValidationProblemDetails } from 'shared/types';
 
 interface CompanySettingsState {
   companySettings: StateEntity<CompanySettings>;
@@ -38,11 +38,11 @@ const companySettingsSlice = createSlice({
       .addCase(fetchCompanySettings.pending, (state) => {
         state.companySettings.fetchStatus = 'loading';
       })
-      .addCase(fetchCompanySettings.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchCompanySettings.rejected, (state, action: PayloadAction<ValidationProblemDetails | undefined>) => {
         state.companySettings.fetchStatus = 'failed';
         state.companySettings.fetchError = action.payload;
       })
-      .addCase(fetchCompanySettings.fulfilled, (state, action: PayloadAction<CompanySettingsDTO>) => {
+      .addCase(fetchCompanySettings.fulfilled, (state, action: PayloadAction<CompanySettings>) => {
         state.companySettings.item = action.payload;
         state.companySettings.fetchStatus = 'succeeded';
       })
@@ -71,7 +71,7 @@ const companySettingsSlice = createSlice({
       .addCase(deleteCompanySettings.pending, (state) => {
         state.companySettings.deleteStatus = 'loading';
       })
-      .addCase(deleteCompanySettings.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(deleteCompanySettings.rejected, (state, action: PayloadAction<ValidationProblemDetails | undefined>) => {
         state.companySettings.deleteStatus = 'failed';
         state.companySettings.fetchError = action.payload;
       })

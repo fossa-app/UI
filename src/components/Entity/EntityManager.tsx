@@ -4,12 +4,12 @@ import { DefaultValues, FieldErrors, FieldValues } from 'react-hook-form';
 import { AsyncThunkAction } from '@reduxjs/toolkit';
 import { useAppDispatch, useAppSelector, RootState, AppDispatch, StateEntity } from 'store';
 import { useOnFormSubmitEffect, useSafeNavigateBack, useUnmount } from 'shared/hooks';
-import { BaseEntity, EntityInput, ErrorResponse, ErrorResponseDTO, Module, SubModule } from 'shared/types';
+import { BaseEntity, EntityInput, ErrorResponse, ValidationProblemDetails, Module, SubModule } from 'shared/types';
 import { areEqualBigIds } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName, FormFieldProps, FormProps } from 'components/UI/Form';
 
-type EntityManagerProps<T extends BaseEntity, TDTO extends BaseEntity> = {
+type EntityManagerProps<T extends BaseEntity, TInput extends BaseEntity> = {
   module: Module;
   subModule: SubModule;
   pageTitle: { create: string; edit: string };
@@ -24,15 +24,17 @@ type EntityManagerProps<T extends BaseEntity, TDTO extends BaseEntity> = {
   resetEntity: () => ReturnType<AppDispatch>;
   resetErrors: () => ReturnType<AppDispatch>;
   resetCatalogFetchStatus: () => ReturnType<AppDispatch>;
-  mapDTO: (value: T) => EntityInput<TDTO>;
-  createEntityAction: (args: EntityInput<TDTO>) => AsyncThunkAction<void, EntityInput<TDTO>, { rejectValue: ErrorResponse<FieldValues> }>;
+  mapInput: (value: T) => EntityInput<TInput>;
+  createEntityAction: (
+    args: EntityInput<TInput>
+  ) => AsyncThunkAction<void, EntityInput<TInput>, { rejectValue: ErrorResponse<FieldValues> }>;
   editEntityAction: (
-    args: [string, EntityInput<TDTO>]
-  ) => AsyncThunkAction<void, [string, EntityInput<TDTO>], { rejectValue: ErrorResponse<FieldValues> }>;
-  fetchEntityAction: (id: string) => AsyncThunkAction<T, unknown, { rejectValue: ErrorResponseDTO }>;
+    args: [string, EntityInput<TInput>]
+  ) => AsyncThunkAction<void, [string, EntityInput<TInput>], { rejectValue: ErrorResponse<FieldValues> }>;
+  fetchEntityAction: (id: string) => AsyncThunkAction<T, unknown, { rejectValue: ValidationProblemDetails }>;
 };
 
-const EntityManager = <T extends BaseEntity, TDTO extends BaseEntity>({
+const EntityManager = <T extends BaseEntity, TInput extends BaseEntity>({
   module,
   subModule,
   pageTitle,
@@ -50,8 +52,8 @@ const EntityManager = <T extends BaseEntity, TDTO extends BaseEntity>({
   fetchEntityAction,
   createEntityAction,
   editEntityAction,
-  mapDTO,
-}: EntityManagerProps<T, TDTO>) => {
+  mapInput,
+}: EntityManagerProps<T, TInput>) => {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
   const { item: values, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectEntity);
@@ -71,12 +73,12 @@ const EntityManager = <T extends BaseEntity, TDTO extends BaseEntity>({
   });
 
   const handleSubmit = (formValue: T) => {
-    const dto = mapDTO(formValue);
+    const input = mapInput(formValue);
 
     if (id) {
-      dispatch(editEntityAction([id, dto]));
+      dispatch(editEntityAction([id, input]));
     } else {
-      dispatch(createEntityAction(dto));
+      dispatch(createEntityAction(input));
     }
 
     setFormSubmitted(true);

@@ -1,26 +1,33 @@
 import { FieldErrors, FieldValues } from 'react-hook-form';
+import type { PagingResponseModel$1 } from '@fossa-app/bridge/Models/ApiModels/EnvelopeModels';
+import type { ProblemDetailsModel } from '@fossa-app/bridge/Models/ApiModels/SharedModels';
 
-export interface ErrorResponseDTO {
-  type?: string;
-  title?: string;
+type UiProblemDetails = Partial<ProblemDetailsModel> & {
+  type?: ProblemDetailsModel['Type'];
+  title?: ProblemDetailsModel['Title'];
+  status?: ProblemDetailsModel['Status'];
+  detail?: ProblemDetailsModel['Detail'];
+  instance?: ProblemDetailsModel['Instance'];
   traceId?: string;
-  status?: number;
+};
+
+export type ValidationProblemDetails = UiProblemDetails & {
   errors?: Record<string, string[]>;
-}
+};
 
-export interface ErrorResponse<T extends FieldValues> extends Omit<ErrorResponseDTO, 'errors'> {
+export type ErrorResponse<T extends FieldValues> = Omit<ValidationProblemDetails, 'errors'> & {
   errors?: FieldErrors<T>;
-}
+};
 
-export type GeneralErrorResponse = ErrorResponseDTO | ErrorResponse<FieldValues>;
+export type GeneralErrorResponse = ValidationProblemDetails | ErrorResponse<FieldValues>;
 
-export interface PaginatedResponse<T> {
+export type PaginatedResponse<T> = Partial<PagingResponseModel$1<T>> & {
   pageNumber?: number;
   pageSize?: number;
   totalItems?: number;
   totalPages?: number;
   items: T[];
-}
+};
 
 export interface PaginationParams {
   pageNumber?: number;

@@ -1,8 +1,8 @@
-import { Company, CompanyDTO, Country } from 'shared/types';
+import { Company, Country } from 'shared/types';
 import { COMPANY_LICENSE_FIELDS } from 'shared/constants';
 import { FormFieldProps, FormFieldType, FieldOption } from 'components/UI/Form';
 
-export const mapCompany = (company: CompanyDTO, countries: Country[]): Company => {
+export const mapCompany = (company: Company, countries: Country[]): Company => {
   return {
     ...company,
     countryName: countries.find(({ code }) => code === company.countryCode)?.name,

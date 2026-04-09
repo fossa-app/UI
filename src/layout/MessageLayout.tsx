@@ -24,7 +24,7 @@ const MessageLayout: React.FC = () => {
       data-cy={testSelector}
       type={type}
       open={!!error || !!success}
-      message={error ? error.title : success}
+      message={error ? (error.title ?? undefined) : success}
       onClose={handleSnackbarClose}
     />
   );

@@ -19,10 +19,10 @@ import {
   ROUTES,
   USER_PERMISSION_GENERAL_ERROR,
 } from 'shared/constants';
-import { Branch, BranchDTO, TimeZone } from 'shared/types';
+import { Branch, TimeZone } from 'shared/types';
 import {
   getBranchManagementDetailsByAddressFormSchema,
-  mapBranchDTO,
+  mapBranchInput,
   mapDisabledFields,
   mapBranchFieldOptionsToFieldOptions,
   deepCopyObject,
@@ -70,7 +70,7 @@ const BranchManagementPage: React.FC = () => {
   };
 
   return (
-    <EntityManager<Branch, BranchDTO>
+    <EntityManager<Branch, Branch>
       module={testModule}
       subModule={testSubModule}
       pageTitle={{ create: 'Create Branch', edit: 'Edit Branch' }}
@@ -88,7 +88,7 @@ const BranchManagementPage: React.FC = () => {
       fetchEntityAction={(id) => fetchBranchById({ id, skipState: false })}
       createEntityAction={createBranch}
       editEntityAction={editBranch}
-      mapDTO={mapBranchDTO}
+      mapInput={mapBranchInput}
     />
   );
 };

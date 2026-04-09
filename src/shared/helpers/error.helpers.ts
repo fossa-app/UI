@@ -1,8 +1,8 @@
 import { FieldErrors, FieldValues } from 'react-hook-form';
-import { ErrorResponseDTO, ErrorResponse } from 'shared/types';
+import { ValidationProblemDetails, ErrorResponse } from 'shared/types';
 import { FormFieldProps } from 'components/UI/Form';
 
-export const mapError = <T extends FieldValues>(error: ErrorResponseDTO): ErrorResponse<T> => {
+export const mapError = <T extends FieldValues>(error: ValidationProblemDetails): ErrorResponse<T> => {
   const errors: FieldErrors<T> = {} as FieldErrors<T>;
 
   if (!error.errors) {

@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompany, selectIsUserAdmin, selectUserRoles, selectSystemCountries } from 'store/features';
 import { createCompany } from 'store/thunks';
-import { Company, CompanyDTO } from 'shared/types';
+import { Company } from 'shared/types';
 import { deepCopyObject, hasAllowedRole, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
 import { COMPANY_DETAILS_FORM_DEFAULT_VALUES, CREATE_COMPANY_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_ERROR } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';
@@ -24,7 +24,7 @@ const CompanyCreatePage: React.FC = () => {
   );
   const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_ERROR;
 
-  const handleSubmit = (data: CompanyDTO) => {
+  const handleSubmit = (data: Company) => {
     dispatch(createCompany(data));
   };
 

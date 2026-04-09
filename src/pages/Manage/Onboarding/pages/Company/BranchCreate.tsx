@@ -12,7 +12,7 @@ import { createOnboardingBranch } from 'store/thunks';
 import { Branch } from 'shared/types';
 import {
   getBranchManagementDetailsByAddressFormSchema,
-  mapBranchDTO,
+  mapBranchInput,
   mapDisabledFields,
   mapBranchFieldOptionsToFieldOptions,
   deepCopyObject,
@@ -46,7 +46,7 @@ const BranchCreatePage: React.FC = () => {
   );
 
   const handleSubmit = (formValue: Branch) => {
-    const submitData = mapBranchDTO(formValue);
+    const submitData = mapBranchInput(formValue);
 
     dispatch(createOnboardingBranch(submitData));
   };

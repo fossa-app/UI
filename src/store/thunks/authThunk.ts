@@ -1,9 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { getUserManager, mapUser } from 'shared/helpers';
-import { AppUser, ErrorResponseDTO } from 'shared/types';
+import { AppUser, ValidationProblemDetails } from 'shared/types';
 import { MESSAGES } from 'shared/constants';
 
-export const fetchUser = createAsyncThunk<AppUser | undefined, void, { rejectValue: ErrorResponseDTO }>(
+export const fetchUser = createAsyncThunk<AppUser | undefined, void, { rejectValue: ValidationProblemDetails }>(
   'auth/fetchUser',
   async (_, { rejectWithValue }) => {
     try {
@@ -18,7 +18,7 @@ export const fetchUser = createAsyncThunk<AppUser | undefined, void, { rejectVal
         status: 401,
       });
     } catch (error) {
-      return rejectWithValue(error as ErrorResponseDTO);
+      return rejectWithValue(error as ValidationProblemDetails);
     }
   }
 );

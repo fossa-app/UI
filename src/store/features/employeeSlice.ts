@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { PaginatedStateEntity, RootState, StateEntity } from 'store';
-import { Employee, EmployeeDTO, ErrorResponse, ErrorResponseDTO, PaginatedResponse, PaginationParams } from 'shared/types';
+import { Employee, ErrorResponse, ValidationProblemDetails, PaginatedResponse, PaginationParams } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
 import { mergePaginatedItems } from 'store/helpers';
 import { editEmployee, fetchEmployeeById, fetchEmployees, fetchManagers, fetchOrgChartEmployees } from 'store/thunks';
@@ -10,8 +10,8 @@ import { editEmployee, fetchEmployeeById, fetchEmployees, fetchManagers, fetchOr
 interface EmployeeState {
   employee: StateEntity<Employee | undefined>;
   employeeCatalog: PaginatedStateEntity<Employee>;
-  managers: PaginatedStateEntity<EmployeeDTO>;
-  employeeOrgChart: PaginatedStateEntity<EmployeeDTO>;
+  managers: PaginatedStateEntity<Employee>;
+  employeeOrgChart: PaginatedStateEntity<Employee>;
 }
 
 const initialState: EmployeeState = {
@@ -73,7 +73,7 @@ const employeeSlice = createSlice({
       .addCase(fetchEmployees.pending, (state) => {
         state.employeeCatalog.status = 'loading';
       })
-      .addCase(fetchEmployees.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchEmployees.rejected, (state, action: PayloadAction<ValidationProblemDetails | undefined>) => {
         state.employeeCatalog.items = [];
         state.employeeCatalog.status = 'failed';
         state.employeeCatalog.error = action.payload;
@@ -92,7 +92,7 @@ const employeeSlice = createSlice({
       .addCase(fetchManagers.fulfilled, (state, action) => {
         const { items = [], ...page } = action.payload || {};
 
-        state.managers.items = mergePaginatedItems<EmployeeDTO>(state.managers.items, items);
+        state.managers.items = mergePaginatedItems<Employee>(state.managers.items, items);
         state.managers.page = page;
         state.managers.status = 'succeeded';
       })
@@ -109,12 +109,12 @@ const employeeSlice = createSlice({
       .addCase(fetchOrgChartEmployees.pending, (state) => {
         state.employeeOrgChart.status = 'loading';
       })
-      .addCase(fetchOrgChartEmployees.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchOrgChartEmployees.rejected, (state, action: PayloadAction<ValidationProblemDetails | undefined>) => {
         state.employeeOrgChart.items = [];
         state.employeeOrgChart.status = 'failed';
         state.employeeOrgChart.error = action.payload;
       })
-      .addCase(fetchOrgChartEmployees.fulfilled, (state, action: PayloadAction<PaginatedResponse<EmployeeDTO> | undefined>) => {
+      .addCase(fetchOrgChartEmployees.fulfilled, (state, action: PayloadAction<PaginatedResponse<Employee> | undefined>) => {
         const { items = [] } = action.payload || {};
         state.employeeOrgChart.items = items;
         state.employeeOrgChart.status = 'succeeded';

@@ -4,7 +4,7 @@ import { selectProfile } from 'store/features';
 import { createProfile } from 'store/thunks';
 import { Employee } from 'shared/types';
 import { EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA } from 'shared/constants';
-import { deepCopyObject, mapProfileDTO } from 'shared/helpers';
+import { deepCopyObject, mapProfileInput } from 'shared/helpers';
 import Form, { FormActionName } from 'components/UI/Form';
 
 const testModule = CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA.module;
@@ -20,7 +20,7 @@ const EmployeeCreatePage: React.FC = () => {
   );
 
   const handleSubmit = (formValue: Employee) => {
-    const submitData = mapProfileDTO(formValue);
+    const submitData = mapProfileInput(formValue);
 
     dispatch(createProfile(submitData));
   };
