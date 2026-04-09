@@ -3,7 +3,7 @@ import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import { createCompanySettings, deleteCompanySettings, editCompanySettings, fetchCompanySettings } from 'store/thunks';
-import { CompanySettings, CompanySettingsDTO, ErrorResponse, ErrorResponseDTO } from 'shared/types';
+import { CompanySettings, ErrorResponse, ProblemDetailsModel } from 'shared/types';
 
 interface CompanySettingsState {
   companySettings: StateEntity<CompanySettings>;
@@ -38,11 +38,11 @@ const companySettingsSlice = createSlice({
       .addCase(fetchCompanySettings.pending, (state) => {
         state.companySettings.fetchStatus = 'loading';
       })
-      .addCase(fetchCompanySettings.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchCompanySettings.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.companySettings.fetchStatus = 'failed';
         state.companySettings.fetchError = action.payload;
       })
-      .addCase(fetchCompanySettings.fulfilled, (state, action: PayloadAction<CompanySettingsDTO>) => {
+      .addCase(fetchCompanySettings.fulfilled, (state, action: PayloadAction<CompanySettings>) => {
         state.companySettings.item = action.payload;
         state.companySettings.fetchStatus = 'succeeded';
       })
@@ -51,7 +51,7 @@ const companySettingsSlice = createSlice({
       })
       .addCase(createCompanySettings.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.companySettings.updateStatus = 'failed';
-        state.companySettings.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.companySettings.updateError = action.payload;
       })
       .addCase(createCompanySettings.fulfilled, (state) => {
         state.companySettings.updateStatus = 'succeeded';
@@ -62,7 +62,7 @@ const companySettingsSlice = createSlice({
       })
       .addCase(editCompanySettings.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.companySettings.updateStatus = 'failed';
-        state.companySettings.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.companySettings.updateError = action.payload;
       })
       .addCase(editCompanySettings.fulfilled, (state) => {
         state.companySettings.updateStatus = 'succeeded';
@@ -71,7 +71,7 @@ const companySettingsSlice = createSlice({
       .addCase(deleteCompanySettings.pending, (state) => {
         state.companySettings.deleteStatus = 'loading';
       })
-      .addCase(deleteCompanySettings.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(deleteCompanySettings.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.companySettings.deleteStatus = 'failed';
         state.companySettings.fetchError = action.payload;
       })

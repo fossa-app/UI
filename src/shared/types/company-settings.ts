@@ -1,12 +1,13 @@
-import { ColorSchemeId } from 'shared/types';
+import type { CompanySettingsRetrievalModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
+import type { BridgeViewModel } from './common';
+import type { ColorSchemeId } from './theme';
 
-export interface CompanySettingsDTO {
-  id: number;
+type BridgeCompanySettings = BridgeViewModel<CompanySettingsRetrievalModel>;
+
+export type CompanySettings = Omit<BridgeCompanySettings, 'companyId' | 'colorSchemeId'> & {
   companyId?: number;
   colorSchemeId?: ColorSchemeId;
-}
-
-export interface CompanySettings extends CompanySettingsDTO {}
+};
 
 export type CompanySettingsFieldConfig = {
   [K in keyof CompanySettings]: { field: K; name: string };

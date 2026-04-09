@@ -1,4 +1,4 @@
-import { AppRoute } from 'shared/types';
+import type { AppRoute } from 'shared/types';
 
 // TODO: use relative routes instead
 export const ROUTES: AppRoute = {

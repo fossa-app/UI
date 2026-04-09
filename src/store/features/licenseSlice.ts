@@ -3,10 +3,10 @@ import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import { fetchCompanyLicense, fetchSystemLicense, uploadCompanyLicense } from 'store/thunks';
-import { CompanyLicense, ErrorResponse, ErrorResponseDTO, SystemLicense } from 'shared/types';
+import { CompanyLicense, ErrorResponse, ProblemDetailsModel, SystemLicense } from 'shared/types';
 
 interface LicenseState {
-  system: StateEntity<SystemLicense | undefined>;
+  system: StateEntity<SystemLicense | null | undefined>;
   company: StateEntity<CompanyLicense | undefined>;
 }
 
@@ -31,19 +31,19 @@ const licenseSlice = createSlice({
       .addCase(fetchSystemLicense.pending, (state) => {
         state.system.fetchStatus = 'loading';
       })
-      .addCase(fetchSystemLicense.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchSystemLicense.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.system.item = undefined;
         state.system.fetchStatus = 'failed';
         state.system.fetchError = action.payload;
       })
-      .addCase(fetchSystemLicense.fulfilled, (state, action: PayloadAction<SystemLicense | undefined>) => {
+      .addCase(fetchSystemLicense.fulfilled, (state, action: PayloadAction<SystemLicense | null>) => {
         state.system.item = action.payload;
         state.system.fetchStatus = 'succeeded';
       })
       .addCase(fetchCompanyLicense.pending, (state) => {
         state.company.fetchStatus = 'loading';
       })
-      .addCase(fetchCompanyLicense.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchCompanyLicense.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.company.item = undefined;
         state.company.fetchStatus = 'failed';
         state.company.fetchError = action.payload;
@@ -58,7 +58,7 @@ const licenseSlice = createSlice({
       .addCase(uploadCompanyLicense.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.company.item = undefined;
         state.company.updateStatus = 'failed';
-        state.company.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.company.updateError = action.payload;
       })
       .addCase(uploadCompanyLicense.fulfilled, (state) => {
         state.company.updateStatus = 'succeeded';

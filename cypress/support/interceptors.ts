@@ -1,4 +1,7 @@
-import { Branch, Department, Employee, PaginatedResponse } from '../../src/shared/types';
+import { Branch } from '../../src/shared/types/branch';
+import { Department } from '../../src/shared/types/department';
+import { Employee } from '../../src/shared/types/employee';
+import type { PaginatedResponse } from '../../src/shared/types/response';
 
 const baseUrl = Cypress.config('baseUrl');
 const serverBaseUrl = Cypress.env('serverBaseUrl');
@@ -12,14 +15,16 @@ export const interceptFetchSystemLicenseRequest = () => {
 
 export const interceptFetchClientRequest = () => {
   cy.fixture('client').then((client) => {
-    cy.intercept('GET', `${serverBaseUrl}/Identity/Client?origin=${Cypress.config('baseUrl')}`, { body: client }).as('fetchClientRequest');
+    cy.intercept('GET', `${serverBaseUrl}/Identity/Client?origin=${encodeURIComponent(baseUrl ?? '')}`, { body: client }).as(
+      'fetchClientRequest'
+    );
   });
 };
 
 export const interceptFetchClientFailedRequest = () => {
   cy.interceptWithAuth(
     'GET',
-    `${serverBaseUrl}/Identity/Client?origin=${Cypress.config('baseUrl')}`,
+    `${serverBaseUrl}/Identity/Client?origin=${encodeURIComponent(baseUrl ?? '')}`,
     null,
     'fetchClientFailedRequest',
     404
@@ -98,7 +103,7 @@ export const interceptDeleteCompanyFailedRequest = () => {
 
 export const interceptFetchCompanyLicenseRequest = ({
   notBefore = '2024-09-01T00:00:00+00:00',
-  notAfter = '2025-09-01T00:00:00+00:00',
+  notAfter = '2035-09-01T00:00:00+00:00',
 } = {}) => {
   cy.fixture('company/company-license').then((companyLicense) => {
     const modifiedLicense = JSON.parse(JSON.stringify(companyLicense));
@@ -178,8 +183,8 @@ export const interceptFetchBranchesRequest = (
   { alias = 'fetchBranchesRequest', fixture = 'branch/branches', statusCode = 200, delay = 300 } = {}
 ) => {
   cy.fixture(fixture).then((branches) => {
-    const searchParam = search ? `&search=${search}` : '';
-    const url = `${serverBaseUrl}/Branches?pageNumber=${pageNumber}&pageSize=${pageSize}${searchParam}`;
+    const searchParam = search ? `search=${search}&` : '';
+    const url = `${serverBaseUrl}/Branches?${searchParam}pageNumber=${pageNumber}&pageSize=${pageSize}`;
 
     cy.interceptWithAuth('GET', url, branches, alias, statusCode, delay);
   });
@@ -339,10 +344,15 @@ export const interceptFetchEmployeesRequest = (
   { alias = 'fetchEmployeesRequest', fixture = 'employee/employees', statusCode = 200, delay = 300 } = {}
 ) => {
   cy.fixture(fixture).then((employees) => {
-    const searchParam = search ? `&search=${search}` : '';
-    const reportsToParam = reportsToId !== undefined ? `&reportsToId=${reportsToId}` : '';
-    const topLevelParam = topLevelOnly !== undefined ? `&topLevelOnly=${topLevelOnly}` : '';
-    const url = `${serverBaseUrl}/Employees?pageNumber=${pageNumber}&pageSize=${pageSize}${searchParam}${reportsToParam}${topLevelParam}`;
+    const searchParam = search ? `search=${encodeURIComponent(search)}&` : '';
+    const pageNumberParam = `pageNumber=${pageNumber}&`;
+    const pageSizeParam = `pageSize=${pageSize}&`;
+    const reportsToParam = reportsToId !== undefined ? `reportsToId=${reportsToId}&` : '';
+    const topLevelParam = topLevelOnly !== undefined ? `topLevelOnly=${topLevelOnly}` : '';
+    const url = `${serverBaseUrl}/Employees?${searchParam}${pageNumberParam}${pageSizeParam}${reportsToParam}${topLevelParam}`.replace(
+      /&$/,
+      ''
+    );
 
     cy.interceptWithAuth('GET', url, employees, alias, statusCode, delay);
   });
@@ -412,8 +422,8 @@ export const interceptFetchDepartmentsRequest = (
   { alias = 'fetchDepartmentsRequest', fixture = 'department/departments', statusCode = 200, delay = 300 } = {}
 ) => {
   cy.fixture(fixture).then((departments) => {
-    const searchParam = search ? `&search=${search}` : '';
-    const url = `${serverBaseUrl}/Departments?pageNumber=${pageNumber}&pageSize=${pageSize}${searchParam}`;
+    const searchParam = search ? `search=${search}&` : '';
+    const url = `${serverBaseUrl}/Departments?${searchParam}pageNumber=${pageNumber}&pageSize=${pageSize}`;
 
     cy.interceptWithAuth('GET', url, departments, alias, statusCode, delay);
   });

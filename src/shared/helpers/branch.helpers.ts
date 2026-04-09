@@ -1,5 +1,5 @@
 import { BRANCH_FIELDS } from 'shared/constants';
-import { Branch, BranchDTO, EntityInput, Company, Country, GeoAddress, TimeZone } from 'shared/types';
+import { Branch, EntityInput, Company, Country, GeoAddress, TimeZone } from 'shared/types';
 import { FormFieldProps, FieldOption } from 'components/UI/Form';
 import { mapCountryToFieldOption } from './company.helpers';
 
@@ -10,7 +10,7 @@ export const mapBranch = ({
   countries,
   geoAddress,
 }: {
-  branch: BranchDTO;
+  branch: Branch;
   timeZones: TimeZone[];
   companyCountryCode: Company['countryCode'];
   countries: Country[];
@@ -37,7 +37,7 @@ export const mapBranch = ({
   };
 };
 
-export const mapBranchDTO = (branch: Branch): EntityInput<BranchDTO> => {
+export const mapBranchInput = (branch: Branch): EntityInput<Branch> => {
   if (branch.noPhysicalAddress) {
     return {
       name: branch.name,
@@ -71,7 +71,7 @@ export const mapBranchDTO = (branch: Branch): EntityInput<BranchDTO> => {
 };
 
 export const mapBranches = (
-  branches: BranchDTO[],
+  branches: Branch[],
   timeZones: TimeZone[],
   companyCountryCode: Company['countryCode'],
   countries: Country[]
@@ -111,7 +111,7 @@ export const mapTimeZoneToFieldOption = (timeZone: TimeZone): FieldOption => {
   };
 };
 
-export const mapBranchToFieldOption = (branch: Branch): FieldOption => {
+export const mapBranchToFieldOption = (branch: Pick<Branch, 'id' | 'name'>): FieldOption => {
   return {
     label: branch.name,
     value: String(branch?.id),

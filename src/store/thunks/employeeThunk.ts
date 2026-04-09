@@ -3,28 +3,22 @@ import { FieldValues } from 'react-hook-form';
 import { RootState } from 'store';
 import { fetchBranchById, fetchBranchesByIds, fetchDepartmentById, fetchDepartmentsByIds } from 'store/thunks';
 import { resetOrgChartEmployeesFetchStatus, setError, setSuccess } from 'store/features';
-import axios from 'shared/configs/axios';
-import {
-  Branch,
-  BranchDTO,
-  Department,
-  DepartmentDTO,
-  Employee,
-  EmployeeDTO,
-  ErrorResponse,
-  ErrorResponseDTO,
-  PaginatedResponse,
-  PaginationParams,
-} from 'shared/types';
-import { MESSAGES, ENDPOINTS } from 'shared/constants';
-import {
-  mapEmployee,
-  mapEmployees,
-  prepareQueryParams,
-  mapError,
-  prepareCommaSeparatedQueryParamsByKey,
-  getEntityIdsByField,
-} from 'shared/helpers';
+import { Branch, Department, Employee, ErrorResponse, ProblemDetailsModel, PaginatedResponse, PaginationParams } from 'shared/types';
+import { MESSAGES } from 'shared/constants';
+import { employeeClient } from 'shared/configs/BridgeClients';
+import { toPaginatedResponse } from 'shared/configs/BridgeResponses';
+import { matchClientResult, matchClientUnitResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
+import type { ClientResult$1_$union } from '@fossa-app/bridge/Models/ClientResults';
+import { EmployeeQueryRequestModel, EmployeeManagementModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
+import { mapEmployee, mapEmployees, mapError, getEntityIdsByField, createProblemDetails } from 'shared/helpers';
+
+const nullableBigInt = (value: number | null | undefined): bigint | null => {
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  return BigInt(value);
+};
 
 const fetchManager = async (dispatch: ThunkDispatch<unknown, unknown, UnknownAction>, id: string) => {
   return dispatch(
@@ -46,24 +40,26 @@ export const fetchEmployees = createAsyncThunk<
     shouldFetchDepartments?: boolean;
     shouldFetchManagers?: boolean;
   },
-  { rejectValue: ErrorResponseDTO }
+  { rejectValue: ProblemDetailsModel }
 >(
   'employee/fetchEmployees',
   async (
     { pageNumber, pageSize, search, shouldFetchBranches = true, shouldFetchDepartments = true, shouldFetchManagers = true },
     { dispatch, rejectWithValue }
   ) => {
-    try {
-      const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
-      const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
+    const query = new EmployeeQueryRequestModel([], search || '', pageNumber || null, pageSize || null, null, null);
+    const result = await employeeClient.getEmployeesAsync(query, new AbortController().signal);
 
-      if (data) {
+    return matchClientResult(
+      result,
+      async (response) => {
+        const data = toPaginatedResponse<Employee>(response);
         const assignedBranchIds = getEntityIdsByField(data.items, 'assignedBranchId');
         const assignedDepartmentIds = getEntityIdsByField(data.items, 'assignedDepartmentId');
         const managerIds = getEntityIdsByField(data.items, 'reportsToId');
-        let branches: PaginatedResponse<BranchDTO> | undefined;
-        let departments: PaginatedResponse<DepartmentDTO> | undefined;
-        let managers: PaginatedResponse<EmployeeDTO> | undefined;
+        let branches: PaginatedResponse<Branch> | undefined;
+        let departments: PaginatedResponse<Department> | undefined;
+        let managers: PaginatedResponse<Employee> | undefined;
 
         if (shouldFetchBranches && assignedBranchIds.length) {
           branches = await dispatch(fetchBranchesByIds(assignedBranchIds)).unwrap();
@@ -86,44 +82,50 @@ export const fetchEmployees = createAsyncThunk<
             managers: managers?.items,
           }),
         };
-      }
-    } catch (error) {
-      return rejectWithValue({
-        ...(error as ErrorResponseDTO),
-        title: MESSAGES.error.employee.notFound,
-      });
-    }
+      },
+      (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.employee.notFound })) as never
+    );
   }
 );
 
 export const fetchManagers = createAsyncThunk<
-  PaginatedResponse<EmployeeDTO> | undefined,
+  PaginatedResponse<Employee> | undefined,
   Partial<PaginationParams>,
-  { state: RootState; rejectValue: ErrorResponseDTO }
+  { state: RootState; rejectValue: ProblemDetailsModel }
 >('employee/fetchManagers', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
-  try {
-    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
-    const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
+  const query = new EmployeeQueryRequestModel([], search || '', pageNumber || null, pageSize || null, null, null);
+  const result = await employeeClient.getEmployeesAsync(query, new AbortController().signal);
 
-    return data;
-  } catch (error) {
-    return rejectWithValue({
-      ...(error as ErrorResponseDTO),
-      title: MESSAGES.error.employee.notFound,
-    });
-  }
+  return matchClientResult(
+    result,
+    (response) => toPaginatedResponse<Employee>(response),
+    (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.employee.notFound })) as never
+  );
 });
 
 export const fetchOrgChartEmployees = createAsyncThunk<
-  PaginatedResponse<EmployeeDTO> | undefined,
+  PaginatedResponse<Employee> | undefined,
   Partial<PaginationParams>,
-  { state: RootState; rejectValue: ErrorResponseDTO }
+  { state: RootState; rejectValue: ProblemDetailsModel }
 >('employee/fetchOrgChartEmployees', async ({ pageNumber, pageSize }, { rejectWithValue }) => {
   try {
-    const fetchSubordinates = async (reportsTo?: EmployeeDTO): Promise<EmployeeDTO[]> => {
-      const queryParams = { pageNumber, pageSize, reportsToId: reportsTo?.id, topLevelOnly: !reportsTo };
-      const subordinatesQuery = prepareQueryParams(queryParams);
-      const { data: subordinateData } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${subordinatesQuery}`);
+    const fetchSubordinates = async (reportsTo?: Employee): Promise<Employee[]> => {
+      const query = new EmployeeQueryRequestModel(
+        [],
+        '',
+        pageNumber || null,
+        pageSize || null,
+        reportsTo?.id ? BigInt(reportsTo.id) : null,
+        !reportsTo
+      );
+      const result = await employeeClient.getEmployeesAsync(query, new AbortController().signal);
+      const subordinateData = await matchClientResult(
+        result,
+        (response) => toPaginatedResponse<Employee>(response),
+        (problem) => {
+          throw createProblemDetails(problem, { Title: MESSAGES.error.employee.notFound });
+        }
+      );
 
       return subordinateData.items.concat((await Promise.all(subordinateData.items.map(fetchSubordinates))).flat());
     };
@@ -132,27 +134,21 @@ export const fetchOrgChartEmployees = createAsyncThunk<
       items: await fetchSubordinates(),
     };
   } catch (error) {
-    return rejectWithValue({
-      ...(error as ErrorResponseDTO),
-      title: MESSAGES.error.employee.notFound,
-    });
+    return rejectWithValue(createProblemDetails(error, { Title: MESSAGES.error.employee.notFound }));
   }
 });
 
-export const fetchEmployeesTotal = createAsyncThunk<PaginatedResponse<EmployeeDTO> | undefined, void, { rejectValue: ErrorResponseDTO }>(
+export const fetchEmployeesTotal = createAsyncThunk<PaginatedResponse<Employee> | undefined, void, { rejectValue: ProblemDetailsModel }>(
   'employee/fetchEmployeesTotal',
   async (_, { rejectWithValue }) => {
-    try {
-      const queryParams = prepareQueryParams({ pageNumber: 1, pageSize: 1 });
-      const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
+    const query = new EmployeeQueryRequestModel([], '', 1, 1, null, null);
+    const result = await employeeClient.getEmployeesAsync(query, new AbortController().signal);
 
-      return data;
-    } catch (error) {
-      return rejectWithValue({
-        ...(error as ErrorResponseDTO),
-        title: MESSAGES.error.employee.notFound,
-      });
-    }
+    return matchClientResult(
+      result,
+      (response) => toPaginatedResponse<Employee>(response),
+      (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.employee.notFound })) as never
+    );
   }
 );
 
@@ -166,77 +162,108 @@ export const fetchEmployeeById = createAsyncThunk<
     shouldFetchDepartment?: boolean;
     shouldFetchEmployeeManager?: boolean;
   },
-  { rejectValue: ErrorResponseDTO }
+  { rejectValue: ProblemDetailsModel }
 >(
   'employee/fetchEmployeeById',
   async (
     { id, shouldFetchBranch = true, shouldFetchBranchGeoAddress = true, shouldFetchDepartment = true, shouldFetchEmployeeManager = true },
     { dispatch, rejectWithValue }
   ) => {
-    try {
-      const { data } = await axios.get<EmployeeDTO>(`${ENDPOINTS.employees}/${id}`);
-      let branch: Branch | undefined;
-      let department: Department | undefined;
-      let manager: Employee | undefined;
+    const employeeResult = await employeeClient.getEmployeeAsync(BigInt(id), new AbortController().signal);
+    return matchClientResult(
+      employeeResult,
+      async (data) => {
+        let branch: Branch | undefined;
+        let department: Department | undefined;
+        let manager: Employee | undefined;
 
-      if (data.assignedBranchId && shouldFetchBranch) {
-        branch = await dispatch(
-          fetchBranchById({ id: String(data.assignedBranchId), skipState: true, shouldFetchBranchGeoAddress })
-        ).unwrap();
-      }
+        if (data.assignedBranchId && shouldFetchBranch) {
+          branch = await dispatch(
+            fetchBranchById({ id: String(data.assignedBranchId), skipState: true, shouldFetchBranchGeoAddress })
+          ).unwrap();
+        }
 
-      if (data.assignedDepartmentId && shouldFetchDepartment) {
-        department = await dispatch(fetchDepartmentById({ id: String(data.assignedDepartmentId), skipState: true })).unwrap();
-      }
+        if (data.assignedDepartmentId && shouldFetchDepartment) {
+          department = await dispatch(fetchDepartmentById({ id: String(data.assignedDepartmentId), skipState: true })).unwrap();
+        }
 
-      if (data.reportsToId && shouldFetchEmployeeManager) {
-        manager = (await fetchManager(dispatch, String(data.reportsToId))) as Employee;
-      }
+        if (data.reportsToId && shouldFetchEmployeeManager) {
+          manager = (await fetchManager(dispatch, String(data.reportsToId))) as Employee;
+        }
 
-      return mapEmployee({ branch, department, manager, employee: data, user: undefined });
-    } catch (error) {
-      return rejectWithValue(error as ErrorResponseDTO);
-    }
+        return mapEmployee({ branch, department, manager, employee: data, user: undefined });
+      },
+      (problem) => rejectWithValue(problem) as never
+    );
   }
 );
 
 export const fetchEmployeesByIds = createAsyncThunk<
-  PaginatedResponse<EmployeeDTO> | undefined,
+  PaginatedResponse<Employee> | undefined,
   number[],
-  { rejectValue: ErrorResponseDTO }
+  { rejectValue: ProblemDetailsModel }
 >('employee/fetchEmployeesByIds', async (ids, { rejectWithValue }) => {
+  let idList: bigint[] = [];
   try {
-    const queryParams = prepareCommaSeparatedQueryParamsByKey('id', ids);
-    const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
-
-    return data;
-  } catch (error) {
-    return rejectWithValue({
-      ...(error as ErrorResponseDTO),
-      title: MESSAGES.error.employee.notFound,
-    });
+    idList = ids.map((id) => BigInt(id));
+  } catch {
+    // Ignored
   }
+
+  const query = new EmployeeQueryRequestModel(idList, '', null, null, null, null);
+  const result = await employeeClient.getEmployeesAsync(query, new AbortController().signal);
+
+  return matchClientResult(
+    result,
+    (response) => toPaginatedResponse<Employee>(response),
+    (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.employee.notFound })) as never
+  );
 });
 
 export const editEmployee = createAsyncThunk<
   void,
-  [string, Pick<EmployeeDTO, 'assignedBranchId'>],
+  [string, Pick<Employee, 'assignedBranchId'>],
   { rejectValue: ErrorResponse<FieldValues> }
 >('employee/editEmployee', async ([id, employee], { dispatch, rejectWithValue }) => {
   try {
-    await axios.put<void>(`${ENDPOINTS.employees}/${id}`, employee);
+    const result = await employeeClient.getEmployeeAsync(BigInt(id), new AbortController().signal);
+    return matchClientResult(
+      result,
+      async (curEmp) => {
+        const modModel = new EmployeeManagementModel(
+          nullableBigInt(employee.assignedBranchId),
+          nullableBigInt(curEmp.assignedDepartmentId),
+          nullableBigInt(curEmp.reportsToId),
+          curEmp.jobTitle ?? null
+        );
 
-    dispatch(resetOrgChartEmployeesFetchStatus());
-    dispatch(setSuccess(MESSAGES.success.employee.updateEmployee));
-  } catch (error) {
-    dispatch(
-      setError({
-        ...(error as ErrorResponseDTO),
-        title: MESSAGES.error.employee.updateEmployee,
-      })
+        return matchClientUnitResult(
+          await employeeClient.manageEmployeeAsync(BigInt(id), modModel, new AbortController().signal),
+          () => {
+            dispatch(resetOrgChartEmployeesFetchStatus());
+            dispatch(setSuccess(MESSAGES.success.employee.updateEmployee));
+          },
+          (problem) => {
+            dispatch(setError(createProblemDetails(problem, { Title: MESSAGES.error.employee.updateEmployee })));
+
+            const mappedError = mapError(problem) as ErrorResponse<FieldValues>;
+
+            return rejectWithValue(mappedError) as never;
+          }
+        );
+      },
+      (problem) => {
+        dispatch(setError(createProblemDetails(problem, { Title: MESSAGES.error.employee.updateEmployee })));
+
+        const mappedError = mapError(problem) as ErrorResponse<FieldValues>;
+
+        return rejectWithValue(mappedError) as never;
+      }
     );
+  } catch (error) {
+    dispatch(setError(createProblemDetails(error, { Title: MESSAGES.error.employee.updateEmployee })));
 
-    const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+    const mappedError = mapError(error as ProblemDetailsModel) as ErrorResponse<FieldValues>;
 
     return rejectWithValue(mappedError);
   }

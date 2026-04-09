@@ -12,10 +12,11 @@ import { createOnboardingBranch } from 'store/thunks';
 import { Branch } from 'shared/types';
 import {
   getBranchManagementDetailsByAddressFormSchema,
-  mapBranchDTO,
+  mapBranchInput,
   mapDisabledFields,
   mapBranchFieldOptionsToFieldOptions,
   deepCopyObject,
+  getProblemErrors,
   hasAllowedRole,
 } from 'shared/helpers';
 import { CREATE_BRANCH_DETAILS_FORM_SCHEMA, BRANCH_DETAILS_FORM_DEFAULT_VALUES, USER_PERMISSION_GENERAL_ERROR } from 'shared/constants';
@@ -37,7 +38,7 @@ const BranchCreatePage: React.FC = () => {
   const schema = getBranchManagementDetailsByAddressFormSchema(CREATE_BRANCH_DETAILS_FORM_SCHEMA.fields, !!noPhysicalAddress);
   const disabledFields = mapDisabledFields(schema, userRoles);
   const fields = mapBranchFieldOptionsToFieldOptions(disabledFields, companyTimeZones, availableCountries);
-  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_ERROR;
+  const errors = isUserAdmin ? deepCopyObject(getProblemErrors(error)) : USER_PERMISSION_GENERAL_ERROR;
 
   const actions = CREATE_BRANCH_DETAILS_FORM_SCHEMA.actions.map((action) =>
     action.name === FormActionName.submit
@@ -46,7 +47,7 @@ const BranchCreatePage: React.FC = () => {
   );
 
   const handleSubmit = (formValue: Branch) => {
-    const submitData = mapBranchDTO(formValue);
+    const submitData = mapBranchInput(formValue);
 
     dispatch(createOnboardingBranch(submitData));
   };

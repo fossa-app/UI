@@ -142,8 +142,8 @@ const onboardingSlice = createSlice({
         state.company.flags[OnboardingStep.companyLicense] = true;
         evaluateCompanyOnboardingStep(state);
       })
-      .addCase(fetchBranchesTotal.fulfilled, (state) => {
-        state.company.flags[OnboardingStep.branch] = true;
+      .addCase(fetchBranchesTotal.fulfilled, (state, action) => {
+        state.company.flags[OnboardingStep.branch] = Number(action.payload?.totalItems ?? action.payload?.items.length ?? 0) > 0;
         evaluateCompanyOnboardingStep(state);
       })
       .addCase(fetchProfile.fulfilled, (state) => {

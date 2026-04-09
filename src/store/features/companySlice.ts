@@ -13,14 +13,13 @@ import {
   fetchEmployeesTotal,
 } from 'store/thunks';
 import {
-  BranchDTO,
+  Branch,
   Company,
   CompanyDatasourceTotals,
-  CompanyDTO,
-  DepartmentDTO,
-  EmployeeDTO,
+  Department,
+  Employee,
   ErrorResponse,
-  ErrorResponseDTO,
+  ProblemDetailsModel,
   PaginatedResponse,
 } from 'shared/types';
 import { calculateUsagePercent, filterUniqueByField } from 'shared/helpers';
@@ -62,12 +61,12 @@ const companySlice = createSlice({
       .addCase(fetchCompany.pending, (state) => {
         state.company.fetchStatus = 'loading';
       })
-      .addCase(fetchCompany.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchCompany.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.company.item = undefined;
         state.company.fetchStatus = 'failed';
         state.company.fetchError = action.payload;
       })
-      .addCase(fetchCompany.fulfilled, (state, action: PayloadAction<CompanyDTO | undefined>) => {
+      .addCase(fetchCompany.fulfilled, (state, action: PayloadAction<Company | undefined>) => {
         state.company.item = action.payload;
         state.company.fetchStatus = 'succeeded';
       })
@@ -76,7 +75,7 @@ const companySlice = createSlice({
       })
       .addCase(createCompany.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.company.updateStatus = 'failed';
-        state.company.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.company.updateError = action.payload;
       })
       .addCase(createCompany.fulfilled, (state) => {
         state.company.updateStatus = 'succeeded';
@@ -87,7 +86,7 @@ const companySlice = createSlice({
       })
       .addCase(editCompany.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.company.updateStatus = 'failed';
-        state.company.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.company.updateError = action.payload;
       })
       .addCase(editCompany.fulfilled, (state) => {
         state.company.updateStatus = 'succeeded';
@@ -96,7 +95,7 @@ const companySlice = createSlice({
       .addCase(deleteCompany.pending, (state) => {
         state.company.deleteStatus = 'loading';
       })
-      .addCase(deleteCompany.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(deleteCompany.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.company.deleteStatus = 'failed';
         state.company.deleteError = action.payload;
       })
@@ -113,13 +112,13 @@ const companySlice = createSlice({
       .addCase(fetchDepartmentsTotal.rejected, (state) => {
         state.companyDatasourceTotals.item.departments = 0;
       })
-      .addCase(fetchBranchesTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<BranchDTO> | undefined>) => {
+      .addCase(fetchBranchesTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<Branch> | undefined>) => {
         state.companyDatasourceTotals.item.branches = action.payload?.totalItems;
       })
-      .addCase(fetchEmployeesTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<EmployeeDTO> | undefined>) => {
+      .addCase(fetchEmployeesTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<Employee> | undefined>) => {
         state.companyDatasourceTotals.item.employees = action.payload?.totalItems;
       })
-      .addCase(fetchDepartmentsTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<DepartmentDTO> | undefined>) => {
+      .addCase(fetchDepartmentsTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<Department> | undefined>) => {
         state.companyDatasourceTotals.item.departments = action.payload?.totalItems;
       })
       .addCase(fetchCompanyDatasourceTotals.pending, (state) => {

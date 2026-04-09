@@ -1,6 +1,6 @@
 import { OidcClientSettings } from 'oidc-client-ts';
 import { FieldErrors, FieldValues } from 'react-hook-form';
-import { ColorSchemeId, CompanySettings, EntityInput, PaginationParams } from 'shared/types';
+import type { ColorSchemeId, CompanySettings, EntityInput } from 'shared/types';
 
 export const OIDC_INITIAL_CONFIG: OidcClientSettings = {
   authority: 'http://localhost:9011',
@@ -15,7 +15,7 @@ export const APP_CONFIG = {
   snackbarAutoHideDuration: 10000,
   httpTimeout: 15000,
   table: {
-    defaultPagination: { pageNumber: 1, pageSize: 10, search: '', totalItems: undefined } as PaginationParams,
+    defaultPagination: { pageNumber: 1, pageSize: 10, search: '', totalItems: undefined, totalPages: undefined },
     defaultPageSizeOptions: [10, 20, 50],
     containerWidth: 'calc(100vw - 32px)',
     containerMaxHeight: 'calc(100% - 70px)',

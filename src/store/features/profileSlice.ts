@@ -3,7 +3,7 @@ import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import { createProfile, deleteProfile, editProfile, fetchProfile, fetchUser } from 'store/thunks';
-import { AppUser, Employee, ErrorResponse, ErrorResponseDTO } from 'shared/types';
+import { AppUser, Employee, ErrorResponse, ProblemDetailsModel } from 'shared/types';
 import { mapUserProfileToEmployee } from 'shared/helpers';
 
 interface ProfileState {
@@ -31,7 +31,7 @@ const profileSlice = createSlice({
       .addCase(fetchProfile.pending, (state) => {
         state.profile.fetchStatus = 'loading';
       })
-      .addCase(fetchProfile.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchProfile.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.profile.fetchStatus = 'failed';
         state.profile.fetchError = action.payload;
       })
@@ -50,7 +50,7 @@ const profileSlice = createSlice({
       })
       .addCase(createProfile.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.profile.updateStatus = 'failed';
-        state.profile.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.profile.updateError = action.payload;
       })
       .addCase(createProfile.fulfilled, (state) => {
         state.profile.updateStatus = 'succeeded';
@@ -61,7 +61,7 @@ const profileSlice = createSlice({
       })
       .addCase(editProfile.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.profile.updateStatus = 'failed';
-        state.profile.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.profile.updateError = action.payload;
       })
       .addCase(editProfile.fulfilled, (state) => {
         state.profile.updateStatus = 'succeeded';
@@ -70,7 +70,7 @@ const profileSlice = createSlice({
       .addCase(deleteProfile.pending, (state) => {
         state.profile.deleteStatus = 'loading';
       })
-      .addCase(deleteProfile.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(deleteProfile.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.profile.deleteStatus = 'failed';
         state.profile.fetchError = action.payload;
       })

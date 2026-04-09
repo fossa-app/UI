@@ -1,9 +1,9 @@
 import { DEPARTMENT_FIELDS } from 'shared/constants';
-import { Department, DepartmentDTO, Employee, EmployeeDTO, EntityInput } from 'shared/types';
+import { Department, Employee, EntityInput } from 'shared/types';
 import { FormFieldProps, FieldOption } from 'components/UI/Form';
 import { mapEmployeeToFieldOption } from './employee.helpers';
 
-export const mapDepartment = (department: DepartmentDTO, parentDepartment?: DepartmentDTO, employee?: EmployeeDTO): Department => {
+export const mapDepartment = (department: Department, parentDepartment?: Department, employee?: Employee): Department => {
   const managerName = employee?.fullName;
 
   return {
@@ -13,7 +13,7 @@ export const mapDepartment = (department: DepartmentDTO, parentDepartment?: Depa
   };
 };
 
-export const mapDepartmentDTO = (department: Department): EntityInput<DepartmentDTO> => {
+export const mapDepartmentInput = (department: Department): EntityInput<Department> => {
   return {
     name: department.name,
     parentDepartmentId: department.parentDepartmentId || null,
@@ -22,9 +22,9 @@ export const mapDepartmentDTO = (department: Department): EntityInput<Department
 };
 
 export const mapDepartments = (
-  departments: DepartmentDTO[],
-  parentDepartments: DepartmentDTO[] = [],
-  employees: EmployeeDTO[] = []
+  departments: Department[],
+  parentDepartments: Department[] = [],
+  employees: Employee[] = []
 ): Department[] => {
   return departments.map((department) => {
     const manager = employees.find(({ id }) => id === department.managerId);
@@ -36,8 +36,8 @@ export const mapDepartments = (
 
 export const mapDepartmentFieldOptionsToFieldOptions = (
   fields: FormFieldProps<Department>[],
-  departments?: Department[],
-  employees?: Employee[]
+  departments?: Pick<Department, 'id' | 'name'>[],
+  employees?: Pick<Employee, 'id' | 'fullName'>[]
 ): FormFieldProps<Department>[] => {
   return fields.map((field) => ({
     ...field,
@@ -52,7 +52,7 @@ export const mapDepartmentFieldOptionsToFieldOptions = (
   }));
 };
 
-export const mapDepartmentToFieldOption = (department: Department): FieldOption => {
+export const mapDepartmentToFieldOption = (department: Pick<Department, 'id' | 'name'>): FieldOption => {
   return {
     label: department.name,
     value: String(department.id),

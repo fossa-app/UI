@@ -19,13 +19,14 @@ import {
   ROUTES,
   USER_PERMISSION_GENERAL_ERROR,
 } from 'shared/constants';
-import { Branch, BranchDTO, TimeZone } from 'shared/types';
+import { Branch, TimeZone } from 'shared/types';
 import {
   getBranchManagementDetailsByAddressFormSchema,
-  mapBranchDTO,
+  mapBranchInput,
   mapDisabledFields,
   mapBranchFieldOptionsToFieldOptions,
   deepCopyObject,
+  getProblemErrors,
 } from 'shared/helpers';
 import { FormFieldProps } from 'components/UI/Form';
 import EntityManager from 'components/Entity/EntityManager';
@@ -44,7 +45,7 @@ const BranchManagementPage: React.FC = () => {
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
   const [fields, setFields] = React.useState<FormFieldProps<Branch>[]>([]);
   const formLoading = fetchStatus === 'loading' || (!branch && !!id) || fields.length === 0;
-  const errors = isUserAdmin ? deepCopyObject(updateError?.errors) : USER_PERMISSION_GENERAL_ERROR;
+  const errors = isUserAdmin ? deepCopyObject(getProblemErrors(updateError)) : USER_PERMISSION_GENERAL_ERROR;
 
   React.useEffect(() => {
     if (!id || (id && branch && noPhysicalAddress !== undefined)) {
@@ -70,7 +71,7 @@ const BranchManagementPage: React.FC = () => {
   };
 
   return (
-    <EntityManager<Branch, BranchDTO>
+    <EntityManager<Branch, Branch>
       module={testModule}
       subModule={testSubModule}
       pageTitle={{ create: 'Create Branch', edit: 'Edit Branch' }}
@@ -88,7 +89,7 @@ const BranchManagementPage: React.FC = () => {
       fetchEntityAction={(id) => fetchBranchById({ id, skipState: false })}
       createEntityAction={createBranch}
       editEntityAction={editBranch}
-      mapDTO={mapBranchDTO}
+      mapInput={mapBranchInput}
     />
   );
 };

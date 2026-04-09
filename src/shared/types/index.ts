@@ -1,4 +1,3 @@
-export * from './client';
 export * from './route';
 export * from './license';
 export * from './response';

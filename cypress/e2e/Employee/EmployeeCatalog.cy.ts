@@ -225,7 +225,7 @@ describe('Employee Catalog Tests', () => {
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
 
-        cy.wait('@fetchSearchedEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10&search=Anthony');
+        cy.wait('@fetchSearchedEmployeesRequest').its('request.url').should('include', 'Employees?search=Anthony&pageNumber=1&pageSize=10');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 1);
 
         interceptFetchEmployeesRequest(
@@ -239,7 +239,7 @@ describe('Employee Catalog Tests', () => {
 
         cy.wait('@fetchSearchedNoEmployeesRequest')
           .its('request.url')
-          .should('include', 'Employees?pageNumber=1&pageSize=10&search=Anthonyy');
+          .should('include', 'Employees?search=Anthonyy&pageNumber=1&pageSize=10');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 0);
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'page-subtitle')
           .should('exist')
@@ -274,7 +274,7 @@ describe('Employee Catalog Tests', () => {
         search(Module.employeeManagement, SubModule.employeeCatalog, 'search-employees', 'Anthony');
 
         getLinearLoader(Module.employeeManagement, SubModule.employeeCatalog, 'table').should('exist');
-        cy.wait('@searchEmployeesRequest').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=10&search=Anthony');
+        cy.wait('@searchEmployeesRequest').its('request.url').should('include', 'Employees?search=Anthony&pageNumber=1&pageSize=10');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 1);
 
         interceptFetchEmployeesRequest(
@@ -286,7 +286,7 @@ describe('Employee Catalog Tests', () => {
           .click();
         cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="20"]').click();
 
-        cy.wait('@searchEmployeesPageSize20').its('request.url').should('include', 'Employees?pageNumber=1&pageSize=20&search=Anthony');
+        cy.wait('@searchEmployeesPageSize20').its('request.url').should('include', 'Employees?search=Anthony&pageNumber=1&pageSize=20');
         getTestSelectorByModule(Module.employeeManagement, SubModule.employeeCatalog, 'table-body-row', true).should('have.length', 15);
         getTablePaginationSizeInput(Module.employeeManagement, SubModule.employeeCatalog, 'table-pagination').should('have.value', '20');
       });
