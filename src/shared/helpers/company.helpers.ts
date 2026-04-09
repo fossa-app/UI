@@ -1,13 +1,25 @@
-import { Company, CompanyDTO, Country } from 'shared/types';
+import type { CompanyRetrievalModel, CompanySettingsRetrievalModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
+import { Company, CompanySettings, Country } from 'shared/types';
 import { COMPANY_LICENSE_FIELDS } from 'shared/constants';
 import { FormFieldProps, FormFieldType, FieldOption } from 'components/UI/Form';
+import { toBigIntId } from './data.helpers';
 
-export const mapCompany = (company: CompanyDTO, countries: Country[]): Company => {
+export const mapCompany = (company: CompanyRetrievalModel, countries: Country[]): Company => {
   return {
     ...company,
+    id: toBigIntId(company.id),
+    name: company.name ?? '',
+    countryCode: company.countryCode ?? '',
     countryName: countries.find(({ code }) => code === company.countryCode)?.name,
   };
 };
+
+export const mapCompanySettingsRetrievalModel = (companySettings: CompanySettingsRetrievalModel): CompanySettings => ({
+  ...companySettings,
+  id: toBigIntId(companySettings.id),
+  companyId: toBigIntId(companySettings.companyId),
+  colorSchemeId: (companySettings.colorSchemeId ?? undefined) as CompanySettings['colorSchemeId'],
+});
 
 export const mapCountriesToFieldOptions = (fields: FormFieldProps<Company>[], countries?: Country[]): FormFieldProps<Company>[] => {
   return fields.map((field) => ({

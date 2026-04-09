@@ -2,7 +2,10 @@ import { User } from 'oidc-client-ts';
 import { OIDC_INITIAL_CONFIG } from 'shared/constants';
 
 export const saveToLocalStorage = <T = unknown>(key: string, value: T) => {
-  localStorage.setItem(key, JSON.stringify(value));
+  localStorage.setItem(
+    key,
+    JSON.stringify(value, (_, entryValue) => (typeof entryValue === 'bigint' ? entryValue.toString() : entryValue))
+  );
 };
 
 export const getFromLocalStorage = <T = unknown>(key: string): T | null => {

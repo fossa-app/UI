@@ -10,7 +10,7 @@ export default defineConfig({
     viewportWidth: 1280,
     viewportHeight: 720,
     env: {
-      serverBaseUrl: 'http://we.dev.localhost:5210/api/1',
+      serverBaseUrl: 'http://we.dev.localhost:5210/api/1.0',
       fusionAuthBaseUrl: 'http://localhost:9011',
     },
     setupNodeEvents(on) {
@@ -24,6 +24,7 @@ export default defineConfig({
   },
   hosts: {
     'we.dev.localhost': '127.0.0.1',
+    'xxx.dev.localhost': '127.0.0.1',
     localhost: '127.0.0.1',
   },
 });

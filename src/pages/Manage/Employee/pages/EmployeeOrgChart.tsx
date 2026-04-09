@@ -25,8 +25,8 @@ const EmployeeOrgChartPage: React.FC = () => {
   const topLevelEmployees = employees.filter(({ reportsToId }) => !reportsToId);
   const loading = fetchStatus === 'idle' || fetchStatus === 'loading';
 
-  const renderTree = (managerId?: number) => {
-    const subordinateEmployees = employees.filter(({ reportsToId }) => reportsToId === managerId);
+  const renderTree = (managerId?: bigint) => {
+    const subordinateEmployees = employees.filter(({ reportsToId }) => reportsToId && managerId && reportsToId === managerId);
 
     return subordinateEmployees.map((employee) => (
       <TreeNode key={employee.id} label={<EmployeeCard module={testModule} subModule={testSubModule} employee={employee} />}>

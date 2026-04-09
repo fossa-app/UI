@@ -21,7 +21,7 @@ describe('Header Component', () => {
         employee: { item: OnboardingStep.completed, fetchStatus: 'succeeded' },
       },
       appConfig: { isDarkTheme: true },
-      company: { company: { item: { id: 0, name: 'Test', countryCode: 'UA' } } },
+      company: { company: { item: { id: 0n, name: 'Test', countryCode: 'UA' } } },
     });
   });
 

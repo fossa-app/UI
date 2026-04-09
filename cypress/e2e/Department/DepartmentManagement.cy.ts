@@ -102,8 +102,8 @@ describe('Department Management Tests', () => {
 
     fillDepartmentDetailsForm({
       name: 'Veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery long department name',
-      parentDepartmentId: 444444444446,
-      managerId: 333333333335,
+      parentDepartmentId: 444444444446n,
+      managerId: 333333333335n,
     });
     clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
 
@@ -114,7 +114,7 @@ describe('Department Management Tests', () => {
     clearDepartmentDetailsForm();
     fillDepartmentDetailsForm({
       name: 'Valid Name',
-      managerId: 333333333335,
+      managerId: 333333333335n,
     });
     clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
 
@@ -144,8 +144,8 @@ describe('Department Management Tests', () => {
 
     fillDepartmentDetailsForm({
       name: 'New Department',
-      parentDepartmentId: 444444444446,
-      managerId: 333333333335,
+      parentDepartmentId: 444444444446n,
+      managerId: 333333333335n,
     });
     clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
     cy.wait('@createDepartmentFailedRequest');
@@ -175,8 +175,8 @@ describe('Department Management Tests', () => {
 
     fillDepartmentDetailsForm({
       name: 'Set Design',
-      parentDepartmentId: 444444444446,
-      managerId: 333333333333,
+      parentDepartmentId: 444444444446n,
+      managerId: 333333333333n,
     });
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-submit-button').should('contain.text', 'Save');
     interceptFetchDepartmentsRequest(
@@ -241,8 +241,8 @@ describe('Department Management Tests', () => {
     clearDepartmentDetailsForm();
     fillDepartmentDetailsForm({
       name: 'Department Name',
-      parentDepartmentId: 444444444446,
-      managerId: 333333333335,
+      parentDepartmentId: 444444444446n,
+      managerId: 333333333335n,
     });
     getTestSelectorByModule(Module.departmentManagement, SubModule.departmentDetails, 'form-cancel-button').should('exist').click();
 
@@ -291,7 +291,7 @@ describe('Department Management Tests', () => {
     clearDepartmentDetailsForm();
     fillDepartmentDetailsForm({
       name: 'Set Design',
-      managerId: 333333333333,
+      managerId: 333333333333n,
     });
     clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
 
@@ -323,7 +323,7 @@ describe('Department Management Tests', () => {
     cy.wait('@fetchDepartmentByIdRequest');
 
     fillDepartmentDetailsForm({
-      parentDepartmentId: 444444444446,
+      parentDepartmentId: 444444444446n,
     });
     clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
 
@@ -368,8 +368,8 @@ describe('Department Management Tests', () => {
 
     fillDepartmentDetailsForm({
       name: 'Department Name',
-      parentDepartmentId: 444444444446,
-      managerId: 333333333335,
+      parentDepartmentId: 444444444446n,
+      managerId: 333333333335n,
     });
     clickActionButton(Module.departmentManagement, SubModule.departmentDetails);
     cy.wait('@createDepartmentFailedWithErrorRequest');
@@ -421,8 +421,8 @@ describe('Department Management Tests', () => {
     clearDepartmentDetailsForm();
     fillDepartmentDetailsForm({
       name: 'Costume Updated',
-      parentDepartmentId: 444444444446,
-      managerId: 333333333335,
+      parentDepartmentId: 444444444446n,
+      managerId: 333333333335n,
     });
     interceptFetchEmployeesByIdsRequest();
     interceptFetchDepartmentsByIdsRequest();

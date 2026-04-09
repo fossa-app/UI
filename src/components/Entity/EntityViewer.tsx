@@ -1,10 +1,11 @@
+import type { ProblemDetailsModel } from '@fossa-app/bridge/Models/ApiModels/SharedModels';
 import React from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { AsyncThunkAction } from '@reduxjs/toolkit';
 import { useAppDispatch, useAppSelector, RootState, AppDispatch, StateEntity } from 'store';
 import { selectUserRoles } from 'store/features';
-import { areEqualBigIds, hasAllowedRole } from 'shared/helpers';
-import { Module, SubModule, ErrorResponseDTO, BaseEntity } from 'shared/types';
+import { hasAllowedRole } from 'shared/helpers';
+import { Module, SubModule, BaseEntity } from 'shared/types';
 import PageLayout from 'components/layouts/PageLayout';
 import ViewDetails, { ViewDetailActionName, ViewDetailProps } from 'components/UI/ViewDetails';
 
@@ -17,7 +18,7 @@ type EntityViewerProps<T extends BaseEntity> = {
   editRoute?: string;
   selectEntity: (state: RootState) => StateEntity<T | undefined>;
   resetEntity: () => ReturnType<AppDispatch>;
-  fetchEntityAction: (id: string) => AsyncThunkAction<T, unknown, { rejectValue: ErrorResponseDTO }>;
+  fetchEntityAction: (id: string) => AsyncThunkAction<T, unknown, { rejectValue: ProblemDetailsModel }>;
 };
 
 const EntityViewer = <T extends BaseEntity>({
@@ -58,7 +59,7 @@ const EntityViewer = <T extends BaseEntity>({
     });
 
   React.useEffect(() => {
-    const shouldFetch = !hasFetched.current && id && (!values || !areEqualBigIds(values.id, id));
+    const shouldFetch = !hasFetched.current && id && (!values || values.id !== BigInt(id));
 
     if (shouldFetch) {
       dispatch(fetchEntityAction(id));

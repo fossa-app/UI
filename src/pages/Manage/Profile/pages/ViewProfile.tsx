@@ -15,6 +15,7 @@ const ViewProfilePage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { item: profile, fetchStatus } = useAppSelector(selectProfile);
+  const persistedProfile = profile && 'id' in profile ? profile : undefined;
   const loading = fetchStatus === 'idle' || fetchStatus === 'loading';
 
   const handleEdit = () => {
@@ -42,7 +43,7 @@ const ViewProfilePage: React.FC = () => {
         <Grid size={12}>
           <ViewDetails module={testModule} subModule={testSubModule} loading={loading}>
             <ViewDetails.Header>{PROFILE_VIEW_DETAILS_SCHEMA.title}</ViewDetails.Header>
-            <ViewDetails.Content fields={PROFILE_VIEW_DETAILS_SCHEMA.fields} values={profile} />
+            <ViewDetails.Content fields={PROFILE_VIEW_DETAILS_SCHEMA.fields} values={persistedProfile} />
             <ViewDetails.Actions actions={actions!}></ViewDetails.Actions>
           </ViewDetails>
         </Grid>

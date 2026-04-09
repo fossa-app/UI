@@ -1,3 +1,4 @@
+import type { ProblemDetailsModel } from '@fossa-app/bridge/Models/ApiModels/SharedModels';
 import { createAsyncThunk, ThunkDispatch, UnknownAction } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
 import { RootState } from 'store';
@@ -9,28 +10,33 @@ import {
   resetDepartmentsFetchStatus,
 } from 'store/features';
 import { fetchEmployeeById, fetchEmployeesByIds } from 'store/thunks';
-import axios from 'shared/configs/axios';
+import { ErrorResponse, PaginatedResponse, PaginationParams, Department, Employee, EntityInput } from 'shared/types';
+import { MESSAGES } from 'shared/constants';
+import { departmentClient } from 'shared/configs/BridgeClients';
+import { mapPaginatedResponse } from 'shared/configs/BridgeResponses';
+import { foldClientResult, foldClientUnitResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
+import { DepartmentQueryRequestModel, DepartmentModificationModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 import {
-  ErrorResponseDTO,
-  ErrorResponse,
-  PaginatedResponse,
-  PaginationParams,
-  Department,
-  DepartmentDTO,
-  EmployeeDTO,
-  EntityInput,
-} from 'shared/types';
-import { MESSAGES, ENDPOINTS } from 'shared/constants';
-import {
-  prepareQueryParams,
   mapDepartments,
+  mapDepartmentRetrievalModel,
   mapError,
   mapDepartment,
-  prepareCommaSeparatedQueryParamsByKey,
   getEntityIdsByField,
+  createProblemDetails,
 } from 'shared/helpers';
 
-const fetchParentDepartment = async (dispatch: ThunkDispatch<unknown, unknown, UnknownAction>, id: string) => {
+const nullableBigInt = (value: bigint | number | string | null | undefined): bigint | null => {
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  return BigInt(value);
+};
+
+const fetchParentDepartment = async (
+  dispatch: ThunkDispatch<unknown, unknown, UnknownAction>,
+  id: Department['id']
+): Promise<Department> => {
   return dispatch(
     fetchDepartmentById({
       id,
@@ -42,37 +48,36 @@ const fetchParentDepartment = async (dispatch: ThunkDispatch<unknown, unknown, U
 };
 
 export const fetchDepartmentsTotal = createAsyncThunk<
-  PaginatedResponse<DepartmentDTO> | undefined,
+  PaginatedResponse<Department> | undefined,
   void,
-  { rejectValue: ErrorResponseDTO }
+  { rejectValue: ProblemDetailsModel }
 >('department/fetchDepartmentsTotal', async (_, { rejectWithValue }) => {
-  try {
-    const queryParams = prepareQueryParams({ pageNumber: 1, pageSize: 1 });
-    const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
+  const query = new DepartmentQueryRequestModel([], '', 1, 1);
+  const result = await departmentClient.getDepartmentsAsync(query, new AbortController().signal);
 
-    return data;
-  } catch (error) {
-    return rejectWithValue({
-      ...(error as ErrorResponseDTO),
-      title: MESSAGES.error.departments.notFound,
-    });
-  }
+  return foldClientResult(
+    result,
+    (response) => mapPaginatedResponse(response, mapDepartmentRetrievalModel),
+    (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.departments.notFound })) as never
+  );
 });
 
 export const fetchDepartments = createAsyncThunk<
   PaginatedResponse<Department> | undefined,
   Partial<PaginationParams> & { shouldFetchEmployees?: boolean },
-  { rejectValue: ErrorResponseDTO }
+  { rejectValue: ProblemDetailsModel }
 >('department/fetchDepartments', async ({ pageNumber, pageSize, search, shouldFetchEmployees = true }, { dispatch, rejectWithValue }) => {
-  try {
-    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
-    const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
+  const query = new DepartmentQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
+  const result = await departmentClient.getDepartmentsAsync(query, new AbortController().signal);
 
-    if (data) {
+  return foldClientResult(
+    result,
+    async (response) => {
+      const data = mapPaginatedResponse(response, mapDepartmentRetrievalModel);
       const departmentsManagerIds = getEntityIdsByField(data.items, 'managerId');
       const parentDepartmentsIds = getEntityIdsByField(data.items, 'parentDepartmentId');
-      let employees: PaginatedResponse<EmployeeDTO> | undefined;
-      let parentDepartments: PaginatedResponse<DepartmentDTO> | undefined;
+      let employees: PaginatedResponse<Employee> | undefined;
+      let parentDepartments: PaginatedResponse<Department> | undefined;
 
       if (shouldFetchEmployees && departmentsManagerIds.length) {
         employees = await dispatch(fetchEmployeesByIds(departmentsManagerIds)).unwrap();
@@ -86,195 +91,188 @@ export const fetchDepartments = createAsyncThunk<
         ...data,
         items: mapDepartments(data.items, parentDepartments?.items, employees?.items),
       };
-    }
-  } catch (error) {
-    return rejectWithValue({
-      ...(error as ErrorResponseDTO),
-      title: MESSAGES.error.departments.notFound,
-    });
-  }
+    },
+    (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.departments.notFound })) as never
+  );
 });
 
 export const fetchSearchedDepartments = createAsyncThunk<
-  PaginatedResponse<DepartmentDTO> | undefined,
+  PaginatedResponse<Department> | undefined,
   Partial<PaginationParams>,
-  { rejectValue: ErrorResponseDTO }
+  { rejectValue: ProblemDetailsModel }
 >('department/fetchSearchedDepartments', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
-  try {
-    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
-    const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
+  const query = new DepartmentQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
+  const result = await departmentClient.getDepartmentsAsync(query, new AbortController().signal);
 
-    return data;
-  } catch (error) {
-    return rejectWithValue({
-      ...(error as ErrorResponseDTO),
-      title: MESSAGES.error.departments.notFound,
-    });
-  }
+  return foldClientResult(
+    result,
+    (response) => mapPaginatedResponse(response, mapDepartmentRetrievalModel),
+    (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.departments.notFound })) as never
+  );
 });
 
 export const fetchParentDepartments = createAsyncThunk<
-  PaginatedResponse<DepartmentDTO> | undefined,
+  PaginatedResponse<Department> | undefined,
   Partial<PaginationParams>,
-  { state: RootState; rejectValue: ErrorResponseDTO }
+  { state: RootState; rejectValue: ProblemDetailsModel }
 >('department/fetchParentDepartments', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
-  try {
-    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
-    const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
+  const query = new DepartmentQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
+  const result = await departmentClient.getDepartmentsAsync(query, new AbortController().signal);
 
-    return data;
-  } catch (error) {
-    return rejectWithValue({
-      ...(error as ErrorResponseDTO),
-      title: MESSAGES.error.departments.notFound,
-    });
-  }
+  return foldClientResult(
+    result,
+    (response) => mapPaginatedResponse(response, mapDepartmentRetrievalModel),
+    (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.departments.notFound })) as never
+  );
 });
 
 export const fetchAssignedDepartments = createAsyncThunk<
-  PaginatedResponse<DepartmentDTO> | undefined,
+  PaginatedResponse<Department> | undefined,
   Partial<PaginationParams>,
-  { state: RootState; rejectValue: ErrorResponseDTO }
+  { state: RootState; rejectValue: ProblemDetailsModel }
 >('department/fetchAssignedDepartments', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
-  try {
-    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
-    const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
+  const query = new DepartmentQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
+  const result = await departmentClient.getDepartmentsAsync(query, new AbortController().signal);
 
-    return data;
-  } catch (error) {
-    return rejectWithValue({
-      ...(error as ErrorResponseDTO),
-      title: MESSAGES.error.departments.notFound,
-    });
-  }
+  return foldClientResult(
+    result,
+    (response) => mapPaginatedResponse(response, mapDepartmentRetrievalModel),
+    (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.departments.notFound })) as never
+  );
 });
 
 export const fetchDepartmentsByIds = createAsyncThunk<
-  PaginatedResponse<DepartmentDTO> | undefined,
-  number[],
-  { rejectValue: ErrorResponseDTO }
+  PaginatedResponse<Department> | undefined,
+  Department['id'][],
+  { rejectValue: ProblemDetailsModel }
 >('department/fetchDepartmentsByIds', async (ids, { rejectWithValue }) => {
-  try {
-    const queryParams = prepareCommaSeparatedQueryParamsByKey('id', ids);
-    const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
+  const query = new DepartmentQueryRequestModel(ids, '', null, null);
+  const result = await departmentClient.getDepartmentsAsync(query, new AbortController().signal);
 
-    return data;
-  } catch (error) {
-    return rejectWithValue({
-      ...(error as ErrorResponseDTO),
-      title: MESSAGES.error.departments.notFound,
-    });
-  }
+  return foldClientResult(
+    result,
+    (response) => mapPaginatedResponse(response, mapDepartmentRetrievalModel),
+    (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.departments.notFound })) as never
+  );
 });
 
 export const fetchDepartmentById = createAsyncThunk<
   Department,
   {
-    id: string;
+    id: string | Department['id'];
     skipState?: boolean;
     shouldFetchParent?: boolean;
     shouldFetchDepartmentManager?: boolean;
   },
-  { rejectValue: ErrorResponseDTO }
+  { rejectValue: ProblemDetailsModel }
 >(
   'department/fetchDepartmentById',
   async ({ id, shouldFetchParent = true, shouldFetchDepartmentManager = true }, { dispatch, rejectWithValue }): Promise<Department> => {
     try {
-      const { data } = await axios.get<DepartmentDTO>(`${ENDPOINTS.departments}/${id}`);
+      const result = await departmentClient.getDepartmentAsync(BigInt(id), new AbortController().signal);
+      return foldClientResult(
+        result,
+        async (data) => {
+          const department = mapDepartmentRetrievalModel(data);
+          let parentDepartment: Department | undefined;
+          let manager: Employee | undefined;
 
-      let parentDepartment: Department | undefined;
-      let manager: EmployeeDTO | undefined;
+          if (department.parentDepartmentId && shouldFetchParent) {
+            parentDepartment = await fetchParentDepartment(dispatch, department.parentDepartmentId);
+          }
 
-      if (data.parentDepartmentId && shouldFetchParent) {
-        parentDepartment = await fetchParentDepartment(dispatch, String(data.parentDepartmentId));
-      }
+          if (department.managerId && shouldFetchDepartmentManager) {
+            manager = await dispatch(
+              fetchEmployeeById({
+                id: department.managerId,
+                skipState: true,
+                shouldFetchBranch: false,
+                shouldFetchDepartment: false,
+                shouldFetchEmployeeManager: false,
+              })
+            ).unwrap();
+          }
 
-      if (data.managerId && shouldFetchDepartmentManager) {
-        manager = await dispatch(
-          fetchEmployeeById({
-            id: String(data.managerId),
-            skipState: true,
-            shouldFetchBranch: false,
-            shouldFetchDepartment: false,
-            shouldFetchEmployeeManager: false,
-          })
-        ).unwrap();
-      }
-
-      return mapDepartment(data, parentDepartment, manager);
+          return mapDepartment(department, parentDepartment, manager);
+        },
+        (problem) => rejectWithValue(problem) as never
+      );
     } catch (error) {
-      return rejectWithValue(error as ErrorResponseDTO) as unknown as Department;
+      return rejectWithValue(error as ProblemDetailsModel) as never;
     }
   }
 );
 
-export const createDepartment = createAsyncThunk<void, EntityInput<DepartmentDTO>, { rejectValue: ErrorResponse<FieldValues> }>(
+export const createDepartment = createAsyncThunk<void, EntityInput<Department>, { rejectValue: ErrorResponse<FieldValues> }>(
   'department/createDepartment',
   async (department, { dispatch, rejectWithValue }) => {
-    try {
-      await axios.post<void>(ENDPOINTS.departments, department);
+    const modModel = new DepartmentModificationModel(
+      department.name,
+      nullableBigInt(department.parentDepartmentId),
+      nullableBigInt(department.managerId)
+    );
 
-      dispatch(resetParentDepartments());
+    return foldClientUnitResult(
+      await departmentClient.createDepartmentAsync(modModel, new AbortController().signal),
+      () => {
+        dispatch(resetParentDepartments());
 
-      dispatch(setSuccess(MESSAGES.success.departments.create));
-    } catch (error) {
-      dispatch(
-        setError({
-          ...(error as ErrorResponseDTO),
-          title: MESSAGES.error.departments.create,
-        })
-      );
+        dispatch(setSuccess(MESSAGES.success.departments.create));
+      },
+      (problem) => {
+        dispatch(setError(createProblemDetails(problem, { Title: MESSAGES.error.departments.create })));
 
-      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+        const mappedError = mapError(problem) as ErrorResponse<FieldValues>;
 
-      return rejectWithValue(mappedError);
-    }
+        return rejectWithValue(mappedError) as never;
+      }
+    );
   }
 );
 
-export const editDepartment = createAsyncThunk<void, [string, EntityInput<DepartmentDTO>], { rejectValue: ErrorResponse<FieldValues> }>(
+export const editDepartment = createAsyncThunk<void, [string, EntityInput<Department>], { rejectValue: ErrorResponse<FieldValues> }>(
   'department/editDepartment',
   async ([id, department], { dispatch, rejectWithValue }) => {
-    try {
-      await axios.put<void>(`${ENDPOINTS.departments}/${id}`, department);
+    const modModel = new DepartmentModificationModel(
+      department.name,
+      nullableBigInt(department.parentDepartmentId),
+      nullableBigInt(department.managerId)
+    );
 
-      dispatch(resetParentDepartments());
+    return foldClientUnitResult(
+      await departmentClient.updateDepartmentAsync(BigInt(id), modModel, new AbortController().signal),
+      () => {
+        dispatch(resetParentDepartments());
 
-      dispatch(setSuccess(MESSAGES.success.departments.update));
-    } catch (error) {
-      dispatch(
-        setError({
-          ...(error as ErrorResponseDTO),
-          title: MESSAGES.error.departments.update,
-        })
-      );
+        dispatch(setSuccess(MESSAGES.success.departments.update));
+      },
+      (problem) => {
+        dispatch(setError(createProblemDetails(problem, { Title: MESSAGES.error.departments.update })));
 
-      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+        const mappedError = mapError(problem) as ErrorResponse<FieldValues>;
 
-      return rejectWithValue(mappedError);
-    }
+        return rejectWithValue(mappedError) as never;
+      }
+    );
   }
 );
 
-export const deleteDepartment = createAsyncThunk<void, DepartmentDTO['id'], { state: RootState; rejectValue: ErrorResponseDTO }>(
+export const deleteDepartment = createAsyncThunk<void, Department['id'], { state: RootState; rejectValue: ProblemDetailsModel }>(
   'department/deleteDepartment',
   async (id, { dispatch, rejectWithValue }) => {
-    try {
-      await axios.delete<void>(`${ENDPOINTS.departments}/${id}`);
+    return foldClientUnitResult(
+      await departmentClient.deleteDepartmentAsync(id, new AbortController().signal),
+      () => {
+        dispatch(resetDepartmentsFetchStatus());
+        dispatch(resetParentDepartments());
+        dispatch(resetCompanyDatasourceTotalsFetchStatus());
+        dispatch(setSuccess(MESSAGES.success.departments.delete));
+      },
+      (problem) => {
+        dispatch(setError(createProblemDetails(problem, { Title: MESSAGES.error.departments.delete })));
 
-      dispatch(resetDepartmentsFetchStatus());
-      dispatch(resetParentDepartments());
-      dispatch(resetCompanyDatasourceTotalsFetchStatus());
-      dispatch(setSuccess(MESSAGES.success.departments.delete));
-    } catch (error) {
-      dispatch(
-        setError({
-          ...(error as ErrorResponseDTO),
-          title: MESSAGES.error.departments.delete,
-        })
-      );
-
-      return rejectWithValue(error as ErrorResponseDTO);
-    }
+        return rejectWithValue(problem) as never;
+      }
+    );
   }
 );

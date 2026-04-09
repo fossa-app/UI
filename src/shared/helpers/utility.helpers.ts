@@ -69,6 +69,8 @@ export const calculateUsagePercent = (current?: number, max?: number): number =>
   return Math.round((current / max) * 100);
 };
 
-export const getEntityIdsByField = <T>(items: T[], field: keyof T = 'id' as keyof T): number[] => {
-  return Array.from(new Set(items.map((item) => item[field] as number).filter((fieldValue) => fieldValue)));
+export const getEntityIdsByField = <T, K extends keyof T = keyof T>(items: T[], field: K = 'id' as K): NonNullable<T[K]>[] => {
+  return Array.from(
+    new Set(items.map((item) => item[field]).filter((fieldValue) => fieldValue !== null && fieldValue !== undefined))
+  ) as NonNullable<T[K]>[];
 };
