@@ -3,16 +3,17 @@ import { FieldValues } from 'react-hook-form';
 import { RootState } from 'store';
 import { fetchBranchesTotal, fetchDepartmentsTotal, fetchEmployeesTotal } from 'store/thunks';
 import { setError, setSuccess } from 'store/features';
-import axios from 'shared/configs/axios';
 import { Company, CompanyDTO, EntityInput, ErrorResponse, ErrorResponseDTO } from 'shared/types';
 import { mapCompany, mapError } from 'shared/helpers';
-import { MESSAGES, ENDPOINTS } from 'shared/constants';
+import { MESSAGES } from 'shared/constants';
+import { companyClient } from 'shared/configs/BridgeClients';
+import { CompanyModificationModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 
 export const fetchCompany = createAsyncThunk<Company | undefined, boolean | undefined, { rejectValue: ErrorResponseDTO }>(
   'company/fetchCompany',
   async (_, { getState, rejectWithValue }) => {
     try {
-      const { data } = await axios.get<CompanyDTO>(ENDPOINTS.company);
+      const data = (await companyClient.GetCompanyAsync(new AbortController().signal)) as unknown as CompanyDTO;
 
       if (data) {
         const state = getState() as RootState;
@@ -33,7 +34,8 @@ export const createCompany = createAsyncThunk<void, CompanyDTO, { rejectValue: E
   'company/createCompany',
   async (company, { dispatch, rejectWithValue }) => {
     try {
-      await axios.post<CompanyDTO>(ENDPOINTS.company, company);
+      const modModel = new CompanyModificationModel(company.name, company.countryCode || '');
+      await companyClient.CreateCompanyAsync(modModel, new AbortController().signal);
       await dispatch(fetchCompany(false)).unwrap();
 
       dispatch(setSuccess(MESSAGES.success.company.create));
@@ -56,7 +58,8 @@ export const editCompany = createAsyncThunk<void, EntityInput<CompanyDTO>, { rej
   'company/editCompany',
   async (company, { dispatch, rejectWithValue }) => {
     try {
-      await axios.put<CompanyDTO>(ENDPOINTS.company, company);
+      const modModel = new CompanyModificationModel(company.name, company.countryCode || '');
+      await companyClient.UpdateCompanyAsync(modModel, new AbortController().signal);
 
       dispatch(setSuccess(MESSAGES.success.company.update));
     } catch (error) {
@@ -78,7 +81,7 @@ export const deleteCompany = createAsyncThunk<void, void, { rejectValue: ErrorRe
   'company/deleteCompany',
   async (_, { dispatch, rejectWithValue }) => {
     try {
-      await axios.delete<void>(ENDPOINTS.company);
+      await companyClient.DeleteCompanyAsync(new AbortController().signal);
 
       dispatch(setSuccess(MESSAGES.success.company.delete));
 

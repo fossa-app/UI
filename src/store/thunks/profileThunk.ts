@@ -2,16 +2,17 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
 import { RootState } from 'store';
 import { setError, setSuccess, resetCompanyDatasourceTotalsFetchStatus } from 'store/features';
-import axios from 'shared/configs/axios';
 import { Employee, EmployeeDTO, EntityInput, ErrorResponse, ErrorResponseDTO } from 'shared/types';
-import { MESSAGES, ENDPOINTS } from 'shared/constants';
+import { MESSAGES } from 'shared/constants';
+import { employeeClient } from 'shared/configs/BridgeClients';
+import { EmployeeModificationModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 import { mapEmployee, mapError } from 'shared/helpers';
 
 export const fetchProfile = createAsyncThunk<Employee | undefined, void, { rejectValue: ErrorResponseDTO }>(
   'profile/fetchProfile',
   async (_, { getState, rejectWithValue }) => {
     try {
-      const { data } = await axios.get<EmployeeDTO>(ENDPOINTS.employee);
+      const data = (await employeeClient.GetCurrentEmployeeAsync(new AbortController().signal)) as unknown as EmployeeDTO;
 
       if (data) {
         const state = getState() as RootState;
@@ -34,7 +35,8 @@ export const createProfile = createAsyncThunk<
   { state: RootState; rejectValue: ErrorResponse<FieldValues> }
 >('profile/createProfile', async (employee, { dispatch, rejectWithValue }) => {
   try {
-    await axios.post<void>(ENDPOINTS.employee, employee);
+    const modModel = new EmployeeModificationModel(employee.firstName, employee.lastName, employee.fullName || '');
+    await employeeClient.CreateEmployeeAsync(modModel, new AbortController().signal);
     await dispatch(fetchProfile()).unwrap();
 
     dispatch(setSuccess(MESSAGES.success.employee.create));
@@ -56,7 +58,8 @@ export const editProfile = createAsyncThunk<void, EntityInput<EmployeeDTO>, { re
   'profile/editProfile',
   async (employee, { dispatch, rejectWithValue }) => {
     try {
-      await axios.put<void>(ENDPOINTS.employee, employee);
+      const modModel = new EmployeeModificationModel(employee.firstName, employee.lastName, employee.fullName || '');
+      await employeeClient.UpdateCurrentEmployeeAsync(modModel, new AbortController().signal);
 
       dispatch(setSuccess(MESSAGES.success.employee.updateProfile));
     } catch (error) {
@@ -78,7 +81,7 @@ export const deleteProfile = createAsyncThunk<void, void, { rejectValue: ErrorRe
   'profile/deleteProfile',
   async (_, { dispatch, rejectWithValue }) => {
     try {
-      await axios.delete<void>(ENDPOINTS.employee);
+      await employeeClient.DeleteCurrentEmployeeAsync(new AbortController().signal);
 
       dispatch(resetCompanyDatasourceTotalsFetchStatus());
       dispatch(setSuccess(MESSAGES.success.employee.deleteProfile));

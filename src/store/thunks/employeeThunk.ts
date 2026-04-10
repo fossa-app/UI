@@ -3,7 +3,6 @@ import { FieldValues } from 'react-hook-form';
 import { RootState } from 'store';
 import { fetchBranchById, fetchBranchesByIds, fetchDepartmentById, fetchDepartmentsByIds } from 'store/thunks';
 import { resetOrgChartEmployeesFetchStatus, setError, setSuccess } from 'store/features';
-import axios from 'shared/configs/axios';
 import {
   Branch,
   BranchDTO,
@@ -16,15 +15,10 @@ import {
   PaginatedResponse,
   PaginationParams,
 } from 'shared/types';
-import { MESSAGES, ENDPOINTS } from 'shared/constants';
-import {
-  mapEmployee,
-  mapEmployees,
-  prepareQueryParams,
-  mapError,
-  prepareCommaSeparatedQueryParamsByKey,
-  getEntityIdsByField,
-} from 'shared/helpers';
+import { MESSAGES } from 'shared/constants';
+import { employeeClient } from 'shared/configs/BridgeClients';
+import { EmployeeQueryRequestModel, EmployeeManagementModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
+import { mapEmployee, mapEmployees, mapError, getEntityIdsByField } from 'shared/helpers';
 
 const fetchManager = async (dispatch: ThunkDispatch<unknown, unknown, UnknownAction>, id: string) => {
   return dispatch(
@@ -54,8 +48,11 @@ export const fetchEmployees = createAsyncThunk<
     { dispatch, rejectWithValue }
   ) => {
     try {
-      const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
-      const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
+      const query = new EmployeeQueryRequestModel([], search || '', pageNumber || null, pageSize || null, null, null);
+      const data = (await employeeClient.GetEmployeesAsync(
+        query,
+        new AbortController().signal
+      )) as unknown as PaginatedResponse<EmployeeDTO>;
 
       if (data) {
         const assignedBranchIds = getEntityIdsByField(data.items, 'assignedBranchId');
@@ -102,8 +99,8 @@ export const fetchManagers = createAsyncThunk<
   { state: RootState; rejectValue: ErrorResponseDTO }
 >('employee/fetchManagers', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
   try {
-    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
-    const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
+    const query = new EmployeeQueryRequestModel([], search || '', pageNumber || null, pageSize || null, null, null);
+    const data = (await employeeClient.GetEmployeesAsync(query, new AbortController().signal)) as unknown as PaginatedResponse<EmployeeDTO>;
 
     return data;
   } catch (error) {
@@ -121,9 +118,18 @@ export const fetchOrgChartEmployees = createAsyncThunk<
 >('employee/fetchOrgChartEmployees', async ({ pageNumber, pageSize }, { rejectWithValue }) => {
   try {
     const fetchSubordinates = async (reportsTo?: EmployeeDTO): Promise<EmployeeDTO[]> => {
-      const queryParams = { pageNumber, pageSize, reportsToId: reportsTo?.id, topLevelOnly: !reportsTo };
-      const subordinatesQuery = prepareQueryParams(queryParams);
-      const { data: subordinateData } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${subordinatesQuery}`);
+      const query = new EmployeeQueryRequestModel(
+        [],
+        '',
+        pageNumber || null,
+        pageSize || null,
+        reportsTo?.id ? BigInt(reportsTo.id) : null,
+        !reportsTo
+      );
+      const subordinateData = (await employeeClient.GetEmployeesAsync(
+        query,
+        new AbortController().signal
+      )) as unknown as PaginatedResponse<EmployeeDTO>;
 
       return subordinateData.items.concat((await Promise.all(subordinateData.items.map(fetchSubordinates))).flat());
     };
@@ -143,8 +149,11 @@ export const fetchEmployeesTotal = createAsyncThunk<PaginatedResponse<EmployeeDT
   'employee/fetchEmployeesTotal',
   async (_, { rejectWithValue }) => {
     try {
-      const queryParams = prepareQueryParams({ pageNumber: 1, pageSize: 1 });
-      const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
+      const query = new EmployeeQueryRequestModel([], '', 1, 1, null, null);
+      const data = (await employeeClient.GetEmployeesAsync(
+        query,
+        new AbortController().signal
+      )) as unknown as PaginatedResponse<EmployeeDTO>;
 
       return data;
     } catch (error) {
@@ -174,7 +183,7 @@ export const fetchEmployeeById = createAsyncThunk<
     { dispatch, rejectWithValue }
   ) => {
     try {
-      const { data } = await axios.get<EmployeeDTO>(`${ENDPOINTS.employees}/${id}`);
+      const data = (await employeeClient.GetEmployeeAsync(BigInt(id), new AbortController().signal)) as unknown as EmployeeDTO;
       let branch: Branch | undefined;
       let department: Department | undefined;
       let manager: Employee | undefined;
@@ -206,8 +215,15 @@ export const fetchEmployeesByIds = createAsyncThunk<
   { rejectValue: ErrorResponseDTO }
 >('employee/fetchEmployeesByIds', async (ids, { rejectWithValue }) => {
   try {
-    const queryParams = prepareCommaSeparatedQueryParamsByKey('id', ids);
-    const { data } = await axios.get<PaginatedResponse<EmployeeDTO>>(`${ENDPOINTS.employees}?${queryParams}`);
+    let idList: bigint[] = [];
+    try {
+      idList = ids.map((id) => BigInt(id));
+    } catch {
+      // Ignored
+    }
+
+    const query = new EmployeeQueryRequestModel(idList, '', null, null, null, null);
+    const data = (await employeeClient.GetEmployeesAsync(query, new AbortController().signal)) as unknown as PaginatedResponse<EmployeeDTO>;
 
     return data;
   } catch (error) {
@@ -224,7 +240,15 @@ export const editEmployee = createAsyncThunk<
   { rejectValue: ErrorResponse<FieldValues> }
 >('employee/editEmployee', async ([id, employee], { dispatch, rejectWithValue }) => {
   try {
-    await axios.put<void>(`${ENDPOINTS.employees}/${id}`, employee);
+    const curEmp = (await employeeClient.GetEmployeeAsync(BigInt(id), new AbortController().signal)) as unknown as EmployeeDTO;
+
+    const modModel = new EmployeeManagementModel(
+      employee.assignedBranchId ? BigInt(employee.assignedBranchId) : null,
+      curEmp.assignedDepartmentId ? BigInt(curEmp.assignedDepartmentId) : null,
+      curEmp.reportsToId ? BigInt(curEmp.reportsToId) : null,
+      curEmp.jobTitle || ''
+    );
+    await employeeClient.ManageEmployeeAsync(BigInt(id), modModel, new AbortController().signal);
 
     dispatch(resetOrgChartEmployeesFetchStatus());
     dispatch(setSuccess(MESSAGES.success.employee.updateEmployee));

@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import { fetchClient } from 'store/thunks';
-import { Client, ErrorResponseDTO } from 'shared/types';
+import { ErrorResponseDTO } from 'shared/types';
+import { IdentityClientRetrievalModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 
 interface IdentityState {
-  client: StateEntity<Client | undefined>;
+  client: StateEntity<IdentityClientRetrievalModel | undefined>;
 }
 
 const initialState: IdentityState = {
@@ -28,7 +29,7 @@ const identitySlice = createSlice({
         state.client.fetchStatus = 'failed';
         state.client.fetchError = action.payload;
       })
-      .addCase(fetchClient.fulfilled, (state, action: PayloadAction<Client | undefined>) => {
+      .addCase(fetchClient.fulfilled, (state, action: PayloadAction<IdentityClientRetrievalModel | undefined>) => {
         state.client.item = action.payload;
         state.client.fetchStatus = 'succeeded';
       });

@@ -9,7 +9,6 @@ import {
   resetDepartmentsFetchStatus,
 } from 'store/features';
 import { fetchEmployeeById, fetchEmployeesByIds } from 'store/thunks';
-import axios from 'shared/configs/axios';
 import {
   ErrorResponseDTO,
   ErrorResponse,
@@ -20,15 +19,10 @@ import {
   EmployeeDTO,
   EntityInput,
 } from 'shared/types';
-import { MESSAGES, ENDPOINTS } from 'shared/constants';
-import {
-  prepareQueryParams,
-  mapDepartments,
-  mapError,
-  mapDepartment,
-  prepareCommaSeparatedQueryParamsByKey,
-  getEntityIdsByField,
-} from 'shared/helpers';
+import { MESSAGES } from 'shared/constants';
+import { departmentClient } from 'shared/configs/BridgeClients';
+import { DepartmentQueryRequestModel, DepartmentModificationModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
+import { mapDepartments, mapError, mapDepartment, getEntityIdsByField } from 'shared/helpers';
 
 const fetchParentDepartment = async (dispatch: ThunkDispatch<unknown, unknown, UnknownAction>, id: string) => {
   return dispatch(
@@ -47,8 +41,11 @@ export const fetchDepartmentsTotal = createAsyncThunk<
   { rejectValue: ErrorResponseDTO }
 >('department/fetchDepartmentsTotal', async (_, { rejectWithValue }) => {
   try {
-    const queryParams = prepareQueryParams({ pageNumber: 1, pageSize: 1 });
-    const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
+    const query = new DepartmentQueryRequestModel([], '', 1, 1);
+    const data = (await departmentClient.GetDepartmentsAsync(
+      query,
+      new AbortController().signal
+    )) as unknown as PaginatedResponse<DepartmentDTO>;
 
     return data;
   } catch (error) {
@@ -65,8 +62,11 @@ export const fetchDepartments = createAsyncThunk<
   { rejectValue: ErrorResponseDTO }
 >('department/fetchDepartments', async ({ pageNumber, pageSize, search, shouldFetchEmployees = true }, { dispatch, rejectWithValue }) => {
   try {
-    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
-    const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
+    const query = new DepartmentQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
+    const data = (await departmentClient.GetDepartmentsAsync(
+      query,
+      new AbortController().signal
+    )) as unknown as PaginatedResponse<DepartmentDTO>;
 
     if (data) {
       const departmentsManagerIds = getEntityIdsByField(data.items, 'managerId');
@@ -101,8 +101,11 @@ export const fetchSearchedDepartments = createAsyncThunk<
   { rejectValue: ErrorResponseDTO }
 >('department/fetchSearchedDepartments', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
   try {
-    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
-    const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
+    const query = new DepartmentQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
+    const data = (await departmentClient.GetDepartmentsAsync(
+      query,
+      new AbortController().signal
+    )) as unknown as PaginatedResponse<DepartmentDTO>;
 
     return data;
   } catch (error) {
@@ -119,8 +122,11 @@ export const fetchParentDepartments = createAsyncThunk<
   { state: RootState; rejectValue: ErrorResponseDTO }
 >('department/fetchParentDepartments', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
   try {
-    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
-    const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
+    const query = new DepartmentQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
+    const data = (await departmentClient.GetDepartmentsAsync(
+      query,
+      new AbortController().signal
+    )) as unknown as PaginatedResponse<DepartmentDTO>;
 
     return data;
   } catch (error) {
@@ -137,8 +143,11 @@ export const fetchAssignedDepartments = createAsyncThunk<
   { state: RootState; rejectValue: ErrorResponseDTO }
 >('department/fetchAssignedDepartments', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
   try {
-    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
-    const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
+    const query = new DepartmentQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
+    const data = (await departmentClient.GetDepartmentsAsync(
+      query,
+      new AbortController().signal
+    )) as unknown as PaginatedResponse<DepartmentDTO>;
 
     return data;
   } catch (error) {
@@ -155,8 +164,18 @@ export const fetchDepartmentsByIds = createAsyncThunk<
   { rejectValue: ErrorResponseDTO }
 >('department/fetchDepartmentsByIds', async (ids, { rejectWithValue }) => {
   try {
-    const queryParams = prepareCommaSeparatedQueryParamsByKey('id', ids);
-    const { data } = await axios.get<PaginatedResponse<DepartmentDTO>>(`${ENDPOINTS.departments}?${queryParams}`);
+    let idList: bigint[] = [];
+    try {
+      idList = ids.map((id) => BigInt(id));
+    } catch {
+      // Ignored
+    }
+
+    const query = new DepartmentQueryRequestModel(idList, '', null, null);
+    const data = (await departmentClient.GetDepartmentsAsync(
+      query,
+      new AbortController().signal
+    )) as unknown as PaginatedResponse<DepartmentDTO>;
 
     return data;
   } catch (error) {
@@ -180,7 +199,7 @@ export const fetchDepartmentById = createAsyncThunk<
   'department/fetchDepartmentById',
   async ({ id, shouldFetchParent = true, shouldFetchDepartmentManager = true }, { dispatch, rejectWithValue }): Promise<Department> => {
     try {
-      const { data } = await axios.get<DepartmentDTO>(`${ENDPOINTS.departments}/${id}`);
+      const data = (await departmentClient.GetDepartmentAsync(BigInt(id), new AbortController().signal)) as unknown as DepartmentDTO;
 
       let parentDepartment: Department | undefined;
       let manager: EmployeeDTO | undefined;
@@ -212,7 +231,12 @@ export const createDepartment = createAsyncThunk<void, EntityInput<DepartmentDTO
   'department/createDepartment',
   async (department, { dispatch, rejectWithValue }) => {
     try {
-      await axios.post<void>(ENDPOINTS.departments, department);
+      const modModel = new DepartmentModificationModel(
+        department.name,
+        department.parentDepartmentId ? BigInt(department.parentDepartmentId) : null,
+        department.managerId ? BigInt(department.managerId) : null
+      );
+      await departmentClient.CreateDepartmentAsync(modModel, new AbortController().signal);
 
       dispatch(resetParentDepartments());
 
@@ -236,7 +260,12 @@ export const editDepartment = createAsyncThunk<void, [string, EntityInput<Depart
   'department/editDepartment',
   async ([id, department], { dispatch, rejectWithValue }) => {
     try {
-      await axios.put<void>(`${ENDPOINTS.departments}/${id}`, department);
+      const modModel = new DepartmentModificationModel(
+        department.name,
+        department.parentDepartmentId ? BigInt(department.parentDepartmentId) : null,
+        department.managerId ? BigInt(department.managerId) : null
+      );
+      await departmentClient.UpdateDepartmentAsync(BigInt(id), modModel, new AbortController().signal);
 
       dispatch(resetParentDepartments());
 
@@ -260,7 +289,7 @@ export const deleteDepartment = createAsyncThunk<void, DepartmentDTO['id'], { st
   'department/deleteDepartment',
   async (id, { dispatch, rejectWithValue }) => {
     try {
-      await axios.delete<void>(`${ENDPOINTS.departments}/${id}`);
+      await departmentClient.DeleteDepartmentAsync(BigInt(id), new AbortController().signal);
 
       dispatch(resetDepartmentsFetchStatus());
       dispatch(resetParentDepartments());

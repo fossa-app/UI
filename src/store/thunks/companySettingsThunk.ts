@@ -1,16 +1,17 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
 import { setError, setSuccess } from 'store/features';
-import axios from 'shared/configs/axios';
 import { CompanySettings, CompanySettingsDTO, EntityInput, ErrorResponse, ErrorResponseDTO } from 'shared/types';
-import { MESSAGES, ENDPOINTS, COMPANY_SETTINGS_KEY } from 'shared/constants';
+import { MESSAGES, COMPANY_SETTINGS_KEY } from 'shared/constants';
 import { mapError, saveToLocalStorage, removeFromLocalStorage } from 'shared/helpers';
+import { companySettingsClient } from 'shared/configs/BridgeClients';
+import { CompanySettingsModificationModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 
 export const fetchCompanySettings = createAsyncThunk<CompanySettings, void, { rejectValue: ErrorResponseDTO }>(
   'companySettings/fetchCompanySettings',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get<CompanySettingsDTO>(ENDPOINTS.companySettings);
+      const data = (await companySettingsClient.GetCompanySettingsAsync(new AbortController().signal)) as unknown as CompanySettingsDTO;
 
       saveToLocalStorage(COMPANY_SETTINGS_KEY, data);
 
@@ -28,7 +29,8 @@ export const createCompanySettings = createAsyncThunk<void, EntityInput<CompanyS
   'companySettings/createCompanySettings',
   async (companySettings, { dispatch, rejectWithValue }) => {
     try {
-      await axios.post<CompanySettingsDTO>(ENDPOINTS.companySettings, companySettings);
+      const modModel = new CompanySettingsModificationModel(companySettings.colorSchemeId || '');
+      await companySettingsClient.CreateCompanySettingsAsync(modModel, new AbortController().signal);
       saveToLocalStorage(COMPANY_SETTINGS_KEY, companySettings);
       await dispatch(fetchCompanySettings()).unwrap();
 
@@ -52,7 +54,8 @@ export const editCompanySettings = createAsyncThunk<void, EntityInput<CompanySet
   'companySettings/editCompanySettings',
   async (companySettings, { dispatch, rejectWithValue }) => {
     try {
-      await axios.put<CompanySettingsDTO>(ENDPOINTS.companySettings, companySettings);
+      const modModel = new CompanySettingsModificationModel(companySettings.colorSchemeId || '');
+      await companySettingsClient.UpdateCompanySettingsAsync(modModel, new AbortController().signal);
 
       await dispatch(fetchCompanySettings()).unwrap();
 
@@ -77,7 +80,7 @@ export const deleteCompanySettings = createAsyncThunk<void, void, { rejectValue:
   'companySettings/deleteCompanySettings',
   async (_, { dispatch, rejectWithValue }) => {
     try {
-      await axios.delete<void>(ENDPOINTS.companySettings);
+      await companySettingsClient.DeleteCompanySettingsAsync(new AbortController().signal);
 
       removeFromLocalStorage(COMPANY_SETTINGS_KEY);
       dispatch(setSuccess(MESSAGES.success.companySettings.delete));
