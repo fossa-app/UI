@@ -16,7 +16,7 @@ import {
   ROUTES,
   USER_PERMISSION_GENERAL_ERROR,
 } from 'shared/constants';
-import { Company, CompanyDTO, EntityInput } from 'shared/types';
+import { Company, EntityInput } from 'shared/types';
 import { deepCopyObject, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
 import { useOnFormSubmitEffect } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
@@ -37,7 +37,7 @@ const CompanyEditPage: React.FC = () => {
   const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_ERROR;
   const navigateToViewCompany = () => navigate(ROUTES.viewCompany.path);
 
-  const handleSubmit = (data: EntityInput<CompanyDTO>) => {
+  const handleSubmit = (data: EntityInput<Company>) => {
     dispatch(editCompany(data));
     setFormSubmitted(true);
   };

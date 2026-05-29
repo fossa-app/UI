@@ -3,7 +3,7 @@ import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, StateEntity } from 'store';
 import { fetchCompanyLicense, fetchSystemLicense, uploadCompanyLicense } from 'store/thunks';
-import { CompanyLicense, ErrorResponse, ErrorResponseDTO, SystemLicense } from 'shared/types';
+import { CompanyLicense, ErrorResponse, ValidationProblemDetails, SystemLicense } from 'shared/types';
 
 interface LicenseState {
   system: StateEntity<SystemLicense | undefined>;
@@ -31,7 +31,7 @@ const licenseSlice = createSlice({
       .addCase(fetchSystemLicense.pending, (state) => {
         state.system.fetchStatus = 'loading';
       })
-      .addCase(fetchSystemLicense.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchSystemLicense.rejected, (state, action: PayloadAction<ValidationProblemDetails | undefined>) => {
         state.system.item = undefined;
         state.system.fetchStatus = 'failed';
         state.system.fetchError = action.payload;
@@ -43,7 +43,7 @@ const licenseSlice = createSlice({
       .addCase(fetchCompanyLicense.pending, (state) => {
         state.company.fetchStatus = 'loading';
       })
-      .addCase(fetchCompanyLicense.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchCompanyLicense.rejected, (state, action: PayloadAction<ValidationProblemDetails | undefined>) => {
         state.company.item = undefined;
         state.company.fetchStatus = 'failed';
         state.company.fetchError = action.payload;

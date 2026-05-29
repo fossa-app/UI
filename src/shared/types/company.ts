@@ -1,13 +1,10 @@
 import { Country, FlattenField } from './common';
 import { CompanyLicense } from './license';
 
-export interface CompanyDTO {
+export interface Company {
   id: number;
   name: string;
   countryCode: Country['code'];
-}
-
-export interface Company extends CompanyDTO {
   countryName?: Country['name'];
 }
 

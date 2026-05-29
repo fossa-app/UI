@@ -9,33 +9,43 @@ import {
   resetBranchesFetchStatus,
   resetCompanyDatasourceTotalsFetchStatus,
 } from 'store/features';
-import axios from 'shared/configs/axios';
 import {
   Branch,
-  BranchDTO,
-  ErrorResponseDTO,
+  ValidationProblemDetails,
   ErrorResponse,
   PaginatedResponse,
   PaginationParams,
   GeoAddress,
   EntityInput,
 } from 'shared/types';
-import { MESSAGES, ENDPOINTS } from 'shared/constants';
-import {
-  mapBranch,
-  mapBranches,
-  mapError,
-  prepareQueryParams,
-  prepareCommaSeparatedQueryParamsByKey,
-  getFullAddress,
-} from 'shared/helpers';
+import { MESSAGES } from 'shared/constants';
+import { mapBranch, mapBranches, mapError, getFullAddress } from 'shared/helpers';
+import { branchClient } from 'shared/configs/BridgeClients';
+import { unwrapBridgePagingResponse, unwrapBridgeUnitResult, unwrapBridgeValue } from 'shared/configs/BridgeResponses';
+import { BranchQueryRequestModel, BranchModificationModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
+import { AddressModel } from '@fossa-app/bridge/Models/ApiModels/SharedModels';
 
-export const fetchBranchesTotal = createAsyncThunk<PaginatedResponse<BranchDTO> | undefined, void, { rejectValue: ErrorResponseDTO }>(
+const toBranchModificationAddress = (address: EntityInput<Branch>['address']): AddressModel | null => {
+  if (address === null || address === undefined) {
+    return null;
+  }
+
+  return new AddressModel(
+    address.line1 ?? null,
+    address.line2 ?? null,
+    address.city ?? null,
+    address.subdivision ?? null,
+    address.postalCode ?? null,
+    address.countryCode ?? null
+  );
+};
+
+export const fetchBranchesTotal = createAsyncThunk<PaginatedResponse<Branch> | undefined, void, { rejectValue: ValidationProblemDetails }>(
   'branch/fetchBranchesTotal',
   async (_, { rejectWithValue }) => {
     try {
-      const queryParams = prepareQueryParams({ pageNumber: 1, pageSize: 1 });
-      const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?${queryParams}`);
+      const query = new BranchQueryRequestModel([], '', 1, 1);
+      const data = unwrapBridgePagingResponse<Branch>(await branchClient.GetBranchesAsync(query, new AbortController().signal));
 
       if (!data.items.length) {
         return rejectWithValue({
@@ -47,7 +57,7 @@ export const fetchBranchesTotal = createAsyncThunk<PaginatedResponse<BranchDTO> 
       return data;
     } catch (error) {
       return rejectWithValue({
-        ...(error as ErrorResponseDTO),
+        ...(error as ValidationProblemDetails),
         title: MESSAGES.error.branches.notFound,
       });
     }
@@ -57,11 +67,11 @@ export const fetchBranchesTotal = createAsyncThunk<PaginatedResponse<BranchDTO> 
 export const fetchBranches = createAsyncThunk<
   PaginatedResponse<Branch> | undefined,
   Partial<PaginationParams>,
-  { rejectValue: ErrorResponseDTO }
+  { rejectValue: ValidationProblemDetails }
 >('branch/fetchBranches', async ({ pageNumber, pageSize, search }, { getState, rejectWithValue }) => {
   try {
-    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
-    const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?${queryParams}`);
+    const query = new BranchQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
+    const data = unwrapBridgePagingResponse<Branch>(await branchClient.GetBranchesAsync(query, new AbortController().signal));
 
     if (!data.items.length) {
       return rejectWithValue({
@@ -81,54 +91,62 @@ export const fetchBranches = createAsyncThunk<
     };
   } catch (error) {
     return rejectWithValue({
-      ...(error as ErrorResponseDTO),
+      ...(error as ValidationProblemDetails),
       title: MESSAGES.error.branches.notFound,
     });
   }
 });
 
 export const fetchAssignedBranches = createAsyncThunk<
-  PaginatedResponse<BranchDTO> | undefined,
+  PaginatedResponse<Branch> | undefined,
   Partial<PaginationParams>,
-  { state: RootState; rejectValue: ErrorResponseDTO }
+  { state: RootState; rejectValue: ValidationProblemDetails }
 >('branch/fetchAssignedBranches', async ({ pageNumber, pageSize, search }, { rejectWithValue }) => {
   try {
-    const queryParams = prepareQueryParams({ pageNumber, pageSize, search });
-    const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?${queryParams}`);
+    const query = new BranchQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
+    const data = unwrapBridgePagingResponse<Branch>(await branchClient.GetBranchesAsync(query, new AbortController().signal));
 
     return data;
   } catch (error) {
     return rejectWithValue({
-      ...(error as ErrorResponseDTO),
+      ...(error as ValidationProblemDetails),
       title: MESSAGES.error.branches.notFound,
     });
   }
 });
 
-export const fetchBranchesByIds = createAsyncThunk<PaginatedResponse<BranchDTO> | undefined, number[], { rejectValue: ErrorResponseDTO }>(
-  'branch/fetchBranchesByIds',
-  async (ids, { rejectWithValue }) => {
+export const fetchBranchesByIds = createAsyncThunk<
+  PaginatedResponse<Branch> | undefined,
+  number[],
+  { rejectValue: ValidationProblemDetails }
+>('branch/fetchBranchesByIds', async (ids, { rejectWithValue }) => {
+  try {
+    let idList: bigint[] = [];
     try {
-      const queryParams = prepareCommaSeparatedQueryParamsByKey('id', ids);
-      const { data } = await axios.get<PaginatedResponse<BranchDTO>>(`${ENDPOINTS.branches}?${queryParams}`);
-
-      return data;
-    } catch (error) {
-      return rejectWithValue({
-        ...(error as ErrorResponseDTO),
-        title: MESSAGES.error.branches.notFound,
-      });
+      idList = ids.map((id) => BigInt(id));
+    } catch {
+      // Ignored
     }
+
+    const query = new BranchQueryRequestModel(idList, '', null, null);
+    const data = unwrapBridgePagingResponse<Branch>(await branchClient.GetBranchesAsync(query, new AbortController().signal));
+
+    return data;
+  } catch (error) {
+    return rejectWithValue({
+      ...(error as ValidationProblemDetails),
+      title: MESSAGES.error.branches.notFound,
+    });
   }
-);
+});
 
 export const fetchBranchById = createAsyncThunk<
   Branch,
   { id: string; skipState?: boolean; shouldFetchBranchGeoAddress?: boolean },
-  { rejectValue: ErrorResponseDTO }
+  { rejectValue: ValidationProblemDetails }
 >('branch/fetchBranchById', async ({ id, shouldFetchBranchGeoAddress = true }, { getState, dispatch, rejectWithValue }) => {
   try {
-    const { data } = await axios.get<BranchDTO>(`${ENDPOINTS.branches}/${id}`);
+    const data = unwrapBridgeValue<Branch>(await branchClient.GetBranchAsync(BigInt(id), new AbortController().signal));
     const state = getState() as RootState;
     const timeZones = state.license.system.item?.entitlements.timeZones || [];
     const countries = state.license.system.item?.entitlements.countries || [];
@@ -149,15 +167,16 @@ export const fetchBranchById = createAsyncThunk<
       geoAddress,
     });
   } catch (error) {
-    return rejectWithValue(error as ErrorResponseDTO);
+    return rejectWithValue(error as ValidationProblemDetails);
   }
 });
 
-export const createOnboardingBranch = createAsyncThunk<void, EntityInput<BranchDTO>, { rejectValue: ErrorResponse<FieldValues> }>(
+export const createOnboardingBranch = createAsyncThunk<void, EntityInput<Branch>, { rejectValue: ErrorResponse<FieldValues> }>(
   'branch/createOnboardingBranch',
   async (branch, { dispatch, rejectWithValue }) => {
     try {
-      await axios.post<void>(ENDPOINTS.branches, branch);
+      const modModel = new BranchModificationModel(branch.name, branch.timeZoneId, toBranchModificationAddress(branch.address));
+      unwrapBridgeUnitResult(await branchClient.CreateBranchAsync(modModel, new AbortController().signal));
 
       dispatch(resetBranchesFetchStatus());
       await dispatch(fetchBranchesTotal()).unwrap();
@@ -166,23 +185,24 @@ export const createOnboardingBranch = createAsyncThunk<void, EntityInput<BranchD
     } catch (error) {
       dispatch(
         setError({
-          ...(error as ErrorResponseDTO),
+          ...(error as ValidationProblemDetails),
           title: MESSAGES.error.branches.create,
         })
       );
 
-      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+      const mappedError = mapError(error as ValidationProblemDetails) as ErrorResponse<FieldValues>;
 
       return rejectWithValue(mappedError);
     }
   }
 );
 
-export const createBranch = createAsyncThunk<void, EntityInput<BranchDTO>, { rejectValue: ErrorResponse<FieldValues> }>(
+export const createBranch = createAsyncThunk<void, EntityInput<Branch>, { rejectValue: ErrorResponse<FieldValues> }>(
   'branch/createBranch',
   async (branch, { dispatch, rejectWithValue }) => {
     try {
-      await axios.post<void>(ENDPOINTS.branches, branch);
+      const modModel = new BranchModificationModel(branch.name, branch.timeZoneId, toBranchModificationAddress(branch.address));
+      unwrapBridgeUnitResult(await branchClient.CreateBranchAsync(modModel, new AbortController().signal));
 
       dispatch(resetBranchesFetchStatus());
       dispatch(setBranchesSucceededFlag());
@@ -190,45 +210,46 @@ export const createBranch = createAsyncThunk<void, EntityInput<BranchDTO>, { rej
     } catch (error) {
       dispatch(
         setError({
-          ...(error as ErrorResponseDTO),
+          ...(error as ValidationProblemDetails),
           title: MESSAGES.error.branches.create,
         })
       );
 
-      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+      const mappedError = mapError(error as ValidationProblemDetails) as ErrorResponse<FieldValues>;
 
       return rejectWithValue(mappedError);
     }
   }
 );
 
-export const editBranch = createAsyncThunk<void, [string, EntityInput<BranchDTO>], { rejectValue: ErrorResponse<FieldValues> }>(
+export const editBranch = createAsyncThunk<void, [string, EntityInput<Branch>], { rejectValue: ErrorResponse<FieldValues> }>(
   'branch/editBranch',
   async ([id, branch], { dispatch, rejectWithValue }) => {
     try {
-      await axios.put<void>(`${ENDPOINTS.branches}/${id}`, branch);
+      const modModel = new BranchModificationModel(branch.name, branch.timeZoneId, toBranchModificationAddress(branch.address));
+      unwrapBridgeUnitResult(await branchClient.UpdateBranchAsync(BigInt(id), modModel, new AbortController().signal));
 
       dispatch(setSuccess(MESSAGES.success.branches.update));
     } catch (error) {
       dispatch(
         setError({
-          ...(error as ErrorResponseDTO),
+          ...(error as ValidationProblemDetails),
           title: MESSAGES.error.branches.update,
         })
       );
 
-      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+      const mappedError = mapError(error as ValidationProblemDetails) as ErrorResponse<FieldValues>;
 
       return rejectWithValue(mappedError);
     }
   }
 );
 
-export const deleteBranch = createAsyncThunk<void, BranchDTO['id'], { state: RootState; rejectValue: ErrorResponseDTO }>(
+export const deleteBranch = createAsyncThunk<void, Branch['id'], { state: RootState; rejectValue: ValidationProblemDetails }>(
   'branch/deleteBranch',
   async (id, { dispatch, getState, rejectWithValue }) => {
     try {
-      await axios.delete<void>(`${ENDPOINTS.branches}/${id}`);
+      unwrapBridgeUnitResult(await branchClient.DeleteBranchAsync(BigInt(id), new AbortController().signal));
 
       dispatch(resetBranchesFetchStatus());
       dispatch(resetCompanyDatasourceTotalsFetchStatus());
@@ -243,12 +264,12 @@ export const deleteBranch = createAsyncThunk<void, BranchDTO['id'], { state: Roo
     } catch (error) {
       dispatch(
         setError({
-          ...(error as ErrorResponseDTO),
+          ...(error as ValidationProblemDetails),
           title: MESSAGES.error.branches.delete,
         })
       );
 
-      return rejectWithValue(error as ErrorResponseDTO);
+      return rejectWithValue(error as ValidationProblemDetails);
     }
   }
 );
@@ -259,17 +280,18 @@ export const fetchGeoAddress = createAsyncThunk<GeoAddress | undefined, string |
   }
 
   try {
-    const response = await axios.get('https://nominatim.openstreetmap.org/search', {
-      params: {
-        q: address,
-        format: 'json',
-        limit: 1,
-      },
+    const url = new window.URL('https://nominatim.openstreetmap.org/search');
+    url.searchParams.append('q', address);
+    url.searchParams.append('format', 'json');
+    url.searchParams.append('limit', '1');
+
+    const response = await fetch(url.toString(), {
       headers: { 'Accept-Language': 'en' },
     });
+    const parsedData = await response.json();
 
-    if (response.data?.length > 0) {
-      const { lat, lon, display_name } = response.data[0];
+    if (parsedData?.length > 0) {
+      const { lat, lon, display_name } = parsedData[0];
 
       return {
         lat: Number(parseFloat(lat).toFixed(7)),

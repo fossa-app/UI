@@ -3,7 +3,7 @@ import { generatePath, useNavigate } from 'react-router-dom';
 import { AsyncThunkAction } from '@reduxjs/toolkit';
 import { AppDispatch, PaginatedStateEntity, RootState, Status, useAppDispatch, useAppSelector } from 'store';
 import { selectUserRoles } from 'store/features';
-import { Module, SubModule, Entity, PaginationParams, UserRole, ErrorResponseDTO, PaginatedResponse } from 'shared/types';
+import { Module, SubModule, Entity, PaginationParams, UserRole, ValidationProblemDetails, PaginatedResponse } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
 import { getTestSelectorByModule } from 'shared/helpers';
 import { useUnmount } from 'shared/hooks';
@@ -15,7 +15,7 @@ import { renderPrimaryLinkText } from 'components/UI/helpers/renderPrimaryLinkTe
 
 interface StateAction {
   state: RootState;
-  rejectValue: ErrorResponseDTO;
+  rejectValue: ValidationProblemDetails;
   dispatch?: AppDispatch;
 }
 

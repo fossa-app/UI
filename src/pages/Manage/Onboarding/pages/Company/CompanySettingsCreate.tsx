@@ -15,7 +15,7 @@ import {
   CREATE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA,
   USER_PERMISSION_GENERAL_ERROR,
 } from 'shared/constants';
-import { CompanySettings, CompanySettingsDTO, EntityInput, ThemeMode } from 'shared/types';
+import { CompanySettings, EntityInput, ThemeMode } from 'shared/types';
 import { deepCopyObject, hasAllowedRole, mapDisabledFields } from 'shared/helpers';
 import { COLOR_SCHEMES } from 'shared/themes';
 import { useUnmount } from 'shared/hooks';
@@ -56,11 +56,11 @@ const CompanySettingsCreatePage: React.FC = () => {
     dispatch(resetPreviewCompanyColorSchemeSettings());
   });
 
-  const handleSubmit = (data: EntityInput<CompanySettingsDTO>) => {
+  const handleSubmit = (data: EntityInput<CompanySettings>) => {
     dispatch(createCompanySettings(data));
   };
 
-  const handleChange = (data: EntityInput<CompanySettingsDTO>) => {
+  const handleChange = (data: EntityInput<CompanySettings>) => {
     const { colorSchemeId } = data;
     if (colorSchemeId) {
       dispatch(setPreviewCompanyColorSchemeSettings(colorSchemeId));

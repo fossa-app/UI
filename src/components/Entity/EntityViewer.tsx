@@ -4,7 +4,7 @@ import { AsyncThunkAction } from '@reduxjs/toolkit';
 import { useAppDispatch, useAppSelector, RootState, AppDispatch, StateEntity } from 'store';
 import { selectUserRoles } from 'store/features';
 import { areEqualBigIds, hasAllowedRole } from 'shared/helpers';
-import { Module, SubModule, ErrorResponseDTO, BaseEntity } from 'shared/types';
+import { Module, SubModule, ValidationProblemDetails, BaseEntity } from 'shared/types';
 import PageLayout from 'components/layouts/PageLayout';
 import ViewDetails, { ViewDetailActionName, ViewDetailProps } from 'components/UI/ViewDetails';
 
@@ -17,7 +17,7 @@ type EntityViewerProps<T extends BaseEntity> = {
   editRoute?: string;
   selectEntity: (state: RootState) => StateEntity<T | undefined>;
   resetEntity: () => ReturnType<AppDispatch>;
-  fetchEntityAction: (id: string) => AsyncThunkAction<T, unknown, { rejectValue: ErrorResponseDTO }>;
+  fetchEntityAction: (id: string) => AsyncThunkAction<T, unknown, { rejectValue: ValidationProblemDetails }>;
 };
 
 const EntityViewer = <T extends BaseEntity>({

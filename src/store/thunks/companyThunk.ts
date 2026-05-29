@@ -3,16 +3,18 @@ import { FieldValues } from 'react-hook-form';
 import { RootState } from 'store';
 import { fetchBranchesTotal, fetchDepartmentsTotal, fetchEmployeesTotal } from 'store/thunks';
 import { setError, setSuccess } from 'store/features';
-import axios from 'shared/configs/axios';
-import { Company, CompanyDTO, EntityInput, ErrorResponse, ErrorResponseDTO } from 'shared/types';
+import { Company, EntityInput, ErrorResponse, ValidationProblemDetails } from 'shared/types';
 import { mapCompany, mapError } from 'shared/helpers';
-import { MESSAGES, ENDPOINTS } from 'shared/constants';
+import { MESSAGES } from 'shared/constants';
+import { companyClient } from 'shared/configs/BridgeClients';
+import { unwrapBridgeUnitResult, unwrapBridgeValue } from 'shared/configs/BridgeResponses';
+import { CompanyModificationModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 
-export const fetchCompany = createAsyncThunk<Company | undefined, boolean | undefined, { rejectValue: ErrorResponseDTO }>(
+export const fetchCompany = createAsyncThunk<Company | undefined, boolean | undefined, { rejectValue: ValidationProblemDetails }>(
   'company/fetchCompany',
   async (_, { getState, rejectWithValue }) => {
     try {
-      const { data } = await axios.get<CompanyDTO>(ENDPOINTS.company);
+      const data = unwrapBridgeValue<Company>(await companyClient.GetCompanyAsync(new AbortController().signal));
 
       if (data) {
         const state = getState() as RootState;
@@ -22,63 +24,65 @@ export const fetchCompany = createAsyncThunk<Company | undefined, boolean | unde
       }
     } catch (error) {
       return rejectWithValue({
-        ...(error as ErrorResponseDTO),
+        ...(error as ValidationProblemDetails),
         title: MESSAGES.error.company.notFound,
       });
     }
   }
 );
 
-export const createCompany = createAsyncThunk<void, CompanyDTO, { rejectValue: ErrorResponse<FieldValues> }>(
+export const createCompany = createAsyncThunk<void, Company, { rejectValue: ErrorResponse<FieldValues> }>(
   'company/createCompany',
   async (company, { dispatch, rejectWithValue }) => {
     try {
-      await axios.post<CompanyDTO>(ENDPOINTS.company, company);
+      const modModel = new CompanyModificationModel(company.name, company.countryCode ?? null);
+      unwrapBridgeUnitResult(await companyClient.CreateCompanyAsync(modModel, new AbortController().signal));
       await dispatch(fetchCompany(false)).unwrap();
 
       dispatch(setSuccess(MESSAGES.success.company.create));
     } catch (error) {
       dispatch(
         setError({
-          ...(error as ErrorResponseDTO),
+          ...(error as ValidationProblemDetails),
           title: MESSAGES.error.company.create,
         })
       );
 
-      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+      const mappedError = mapError(error as ValidationProblemDetails) as ErrorResponse<FieldValues>;
 
       return rejectWithValue(mappedError);
     }
   }
 );
 
-export const editCompany = createAsyncThunk<void, EntityInput<CompanyDTO>, { rejectValue: ErrorResponse<FieldValues> }>(
+export const editCompany = createAsyncThunk<void, EntityInput<Company>, { rejectValue: ErrorResponse<FieldValues> }>(
   'company/editCompany',
   async (company, { dispatch, rejectWithValue }) => {
     try {
-      await axios.put<CompanyDTO>(ENDPOINTS.company, company);
+      const modModel = new CompanyModificationModel(company.name, company.countryCode ?? null);
+      unwrapBridgeUnitResult(await companyClient.UpdateCompanyAsync(modModel, new AbortController().signal));
 
       dispatch(setSuccess(MESSAGES.success.company.update));
     } catch (error) {
       dispatch(
         setError({
-          ...(error as ErrorResponseDTO),
+          ...(error as ValidationProblemDetails),
           title: MESSAGES.error.company.update,
         })
       );
 
-      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+      const mappedError = mapError(error as ValidationProblemDetails) as ErrorResponse<FieldValues>;
 
       return rejectWithValue(mappedError);
     }
   }
 );
 
-export const deleteCompany = createAsyncThunk<void, void, { rejectValue: ErrorResponseDTO }>(
+export const deleteCompany = createAsyncThunk<void, void, { rejectValue: ValidationProblemDetails }>(
   'company/deleteCompany',
   async (_, { dispatch, rejectWithValue }) => {
     try {
-      await axios.delete<void>(ENDPOINTS.company);
+      unwrapBridgeUnitResult(await companyClient.DeleteCompanyAsync(new AbortController().signal));
 
       dispatch(setSuccess(MESSAGES.success.company.delete));
 
@@ -88,28 +92,28 @@ export const deleteCompany = createAsyncThunk<void, void, { rejectValue: ErrorRe
         // Ignored: fetchCompany will return 404 after delete, which is expected.
       }
     } catch (error) {
-      if ((error as ErrorResponseDTO).status === 424) {
+      if ((error as ValidationProblemDetails).status === 424) {
         dispatch(
           setError({
-            ...(error as ErrorResponseDTO),
+            ...(error as ValidationProblemDetails),
             title: MESSAGES.error.company.deleteDependency,
           })
         );
       } else {
         dispatch(
           setError({
-            ...(error as ErrorResponseDTO),
+            ...(error as ValidationProblemDetails),
             title: MESSAGES.error.company.delete,
           })
         );
       }
 
-      return rejectWithValue(error as ErrorResponseDTO);
+      return rejectWithValue(error as ValidationProblemDetails);
     }
   }
 );
 
-export const fetchCompanyDatasourceTotals = createAsyncThunk<void, void, { rejectValue: ErrorResponseDTO }>(
+export const fetchCompanyDatasourceTotals = createAsyncThunk<void, void, { rejectValue: ValidationProblemDetails }>(
   'company/fetchCompanyDatasourceTotals',
   async (_, { dispatch }) => {
     try {

@@ -1,3 +1,5 @@
+import { JsonSerializer } from '@fossa-app/bridge/Services/JsonSerializer';
+
 export const parseResponse = <T = unknown>(response: any): T => {
   if (response.data === '') {
     return response as T;
@@ -8,20 +10,10 @@ export const parseResponse = <T = unknown>(response: any): T => {
   }
 
   if (typeof response.data === 'string') {
-    const isBigNumber = (num: string | number): boolean => {
-      const n = Number(num);
-      return !isNaN(n) && !Number.isSafeInteger(n);
-    };
-
-    const enquoteBigNumber = (jsonString: string, bigNumChecker: (num: string | number) => boolean): string =>
-      jsonString.replace(/(:\s*)(\d{15,})(\s*[,}])/g, (match, prefix, numberPart, suffix) =>
-        bigNumChecker(numberPart) ? `${prefix}"${numberPart}"${suffix}` : match
-      );
-
     try {
       return {
         ...response,
-        data: JSON.parse(enquoteBigNumber(response.data, isBigNumber)),
+        data: new JsonSerializer().Deserialize(response.data),
       } as T;
     } catch (error) {
       console.error('Error parsing response data:', error);

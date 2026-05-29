@@ -1,4 +1,4 @@
-export interface EmployeeDTO {
+export interface Employee {
   id: number;
   companyId?: number;
   assignedBranchId: number | null;
@@ -8,9 +8,6 @@ export interface EmployeeDTO {
   firstName: string;
   lastName: string;
   fullName: string;
-}
-
-export interface Employee extends EmployeeDTO {
   picture?: string;
   isDraft?: boolean;
   assignedBranchName?: string;

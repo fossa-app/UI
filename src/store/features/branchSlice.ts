@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
 import { WritableDraft } from 'immer';
 import { RootState, PaginatedStateEntity, StateEntity } from 'store';
-import { Branch, BranchDTO, ErrorResponseDTO, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/types';
+import { Branch, ValidationProblemDetails, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
 import { mergePaginatedItems } from 'store/helpers';
 import {
@@ -18,7 +18,7 @@ import {
 interface BranchState {
   branch: StateEntity<Branch | undefined>;
   branchCatalog: PaginatedStateEntity<Branch>;
-  assignedBranches: PaginatedStateEntity<BranchDTO>;
+  assignedBranches: PaginatedStateEntity<Branch>;
 }
 
 const initialState: BranchState = {
@@ -73,7 +73,7 @@ const branchSlice = createSlice({
       .addCase(fetchBranches.pending, (state) => {
         state.branchCatalog.status = 'loading';
       })
-      .addCase(fetchBranches.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchBranches.rejected, (state, action: PayloadAction<ValidationProblemDetails | undefined>) => {
         state.branchCatalog.items = [];
         state.branchCatalog.status = 'failed';
         state.branchCatalog.error = action.payload;
@@ -92,7 +92,7 @@ const branchSlice = createSlice({
       .addCase(fetchAssignedBranches.fulfilled, (state, action) => {
         const { items = [], ...page } = action.payload || {};
 
-        state.assignedBranches.items = mergePaginatedItems<BranchDTO>(state.assignedBranches.items, items);
+        state.assignedBranches.items = mergePaginatedItems<Branch>(state.assignedBranches.items, items);
         state.assignedBranches.page = page;
         state.assignedBranches.status = 'succeeded';
       })
@@ -160,7 +160,7 @@ const branchSlice = createSlice({
       .addCase(deleteBranch.pending, (state) => {
         state.branch.deleteStatus = 'loading';
       })
-      .addCase(deleteBranch.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(deleteBranch.rejected, (state, action: PayloadAction<ValidationProblemDetails | undefined>) => {
         state.branch.deleteStatus = 'failed';
         state.branch.deleteError = action.payload;
       })

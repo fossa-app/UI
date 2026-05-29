@@ -1,11 +1,8 @@
-export interface DepartmentDTO {
+export interface Department {
   id: number;
   name: string;
   parentDepartmentId: number | null;
   managerId: number | null;
-}
-
-export interface Department extends DepartmentDTO {
   parentDepartmentName?: string;
   managerName?: string;
 }

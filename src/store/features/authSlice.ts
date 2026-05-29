@@ -3,7 +3,7 @@ import { OidcClientSettings } from 'oidc-client-ts';
 import { RootState, StateEntity } from 'store';
 import { fetchUser } from 'store/thunks';
 import { updateUserManager, decodeJwt } from 'shared/helpers';
-import { AppUser, ErrorResponseDTO, UserRole } from 'shared/types';
+import { AppUser, ValidationProblemDetails, UserRole } from 'shared/types';
 import { OIDC_INITIAL_CONFIG } from 'shared/constants';
 
 interface AuthState {
@@ -45,7 +45,7 @@ const authSlice = createSlice({
       .addCase(fetchUser.pending, (state) => {
         state.user.fetchStatus = 'loading';
       })
-      .addCase(fetchUser.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchUser.rejected, (state, action: PayloadAction<ValidationProblemDetails | undefined>) => {
         state.user.item = undefined;
         state.user.fetchStatus = 'failed';
         state.user.fetchError = action.payload;
