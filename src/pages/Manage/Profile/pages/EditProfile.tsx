@@ -1,3 +1,4 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -19,7 +20,7 @@ const EditProfilePage: React.FC = () => {
   const { item: profile, updateError: error, updateStatus = 'idle' } = useAppSelector(selectProfile);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
   const defaultValues: EntityInput<Employee> = profile || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
-  const errors = deepCopyObject(getProblemErrors(error));
+  const errors = deepCopyObject(error ? getProblemErrors(error as ProblemDetailsModel) : undefined);
 
   const navigateToViewProfile = () => {
     navigate(ROUTES.viewProfile.path);

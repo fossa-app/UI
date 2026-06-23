@@ -1,3 +1,4 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectProfile } from 'store/features';
@@ -13,7 +14,7 @@ const testSubModule = CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA.subModule;
 const EmployeeCreatePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { item: profile, updateStatus, updateError: error } = useAppSelector(selectProfile);
-  const errors = deepCopyObject(getProblemErrors(error));
+  const errors = deepCopyObject(error ? getProblemErrors(error as ProblemDetailsModel) : undefined);
 
   const actions = CREATE_EMPLOYEE_DETAILS_FORM_SCHEMA.actions.map((action) =>
     action.name === FormActionName.submit ? { ...action, loading: updateStatus === 'loading' } : action

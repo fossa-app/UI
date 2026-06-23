@@ -1,3 +1,4 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FieldValues } from 'react-hook-form';
@@ -27,7 +28,9 @@ const CompanyLicenseUploadPage: React.FC = () => {
   const { updateStatus, updateError: error } = useAppSelector(selectCompanyLicense);
   const { item: company } = useAppSelector(selectCompany);
   const skipRef = React.useRef(false);
-  const errors = isUserAdmin ? deepCopyObject(getProblemErrors(error)) : USER_PERMISSION_GENERAL_ERROR;
+  const errors = isUserAdmin
+    ? deepCopyObject(error ? getProblemErrors(error as ProblemDetailsModel) : undefined)
+    : USER_PERMISSION_GENERAL_ERROR;
 
   React.useEffect(() => {
     return () => {

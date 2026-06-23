@@ -6,8 +6,7 @@ import { MESSAGES } from 'shared/constants';
 import { Endpoints_CompanyLicense, Endpoints_BasePath } from '@fossa-app/bridge/Services/Endpoints';
 import { mapCompanyLicense, mapError, createProblemDetails } from 'shared/helpers';
 import { systemLicenseClient, companyLicenseClient } from 'shared/configs/BridgeClients';
-import { matchClientResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
-import type { ClientResult$1_$union } from '@fossa-app/bridge/Models/ClientResults';
+import { foldClientResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
 import { AppAccessTokenProvider } from 'shared/configs/BridgeTransport';
 import { getBackendOrigin } from '@fossa-app/bridge/Services/UrlHelpers';
 
@@ -15,9 +14,9 @@ export const fetchSystemLicense = createAsyncThunk<SystemLicense | null, void, {
   'license/fetchSystemLicense',
   async (_, { rejectWithValue }) => {
     const result = await systemLicenseClient.getLicenseAsync(new AbortController().signal);
-    return matchClientResult(
+    return foldClientResult(
       result,
-      (data) => data,
+      (data) => data as any as any,
       (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.license.system.notFound })) as never
     );
   }
@@ -27,9 +26,9 @@ export const fetchCompanyLicense = createAsyncThunk<CompanyLicense | undefined, 
   'license/fetchCompanyLicense',
   async (_, { rejectWithValue }) => {
     const result = await companyLicenseClient.getLicenseAsync(new AbortController().signal);
-    return matchClientResult(
+    return foldClientResult(
       result,
-      (data) => mapCompanyLicense(data),
+      (data) => mapCompanyLicense(data as any),
       (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.license.company.notFound })) as never
     );
   }

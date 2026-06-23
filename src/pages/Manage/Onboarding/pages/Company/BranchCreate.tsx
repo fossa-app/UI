@@ -1,3 +1,4 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
@@ -38,7 +39,9 @@ const BranchCreatePage: React.FC = () => {
   const schema = getBranchManagementDetailsByAddressFormSchema(CREATE_BRANCH_DETAILS_FORM_SCHEMA.fields, !!noPhysicalAddress);
   const disabledFields = mapDisabledFields(schema, userRoles);
   const fields = mapBranchFieldOptionsToFieldOptions(disabledFields, companyTimeZones, availableCountries);
-  const errors = isUserAdmin ? deepCopyObject(getProblemErrors(error)) : USER_PERMISSION_GENERAL_ERROR;
+  const errors = isUserAdmin
+    ? deepCopyObject(error ? getProblemErrors(error as ProblemDetailsModel) : undefined)
+    : USER_PERMISSION_GENERAL_ERROR;
 
   const actions = CREATE_BRANCH_DETAILS_FORM_SCHEMA.actions.map((action) =>
     action.name === FormActionName.submit

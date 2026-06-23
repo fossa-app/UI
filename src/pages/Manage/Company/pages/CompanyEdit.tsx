@@ -1,3 +1,4 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -34,7 +35,9 @@ const CompanyEditPage: React.FC = () => {
   const { item: company, updateError: error, fetchStatus, updateStatus = 'idle' } = useAppSelector(selectCompany);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
   const fields = mapCountriesToFieldOptions(mapDisabledFields(COMPANY_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, userRoles), countries);
-  const errors = isUserAdmin ? deepCopyObject(getProblemErrors(error)) : USER_PERMISSION_GENERAL_ERROR;
+  const errors = isUserAdmin
+    ? deepCopyObject(error ? getProblemErrors(error as ProblemDetailsModel) : undefined)
+    : USER_PERMISSION_GENERAL_ERROR;
   const navigateToViewCompany = () => navigate(ROUTES.viewCompany.path);
 
   const handleSubmit = (data: EntityInput<Company>) => {

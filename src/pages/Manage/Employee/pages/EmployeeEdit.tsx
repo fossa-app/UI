@@ -1,3 +1,4 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -60,7 +61,7 @@ const EmployeeEditPage: React.FC = () => {
   const safeNavigateBack = useSafeNavigateBack(ROUTES.employees.path);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
   const defaultValues: EntityInput<Employee> = employee || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
-  const errors = deepCopyObject(getProblemErrors(updateError));
+  const errors = deepCopyObject(updateError ? getProblemErrors(updateError as ProblemDetailsModel) : undefined);
 
   const handleAssignedBranchesScrollEnd = () => {
     if (assignedBranchesPage.pageNumber! < assignedBranchesPage.totalPages!) {

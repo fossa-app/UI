@@ -1,3 +1,4 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
@@ -53,7 +54,9 @@ const DepartmentManagementPage: React.FC = () => {
   } = useAppSelector(selectManagers);
   const parentDepartmentsLoading = parentDepartmentsFetchStatus === 'loading';
   const managersLoading = managersFetchStatus === 'loading';
-  const errors = isUserAdmin ? deepCopyObject(getProblemErrors(updateError)) : USER_PERMISSION_GENERAL_ERROR;
+  const errors = isUserAdmin
+    ? deepCopyObject(updateError ? getProblemErrors(updateError as ProblemDetailsModel) : undefined)
+    : USER_PERMISSION_GENERAL_ERROR;
 
   const handleParentDepartmentsScrollEnd = () => {
     if (parentDepartmentsPage.pageNumber! < parentDepartmentsPage.totalPages!) {

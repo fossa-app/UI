@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
-import { WritableDraft } from 'immer';
+
 import { RootState, PaginatedStateEntity, StateEntity } from 'store';
 import { Branch, ProblemDetailsModel, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
@@ -60,7 +60,7 @@ const branchSlice = createSlice({
       state.assignedBranches.status = initialState.assignedBranches.status;
     },
     resetBranch(state) {
-      state.branch = initialState.branch;
+      state.branch = initialState.branch as any;
     },
     resetBranchErrors(state) {
       state.branch.fetchError = undefined;
@@ -76,7 +76,7 @@ const branchSlice = createSlice({
       .addCase(fetchBranches.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.branchCatalog.items = [];
         state.branchCatalog.status = 'failed';
-        state.branchCatalog.error = action.payload;
+        state.branchCatalog.error = action.payload as any;
       })
       .addCase(fetchBranches.fulfilled, (state, action: PayloadAction<PaginatedResponse<Branch> | undefined>) => {
         const { items = [], ...page } = action.payload || {};
@@ -113,14 +113,14 @@ const branchSlice = createSlice({
 
         state.branch.item = undefined;
         state.branch.fetchStatus = 'failed';
-        state.branch.fetchError = action.payload;
+        state.branch.fetchError = action.payload as any;
       })
       .addCase(fetchBranchById.fulfilled, (state, action) => {
         if (action.meta.arg.skipState) {
           return;
         }
 
-        state.branch.item = action.payload;
+        state.branch.item = action.payload as any;
         state.branch.fetchStatus = 'succeeded';
         state.branch.fetchError = undefined;
       })
@@ -129,7 +129,7 @@ const branchSlice = createSlice({
       })
       .addCase(createBranch.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.branch.updateStatus = 'failed';
-        state.branch.updateError = action.payload;
+        state.branch.updateError = action.payload as any;
       })
       .addCase(createBranch.fulfilled, (state) => {
         state.branch.updateStatus = 'succeeded';
@@ -140,7 +140,7 @@ const branchSlice = createSlice({
       })
       .addCase(createOnboardingBranch.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.branch.updateStatus = 'failed';
-        state.branch.updateError = action.payload;
+        state.branch.updateError = action.payload as any;
       })
       .addCase(createOnboardingBranch.fulfilled, (state) => {
         state.branch.updateStatus = 'succeeded';
@@ -151,7 +151,7 @@ const branchSlice = createSlice({
       })
       .addCase(editBranch.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.branch.updateStatus = 'failed';
-        state.branch.updateError = action.payload;
+        state.branch.updateError = action.payload as any;
       })
       .addCase(editBranch.fulfilled, (state) => {
         state.branch.updateStatus = 'succeeded';
@@ -162,7 +162,7 @@ const branchSlice = createSlice({
       })
       .addCase(deleteBranch.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.branch.deleteStatus = 'failed';
-        state.branch.deleteError = action.payload;
+        state.branch.deleteError = action.payload as any;
       })
       .addCase(deleteBranch.fulfilled, (state) => {
         state.branch.deleteStatus = 'succeeded';

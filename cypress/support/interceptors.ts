@@ -22,13 +22,7 @@ export const interceptFetchClientRequest = () => {
 };
 
 export const interceptFetchClientFailedRequest = () => {
-  cy.interceptWithAuth(
-    'GET',
-    `${serverBaseUrl}/Identity/Client?origin=${encodeURIComponent(baseUrl ?? '')}`,
-    null,
-    'fetchClientFailedRequest',
-    404
-  );
+  cy.intercept('GET', '**/api/1.0/Identity/Client?origin=*', { statusCode: 404 }).as('fetchClientFailedRequest');
 };
 
 export const interceptLoginRequest = () => {

@@ -5,13 +5,13 @@ import { ProblemDetailsModel } from 'shared/types';
 import { IdentityClientRetrievalModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 import { MESSAGES, ROUTES } from 'shared/constants';
 import { identityClient } from 'shared/configs/BridgeClients';
-import { matchClientResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
+import { foldClientResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
 
 export const fetchClient = createAsyncThunk<IdentityClientRetrievalModel | undefined, void, { rejectValue: ProblemDetailsModel }>(
   'identity/fetchClient',
   async (_, { dispatch, rejectWithValue }) => {
     const result = await identityClient.getClientAsync(window.location.origin, new AbortController().signal);
-    return matchClientResult(
+    return foldClientResult(
       result,
       (parsedResponse) => {
         dispatch(

@@ -14,8 +14,7 @@ import { MESSAGES } from 'shared/constants';
 import { mapBranch, mapBranches, mapError, getFullAddress, createProblemDetails } from 'shared/helpers';
 import { branchClient } from 'shared/configs/BridgeClients';
 import { toPaginatedResponse } from 'shared/configs/BridgeResponses';
-import { matchClientResult, matchClientUnitResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
-import type { ClientResult$1_$union } from '@fossa-app/bridge/Models/ClientResults';
+import { foldClientResult, foldClientUnitResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
 import { BranchQueryRequestModel, BranchModificationModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 import { AddressModel } from '@fossa-app/bridge/Models/ApiModels/SharedModels';
 
@@ -40,7 +39,7 @@ export const fetchBranchesTotal = createAsyncThunk<PaginatedResponse<Branch> | u
     const query = new BranchQueryRequestModel([], '', 1, 1);
     const result = await branchClient.getBranchesAsync(query, new AbortController().signal);
 
-    return matchClientResult(
+    return foldClientResult(
       result,
       (response) => toPaginatedResponse<Branch>(response),
       (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.branches.notFound })) as never
@@ -56,7 +55,7 @@ export const fetchBranches = createAsyncThunk<
   const query = new BranchQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
   const result = await branchClient.getBranchesAsync(query, new AbortController().signal);
 
-  return matchClientResult(
+  return foldClientResult(
     result,
     (response) => {
       const data = toPaginatedResponse<Branch>(response);
@@ -83,7 +82,7 @@ export const fetchAssignedBranches = createAsyncThunk<
   const query = new BranchQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
   const result = await branchClient.getBranchesAsync(query, new AbortController().signal);
 
-  return matchClientResult(
+  return foldClientResult(
     result,
     (response) => toPaginatedResponse<Branch>(response),
     (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.branches.notFound })) as never
@@ -103,7 +102,7 @@ export const fetchBranchesByIds = createAsyncThunk<PaginatedResponse<Branch> | u
     const query = new BranchQueryRequestModel(idList, '', null, null);
     const result = await branchClient.getBranchesAsync(query, new AbortController().signal);
 
-    return matchClientResult(
+    return foldClientResult(
       result,
       (response) => toPaginatedResponse<Branch>(response),
       (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.branches.notFound })) as never
@@ -118,7 +117,7 @@ export const fetchBranchById = createAsyncThunk<
 >('branch/fetchBranchById', async ({ id, shouldFetchBranchGeoAddress = true }, { getState, dispatch, rejectWithValue }) => {
   try {
     const result = await branchClient.getBranchAsync(BigInt(id), new AbortController().signal);
-    return matchClientResult(
+    return foldClientResult(
       result,
       async (data) => {
         const state = getState() as RootState;
@@ -134,7 +133,7 @@ export const fetchBranchById = createAsyncThunk<
         }
 
         return mapBranch({
-          branch: data,
+          branch: data as any,
           timeZones,
           companyCountryCode,
           countries,
@@ -153,7 +152,7 @@ export const createOnboardingBranch = createAsyncThunk<void, EntityInput<Branch>
   async (branch, { dispatch, rejectWithValue }) => {
     const modModel = new BranchModificationModel(branch.name, branch.timeZoneId, toBranchModificationAddress(branch.address));
 
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await branchClient.createBranchAsync(modModel, new AbortController().signal),
       async () => {
         dispatch(resetBranchesFetchStatus());
@@ -177,7 +176,7 @@ export const createBranch = createAsyncThunk<void, EntityInput<Branch>, { reject
   async (branch, { dispatch, rejectWithValue }) => {
     const modModel = new BranchModificationModel(branch.name, branch.timeZoneId, toBranchModificationAddress(branch.address));
 
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await branchClient.createBranchAsync(modModel, new AbortController().signal),
       () => {
         dispatch(resetBranchesFetchStatus());
@@ -200,7 +199,7 @@ export const editBranch = createAsyncThunk<void, [string, EntityInput<Branch>], 
   async ([id, branch], { dispatch, rejectWithValue }) => {
     const modModel = new BranchModificationModel(branch.name, branch.timeZoneId, toBranchModificationAddress(branch.address));
 
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await branchClient.updateBranchAsync(BigInt(id), modModel, new AbortController().signal),
       () => {
         dispatch(setSuccess(MESSAGES.success.branches.update));
@@ -219,7 +218,7 @@ export const editBranch = createAsyncThunk<void, [string, EntityInput<Branch>], 
 export const deleteBranch = createAsyncThunk<void, Branch['id'], { state: RootState; rejectValue: ProblemDetailsModel }>(
   'branch/deleteBranch',
   async (id, { dispatch, getState, rejectWithValue }) => {
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await branchClient.deleteBranchAsync(BigInt(id), new AbortController().signal),
       () => {
         dispatch(resetBranchesFetchStatus());

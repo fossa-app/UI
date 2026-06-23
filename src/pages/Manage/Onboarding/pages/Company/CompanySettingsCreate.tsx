@@ -1,3 +1,4 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
@@ -33,7 +34,9 @@ const CompanySettingsCreatePage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const mode: ThemeMode = isDarkTheme ? 'dark' : 'light';
   const filteredSchemes = Object.fromEntries(Object.entries(COLOR_SCHEMES).filter(([, scheme]) => scheme[mode]));
-  const errors = isUserAdmin ? deepCopyObject(getProblemErrors(error)) : USER_PERMISSION_GENERAL_ERROR;
+  const errors = isUserAdmin
+    ? deepCopyObject(error ? getProblemErrors(error as ProblemDetailsModel) : undefined)
+    : USER_PERMISSION_GENERAL_ERROR;
 
   const fields = mapDisabledFields(CREATE_COMPANY_SETTINGS_DETAILS_FORM_SCHEMA.fields, userRoles).map((field) => {
     if (field.name === COMPANY_SETTINGS_FIELDS.colorSchemeId!.field) {

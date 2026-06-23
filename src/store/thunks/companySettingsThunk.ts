@@ -5,20 +5,19 @@ import { CompanySettings, EntityInput, ErrorResponse, ProblemDetailsModel } from
 import { MESSAGES, COMPANY_SETTINGS_KEY } from 'shared/constants';
 import { mapError, saveToLocalStorage, removeFromLocalStorage, createProblemDetails } from 'shared/helpers';
 import { companySettingsClient } from 'shared/configs/BridgeClients';
-import { matchClientResult, matchClientUnitResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
-import type { ClientResult$1_$union } from '@fossa-app/bridge/Models/ClientResults';
+import { foldClientResult, foldClientUnitResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
 import { CompanySettingsModificationModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 
 export const fetchCompanySettings = createAsyncThunk<CompanySettings, void, { rejectValue: ProblemDetailsModel }>(
   'companySettings/fetchCompanySettings',
   async (_, { rejectWithValue }) => {
     const result = await companySettingsClient.getCompanySettingsAsync(new AbortController().signal);
-    return matchClientResult(
+    return foldClientResult(
       result,
       (data) => {
         saveToLocalStorage(COMPANY_SETTINGS_KEY, data);
 
-        return (data || {}) as CompanySettings;
+        return (data || {}) as any;
       },
       (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.companySettings.notFound })) as never
     );
@@ -30,7 +29,7 @@ export const createCompanySettings = createAsyncThunk<void, EntityInput<CompanyS
   async (companySettings, { dispatch, rejectWithValue }) => {
     const modModel = new CompanySettingsModificationModel(companySettings.colorSchemeId!);
 
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await companySettingsClient.createCompanySettingsAsync(modModel, new AbortController().signal),
       async () => {
         saveToLocalStorage(COMPANY_SETTINGS_KEY, companySettings);
@@ -54,7 +53,7 @@ export const editCompanySettings = createAsyncThunk<void, EntityInput<CompanySet
   async (companySettings, { dispatch, rejectWithValue }) => {
     const modModel = new CompanySettingsModificationModel(companySettings.colorSchemeId!);
 
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await companySettingsClient.updateCompanySettingsAsync(modModel, new AbortController().signal),
       async () => {
         await dispatch(fetchCompanySettings()).unwrap();
@@ -76,7 +75,7 @@ export const editCompanySettings = createAsyncThunk<void, EntityInput<CompanySet
 export const deleteCompanySettings = createAsyncThunk<void, void, { rejectValue: ProblemDetailsModel }>(
   'companySettings/deleteCompanySettings',
   async (_, { dispatch, rejectWithValue }) => {
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await companySettingsClient.deleteCompanySettingsAsync(new AbortController().signal),
       async () => {
         removeFromLocalStorage(COMPANY_SETTINGS_KEY);

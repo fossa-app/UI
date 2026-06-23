@@ -8,32 +8,16 @@ type LegacyProblemDetailsPatch = Partial<Record<'Type' | 'Title' | 'Status' | 'D
 type ProblemDetailsPatch = Partial<Pick<ProblemDetailsModel, 'type' | 'title' | 'status' | 'detail' | 'instance' | 'errors' | 'traceId'>> &
   LegacyProblemDetailsPatch;
 
-const asRecord = (value: unknown): Record<string, unknown> => {
-  return value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
+export const getProblemTitle = (problem?: ProblemDetailsModel): string | undefined => {
+  return problem?.title ?? (problem as ProblemDetailsModel & { Title?: string })?.Title ?? undefined;
 };
 
-const read = <T>(
-  value: unknown,
-  pascalName: string,
-  camelName = `${pascalName.charAt(0).toLowerCase()}${pascalName.slice(1)}`
-): T | undefined => {
-  const record = asRecord(value);
-
-  return (record[camelName] ?? record[pascalName]) as T | undefined;
+export const getProblemStatus = (problem?: ProblemDetailsModel): number | undefined => {
+  return problem?.status ?? (problem as ProblemDetailsModel & { Status?: number })?.Status ?? undefined;
 };
 
-export const getProblemTitle = (problem: unknown): string | undefined => {
-  return read<string>(problem, 'Title');
-};
-
-export const getProblemStatus = (problem: unknown): number | undefined => {
-  const status = read<unknown>(problem, 'Status');
-
-  return status === null || status === undefined ? undefined : Number(status);
-};
-
-export const getProblemErrors = (problem: unknown): Record<string, string[]> | undefined => {
-  const errors = read<unknown>(problem, 'Errors');
+export const getProblemErrors = (problem?: ProblemDetailsModel): Record<string, string[]> | undefined => {
+  const errors = problem?.errors ?? (problem as ProblemDetailsModel & { Errors?: unknown })?.Errors;
 
   if (!errors) {
     return undefined;
@@ -43,7 +27,7 @@ export const getProblemErrors = (problem: unknown): Record<string, string[]> | u
     return Object.fromEntries(errors.entries()) as Record<string, string[]>;
   }
 
-  return typeof errors === 'object' ? (errors as Record<string, string[]>) : undefined;
+  return typeof errors === 'object' ? (errors as unknown as Record<string, string[]>) : undefined;
 };
 
 const toProblemErrorsMap = (errors: unknown): Map<string, string[]> => {
@@ -75,16 +59,15 @@ const deserializeProblemDetails = (problem: unknown): ProblemDetailsModel => {
 export const createProblemDetails = (problem?: unknown, overrides: ProblemDetailsPatch = {}): ProblemDetailsModel => {
   const normalized = deserializeProblemDetails(problem);
   const normalizedOverrides = deserializeProblemDetails(overrides);
-  const type = read<string>(overrides, 'Type') ?? read<string>(normalizedOverrides, 'Type') ?? read<string>(normalized, 'Type') ?? '';
-  const title = read<string>(overrides, 'Title') ?? read<string>(normalizedOverrides, 'Title') ?? read<string>(normalized, 'Title') ?? null;
-  const status = read<unknown>(overrides, 'Status') ?? read<unknown>(normalizedOverrides, 'Status') ?? read<unknown>(normalized, 'Status');
-  const detail =
-    read<string>(overrides, 'Detail') ?? read<string>(normalizedOverrides, 'Detail') ?? read<string>(normalized, 'Detail') ?? null;
+
+  const type = (overrides as any).type ?? (overrides as any).Type ?? normalizedOverrides.type ?? normalized.type ?? '';
+  const title = (overrides as any).title ?? (overrides as any).Title ?? normalizedOverrides.title ?? normalized.title ?? null;
+  const status = (overrides as any).status ?? (overrides as any).Status ?? normalizedOverrides.status ?? normalized.status;
+  const detail = (overrides as any).detail ?? (overrides as any).Detail ?? normalizedOverrides.detail ?? normalized.detail ?? null;
   const instance =
-    read<string>(overrides, 'Instance') ?? read<string>(normalizedOverrides, 'Instance') ?? read<string>(normalized, 'Instance') ?? null;
-  const errors = read<unknown>(overrides, 'Errors') ?? read<unknown>(normalizedOverrides, 'Errors') ?? read<unknown>(normalized, 'Errors');
-  const traceId =
-    read<string>(overrides, 'TraceId') ?? read<string>(normalizedOverrides, 'TraceId') ?? read<string>(normalized, 'TraceId') ?? null;
+    (overrides as any).instance ?? (overrides as any).Instance ?? normalizedOverrides.instance ?? normalized.instance ?? null;
+  const errors = (overrides as any).errors ?? (overrides as any).Errors ?? normalizedOverrides.errors ?? normalized.errors;
+  const traceId = (overrides as any).traceId ?? (overrides as any).TraceId ?? normalizedOverrides.traceId ?? normalized.traceId ?? null;
 
   return {
     ...normalized,
@@ -99,12 +82,12 @@ export const createProblemDetails = (problem?: unknown, overrides: ProblemDetail
   } as unknown as ProblemDetailsModel;
 };
 
-export const mapError = <T extends FieldValues>(error: ProblemDetailsModel): ErrorResponse<T> => {
+export const mapError = <T extends FieldValues>(error?: ProblemDetailsModel): ErrorResponse<T> => {
   const errors: FieldErrors<T> = {} as FieldErrors<T>;
   const problemErrors = getProblemErrors(error);
 
   if (!problemErrors) {
-    return { ...error, errors };
+    return { ...(error ?? {}), errors };
   }
 
   Object.entries(problemErrors).forEach(([key, messages]) => {

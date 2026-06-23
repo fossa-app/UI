@@ -1,3 +1,4 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppSelector } from 'store';
@@ -45,7 +46,9 @@ const BranchManagementPage: React.FC = () => {
   const [noPhysicalAddress, setNoPhysicalAddress] = React.useState<boolean | undefined>(undefined);
   const [fields, setFields] = React.useState<FormFieldProps<Branch>[]>([]);
   const formLoading = fetchStatus === 'loading' || (!branch && !!id) || fields.length === 0;
-  const errors = isUserAdmin ? deepCopyObject(getProblemErrors(updateError)) : USER_PERMISSION_GENERAL_ERROR;
+  const errors = isUserAdmin
+    ? deepCopyObject(updateError ? getProblemErrors(updateError as ProblemDetailsModel) : undefined)
+    : USER_PERMISSION_GENERAL_ERROR;
 
   React.useEffect(() => {
     if (!id || (id && branch && noPhysicalAddress !== undefined)) {

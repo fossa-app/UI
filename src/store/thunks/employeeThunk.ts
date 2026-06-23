@@ -7,8 +7,7 @@ import { Branch, Department, Employee, ErrorResponse, ProblemDetailsModel, Pagin
 import { MESSAGES } from 'shared/constants';
 import { employeeClient } from 'shared/configs/BridgeClients';
 import { toPaginatedResponse } from 'shared/configs/BridgeResponses';
-import { matchClientResult, matchClientUnitResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
-import type { ClientResult$1_$union } from '@fossa-app/bridge/Models/ClientResults';
+import { foldClientResult, foldClientUnitResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
 import { EmployeeQueryRequestModel, EmployeeManagementModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 import { mapEmployee, mapEmployees, mapError, getEntityIdsByField, createProblemDetails } from 'shared/helpers';
 
@@ -50,7 +49,7 @@ export const fetchEmployees = createAsyncThunk<
     const query = new EmployeeQueryRequestModel([], search || '', pageNumber || null, pageSize || null, null, null);
     const result = await employeeClient.getEmployeesAsync(query, new AbortController().signal);
 
-    return matchClientResult(
+    return foldClientResult(
       result,
       async (response) => {
         const data = toPaginatedResponse<Employee>(response);
@@ -96,7 +95,7 @@ export const fetchManagers = createAsyncThunk<
   const query = new EmployeeQueryRequestModel([], search || '', pageNumber || null, pageSize || null, null, null);
   const result = await employeeClient.getEmployeesAsync(query, new AbortController().signal);
 
-  return matchClientResult(
+  return foldClientResult(
     result,
     (response) => toPaginatedResponse<Employee>(response),
     (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.employee.notFound })) as never
@@ -119,7 +118,7 @@ export const fetchOrgChartEmployees = createAsyncThunk<
         !reportsTo
       );
       const result = await employeeClient.getEmployeesAsync(query, new AbortController().signal);
-      const subordinateData = await matchClientResult(
+      const subordinateData = await foldClientResult(
         result,
         (response) => toPaginatedResponse<Employee>(response),
         (problem) => {
@@ -144,7 +143,7 @@ export const fetchEmployeesTotal = createAsyncThunk<PaginatedResponse<Employee> 
     const query = new EmployeeQueryRequestModel([], '', 1, 1, null, null);
     const result = await employeeClient.getEmployeesAsync(query, new AbortController().signal);
 
-    return matchClientResult(
+    return foldClientResult(
       result,
       (response) => toPaginatedResponse<Employee>(response),
       (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.employee.notFound })) as never
@@ -170,7 +169,7 @@ export const fetchEmployeeById = createAsyncThunk<
     { dispatch, rejectWithValue }
   ) => {
     const employeeResult = await employeeClient.getEmployeeAsync(BigInt(id), new AbortController().signal);
-    return matchClientResult(
+    return foldClientResult(
       employeeResult,
       async (data) => {
         let branch: Branch | undefined;
@@ -191,7 +190,7 @@ export const fetchEmployeeById = createAsyncThunk<
           manager = (await fetchManager(dispatch, String(data.reportsToId))) as Employee;
         }
 
-        return mapEmployee({ branch, department, manager, employee: data, user: undefined });
+        return mapEmployee({ branch, department, manager, employee: data as any, user: undefined });
       },
       (problem) => rejectWithValue(problem) as never
     );
@@ -213,7 +212,7 @@ export const fetchEmployeesByIds = createAsyncThunk<
   const query = new EmployeeQueryRequestModel(idList, '', null, null, null, null);
   const result = await employeeClient.getEmployeesAsync(query, new AbortController().signal);
 
-  return matchClientResult(
+  return foldClientResult(
     result,
     (response) => toPaginatedResponse<Employee>(response),
     (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.employee.notFound })) as never
@@ -222,22 +221,22 @@ export const fetchEmployeesByIds = createAsyncThunk<
 
 export const editEmployee = createAsyncThunk<
   void,
-  [string, Pick<Employee, 'assignedBranchId'>],
+  [string, Pick<Employee, 'assignedBranchId' | 'assignedDepartmentId' | 'reportsToId' | 'jobTitle'>],
   { rejectValue: ErrorResponse<FieldValues> }
 >('employee/editEmployee', async ([id, employee], { dispatch, rejectWithValue }) => {
   try {
     const result = await employeeClient.getEmployeeAsync(BigInt(id), new AbortController().signal);
-    return matchClientResult(
+    return foldClientResult(
       result,
       async (curEmp) => {
         const modModel = new EmployeeManagementModel(
           nullableBigInt(employee.assignedBranchId),
-          nullableBigInt(curEmp.assignedDepartmentId),
-          nullableBigInt(curEmp.reportsToId),
-          curEmp.jobTitle ?? null
+          nullableBigInt(employee.assignedDepartmentId),
+          nullableBigInt(employee.reportsToId),
+          employee.jobTitle ?? curEmp.jobTitle ?? null
         );
 
-        return matchClientUnitResult(
+        return foldClientUnitResult(
           await employeeClient.manageEmployeeAsync(BigInt(id), modModel, new AbortController().signal),
           () => {
             dispatch(resetOrgChartEmployeesFetchStatus());

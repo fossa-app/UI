@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
-import { WritableDraft } from 'immer';
+
 import { FieldValues } from 'react-hook-form';
 import { RootState, StateEntity } from 'store';
 import {
@@ -64,10 +64,10 @@ const companySlice = createSlice({
       .addCase(fetchCompany.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.company.item = undefined;
         state.company.fetchStatus = 'failed';
-        state.company.fetchError = action.payload;
+        state.company.fetchError = action.payload as any;
       })
       .addCase(fetchCompany.fulfilled, (state, action: PayloadAction<Company | undefined>) => {
-        state.company.item = action.payload;
+        state.company.item = action.payload as any;
         state.company.fetchStatus = 'succeeded';
       })
       .addCase(createCompany.pending, (state) => {
@@ -75,7 +75,7 @@ const companySlice = createSlice({
       })
       .addCase(createCompany.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.company.updateStatus = 'failed';
-        state.company.updateError = action.payload;
+        state.company.updateError = action.payload as any;
       })
       .addCase(createCompany.fulfilled, (state) => {
         state.company.updateStatus = 'succeeded';
@@ -86,7 +86,7 @@ const companySlice = createSlice({
       })
       .addCase(editCompany.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.company.updateStatus = 'failed';
-        state.company.updateError = action.payload;
+        state.company.updateError = action.payload as any;
       })
       .addCase(editCompany.fulfilled, (state) => {
         state.company.updateStatus = 'succeeded';
@@ -97,7 +97,7 @@ const companySlice = createSlice({
       })
       .addCase(deleteCompany.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.company.deleteStatus = 'failed';
-        state.company.deleteError = action.payload;
+        state.company.deleteError = action.payload as any;
       })
       .addCase(deleteCompany.fulfilled, (state) => {
         state.company.item = undefined;

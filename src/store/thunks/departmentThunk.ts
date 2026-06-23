@@ -13,8 +13,7 @@ import { ProblemDetailsModel, ErrorResponse, PaginatedResponse, PaginationParams
 import { MESSAGES } from 'shared/constants';
 import { departmentClient } from 'shared/configs/BridgeClients';
 import { toPaginatedResponse } from 'shared/configs/BridgeResponses';
-import { matchClientResult, matchClientUnitResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
-import type { ClientResult$1_$union } from '@fossa-app/bridge/Models/ClientResults';
+import { foldClientResult, foldClientUnitResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
 import { DepartmentQueryRequestModel, DepartmentModificationModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 import { mapDepartments, mapError, mapDepartment, getEntityIdsByField, createProblemDetails } from 'shared/helpers';
 
@@ -45,7 +44,7 @@ export const fetchDepartmentsTotal = createAsyncThunk<
   const query = new DepartmentQueryRequestModel([], '', 1, 1);
   const result = await departmentClient.getDepartmentsAsync(query, new AbortController().signal);
 
-  return matchClientResult(
+  return foldClientResult(
     result,
     (response) => toPaginatedResponse<Department>(response),
     (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.departments.notFound })) as never
@@ -60,7 +59,7 @@ export const fetchDepartments = createAsyncThunk<
   const query = new DepartmentQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
   const result = await departmentClient.getDepartmentsAsync(query, new AbortController().signal);
 
-  return matchClientResult(
+  return foldClientResult(
     result,
     async (response) => {
       const data = toPaginatedResponse<Department>(response);
@@ -94,7 +93,7 @@ export const fetchSearchedDepartments = createAsyncThunk<
   const query = new DepartmentQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
   const result = await departmentClient.getDepartmentsAsync(query, new AbortController().signal);
 
-  return matchClientResult(
+  return foldClientResult(
     result,
     (response) => toPaginatedResponse<Department>(response),
     (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.departments.notFound })) as never
@@ -109,7 +108,7 @@ export const fetchParentDepartments = createAsyncThunk<
   const query = new DepartmentQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
   const result = await departmentClient.getDepartmentsAsync(query, new AbortController().signal);
 
-  return matchClientResult(
+  return foldClientResult(
     result,
     (response) => toPaginatedResponse<Department>(response),
     (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.departments.notFound })) as never
@@ -124,7 +123,7 @@ export const fetchAssignedDepartments = createAsyncThunk<
   const query = new DepartmentQueryRequestModel([], search || '', pageNumber || null, pageSize || null);
   const result = await departmentClient.getDepartmentsAsync(query, new AbortController().signal);
 
-  return matchClientResult(
+  return foldClientResult(
     result,
     (response) => toPaginatedResponse<Department>(response),
     (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.departments.notFound })) as never
@@ -146,7 +145,7 @@ export const fetchDepartmentsByIds = createAsyncThunk<
   const query = new DepartmentQueryRequestModel(idList, '', null, null);
   const result = await departmentClient.getDepartmentsAsync(query, new AbortController().signal);
 
-  return matchClientResult(
+  return foldClientResult(
     result,
     (response) => toPaginatedResponse<Department>(response),
     (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.departments.notFound })) as never
@@ -167,7 +166,7 @@ export const fetchDepartmentById = createAsyncThunk<
   async ({ id, shouldFetchParent = true, shouldFetchDepartmentManager = true }, { dispatch, rejectWithValue }): Promise<Department> => {
     try {
       const result = await departmentClient.getDepartmentAsync(BigInt(id), new AbortController().signal);
-      return matchClientResult(
+      return foldClientResult(
         result,
         async (data) => {
           let parentDepartment: Department | undefined;
@@ -189,7 +188,7 @@ export const fetchDepartmentById = createAsyncThunk<
             ).unwrap();
           }
 
-          return mapDepartment(data, parentDepartment, manager);
+          return mapDepartment(data as any, parentDepartment, manager);
         },
         (problem) => rejectWithValue(problem) as never
       );
@@ -208,7 +207,7 @@ export const createDepartment = createAsyncThunk<void, EntityInput<Department>, 
       nullableBigInt(department.managerId)
     );
 
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await departmentClient.createDepartmentAsync(modModel, new AbortController().signal),
       () => {
         dispatch(resetParentDepartments());
@@ -235,7 +234,7 @@ export const editDepartment = createAsyncThunk<void, [string, EntityInput<Depart
       nullableBigInt(department.managerId)
     );
 
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await departmentClient.updateDepartmentAsync(BigInt(id), modModel, new AbortController().signal),
       () => {
         dispatch(resetParentDepartments());
@@ -256,7 +255,7 @@ export const editDepartment = createAsyncThunk<void, [string, EntityInput<Depart
 export const deleteDepartment = createAsyncThunk<void, Department['id'], { state: RootState; rejectValue: ProblemDetailsModel }>(
   'department/deleteDepartment',
   async (id, { dispatch, rejectWithValue }) => {
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await departmentClient.deleteDepartmentAsync(BigInt(id), new AbortController().signal),
       () => {
         dispatch(resetDepartmentsFetchStatus());

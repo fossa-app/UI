@@ -17,11 +17,11 @@ const messageSlice = createSlice({
   initialState,
   reducers: {
     setError: (state, action: PayloadAction<ProblemDetailsModel>) => {
-      state.error = action.payload;
+      state.error = action.payload as any;
       state.success = undefined;
     },
     setSuccess: (state, action: PayloadAction<string>) => {
-      state.success = action.payload;
+      state.success = action.payload as any;
       state.error = undefined;
     },
     clearMessages: (state) => {

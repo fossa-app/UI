@@ -27,10 +27,10 @@ const identitySlice = createSlice({
       .addCase(fetchClient.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.client.item = undefined;
         state.client.fetchStatus = 'failed';
-        state.client.fetchError = action.payload;
+        state.client.fetchError = action.payload as any;
       })
       .addCase(fetchClient.fulfilled, (state, action: PayloadAction<IdentityClientRetrievalModel | undefined>) => {
-        state.client.item = action.payload;
+        state.client.item = action.payload as any;
         state.client.fetchStatus = 'succeeded';
       });
   },

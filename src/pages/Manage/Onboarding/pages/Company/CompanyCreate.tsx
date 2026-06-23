@@ -1,3 +1,4 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompany, selectIsUserAdmin, selectUserRoles, selectSystemCountries } from 'store/features';
@@ -22,7 +23,9 @@ const CompanyCreatePage: React.FC = () => {
       ? { ...action, disabled: !hasAllowedRole(action.roles, userRoles), loading: updateStatus === 'loading' }
       : action
   );
-  const errors = isUserAdmin ? deepCopyObject(getProblemErrors(error)) : USER_PERMISSION_GENERAL_ERROR;
+  const errors = isUserAdmin
+    ? deepCopyObject(error ? getProblemErrors(error as ProblemDetailsModel) : undefined)
+    : USER_PERMISSION_GENERAL_ERROR;
 
   const handleSubmit = (data: Company) => {
     dispatch(createCompany(data));

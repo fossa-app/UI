@@ -7,21 +7,20 @@ import { Company, EntityInput, ErrorResponse, ProblemDetailsModel } from 'shared
 import { getProblemStatus, mapCompany, mapError, createProblemDetails } from 'shared/helpers';
 import { MESSAGES } from 'shared/constants';
 import { companyClient } from 'shared/configs/BridgeClients';
-import { matchClientResult, matchClientUnitResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
-import type { ClientResult$1_$union } from '@fossa-app/bridge/Models/ClientResults';
+import { foldClientResult, foldClientUnitResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
 import { CompanyModificationModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 
 export const fetchCompany = createAsyncThunk<Company | undefined, boolean | undefined, { rejectValue: ProblemDetailsModel }>(
   'company/fetchCompany',
   async (_, { getState, rejectWithValue }) => {
     const result = await companyClient.getCompanyAsync(new AbortController().signal);
-    return matchClientResult(
+    return foldClientResult(
       result,
       (data) => {
         const state = getState() as RootState;
         const countries = state.license.system.item?.entitlements.countries || [];
 
-        return mapCompany(data, countries);
+        return mapCompany(data as any, countries);
       },
       (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.company.notFound })) as never
     );
@@ -33,7 +32,7 @@ export const createCompany = createAsyncThunk<void, Company, { rejectValue: Erro
   async (company, { dispatch, rejectWithValue }) => {
     const modModel = new CompanyModificationModel(company.name, company.countryCode ?? null);
 
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await companyClient.createCompanyAsync(modModel, new AbortController().signal),
       async () => {
         await dispatch(fetchCompany(false)).unwrap();
@@ -56,7 +55,7 @@ export const editCompany = createAsyncThunk<void, EntityInput<Company>, { reject
   async (company, { dispatch, rejectWithValue }) => {
     const modModel = new CompanyModificationModel(company.name, company.countryCode ?? null);
 
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await companyClient.updateCompanyAsync(modModel, new AbortController().signal),
       () => {
         dispatch(setSuccess(MESSAGES.success.company.update));
@@ -75,7 +74,7 @@ export const editCompany = createAsyncThunk<void, EntityInput<Company>, { reject
 export const deleteCompany = createAsyncThunk<void, void, { rejectValue: ProblemDetailsModel }>(
   'company/deleteCompany',
   async (_, { dispatch, rejectWithValue }) => {
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await companyClient.deleteCompanyAsync(new AbortController().signal),
       async () => {
         dispatch(setSuccess(MESSAGES.success.company.delete));

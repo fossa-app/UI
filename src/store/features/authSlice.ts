@@ -51,7 +51,7 @@ const authSlice = createSlice({
         state.user.fetchError = undefined;
       })
       .addCase(fetchUser.fulfilled, (state, action: PayloadAction<AppUser | undefined>) => {
-        state.user.item = action.payload;
+        state.user.item = action.payload as any;
         state.user.fetchStatus = 'succeeded';
 
         const atClaims = decodeJwt<AppUser>(action.payload?.access_token);

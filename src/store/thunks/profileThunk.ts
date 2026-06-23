@@ -5,8 +5,7 @@ import { setError, setSuccess, resetCompanyDatasourceTotalsFetchStatus } from 's
 import { Employee, EntityInput, ErrorResponse, ProblemDetailsModel } from 'shared/types';
 import { MESSAGES } from 'shared/constants';
 import { employeeClient } from 'shared/configs/BridgeClients';
-import { matchClientResult, matchClientUnitResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
-import type { ClientResult$1_$union } from '@fossa-app/bridge/Models/ClientResults';
+import { foldClientResult, foldClientUnitResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
 import { EmployeeModificationModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 import { getProblemStatus, mapEmployee, mapError, createProblemDetails } from 'shared/helpers';
 
@@ -14,13 +13,13 @@ export const fetchProfile = createAsyncThunk<Employee | undefined, void, { rejec
   'profile/fetchProfile',
   async (_, { getState, rejectWithValue }) => {
     const result = await employeeClient.getCurrentEmployeeAsync(new AbortController().signal);
-    return matchClientResult(
+    return foldClientResult(
       result,
       (data) => {
         const state = getState() as RootState;
         const user = state.auth.user.item;
 
-        return mapEmployee({ user, employee: data });
+        return mapEmployee({ user, employee: data as any });
       },
       (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.employee.notFound })) as never
     );
@@ -32,7 +31,7 @@ export const createProfile = createAsyncThunk<void, EntityInput<Employee>, { sta
   async (employee, { dispatch, rejectWithValue }) => {
     const modModel = new EmployeeModificationModel(employee.firstName, employee.lastName, employee.fullName ?? null);
 
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await employeeClient.createEmployeeAsync(modModel, new AbortController().signal),
       async () => {
         await dispatch(fetchProfile()).unwrap();
@@ -55,7 +54,7 @@ export const editProfile = createAsyncThunk<void, EntityInput<Employee>, { rejec
   async (employee, { dispatch, rejectWithValue }) => {
     const modModel = new EmployeeModificationModel(employee.firstName, employee.lastName, employee.fullName ?? null);
 
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await employeeClient.updateCurrentEmployeeAsync(modModel, new AbortController().signal),
       () => {
         dispatch(setSuccess(MESSAGES.success.employee.updateProfile));
@@ -74,7 +73,7 @@ export const editProfile = createAsyncThunk<void, EntityInput<Employee>, { rejec
 export const deleteProfile = createAsyncThunk<void, void, { rejectValue: ProblemDetailsModel }>(
   'profile/deleteProfile',
   async (_, { dispatch, rejectWithValue }) => {
-    return matchClientUnitResult(
+    return foldClientUnitResult(
       await employeeClient.deleteCurrentEmployeeAsync(new AbortController().signal),
       () => {
         dispatch(resetCompanyDatasourceTotalsFetchStatus());
