@@ -1,8 +1,9 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompany, selectIsUserAdmin, selectUserRoles } from 'store/features';
 import { deleteCompany } from 'store/thunks';
-import { deepCopyObject, hasAllowedRole } from 'shared/helpers';
+import { deepCopyObject, getProblemErrors, hasAllowedRole } from 'shared/helpers';
 import { DELETE_COMPANY_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_ERROR } from 'shared/constants';
 import { Company } from 'shared/types';
 import Form, { FormActionName } from 'components/UI/Form';
@@ -16,7 +17,9 @@ const CompanyDeletePage: React.FC = () => {
   const isUserAdmin = useAppSelector(selectIsUserAdmin);
   const { deleteError: error, deleteStatus } = useAppSelector(selectCompany);
   const fields = DELETE_COMPANY_DETAILS_FORM_SCHEMA.fields;
-  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_ERROR;
+  const errors = isUserAdmin
+    ? deepCopyObject(error ? getProblemErrors(error as ProblemDetailsModel) : undefined)
+    : USER_PERMISSION_GENERAL_ERROR;
 
   const actions = DELETE_COMPANY_DETAILS_FORM_SCHEMA.actions.map((action) => {
     switch (action.name) {

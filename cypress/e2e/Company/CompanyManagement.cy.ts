@@ -1,5 +1,6 @@
 import { ROUTES } from 'shared/constants';
 import { Module, SubModule } from 'shared/types';
+import { daysUntil } from 'shared/helpers';
 import {
   clearInputField,
   clickActionButton,
@@ -44,8 +45,9 @@ const testCompaLicenseFields = () => {
     'view-details-label-terms.licensee.shortName': 'Short Name',
     'view-details-value-terms.licensee.shortName': 'TCL',
     'view-details-label-terms.notBefore': 'Valid From',
-    'view-details-value-terms.notBefore': '9/1/2024',
+    'view-details-value-terms.notBefore': new Date('2024-09-01T00:00:00Z').toLocaleDateString(),
     'view-details-label-terms.notAfter': 'Valid To',
+    'view-details-value-terms.notAfter': `${new Date('2035-09-01T00:00:00Z').toLocaleDateString()} (${daysUntil('2035-09-01T00:00:00Z')} days left)`,
     'view-details-label-entitlements.maximumBranchCount': 'Branch usage: 1 of 10',
     'view-details-label-entitlements.maximumEmployeeCount': 'Employee usage: 1 of 100',
     'view-details-label-entitlements.maximumDepartmentCount': 'Department usage: 4 of 20',

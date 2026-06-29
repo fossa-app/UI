@@ -235,7 +235,7 @@ describe('Department Catalog Tests', () => {
           getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
           cy.wait('@fetchSearchedDepartmentsRequest')
             .its('request.url')
-            .should('include', 'Departments?pageNumber=1&pageSize=10&search=Production');
+            .should('include', 'Departments?search=Production&pageNumber=1&pageSize=10');
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
             'have.length',
             3
@@ -251,7 +251,7 @@ describe('Department Catalog Tests', () => {
           getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
           cy.wait('@fetchSearchedNoDepartmentsRequest')
             .its('request.url')
-            .should('include', 'Departments?pageNumber=1&pageSize=10&search=Productions');
+            .should('include', 'Departments?search=Productions&pageNumber=1&pageSize=10');
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
             'have.length',
             0
@@ -298,7 +298,7 @@ describe('Department Catalog Tests', () => {
           getLinearLoader(Module.departmentManagement, SubModule.departmentCatalog, 'table').should('exist');
           cy.wait('@searchDepartmentsRequest')
             .its('request.url')
-            .should('include', 'Departments?pageNumber=1&pageSize=10&search=Production');
+            .should('include', 'Departments?search=Production&pageNumber=1&pageSize=10');
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
             'have.length',
             3
@@ -315,7 +315,7 @@ describe('Department Catalog Tests', () => {
 
           cy.wait('@searchDepartmentsPageSize20')
             .its('request.url')
-            .should('include', 'Departments?pageNumber=1&pageSize=20&search=Production');
+            .should('include', 'Departments?search=Production&pageNumber=1&pageSize=20');
           getTestSelectorByModule(Module.departmentManagement, SubModule.departmentCatalog, 'table-body-row', true).should(
             'have.length',
             20

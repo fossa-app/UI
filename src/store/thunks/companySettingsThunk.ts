@@ -1,100 +1,96 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
 import { setError, setSuccess } from 'store/features';
-import axios from 'shared/configs/axios';
-import { CompanySettings, CompanySettingsDTO, EntityInput, ErrorResponse, ErrorResponseDTO } from 'shared/types';
-import { MESSAGES, ENDPOINTS, COMPANY_SETTINGS_KEY } from 'shared/constants';
-import { mapError, saveToLocalStorage, removeFromLocalStorage } from 'shared/helpers';
+import { CompanySettings, EntityInput, ErrorResponse, ProblemDetailsModel } from 'shared/types';
+import { MESSAGES, COMPANY_SETTINGS_KEY } from 'shared/constants';
+import { mapError, saveToLocalStorage, removeFromLocalStorage, createProblemDetails } from 'shared/helpers';
+import { companySettingsClient } from 'shared/configs/BridgeClients';
+import { foldClientResult, foldClientUnitResult } from '@fossa-app/bridge/Models/Helpers/ClientResultHelpers';
+import { CompanySettingsModificationModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 
-export const fetchCompanySettings = createAsyncThunk<CompanySettings, void, { rejectValue: ErrorResponseDTO }>(
+export const fetchCompanySettings = createAsyncThunk<CompanySettings, void, { rejectValue: ProblemDetailsModel }>(
   'companySettings/fetchCompanySettings',
   async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await axios.get<CompanySettingsDTO>(ENDPOINTS.companySettings);
+    const result = await companySettingsClient.getCompanySettingsAsync(new AbortController().signal);
+    return foldClientResult(
+      result,
+      (data) => {
+        saveToLocalStorage(COMPANY_SETTINGS_KEY, data);
 
-      saveToLocalStorage(COMPANY_SETTINGS_KEY, data);
-
-      return data || {};
-    } catch (error) {
-      return rejectWithValue({
-        ...(error as ErrorResponseDTO),
-        title: MESSAGES.error.companySettings.notFound,
-      });
-    }
+        return (data || {}) as any;
+      },
+      (problem) => rejectWithValue(createProblemDetails(problem, { Title: MESSAGES.error.companySettings.notFound })) as never
+    );
   }
 );
 
-export const createCompanySettings = createAsyncThunk<void, EntityInput<CompanySettingsDTO>, { rejectValue: ErrorResponse<FieldValues> }>(
+export const createCompanySettings = createAsyncThunk<void, EntityInput<CompanySettings>, { rejectValue: ErrorResponse<FieldValues> }>(
   'companySettings/createCompanySettings',
   async (companySettings, { dispatch, rejectWithValue }) => {
-    try {
-      await axios.post<CompanySettingsDTO>(ENDPOINTS.companySettings, companySettings);
-      saveToLocalStorage(COMPANY_SETTINGS_KEY, companySettings);
-      await dispatch(fetchCompanySettings()).unwrap();
+    const modModel = new CompanySettingsModificationModel(companySettings.colorSchemeId!);
 
-      dispatch(setSuccess(MESSAGES.success.companySettings.create));
-    } catch (error) {
-      dispatch(
-        setError({
-          ...(error as ErrorResponseDTO),
-          title: MESSAGES.error.companySettings.create,
-        })
-      );
+    return foldClientUnitResult(
+      await companySettingsClient.createCompanySettingsAsync(modModel, new AbortController().signal),
+      async () => {
+        saveToLocalStorage(COMPANY_SETTINGS_KEY, companySettings);
+        await dispatch(fetchCompanySettings()).unwrap();
 
-      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+        dispatch(setSuccess(MESSAGES.success.companySettings.create));
+      },
+      (problem) => {
+        dispatch(setError(createProblemDetails(problem, { Title: MESSAGES.error.companySettings.create })));
 
-      return rejectWithValue(mappedError);
-    }
+        const mappedError = mapError(problem) as ErrorResponse<FieldValues>;
+
+        return rejectWithValue(mappedError) as never;
+      }
+    );
   }
 );
 
-export const editCompanySettings = createAsyncThunk<void, EntityInput<CompanySettingsDTO>, { rejectValue: ErrorResponse<FieldValues> }>(
+export const editCompanySettings = createAsyncThunk<void, EntityInput<CompanySettings>, { rejectValue: ErrorResponse<FieldValues> }>(
   'companySettings/editCompanySettings',
   async (companySettings, { dispatch, rejectWithValue }) => {
-    try {
-      await axios.put<CompanySettingsDTO>(ENDPOINTS.companySettings, companySettings);
+    const modModel = new CompanySettingsModificationModel(companySettings.colorSchemeId!);
 
-      await dispatch(fetchCompanySettings()).unwrap();
+    return foldClientUnitResult(
+      await companySettingsClient.updateCompanySettingsAsync(modModel, new AbortController().signal),
+      async () => {
+        await dispatch(fetchCompanySettings()).unwrap();
 
-      saveToLocalStorage(COMPANY_SETTINGS_KEY, companySettings);
-      dispatch(setSuccess(MESSAGES.success.companySettings.update));
-    } catch (error) {
-      dispatch(
-        setError({
-          ...(error as ErrorResponseDTO),
-          title: MESSAGES.error.companySettings.update,
-        })
-      );
+        saveToLocalStorage(COMPANY_SETTINGS_KEY, companySettings);
+        dispatch(setSuccess(MESSAGES.success.companySettings.update));
+      },
+      (problem) => {
+        dispatch(setError(createProblemDetails(problem, { Title: MESSAGES.error.companySettings.update })));
 
-      const mappedError = mapError(error as ErrorResponseDTO) as ErrorResponse<FieldValues>;
+        const mappedError = mapError(problem) as ErrorResponse<FieldValues>;
 
-      return rejectWithValue(mappedError);
-    }
+        return rejectWithValue(mappedError) as never;
+      }
+    );
   }
 );
 
-export const deleteCompanySettings = createAsyncThunk<void, void, { rejectValue: ErrorResponseDTO }>(
+export const deleteCompanySettings = createAsyncThunk<void, void, { rejectValue: ProblemDetailsModel }>(
   'companySettings/deleteCompanySettings',
   async (_, { dispatch, rejectWithValue }) => {
-    try {
-      await axios.delete<void>(ENDPOINTS.companySettings);
+    return foldClientUnitResult(
+      await companySettingsClient.deleteCompanySettingsAsync(new AbortController().signal),
+      async () => {
+        removeFromLocalStorage(COMPANY_SETTINGS_KEY);
+        dispatch(setSuccess(MESSAGES.success.companySettings.delete));
+        try {
+          await dispatch(fetchCompanySettings()).unwrap();
+        } catch {
+          // Ignored: fetchCompanySettings will return 404 after delete, which is expected.
+        }
+      },
+      (problem) => {
+        dispatch(setError(createProblemDetails(problem, { Title: MESSAGES.error.companySettings.delete })));
 
-      removeFromLocalStorage(COMPANY_SETTINGS_KEY);
-      dispatch(setSuccess(MESSAGES.success.companySettings.delete));
-      try {
-        await dispatch(fetchCompanySettings()).unwrap();
-      } catch {
-        // Ignored: fetchCompanySettings will return 404 after delete, which is expected.
+        return rejectWithValue(problem) as never;
       }
-    } catch (error) {
-      dispatch(
-        setError({
-          ...(error as ErrorResponseDTO),
-          title: MESSAGES.error.companySettings.delete,
-        })
-      );
-
-      return rejectWithValue(error as ErrorResponseDTO);
-    }
+    );
   }
 );

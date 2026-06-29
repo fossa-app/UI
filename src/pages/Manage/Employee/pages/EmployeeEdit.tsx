@@ -1,3 +1,4 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -20,14 +21,15 @@ import {
 } from 'store/features';
 import { fetchAssignedBranches, fetchAssignedDepartments, editEmployee, fetchEmployeeById, fetchManagers } from 'store/thunks';
 import { APP_CONFIG, EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, EMPLOYEE_DETAILS_FORM_SCHEMA, EMPLOYEE_FIELDS, ROUTES } from 'shared/constants';
-import { Branch, Department, Employee, EmployeeDTO, EntityInput } from 'shared/types';
+import { Employee, EntityInput } from 'shared/types';
 import {
   areEqualBigIds,
   deepCopyObject,
   mapBranchToFieldOption,
   mapDepartmentToFieldOption,
-  mapEmployeeDTO,
+  mapEmployeeInput,
   mapEmployeeToFieldOption,
+  getProblemErrors,
 } from 'shared/helpers';
 import { useOnFormSubmitEffect, useSafeNavigateBack } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
@@ -59,7 +61,7 @@ const EmployeeEditPage: React.FC = () => {
   const safeNavigateBack = useSafeNavigateBack(ROUTES.employees.path);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
   const defaultValues: EntityInput<Employee> = employee || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
-  const errors = deepCopyObject(updateError?.errors);
+  const errors = deepCopyObject(updateError ? getProblemErrors(updateError as ProblemDetailsModel) : undefined);
 
   const handleAssignedBranchesScrollEnd = () => {
     if (assignedBranchesPage.pageNumber! < assignedBranchesPage.totalPages!) {
@@ -93,7 +95,7 @@ const EmployeeEditPage: React.FC = () => {
   };
 
   const handleSubmit = (formValue: Employee) => {
-    const submitData = mapEmployeeDTO(formValue);
+    const submitData = mapEmployeeInput(formValue);
 
     dispatch(editEmployee([id!, submitData]));
     setFormSubmitted(true);
@@ -102,19 +104,19 @@ const EmployeeEditPage: React.FC = () => {
   const isBranchOptionAvailable = assignedBranches.some((branchItem) => String(branchItem.id) === String(employee?.assignedBranchId));
   const branchItems =
     employee?.assignedBranchId && !isBranchOptionAvailable
-      ? [{ id: employee.assignedBranchId, name: employee.assignedBranchName } as Branch, ...assignedBranches]
+      ? [{ id: employee.assignedBranchId, name: employee.assignedBranchName ?? '' }, ...assignedBranches]
       : assignedBranches;
   const isDepartmentOptionAvailable = assignedDepartments.some(
     (departmentItem) => String(departmentItem.id) === String(employee?.assignedDepartmentId)
   );
   const departmentItems =
     employee?.assignedDepartmentId && !isDepartmentOptionAvailable
-      ? [{ id: employee.assignedDepartmentId, name: employee.assignedDepartmentName } as Department, ...assignedDepartments]
+      ? [{ id: employee.assignedDepartmentId, name: employee.assignedDepartmentName ?? '' }, ...assignedDepartments]
       : assignedDepartments;
   const isManagerOptionAvailable = managers.some((managerItem) => String(managerItem.id) === String(employee?.reportsToId));
   const managerItems =
     employee?.reportsToId && !isManagerOptionAvailable
-      ? [{ id: employee.reportsToId, name: employee.reportsToName } as unknown as EmployeeDTO, ...managers]
+      ? [{ id: employee.reportsToId, fullName: employee.reportsToName ?? '' }, ...managers]
       : managers;
 
   const fields = EMPLOYEE_DETAILS_FORM_SCHEMA.fields.map((field) => {

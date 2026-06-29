@@ -1,15 +1,14 @@
-import { Country, FlattenField } from './common';
+import type { CompanyRetrievalModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
+import { BridgeViewModel, Country, FlattenField } from './common';
 import { CompanyLicense } from './license';
 
-export interface CompanyDTO {
-  id: number;
+type BridgeCompany = BridgeViewModel<CompanyRetrievalModel>;
+
+export type Company = Omit<BridgeCompany, 'name' | 'countryCode'> & {
   name: string;
   countryCode: Country['code'];
-}
-
-export interface Company extends CompanyDTO {
   countryName?: Country['name'];
-}
+};
 
 export interface CompanyDatasourceTotals {
   branches?: number;

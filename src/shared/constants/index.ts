@@ -1,4 +1,3 @@
-export * from './endpoints';
 export * from './routes';
 export * from './configs';
 export * from './flows';

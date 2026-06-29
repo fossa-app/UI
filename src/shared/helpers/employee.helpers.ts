@@ -1,4 +1,4 @@
-import { AppUser, Branch, BranchDTO, Department, DepartmentDTO, Employee, EmployeeDTO, EntityInput } from 'shared/types';
+import { AppUser, Branch, Department, Employee, EntityInput } from 'shared/types';
 import { FieldOption } from 'components/UI/Form';
 import { mapUserProfileToEmployee } from './user.helpers';
 
@@ -9,7 +9,7 @@ export const mapEmployee = ({
   department,
   manager,
 }: {
-  employee: EmployeeDTO;
+  employee: Employee;
   user?: AppUser;
   branch?: Branch;
   department?: Department;
@@ -34,10 +34,10 @@ export const mapEmployees = ({
   departments = [],
   managers = [],
 }: {
-  employees: EmployeeDTO[];
-  branches?: BranchDTO[];
-  departments?: DepartmentDTO[];
-  managers?: EmployeeDTO[];
+  employees: Employee[];
+  branches?: Branch[];
+  departments?: Department[];
+  managers?: Employee[];
 }): Employee[] => {
   return employees.map((employee) => {
     const branch = branches.find(({ id }) => id === employee.assignedBranchId);
@@ -48,7 +48,7 @@ export const mapEmployees = ({
   });
 };
 
-export const mapEmployeeDTO = (employee: Employee): Omit<EntityInput<EmployeeDTO>, 'firstName' | 'lastName' | 'fullName'> => {
+export const mapEmployeeInput = (employee: Employee): Omit<EntityInput<Employee>, 'firstName' | 'lastName' | 'fullName'> => {
   return {
     jobTitle: employee.jobTitle,
     assignedBranchId: employee.assignedBranchId || null,
@@ -57,7 +57,7 @@ export const mapEmployeeDTO = (employee: Employee): Omit<EntityInput<EmployeeDTO
   };
 };
 
-export const mapProfileDTO = (employee: EntityInput<Employee>): EntityInput<EmployeeDTO> => {
+export const mapProfileInput = (employee: EntityInput<Employee>): EntityInput<Employee> => {
   return {
     firstName: employee.firstName,
     lastName: employee.lastName,
@@ -69,7 +69,7 @@ export const mapProfileDTO = (employee: EntityInput<Employee>): EntityInput<Empl
   };
 };
 
-export const mapEmployeeToFieldOption = (employee: EmployeeDTO): FieldOption => {
+export const mapEmployeeToFieldOption = (employee: Pick<Employee, 'id' | 'fullName'>): FieldOption => {
   return {
     label: employee.fullName,
     value: String(employee.id),

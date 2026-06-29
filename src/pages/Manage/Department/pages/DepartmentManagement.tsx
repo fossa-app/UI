@@ -1,3 +1,4 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import {
@@ -23,8 +24,14 @@ import {
   ROUTES,
   USER_PERMISSION_GENERAL_ERROR,
 } from 'shared/constants';
-import { Department, DepartmentDTO, EmployeeDTO } from 'shared/types';
-import { mapDisabledFields, deepCopyObject, mapDepartmentDTO, mapDepartmentFieldOptionsToFieldOptions } from 'shared/helpers';
+import { Department } from 'shared/types';
+import {
+  mapDisabledFields,
+  deepCopyObject,
+  mapDepartmentInput,
+  mapDepartmentFieldOptionsToFieldOptions,
+  getProblemErrors,
+} from 'shared/helpers';
 import EntityManager from 'components/Entity/EntityManager';
 
 const testModule = DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.module;
@@ -47,7 +54,9 @@ const DepartmentManagementPage: React.FC = () => {
   } = useAppSelector(selectManagers);
   const parentDepartmentsLoading = parentDepartmentsFetchStatus === 'loading';
   const managersLoading = managersFetchStatus === 'loading';
-  const errors = isUserAdmin ? deepCopyObject(updateError?.errors) : USER_PERMISSION_GENERAL_ERROR;
+  const errors = isUserAdmin
+    ? deepCopyObject(updateError ? getProblemErrors(updateError as ProblemDetailsModel) : undefined)
+    : USER_PERMISSION_GENERAL_ERROR;
 
   const handleParentDepartmentsScrollEnd = () => {
     if (parentDepartmentsPage.pageNumber! < parentDepartmentsPage.totalPages!) {
@@ -68,12 +77,12 @@ const DepartmentManagementPage: React.FC = () => {
   );
   const parentDepartmentItems =
     department?.parentDepartmentId && !isParentDepartmentOptionAvailable
-      ? [{ id: department.parentDepartmentId, name: department.parentDepartmentName } as DepartmentDTO, ...parentDepartments]
+      ? [{ id: department.parentDepartmentId, name: department.parentDepartmentName ?? '' }, ...parentDepartments]
       : parentDepartments;
   const isManagerOptionAvailable = managers.some((managertItem) => String(managertItem.id) === String(department?.managerId));
   const managerItems =
     department?.managerId && !isManagerOptionAvailable
-      ? [{ id: department.managerId, name: department.managerName } as unknown as EmployeeDTO, ...managers]
+      ? [{ id: department.managerId, fullName: department.managerName ?? '' }, ...managers]
       : managers;
   const disabledFields = mapDisabledFields(DEPARTMENT_MANAGEMENT_DETAILS_FORM_SCHEMA.fields, userRoles);
   const mappedFields = mapDepartmentFieldOptionsToFieldOptions(disabledFields, parentDepartmentItems, managerItems);
@@ -110,7 +119,7 @@ const DepartmentManagementPage: React.FC = () => {
   }, [parentDepartmentsFetchStatus, parentDepartmentsPage, dispatch]);
 
   return (
-    <EntityManager<Department, DepartmentDTO>
+    <EntityManager<Department, Department>
       module={testModule}
       subModule={testSubModule}
       pageTitle={{ create: 'Create Department', edit: 'Edit Department' }}
@@ -127,7 +136,7 @@ const DepartmentManagementPage: React.FC = () => {
       fetchEntityAction={(id) => fetchDepartmentById({ id, skipState: false })}
       createEntityAction={createDepartment}
       editEntityAction={editDepartment}
-      mapDTO={mapDepartmentDTO}
+      mapInput={mapDepartmentInput}
     />
   );
 };

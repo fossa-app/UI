@@ -1,3 +1,4 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -5,7 +6,7 @@ import { resetProfileFetchStatus, selectProfile } from 'store/features';
 import { editProfile } from 'store/thunks';
 import { EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES, PROFILE_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
 import { Employee, EntityInput } from 'shared/types';
-import { deepCopyObject, mapProfileDTO } from 'shared/helpers';
+import { deepCopyObject, getProblemErrors, mapProfileInput } from 'shared/helpers';
 import { useOnFormSubmitEffect } from 'shared/hooks';
 import PageLayout from 'components/layouts/PageLayout';
 import Form, { FormActionName } from 'components/UI/Form';
@@ -19,7 +20,7 @@ const EditProfilePage: React.FC = () => {
   const { item: profile, updateError: error, updateStatus = 'idle' } = useAppSelector(selectProfile);
   const [formSubmitted, setFormSubmitted] = React.useState<boolean>(false);
   const defaultValues: EntityInput<Employee> = profile || EMPLOYEE_DETAILS_FORM_DEFAULT_VALUES;
-  const errors = deepCopyObject(error?.errors);
+  const errors = deepCopyObject(error ? getProblemErrors(error as ProblemDetailsModel) : undefined);
 
   const navigateToViewProfile = () => {
     navigate(ROUTES.viewProfile.path);
@@ -47,7 +48,7 @@ const EditProfilePage: React.FC = () => {
   });
 
   const handleSubmit = (formValue: EntityInput<Employee>) => {
-    const submitData = mapProfileDTO(formValue);
+    const submitData = mapProfileInput(formValue);
 
     dispatch(editProfile(submitData));
     setFormSubmitted(true);

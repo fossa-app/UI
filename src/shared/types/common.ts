@@ -10,6 +10,24 @@ export type NonNullableFields<T> = {
   [K in keyof T]-?: NonNullable<T[K]>;
 };
 
+type BridgeViewValue<T> = T extends bigint
+  ? number
+  : T extends Date
+    ? string
+    : T extends Array<infer TItem>
+      ? BridgeViewValue<TItem>[]
+      : T extends object
+        ? BridgeViewModel<T>
+        : T;
+
+export type BridgeViewModel<T> = {
+  -readonly [K in keyof T as K extends string
+    ? Uncapitalize<K> extends 'equals' | 'compareTo' | 'getHashCode' | 'toJSON' | 'toString'
+      ? never
+      : Uncapitalize<K>
+    : K]: BridgeViewValue<T[K]>;
+};
+
 export type BaseEntity = { id: number };
 
 export type EntityInput<T extends BaseEntity> = Omit<T, 'id'>;

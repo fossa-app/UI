@@ -1,3 +1,4 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FieldValues } from 'react-hook-form';
@@ -11,7 +12,7 @@ import {
   setCompanyLicenseSkipped,
   resetCompanyLicenseSkipped,
 } from 'store/features';
-import { mapDisabledFields, hasAllowedRole, deepCopyObject } from 'shared/helpers';
+import { mapDisabledFields, hasAllowedRole, deepCopyObject, getProblemErrors } from 'shared/helpers';
 import { ROUTES, UPLOAD_COMPANY_LICENSE_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_ERROR } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';
 import { renderCopyableField } from 'components/UI/helpers/renderCopyableField';
@@ -27,7 +28,9 @@ const CompanyLicenseUploadPage: React.FC = () => {
   const { updateStatus, updateError: error } = useAppSelector(selectCompanyLicense);
   const { item: company } = useAppSelector(selectCompany);
   const skipRef = React.useRef(false);
-  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_ERROR;
+  const errors = isUserAdmin
+    ? deepCopyObject(error ? getProblemErrors(error as ProblemDetailsModel) : undefined)
+    : USER_PERMISSION_GENERAL_ERROR;
 
   React.useEffect(() => {
     return () => {

@@ -1,9 +1,10 @@
+import { ProblemDetailsModel } from 'shared/types';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import { selectCompany, selectIsUserAdmin, selectUserRoles, selectSystemCountries } from 'store/features';
 import { createCompany } from 'store/thunks';
-import { Company, CompanyDTO } from 'shared/types';
-import { deepCopyObject, hasAllowedRole, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
+import { Company } from 'shared/types';
+import { deepCopyObject, getProblemErrors, hasAllowedRole, mapCountriesToFieldOptions, mapDisabledFields } from 'shared/helpers';
 import { COMPANY_DETAILS_FORM_DEFAULT_VALUES, CREATE_COMPANY_DETAILS_FORM_SCHEMA, USER_PERMISSION_GENERAL_ERROR } from 'shared/constants';
 import Form, { FormActionName } from 'components/UI/Form';
 
@@ -22,9 +23,11 @@ const CompanyCreatePage: React.FC = () => {
       ? { ...action, disabled: !hasAllowedRole(action.roles, userRoles), loading: updateStatus === 'loading' }
       : action
   );
-  const errors = isUserAdmin ? deepCopyObject(error?.errors) : USER_PERMISSION_GENERAL_ERROR;
+  const errors = isUserAdmin
+    ? deepCopyObject(error ? getProblemErrors(error as ProblemDetailsModel) : undefined)
+    : USER_PERMISSION_GENERAL_ERROR;
 
-  const handleSubmit = (data: CompanyDTO) => {
+  const handleSubmit = (data: Company) => {
     dispatch(createCompany(data));
   };
 

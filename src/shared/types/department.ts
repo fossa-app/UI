@@ -1,14 +1,13 @@
-export interface DepartmentDTO {
-  id: number;
-  name: string;
-  parentDepartmentId: number | null;
-  managerId: number | null;
-}
+import type { DepartmentRetrievalModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
+import type { BridgeViewModel } from './common';
 
-export interface Department extends DepartmentDTO {
+type BridgeDepartment = BridgeViewModel<DepartmentRetrievalModel>;
+
+export type Department = Omit<BridgeDepartment, 'name'> & {
+  name: string;
   parentDepartmentName?: string;
   managerName?: string;
-}
+};
 
 export type DepartmentFieldConfig = {
   [K in keyof Department]: { field: K; name: string };

@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, StateEntity } from 'store';
 import { fetchClient } from 'store/thunks';
-import { Client, ErrorResponseDTO } from 'shared/types';
+import { ProblemDetailsModel } from 'shared/types';
+import { IdentityClientRetrievalModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 
 interface IdentityState {
-  client: StateEntity<Client | undefined>;
+  client: StateEntity<IdentityClientRetrievalModel | undefined>;
 }
 
 const initialState: IdentityState = {
@@ -23,13 +24,13 @@ const identitySlice = createSlice({
       .addCase(fetchClient.pending, (state) => {
         state.client.fetchStatus = 'loading';
       })
-      .addCase(fetchClient.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchClient.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.client.item = undefined;
         state.client.fetchStatus = 'failed';
-        state.client.fetchError = action.payload;
+        state.client.fetchError = action.payload as any;
       })
-      .addCase(fetchClient.fulfilled, (state, action: PayloadAction<Client | undefined>) => {
-        state.client.item = action.payload;
+      .addCase(fetchClient.fulfilled, (state, action: PayloadAction<IdentityClientRetrievalModel | undefined>) => {
+        state.client.item = action.payload as any;
         state.client.fetchStatus = 'succeeded';
       });
   },
