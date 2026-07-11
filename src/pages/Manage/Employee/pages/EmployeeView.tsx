@@ -6,7 +6,6 @@ import { selectEmployee, resetEmployee, selectProfile, selectUserRoles } from 's
 import { fetchEmployeeById } from 'store/thunks';
 import { UserRole } from 'shared/types';
 import { EMPLOYEE_VIEW_DETAILS_SCHEMA, ROUTES, ACTION_BUTTON_STYLES } from 'shared/constants';
-import { areEqualBigIds } from 'shared/helpers';
 import PageLayout from 'components/layouts/PageLayout';
 import WithRolesLayout from 'components/layouts/WithRolesLayout';
 import ViewDetails from 'components/UI/ViewDetails';
@@ -34,7 +33,7 @@ const EmployeeViewPage: React.FC = () => {
   };
 
   React.useEffect(() => {
-    if (id && (!employee || !areEqualBigIds(employee.id, id))) {
+    if (id && (!employee || employee.id !== BigInt(id))) {
       dispatch(fetchEmployeeById({ id, shouldFetchBranchGeoAddress: false }));
     }
   }, [id, employee, dispatch]);
@@ -58,7 +57,7 @@ const EmployeeViewPage: React.FC = () => {
         <ViewDetails.Header>{EMPLOYEE_VIEW_DETAILS_SCHEMA.title}</ViewDetails.Header>
         <ViewDetails.Content fields={EMPLOYEE_VIEW_DETAILS_SCHEMA.fields} values={employee} />
         <ViewDetails.Actions sx={{ flexWrap: 'wrap', gap: 4 }}>
-          {profile?.id === employee?.id && (
+          {profile && 'id' in profile && employee && profile.id === employee.id && (
             <Button
               data-cy={`${testModule}-${testSubModule}-view-profile-button`}
               aria-label="View Profile Button"

@@ -1,8 +1,9 @@
+import type { ProblemDetailsModel } from '@fossa-app/bridge/Models/ApiModels/SharedModels';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FieldValues } from 'react-hook-form';
-import { WritableDraft } from 'immer';
+
 import { PaginatedStateEntity, RootState, StateEntity } from 'store';
-import { Employee, EmployeeDTO, ErrorResponse, ErrorResponseDTO, PaginatedResponse, PaginationParams } from 'shared/types';
+import { Employee, ErrorResponse, PaginatedResponse, PaginationParams } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
 import { mergePaginatedItems } from 'store/helpers';
 import { editEmployee, fetchEmployeeById, fetchEmployees, fetchManagers, fetchOrgChartEmployees } from 'store/thunks';
@@ -10,8 +11,8 @@ import { editEmployee, fetchEmployeeById, fetchEmployees, fetchManagers, fetchOr
 interface EmployeeState {
   employee: StateEntity<Employee | undefined>;
   employeeCatalog: PaginatedStateEntity<Employee>;
-  managers: PaginatedStateEntity<EmployeeDTO>;
-  employeeOrgChart: PaginatedStateEntity<EmployeeDTO>;
+  managers: PaginatedStateEntity<Employee>;
+  employeeOrgChart: PaginatedStateEntity<Employee>;
 }
 
 const initialState: EmployeeState = {
@@ -61,7 +62,7 @@ const employeeSlice = createSlice({
       state.employeeOrgChart.status = initialState.employeeOrgChart.status;
     },
     resetEmployee(state) {
-      state.employee = initialState.employee as WritableDraft<StateEntity<Employee>>;
+      state.employee = initialState.employee as any;
     },
     resetEmployeeErrors(state) {
       state.employee.fetchError = undefined;
@@ -73,10 +74,10 @@ const employeeSlice = createSlice({
       .addCase(fetchEmployees.pending, (state) => {
         state.employeeCatalog.status = 'loading';
       })
-      .addCase(fetchEmployees.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchEmployees.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.employeeCatalog.items = [];
         state.employeeCatalog.status = 'failed';
-        state.employeeCatalog.error = action.payload;
+        state.employeeCatalog.error = action.payload as any;
       })
       .addCase(fetchEmployees.fulfilled, (state, action: PayloadAction<PaginatedResponse<Employee> | undefined>) => {
         const { items = [], ...page } = action.payload || {};
@@ -92,7 +93,7 @@ const employeeSlice = createSlice({
       .addCase(fetchManagers.fulfilled, (state, action) => {
         const { items = [], ...page } = action.payload || {};
 
-        state.managers.items = mergePaginatedItems<EmployeeDTO>(state.managers.items, items);
+        state.managers.items = mergePaginatedItems<Employee>(state.managers.items, items);
         state.managers.page = page;
         state.managers.status = 'succeeded';
       })
@@ -109,12 +110,12 @@ const employeeSlice = createSlice({
       .addCase(fetchOrgChartEmployees.pending, (state) => {
         state.employeeOrgChart.status = 'loading';
       })
-      .addCase(fetchOrgChartEmployees.rejected, (state, action: PayloadAction<ErrorResponseDTO | undefined>) => {
+      .addCase(fetchOrgChartEmployees.rejected, (state, action: PayloadAction<ProblemDetailsModel | undefined>) => {
         state.employeeOrgChart.items = [];
         state.employeeOrgChart.status = 'failed';
-        state.employeeOrgChart.error = action.payload;
+        state.employeeOrgChart.error = action.payload as any;
       })
-      .addCase(fetchOrgChartEmployees.fulfilled, (state, action: PayloadAction<PaginatedResponse<EmployeeDTO> | undefined>) => {
+      .addCase(fetchOrgChartEmployees.fulfilled, (state, action: PayloadAction<PaginatedResponse<Employee> | undefined>) => {
         const { items = [] } = action.payload || {};
         state.employeeOrgChart.items = items;
         state.employeeOrgChart.status = 'succeeded';
@@ -127,14 +128,14 @@ const employeeSlice = createSlice({
 
         state.employee.item = undefined;
         state.employee.fetchStatus = 'failed';
-        state.employee.fetchError = action.payload;
+        state.employee.fetchError = action.payload as any;
       })
       .addCase(fetchEmployeeById.fulfilled, (state, action) => {
         if (action.meta.arg.skipState) {
           return;
         }
 
-        state.employee.item = action.payload;
+        state.employee.item = action.payload as any;
         state.employee.fetchStatus = 'succeeded';
         state.employee.fetchError = undefined;
       })
@@ -143,7 +144,7 @@ const employeeSlice = createSlice({
       })
       .addCase(editEmployee.rejected, (state, action: PayloadAction<ErrorResponse<FieldValues> | undefined>) => {
         state.employee.updateStatus = 'failed';
-        state.employee.updateError = action.payload as WritableDraft<ErrorResponse<FieldValues>>;
+        state.employee.updateError = action.payload as any;
       })
       .addCase(editEmployee.fulfilled, (state) => {
         state.employee.updateStatus = 'succeeded';

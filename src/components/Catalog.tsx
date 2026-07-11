@@ -1,9 +1,10 @@
+import type { ProblemDetailsModel } from '@fossa-app/bridge/Models/ApiModels/SharedModels';
 import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { AsyncThunkAction } from '@reduxjs/toolkit';
 import { AppDispatch, PaginatedStateEntity, RootState, Status, useAppDispatch, useAppSelector } from 'store';
 import { selectUserRoles } from 'store/features';
-import { Module, SubModule, Entity, PaginationParams, UserRole, ErrorResponseDTO, PaginatedResponse } from 'shared/types';
+import { BaseEntity, Module, SubModule, Entity, PaginationParams, UserRole, PaginatedResponse } from 'shared/types';
 import { APP_CONFIG } from 'shared/constants';
 import { getTestSelectorByModule } from 'shared/helpers';
 import { useUnmount } from 'shared/hooks';
@@ -15,11 +16,11 @@ import { renderPrimaryLinkText } from 'components/UI/helpers/renderPrimaryLinkTe
 
 interface StateAction {
   state: RootState;
-  rejectValue: ErrorResponseDTO;
+  rejectValue: ProblemDetailsModel;
   dispatch?: AppDispatch;
 }
 
-type CatalogProps<T extends Entity> = {
+type CatalogProps<T extends Entity & BaseEntity> = {
   module: Module;
   subModule: SubModule;
   pageTitle: string;
@@ -37,11 +38,11 @@ type CatalogProps<T extends Entity> = {
   resetFetchStatus: () => ReturnType<AppDispatch>;
   resetPagination: () => ReturnType<AppDispatch>;
   selectCatalog: (state: RootState) => PaginatedStateEntity<T>;
-  deleteAction?: (id: number) => AsyncThunkAction<void, number, StateAction>;
+  deleteAction?: (id: T['id']) => AsyncThunkAction<void, T['id'], StateAction>;
   selectEntity?: (state: RootState) => { deleteStatus?: Status };
 };
 
-const Catalog = <T extends Entity>({
+const Catalog = <T extends Entity & BaseEntity>({
   module,
   subModule,
   pageTitle,
@@ -76,13 +77,13 @@ const Catalog = <T extends Entity>({
     switch (action) {
       case 'view':
         if (viewPath) {
-          handleNavigate(generatePath(viewPath, { id: item.id }));
+          handleNavigate(generatePath(viewPath, { id: String(item.id) }));
         }
 
         break;
       case 'edit':
         if (editPath) {
-          handleNavigate(generatePath(editPath, { id: item.id }));
+          handleNavigate(generatePath(editPath, { id: String(item.id) }));
         }
 
         break;
@@ -148,7 +149,7 @@ const Catalog = <T extends Entity>({
   }, [search, searchTermChanged, setSearchTermChanged, dispatch, resetFetchStatus, updatePagination]);
 
   useUnmount(() => {
-    if (search) {
+    if (search || page.search) {
       dispatch(resetFetchStatus());
       dispatch(resetPagination());
     }

@@ -179,7 +179,7 @@ describe('Branch Catalog Tests', () => {
           search(Module.branchManagement, SubModule.branchCatalog, 'search-branches', 'New');
 
           getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('exist');
-          cy.wait('@fetchSearchedBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10&search=New');
+          cy.wait('@fetchSearchedBranchesRequest').its('request.url').should('include', 'Branches?search=New&pageNumber=1&pageSize=10');
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 1);
 
           interceptFetchBranchesRequest(
@@ -190,7 +190,7 @@ describe('Branch Catalog Tests', () => {
           search(Module.branchManagement, SubModule.branchCatalog, 'search-branches', 'w');
 
           getLinearLoader(Module.branchManagement, SubModule.branchCatalog, 'table').should('exist');
-          cy.wait('@fetchSearchedNoBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10&search=Neww');
+          cy.wait('@fetchSearchedNoBranchesRequest').its('request.url').should('include', 'Branches?search=Neww&pageNumber=1&pageSize=10');
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 0);
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'page-subtitle')
             .should('exist')
@@ -221,7 +221,7 @@ describe('Branch Catalog Tests', () => {
             { alias: 'searchBranchesRequest', fixture: 'branch/branches' }
           );
           search(Module.branchManagement, SubModule.branchCatalog, 'search-branches', 'New');
-          cy.wait('@searchBranchesRequest').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=10&search=New');
+          cy.wait('@searchBranchesRequest').its('request.url').should('include', 'Branches?search=New&pageNumber=1&pageSize=10');
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 1);
 
           interceptFetchBranchesRequest(
@@ -233,7 +233,7 @@ describe('Branch Catalog Tests', () => {
             .click();
           cy.get('.MuiMenu-paper').find('.MuiTablePagination-menuItem[data-value="20"]').click();
 
-          cy.wait('@searchBranchesPageSize20').its('request.url').should('include', 'Branches?pageNumber=1&pageSize=20&search=New');
+          cy.wait('@searchBranchesPageSize20').its('request.url').should('include', 'Branches?search=New&pageNumber=1&pageSize=20');
           getTestSelectorByModule(Module.branchManagement, SubModule.branchCatalog, 'table-body-row', true).should('have.length', 20);
         });
 

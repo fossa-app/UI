@@ -1,8 +1,8 @@
+import type { ProblemDetailsModel } from '@fossa-app/bridge/Models/ApiModels/SharedModels';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchBranchesTotal, fetchCompanySettings, fetchCompany, fetchCompanyLicense, fetchProfile } from 'store/thunks';
-import { ErrorResponseDTO } from 'shared/types';
 
-export const fetchOnboardingData = createAsyncThunk<void, void, { rejectValue: ErrorResponseDTO }>(
+export const fetchOnboardingData = createAsyncThunk<void, void, { rejectValue: ProblemDetailsModel }>(
   'onboarding/fetchOnboardingData',
   async (_, { dispatch }) => {
     try {

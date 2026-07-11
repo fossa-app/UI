@@ -20,7 +20,7 @@ export const appConfigSlice = createSlice({
   initialState,
   reducers: {
     toggleAppTheme(state, action: PayloadAction<ConfigState['isDarkTheme']>) {
-      state.isDarkTheme = action.payload;
+      state.isDarkTheme = action.payload as any;
       state.status = 'succeeded';
     },
     openSideBar: (state) => {

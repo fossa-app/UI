@@ -41,13 +41,22 @@ const Form = <T extends Entity>({
 
   const watchedValues = methods.watch();
   const prevValuesRef = React.useRef<T | null>(null);
+  const resetValuesRef = React.useRef<T | DefaultValues<T> | undefined>(undefined);
 
   React.useEffect(() => {
+    const resetValues = values ?? defaultValues;
+
+    if (deepEqual(resetValues, resetValuesRef.current)) {
+      return;
+    }
+
     if (values) {
       methods.reset(values);
     } else {
       methods.reset(defaultValues, { keepErrors: true });
     }
+
+    resetValuesRef.current = resetValues;
   }, [values, defaultValues, methods]);
 
   React.useEffect(() => {

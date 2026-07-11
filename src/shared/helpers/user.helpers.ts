@@ -1,5 +1,5 @@
 import { User } from 'oidc-client-ts';
-import { AppUser, Employee, UserProfile } from 'shared/types';
+import { AppUser, DraftEmployee, Employee, UserProfile } from 'shared/types';
 
 export const mapUser = (user: User): AppUser => {
   const { toStorageString, ...rest } = user;
@@ -7,20 +7,29 @@ export const mapUser = (user: User): AppUser => {
   return rest;
 };
 
-export const mapUserProfileToEmployee = (userProfile?: UserProfile): Employee | undefined => {
+export const mapUserProfileToEmployeeDetails = (
+  userProfile?: UserProfile
+): Pick<
+  Employee,
+  'firstName' | 'lastName' | 'fullName' | 'assignedBranchId' | 'assignedDepartmentId' | 'reportsToId' | 'jobTitle' | 'picture'
+> => ({
+  firstName: userProfile?.given_name ?? '',
+  lastName: userProfile?.family_name ?? '',
+  fullName: userProfile?.name ?? '',
+  assignedBranchId: null,
+  assignedDepartmentId: null,
+  reportsToId: null,
+  jobTitle: '',
+  picture: userProfile?.picture,
+});
+
+export const mapUserProfileToDraftEmployee = (userProfile?: UserProfile): DraftEmployee | undefined => {
   if (!userProfile) {
     return;
   }
 
   return {
-    id: userProfile.sub as unknown as number,
-    firstName: userProfile.given_name!,
-    lastName: userProfile.family_name!,
-    fullName: userProfile.name!,
-    assignedBranchId: null,
-    assignedDepartmentId: null,
-    reportsToId: null,
-    jobTitle: '',
-    picture: userProfile.picture,
+    ...mapUserProfileToEmployeeDetails(userProfile),
+    isDraft: true,
   };
 };

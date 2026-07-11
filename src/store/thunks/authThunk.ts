@@ -1,24 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { getUserManager, mapUser } from 'shared/helpers';
-import { AppUser, ErrorResponseDTO } from 'shared/types';
-import { MESSAGES } from 'shared/constants';
+import { AppUser } from 'shared/types';
 
-export const fetchUser = createAsyncThunk<AppUser | undefined, void, { rejectValue: ErrorResponseDTO }>(
-  'auth/fetchUser',
-  async (_, { rejectWithValue }) => {
-    try {
-      const user = await getUserManager().getUser();
+export const fetchUser = createAsyncThunk<AppUser | undefined, void>('auth/fetchUser', async () => {
+  const user = await getUserManager().getUser();
 
-      if (user) {
-        return mapUser(user);
-      }
-
-      return rejectWithValue({
-        title: MESSAGES.error.general.unAuthorized,
-        status: 401,
-      });
-    } catch (error) {
-      return rejectWithValue(error as ErrorResponseDTO);
-    }
+  if (user) {
+    return mapUser(user);
   }
-);
+
+  throw new Error('No authenticated user');
+});

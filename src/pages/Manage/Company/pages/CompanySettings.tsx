@@ -10,7 +10,7 @@ import {
 } from 'store/features';
 import { editCompanySettings } from 'store/thunks';
 import { COMPANY_SETTINGS_FIELDS, COMPANY_SETTINGS_MANAGEMENT_DETAILS_FORM_SCHEMA, ROUTES } from 'shared/constants';
-import { CompanySettings, CompanySettingsDTO, EntityInput, ThemeMode } from 'shared/types';
+import { CompanySettings, EntityInput, ThemeMode } from 'shared/types';
 import { mapDisabledFields } from 'shared/helpers';
 import { COLOR_SCHEMES } from 'shared/themes';
 import { useUnmount } from 'shared/hooks';
@@ -29,11 +29,11 @@ const CompanySettingsPage: React.FC = () => {
   const { isDarkTheme } = useAppSelector(selectAppConfig);
   const mode: ThemeMode = isDarkTheme ? 'dark' : 'light';
 
-  const handleSubmit = (data: EntityInput<CompanySettingsDTO>) => {
+  const handleSubmit = (data: EntityInput<CompanySettings>) => {
     dispatch(editCompanySettings({ ...companySettings, ...data }));
   };
 
-  const handleChange = (data: CompanySettingsDTO) => {
+  const handleChange = (data: CompanySettings) => {
     if (data.colorSchemeId) {
       dispatch(setPreviewCompanyColorSchemeSettings(data.colorSchemeId));
     }

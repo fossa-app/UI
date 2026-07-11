@@ -1,6 +1,21 @@
-import { AppUser, Branch, BranchDTO, Department, DepartmentDTO, Employee, EmployeeDTO, EntityInput } from 'shared/types';
+import { AppUser, Branch, Department, Employee, EntityInput } from 'shared/types';
+import type { EmployeeRetrievalModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 import { FieldOption } from 'components/UI/Form';
-import { mapUserProfileToEmployee } from './user.helpers';
+import { toBigIntId, toNullableBigIntId } from './data.helpers';
+import { mapUserProfileToEmployeeDetails } from './user.helpers';
+
+export const mapEmployeeRetrievalModel = (employee: EmployeeRetrievalModel): Employee => ({
+  ...employee,
+  id: toBigIntId(employee.id),
+  companyId: toBigIntId(employee.companyId),
+  assignedBranchId: toNullableBigIntId(employee.assignedBranchId),
+  assignedDepartmentId: toNullableBigIntId(employee.assignedDepartmentId),
+  reportsToId: toNullableBigIntId(employee.reportsToId),
+  jobTitle: employee.jobTitle ?? '',
+  firstName: employee.firstName ?? '',
+  lastName: employee.lastName ?? '',
+  fullName: employee.fullName ?? '',
+});
 
 export const mapEmployee = ({
   employee,
@@ -9,7 +24,7 @@ export const mapEmployee = ({
   department,
   manager,
 }: {
-  employee: EmployeeDTO;
+  employee: Employee;
   user?: AppUser;
   branch?: Branch;
   department?: Department;
@@ -20,7 +35,7 @@ export const mapEmployee = ({
   const reportsToName = manager?.fullName;
 
   return {
-    ...(user ? mapUserProfileToEmployee(user.profile) : {}),
+    ...(user ? mapUserProfileToEmployeeDetails(user.profile) : {}),
     ...employee,
     assignedBranchName,
     assignedDepartmentName,
@@ -34,21 +49,21 @@ export const mapEmployees = ({
   departments = [],
   managers = [],
 }: {
-  employees: EmployeeDTO[];
-  branches?: BranchDTO[];
-  departments?: DepartmentDTO[];
-  managers?: EmployeeDTO[];
+  employees: Employee[];
+  branches?: Branch[];
+  departments?: Department[];
+  managers?: Employee[];
 }): Employee[] => {
   return employees.map((employee) => {
-    const branch = branches.find(({ id }) => id === employee.assignedBranchId);
-    const department = departments.find(({ id }) => id === employee.assignedDepartmentId);
-    const manager = managers.find(({ id }) => id === employee.reportsToId);
+    const branch = employee.assignedBranchId ? branches.find(({ id }) => id === employee.assignedBranchId) : undefined;
+    const department = employee.assignedDepartmentId ? departments.find(({ id }) => id === employee.assignedDepartmentId) : undefined;
+    const manager = employee.reportsToId ? managers.find(({ id }) => id === employee.reportsToId) : undefined;
 
     return mapEmployee({ employee, branch, department, manager });
   });
 };
 
-export const mapEmployeeDTO = (employee: Employee): Omit<EntityInput<EmployeeDTO>, 'firstName' | 'lastName' | 'fullName'> => {
+export const mapEmployeeInput = (employee: Employee): Omit<EntityInput<Employee>, 'firstName' | 'lastName' | 'fullName'> => {
   return {
     jobTitle: employee.jobTitle,
     assignedBranchId: employee.assignedBranchId || null,
@@ -57,7 +72,7 @@ export const mapEmployeeDTO = (employee: Employee): Omit<EntityInput<EmployeeDTO
   };
 };
 
-export const mapProfileDTO = (employee: EntityInput<Employee>): EntityInput<EmployeeDTO> => {
+export const mapProfileInput = (employee: EntityInput<Employee>): EntityInput<Employee> => {
   return {
     firstName: employee.firstName,
     lastName: employee.lastName,
@@ -69,7 +84,7 @@ export const mapProfileDTO = (employee: EntityInput<Employee>): EntityInput<Empl
   };
 };
 
-export const mapEmployeeToFieldOption = (employee: EmployeeDTO): FieldOption => {
+export const mapEmployeeToFieldOption = (employee: Pick<Employee, 'id' | 'fullName'>): FieldOption => {
   return {
     label: employee.fullName,
     value: String(employee.id),

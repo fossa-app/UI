@@ -1,4 +1,4 @@
-import { getFromLocalStorage } from 'shared/helpers/storage.helpers';
+import { getFromLocalStorage } from 'shared/helpers';
 import { CompanySettings, EntityInput, ThemeMode } from 'shared/types';
 import { COMPANY_SETTINGS_KEY, DEFAULT_COMPANY_SETTINGS } from 'shared/constants';
 import { createCustomTheme } from 'shared/themes';

@@ -5,14 +5,14 @@ import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import { Employee, Module, SubModule } from 'shared/types';
+import { Module, Profile, SubModule } from 'shared/types';
 import { getTestSelectorByModule } from 'shared/helpers';
 
 const testModule = Module.shared;
 const testSubModule = SubModule.header;
 
 interface ProfileMenuProps {
-  profile?: Employee;
+  profile?: Profile;
   onLogoutClick: () => void;
   onProfileClick: () => void;
 }

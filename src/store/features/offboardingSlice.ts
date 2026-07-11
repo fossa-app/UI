@@ -12,11 +12,11 @@ import {
   fetchProfile,
 } from 'store/thunks';
 import {
-  BranchDTO,
+  Branch,
   CompanyDatasourceTotals,
   CompanyOffboardingStep,
-  DepartmentDTO,
-  EmployeeDTO,
+  Department,
+  Employee,
   OffboardingStep,
   PaginatedResponse,
 } from 'shared/types';
@@ -108,7 +108,7 @@ const offboardingSlice = createSlice({
         state.company.flags[OffboardingStep.companySettings] = true;
         evaluateCompanyOffboardingStep(state);
       })
-      .addCase(fetchBranchesTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<BranchDTO> | undefined>) => {
+      .addCase(fetchBranchesTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<Branch> | undefined>) => {
         state.company.flags[OffboardingStep.instructions].branches = action.payload?.totalItems;
         evaluateCompanyOffboardingStep(state);
       })
@@ -119,11 +119,11 @@ const offboardingSlice = createSlice({
         state.company.flags[OffboardingStep.company] = true;
         evaluateCompanyOffboardingStep(state);
       })
-      .addCase(fetchEmployeesTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<EmployeeDTO> | undefined>) => {
+      .addCase(fetchEmployeesTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<Employee> | undefined>) => {
         state.company.flags[OffboardingStep.instructions].employees = action.payload?.totalItems;
         evaluateCompanyOffboardingStep(state);
       })
-      .addCase(fetchDepartmentsTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<DepartmentDTO> | undefined>) => {
+      .addCase(fetchDepartmentsTotal.fulfilled, (state, action: PayloadAction<PaginatedResponse<Department> | undefined>) => {
         state.company.flags[OffboardingStep.instructions].departments = action.payload?.totalItems;
         evaluateCompanyOffboardingStep(state);
       })

@@ -9,7 +9,6 @@ import { useAppTheme } from 'shared/hooks';
 import { darkScrollbar, getTestSelectorByModule, lightScrollbar } from 'shared/helpers';
 import { Module, SubModule } from 'shared/types';
 import MessageLayout from 'layout/MessageLayout';
-import AxiosInterceptor from '../AxiosInterceptor';
 import ClientLoader from '../ClientLoader';
 
 const RootPage: React.FC = () => {
@@ -23,20 +22,18 @@ const RootPage: React.FC = () => {
   });
 
   return (
-    <AxiosInterceptor>
-      <ThemeProvider theme={appTheme}>
-        <GlobalStyles styles={isDarkTheme ? darkScrollbar() : lightScrollbar()} />
-        <CssBaseline />
-        <ClientLoader />
-        <MessageLayout />
-        <Box
-          data-cy={getTestSelectorByModule(Module.shared, SubModule.theme, 'app-theme')}
-          data-theme={appTheme.palette.mode}
-          data-color-scheme-id={colorSchemeId}
-          sx={{ display: 'contents' }}
-        />
-      </ThemeProvider>
-    </AxiosInterceptor>
+    <ThemeProvider theme={appTheme}>
+      <GlobalStyles styles={isDarkTheme ? darkScrollbar() : lightScrollbar()} />
+      <CssBaseline />
+      <ClientLoader />
+      <MessageLayout />
+      <Box
+        data-cy={getTestSelectorByModule(Module.shared, SubModule.theme, 'app-theme')}
+        data-theme={appTheme.palette.mode}
+        data-color-scheme-id={colorSchemeId}
+        sx={{ display: 'contents' }}
+      />
+    </ThemeProvider>
   );
 };
 

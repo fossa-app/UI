@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import { clearMessages, selectMessage } from 'store/features';
 import { Module, SubModule } from 'shared/types';
-import { getTestSelectorByModule } from 'shared/helpers';
+import { getProblemTitle, getTestSelectorByModule } from 'shared/helpers';
 import Snackbar from 'components/UI/Snackbar';
 
 const MessageLayout: React.FC = () => {
@@ -24,7 +24,7 @@ const MessageLayout: React.FC = () => {
       data-cy={testSelector}
       type={type}
       open={!!error || !!success}
-      message={error ? error.title : success}
+      message={error ? getProblemTitle(error) : success}
       onClose={handleSnackbarClose}
     />
   );

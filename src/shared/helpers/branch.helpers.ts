@@ -1,7 +1,18 @@
 import { BRANCH_FIELDS } from 'shared/constants';
-import { Branch, BranchDTO, EntityInput, Company, Country, GeoAddress, TimeZone } from 'shared/types';
+import { Branch, EntityInput, Company, Country, GeoAddress, TimeZone } from 'shared/types';
+import type { BranchRetrievalModel } from '@fossa-app/bridge/Models/ApiModels/PayloadModels';
 import { FormFieldProps, FieldOption } from 'components/UI/Form';
 import { mapCountryToFieldOption } from './company.helpers';
+import { toBigIntId } from './data.helpers';
+
+export const mapBranchRetrievalModel = (branch: BranchRetrievalModel): Branch => ({
+  ...branch,
+  id: toBigIntId(branch.id),
+  companyId: toBigIntId(branch.companyId),
+  name: branch.name ?? '',
+  timeZoneId: branch.timeZoneId ?? '',
+  address: branch.address ? { ...branch.address } : null,
+});
 
 export const mapBranch = ({
   branch,
@@ -10,7 +21,7 @@ export const mapBranch = ({
   countries,
   geoAddress,
 }: {
-  branch: BranchDTO;
+  branch: Branch;
   timeZones: TimeZone[];
   companyCountryCode: Company['countryCode'];
   countries: Country[];
@@ -37,7 +48,7 @@ export const mapBranch = ({
   };
 };
 
-export const mapBranchDTO = (branch: Branch): EntityInput<BranchDTO> => {
+export const mapBranchInput = (branch: Branch): EntityInput<Branch> => {
   if (branch.noPhysicalAddress) {
     return {
       name: branch.name,
@@ -71,7 +82,7 @@ export const mapBranchDTO = (branch: Branch): EntityInput<BranchDTO> => {
 };
 
 export const mapBranches = (
-  branches: BranchDTO[],
+  branches: Branch[],
   timeZones: TimeZone[],
   companyCountryCode: Company['countryCode'],
   countries: Country[]
@@ -111,7 +122,7 @@ export const mapTimeZoneToFieldOption = (timeZone: TimeZone): FieldOption => {
   };
 };
 
-export const mapBranchToFieldOption = (branch: Branch): FieldOption => {
+export const mapBranchToFieldOption = (branch: Pick<Branch, 'id' | 'name'>): FieldOption => {
   return {
     label: branch.name,
     value: String(branch?.id),
