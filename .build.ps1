@@ -79,7 +79,9 @@ Task Pack Build, Test, EstimateVersion, {
     $state.DockerImageLatestTag = $dockerImageLatestTag
 
     $state | Export-Clixml -Path ".\.trash\$Instance\state.clixml"
-    Write-Output $state
+    foreach ($stateProperty in $state.PSObject.Properties) {
+        Write-Build -Color Magenta -Text "State: $($stateProperty.Name): $($stateProperty.Value)"
+    }
 }
 
 # Synopsis: Test
@@ -101,11 +103,11 @@ Task FunctionalTest Build, {
         $devServerUrl = 'http://localhost:4211/'
 
         while ($attempt -lt $maxAttempts) {
-            Write-Output "Making request to $devServerUrl (attempt $($attempt + 1))"
+            Write-Build -Color DarkMagenta -Text "Making request to $devServerUrl (attempt $($attempt + 1))"
             try {
                 $response = Invoke-WebRequest -Uri $devServerUrl -UseBasicParsing
                 if ($response.StatusCode -eq 200) {
-                    Write-Output 'Endpoint returned 200. Ending attempts.'
+                    Write-Build -Color DarkMagenta -Text 'Endpoint returned 200. Ending attempts.'
                     break
                 }
             }
@@ -151,8 +153,10 @@ Task EstimateVersion Restore, {
     }
 
     $state | Export-Clixml -Path ".\.trash\$Instance\state.clixml"
-    Write-Output "Next version estimated to be $($state.NextVersion)"
-    Write-Output $state
+    Write-Build -Color DarkMagenta -Text "Next version estimated to be $($state.NextVersion)"
+    foreach ($stateProperty in $state.PSObject.Properties) {
+        Write-Build -Color Magenta -Text "State: $($stateProperty.Name): $($stateProperty.Value)"
+    }
 }
 
 # Synopsis: Format
@@ -170,7 +174,7 @@ Task FormatXmlFiles Clean, {
     Get-ChildItem -Include *.xml, *.config, *.props, *.targets, *.nuspec, *.resx, *.ruleset, *.vsixmanifest, *.vsct, *.xlf, *.csproj -Recurse -File
     | Where-Object { -not (git check-ignore $PSItem) }
     | ForEach-Object {
-        Write-Output "Formatting XML File: $PSItem"
+        Write-Build -Color DarkMagenta -Text "Formatting XML File: $PSItem"
         $content = Get-Content -Path $PSItem -Raw
         $xml = [xml]$content
         $xml.Save($PSItem)
@@ -210,5 +214,7 @@ Task Init {
     }
 
     $state | Export-Clixml -Path ".\.trash\$Instance\state.clixml"
-    Write-Output $state
+    foreach ($stateProperty in $state.PSObject.Properties) {
+        Write-Build -Color Magenta -Text "State: $($stateProperty.Name): $($stateProperty.Value)"
+    }
 }
